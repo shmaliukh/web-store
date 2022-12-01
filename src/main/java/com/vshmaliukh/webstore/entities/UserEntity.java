@@ -14,12 +14,13 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name = USER_TABLE, uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
+@Table(name = USER_TABLE,
+        uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = ID_COLUMN, nullable = false)
     private Long id;
 
     @Column(name = USER_NAME_COLUMN, nullable = false)
@@ -29,7 +30,7 @@ public class UserEntity {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = USER_LOG_IN_PROVIDER, nullable = false)
+    @Column(name = USER_LOG_IN_PROVIDER)
     private LogInProvider logInProvider;
 
 
