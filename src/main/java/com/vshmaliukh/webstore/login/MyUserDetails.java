@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore;
+package com.vshmaliukh.webstore.login;
 
 import com.vshmaliukh.webstore.entities.RoleEntity;
 import com.vshmaliukh.webstore.entities.UserEntity;

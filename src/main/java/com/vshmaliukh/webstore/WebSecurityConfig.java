@@ -1,6 +1,8 @@
-package com.vshmaliukh.webstore.login;
+package com.vshmaliukh.webstore;
 
-import com.vshmaliukh.webstore.UserDetailsServiceImpl;
+import com.vshmaliukh.webstore.login.CustomOAuth2User;
+import com.vshmaliukh.webstore.login.CustomOAuth2UserService;
+import com.vshmaliukh.webstore.services.UserDetailsServiceImpl;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,23 +62,24 @@ public class WebSecurityConfig {
                 .requestMatchers("/", "/login", "/oauth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().permitAll()
-                .loginPage("/login")
-                .usernameParameter("email")
-                .passwordParameter("pass")
-                .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
+                    .formLogin().permitAll()
+////                        .loginPage("/login")
+                        .usernameParameter("email")
+                        .passwordParameter("pass")
+                        .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
                 .and()
-                .oauth2Login()
-                .loginPage("/login")
-                .userInfoEndpoint()
-                .userService(oauthUserService)
+                    .oauth2Login()
+//                        .loginPage("/login")
+                        .userInfoEndpoint()
+                        .userService(oauthUserService)
                 .and()
-                .successHandler(getAuthenticationSuccessHandler())
-                //.defaultSuccessUrl(LOG_IN_PAGE_SUCCES)
+                    .successHandler(getAuthenticationSuccessHandler())
+                    .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
                 .and()
-                .logout().logoutSuccessUrl("/").permitAll()
+                    .logout().logoutSuccessUrl("/").permitAll()
                 .and()
-                .exceptionHandling().accessDeniedPage("/403");
+                    .exceptionHandling().accessDeniedPage("/403")
+        ;
         return http.build();
     }
 
@@ -88,8 +91,9 @@ public class WebSecurityConfig {
             userService.processOAuthPostLogin(oauthUser.getEmail());
             try {
                 response.sendRedirect(LOG_IN_SUCCESS_URL_STR);
-            } catch (IOException e) {
-                log.error("problem to redirect to '{}' page", LOG_IN_SUCCESS_URL_STR);
+            } catch (IOException ioe) {
+                log.warn("problem to redirect to '{}' page", LOG_IN_SUCCESS_URL_STR);
+                log.error(ioe.getMessage(), ioe);
             }
         };
     }

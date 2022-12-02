@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore;
+package com.vshmaliukh.webstore.login;
 
 public enum LogInProvider {
 

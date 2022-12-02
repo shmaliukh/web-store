@@ -1,6 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
-import com.vshmaliukh.webstore.LogInProvider;
+import com.vshmaliukh.webstore.login.LogInProvider;
 import com.vshmaliukh.webstore.entities.UserEntity;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;

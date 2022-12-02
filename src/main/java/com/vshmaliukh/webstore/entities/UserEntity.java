@@ -1,6 +1,6 @@
 package com.vshmaliukh.webstore.entities;
 
-import com.vshmaliukh.webstore.LogInProvider;
+import com.vshmaliukh.webstore.login.LogInProvider;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
