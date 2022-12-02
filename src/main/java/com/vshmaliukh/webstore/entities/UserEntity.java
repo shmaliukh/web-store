@@ -21,6 +21,9 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
         uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
 public class UserEntity {
 
+    private String password;
+    private boolean enabled;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID_COLUMN, nullable = false)
