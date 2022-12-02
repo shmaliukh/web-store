@@ -16,7 +16,7 @@
     <description>web-store</description>
 
     <properties>
-        <java.version>8</java.version>
+        <java.version>17</java.version>
         <spring-boot-starter.version>2.7.5</spring-boot-starter.version>
         <spring-boot-starter-thymeleaf.version>2.7.4</spring-boot-starter-thymeleaf.version>
         <h2.version>2.1.214</h2.version>
@@ -38,6 +38,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
             <version>${spring-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

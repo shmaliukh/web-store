@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
 @Getter
@@ -32,6 +35,12 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = USER_LOG_IN_PROVIDER)
     private LogInProvider logInProvider;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = USER_ROLE_TABLE,
+            joinColumns = @JoinColumn(name = USER_ID_COLUMN),
+            inverseJoinColumns = @JoinColumn(name = ROLE_ID_COLUMN))
+    private Set<RoleEntity> roles = new HashSet<>();
 
 
 }
