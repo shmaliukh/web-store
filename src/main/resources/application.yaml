@@ -1,6 +1,9 @@
 server:
   port: 8082
 
+app:
+  webSecurityEnable: !!bool true
+
 logging:
   level:
     root: INFO

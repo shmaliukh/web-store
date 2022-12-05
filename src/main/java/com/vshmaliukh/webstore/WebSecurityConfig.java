@@ -6,6 +6,7 @@ import com.vshmaliukh.webstore.services.UserDetailsServiceImpl;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,6 +31,9 @@ public class WebSecurityConfig {
     private final UserService userService;
     private final CustomOAuth2UserService oauthUserService;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
+
+    @Value("${app.webSecurityEnable:true}")
+    public Boolean webSecurityEnable;
 
     @Autowired
     public WebSecurityConfig(UserService userService,
@@ -60,29 +64,30 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
-                .requestMatchers("/", "/" + PAGE_LOGIN, "/oauth/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .permitAll()
-                .loginPage("/" + PAGE_LOGIN)
+        if (webSecurityEnable) {
+            http.authorizeHttpRequests()
+                    .requestMatchers("/", "/" + PAGE_LOGIN, "/oauth/**").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                    .formLogin()
+                    .permitAll()
+                    .loginPage("/" + PAGE_LOGIN)
 //                .usernameParameter("email")
 //                .passwordParameter("pass")
 //                .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
-                .and()
-                .oauth2Login().permitAll()
+                    .and()
+                    .oauth2Login().permitAll()
 //                .loginPage("/" + PAGE_LOGIN)
-                .userInfoEndpoint()
-                .userService(oauthUserService)
-                .and()
-                .successHandler(getAuthenticationSuccessHandler())
-                .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
-                .and()
-                .logout().logoutSuccessUrl("/").permitAll()
-                .and()
-                .exceptionHandling().accessDeniedPage("/" + PAGE_403)
-        ;
+                    .userInfoEndpoint()
+                    .userService(oauthUserService)
+                    .and()
+                    .successHandler(getAuthenticationSuccessHandler())
+                    .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
+                    .and()
+                    .logout().logoutSuccessUrl("/").permitAll()
+                    .and()
+                    .exceptionHandling().accessDeniedPage("/" + PAGE_403);
+        }
         return http.build();
     }
 
