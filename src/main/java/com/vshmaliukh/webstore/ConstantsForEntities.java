@@ -5,6 +5,8 @@ public final class ConstantsForEntities {
     private ConstantsForEntities(){}
 
     public static final String USER_TABLE = "Users";
+    public static final String ROLE_TABLE = "Roles";
+    public static final String USER_ROLE_TABLE = "User_roles";
     public static final String BOOK_TABLE = "Books";
     public static final String COMICS_TABLE = "Comics";
     public static final String MAGAZINE_TABLE = "Magazines";
@@ -15,6 +17,8 @@ public final class ConstantsForEntities {
     public static final String USER_LOG_IN_PROVIDER = "log_in_provider";
     public static final String ID_COLUMN = "id";
     public static final String USER_ID_COLUMN = "user_id";
+    public static final String ROLE_ID_COLUMN = "role_id";
+    public static final String ROLE_NAME_COLUMN = "role_name";
     public static final String NAME_COLUMN = "name";
     public static final String PAGES_COLUMN = "pages";
     public static final String BORROWED_COLUMN = "borrowed";
