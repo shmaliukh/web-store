@@ -20,11 +20,15 @@ public final class ConstantsForEntities {
     public static final String ROLE_ID_COLUMN = "role_id";
     public static final String ROLE_NAME_COLUMN = "role_name";
     public static final String NAME_COLUMN = "name";
+    public static final String QUANTITY_COLUMN = "quantity";
+    public static final String CATEGORY_COLUMN = "category";
     public static final String PAGES_COLUMN = "pages";
     public static final String BORROWED_COLUMN = "borrowed";
     public static final String AUTHOR_COLUMN = "author";
     public static final String DATE_COLUMN = "date";
     public static final String PUBLISHER_COLUMN = "publisher";
+    public static final String PRICE_COLUMN = "price";
+    public static final String IS_AVAILABLE_IN_STORE_COLUMN = "is_available_in_store";
 
 
 }

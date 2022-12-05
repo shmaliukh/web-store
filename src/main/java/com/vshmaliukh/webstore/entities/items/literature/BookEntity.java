@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore.entities.items;
+package com.vshmaliukh.webstore.entities.items.literature;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,8 +16,8 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Entity
 @Table(name = BOOK_TABLE,
         uniqueConstraints = {@UniqueConstraint(columnNames = {
-                USER_ID_COLUMN, NAME_COLUMN, PAGES_COLUMN, BORROWED_COLUMN, AUTHOR_COLUMN, DATE_COLUMN})})
-public class BookEntity extends ItemEntity {
+                NAME_COLUMN, PAGES_COLUMN, BORROWED_COLUMN, AUTHOR_COLUMN, DATE_COLUMN})})
+public class BookEntity extends LiteratureItemEntity {
 
     @Column(name = AUTHOR_COLUMN, nullable = false)
     String author;
@@ -28,11 +28,11 @@ public class BookEntity extends ItemEntity {
     @Override
     public String toString() {
         return "BookEntity{" +
-                "name='" + name + '\'' +
-                ", pages=" + pages +
+                "name='" + getName() + '\'' +
+                ", pages=" + getPages() +
                 ", isBorrowed=" + isBorrowed +
-                ", author='" + author + '\'' +
-                ", dateOfIssue=" + dateOfIssue +
+                ", author='" + getAuthor() + '\'' +
+                ", dateOfIssue=" + getDateOfIssue() +
                 '}';
     }
 }
