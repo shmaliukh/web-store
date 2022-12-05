@@ -18,13 +18,15 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import java.io.IOException;
 
+import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
+
 @Slf4j
 @Configuration
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
-    public static final String LOG_IN_SUCCESS_URL_STR = "/index";
+    public static final String LOG_IN_SUCCESS_URL_STR = "/" + PAGE_HOME;
     private final UserService userService;
     private final CustomOAuth2UserService oauthUserService;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
@@ -59,26 +61,27 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers("/", "/login", "/oauth/**").permitAll()
+                .requestMatchers("/", "/" + PAGE_LOGIN, "/oauth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                    .formLogin().permitAll()
-////                        .loginPage("/login")
-                        .usernameParameter("email")
-                        .passwordParameter("pass")
-                        .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
+                .formLogin()
+                .permitAll()
+                .loginPage("/" + PAGE_LOGIN)
+//                .usernameParameter("email")
+//                .passwordParameter("pass")
+//                .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
                 .and()
-                    .oauth2Login()
-//                        .loginPage("/login")
-                        .userInfoEndpoint()
-                        .userService(oauthUserService)
+                .oauth2Login().permitAll()
+//                .loginPage("/" + PAGE_LOGIN)
+                .userInfoEndpoint()
+                .userService(oauthUserService)
                 .and()
-                    .successHandler(getAuthenticationSuccessHandler())
-                    .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
+                .successHandler(getAuthenticationSuccessHandler())
+                .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
                 .and()
-                    .logout().logoutSuccessUrl("/").permitAll()
+                .logout().logoutSuccessUrl("/").permitAll()
                 .and()
-                    .exceptionHandling().accessDeniedPage("/403")
+                .exceptionHandling().accessDeniedPage("/" + PAGE_403)
         ;
         return http.build();
     }
