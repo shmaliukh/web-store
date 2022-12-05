@@ -1,6 +1,5 @@
-package com.vshmaliukh.webstore.entities.items.literature;
+package com.vshmaliukh.webstore.model.items;
 
-import com.vshmaliukh.webstore.entities.items.ItemEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +9,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class LiteratureItemEntity extends ItemEntity {
+public abstract class LiteratureItem extends Item {
 
 //    @Column(name = USER_ID_COLUMN, nullable = false)
 //    private Integer userId;

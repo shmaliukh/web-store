@@ -1,5 +1,6 @@
-package com.vshmaliukh.webstore.entities.items.literature;
+package com.vshmaliukh.webstore.model.items.literatureItemImp;
 
+import com.vshmaliukh.webstore.model.items.LiteratureItem;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -17,7 +18,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Table(name = BOOK_TABLE,
         uniqueConstraints = {@UniqueConstraint(columnNames = {
                 NAME_COLUMN, PAGES_COLUMN, BORROWED_COLUMN, AUTHOR_COLUMN, DATE_COLUMN})})
-public class BookEntity extends LiteratureItemEntity {
+public class Book extends LiteratureItem {
 
     @Column(name = AUTHOR_COLUMN, nullable = false)
     String author;
@@ -27,10 +28,10 @@ public class BookEntity extends LiteratureItemEntity {
 
     @Override
     public String toString() {
-        return "BookEntity{" +
+        return "Book{" +
                 "name='" + getName() + '\'' +
                 ", pages=" + getPages() +
-                ", isBorrowed=" + isBorrowed +
+                ", isBorrowed=" + isBorrowed() +
                 ", author='" + getAuthor() + '\'' +
                 ", dateOfIssue=" + getDateOfIssue() +
                 '}';
