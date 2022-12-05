@@ -39,11 +39,11 @@ public class UserEntity {
     @Column(name = USER_LOG_IN_PROVIDER)
     private LogInProvider logInProvider;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = USER_ROLE_TABLE,
             joinColumns = @JoinColumn(name = USER_ID_COLUMN),
             inverseJoinColumns = @JoinColumn(name = ROLE_ID_COLUMN))
-    private Set<RoleEntity> roles = new HashSet<>();
+    private RoleEntity role;
 
 
 }
