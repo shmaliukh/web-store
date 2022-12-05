@@ -22,6 +22,7 @@ public class UserService {
             user = new UserEntity();
             user.setUsername(username);
             user.setLogInProvider(LogInProvider.GOOGLE);
+            user.setEnabled(true);
 
             userRepository.save(user);
             log.info("Created new user: '{}'", user);
