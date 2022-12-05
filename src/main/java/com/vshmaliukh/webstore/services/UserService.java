@@ -1,7 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import com.vshmaliukh.webstore.entities.UserEntity;
+import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,9 @@ public class UserService {
     }
 
     public void processOAuthPostLogin(String username) {
-        UserEntity user = userRepository.getUserEntityByUsername(username);
+        User user = userRepository.getUserEntityByUsername(username);
         if (user == null) {
-            user = new UserEntity();
+            user = new User();
             user.setUsername(username);
             user.setLogInProvider(LogInProvider.GOOGLE);
             user.setEnabled(true);

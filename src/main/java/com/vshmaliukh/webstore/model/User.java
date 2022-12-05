@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore.entities;
+package com.vshmaliukh.webstore.model;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
 import jakarta.persistence.*;
@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
@@ -19,7 +16,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Entity
 @Table(name = USER_TABLE,
         uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
-public class UserEntity {
+public class User {
 
     private String password;
     private boolean enabled;
@@ -43,7 +40,7 @@ public class UserEntity {
     @JoinTable(name = USER_ROLE_TABLE,
             joinColumns = @JoinColumn(name = USER_ID_COLUMN),
             inverseJoinColumns = @JoinColumn(name = ROLE_ID_COLUMN))
-    private RoleEntity role;
+    private Role role;
 
 
 }

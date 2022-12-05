@@ -1,5 +1,6 @@
-package com.vshmaliukh.webstore.entities.items.literature;
+package com.vshmaliukh.webstore.model.items.literatureItemImp;
 
+import com.vshmaliukh.webstore.model.items.LiteratureItem;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -11,14 +12,14 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Getter
 @Setter
 @Entity
-@Table(name = NEWSPAPER_TABLE,
+@Table(name = MAGAZINE_TABLE,
         uniqueConstraints = {@UniqueConstraint(columnNames = {
                 NAME_COLUMN, PAGES_COLUMN, BORROWED_COLUMN})})
-public class NewspaperEntity extends LiteratureItemEntity {
+public class Magazine extends LiteratureItem {
 
     @Override
     public String toString() {
-        return "NewspaperEntity{" +
+        return "Magazine{" +
                 "name='" + getName() + '\'' +
                 ", pages=" + getPages() +
                 ", isBorrowed=" + isBorrowed() +

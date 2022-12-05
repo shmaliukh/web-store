@@ -1,33 +1,28 @@
-package com.vshmaliukh.webstore.entities.items.literature;
+package com.vshmaliukh.webstore.model.items.literatureItemImp;
 
-import jakarta.persistence.Column;
+import com.vshmaliukh.webstore.model.items.LiteratureItem;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
-
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
 @Getter
 @Setter
 @Entity
-@Table(name = COMICS_TABLE,
+@Table(name = NEWSPAPER_TABLE,
         uniqueConstraints = {@UniqueConstraint(columnNames = {
-                NAME_COLUMN, PAGES_COLUMN, BORROWED_COLUMN, PUBLISHER_COLUMN})})
-public class ComicsEntity extends LiteratureItemEntity {
-
-    @Column(name = PUBLISHER_COLUMN, nullable = false)
-    String publisher;
+                NAME_COLUMN, PAGES_COLUMN, BORROWED_COLUMN})})
+public class Newspaper extends LiteratureItem {
 
     @Override
     public String toString() {
-        return "ComicsEntity{" +
+        return "Newspaper{" +
                 "name='" + getName() + '\'' +
                 ", pages=" + getPages() +
                 ", isBorrowed=" + isBorrowed() +
-                ", publisher='" + getPublisher() + '\'' +
                 '}';
     }
 }

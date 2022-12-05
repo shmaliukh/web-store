@@ -11,6 +11,7 @@ public final class ConstantsForEntities {
     public static final String COMICS_TABLE = "Comics";
     public static final String MAGAZINE_TABLE = "Magazines";
     public static final String NEWSPAPER_TABLE = "Newspapers";
+    public static final String ORDER_TABLE = "Orders";
 
     public static final String USER_NAME_COLUMN = "user_name";
     public static final String USER_EMAIL_COLUMN = "user_email";

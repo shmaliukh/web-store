@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore.entities.items;
+package com.vshmaliukh.webstore.model.items;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class ItemEntity {
+public abstract class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

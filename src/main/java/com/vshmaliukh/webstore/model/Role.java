@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore.entities;
+package com.vshmaliukh.webstore.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Setter
 @Entity
 @Table(name = ROLE_TABLE)
-public class RoleEntity {
+public class Role {
 
     @Id
     @Column(name = ROLE_ID_COLUMN)
