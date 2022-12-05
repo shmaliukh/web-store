@@ -1,10 +1,8 @@
 package com.vshmaliukh.webstore.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,5 +29,11 @@ public class MainPageController {
         modelMap.addAttribute("footer","footer");
         return modelMap;
     }
+
+    @GetMapping("/catalog/category/item")
+    public ModelAndView showItemPage(ModelMap modelMap){
+        return new ModelAndView("item-page");
+    }
+
 
 }
