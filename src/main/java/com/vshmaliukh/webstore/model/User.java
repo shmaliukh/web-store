@@ -1,7 +1,7 @@
 package com.vshmaliukh.webstore.model;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

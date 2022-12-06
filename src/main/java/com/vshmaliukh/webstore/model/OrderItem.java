@@ -2,10 +2,9 @@ package com.vshmaliukh.webstore.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vshmaliukh.webstore.model.items.Item;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Transient;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.ORDER_ID_COLUMN;
 

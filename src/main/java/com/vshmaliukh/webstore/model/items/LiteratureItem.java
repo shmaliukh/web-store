@@ -1,8 +1,10 @@
 package com.vshmaliukh.webstore.model.items;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.MappedSuperclass;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 

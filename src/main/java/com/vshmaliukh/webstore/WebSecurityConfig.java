@@ -66,7 +66,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         if (webSecurityEnable) {
             http.authorizeHttpRequests()
-                    .requestMatchers("/", "/" + PAGE_LOGIN, "/oauth/**").permitAll()
+                    .antMatchers("/", "/" + PAGE_LOGIN, "/oauth/**").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .formLogin()
