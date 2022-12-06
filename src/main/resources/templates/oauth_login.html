@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Log in</title>
+    <link th:insert="blocks/bootstrap-css-style.html :: style">
+</head>
+
+<body>
+
+<div>
+    <div class="container mt-5 mb-5">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">Please, log in</h4>
+                <div th:if="${param.error}">
+                    <p class="text-danger">Invalid username or password.</p>
+                </div>
+                <div th:if="${param.logout}">
+                    <p class="text-warning">You have been logged out.</p>
+                </div>
+            </div>
+            <div class="card-body">
+                <!--                <form id="formElem">-->
+
+                <!--                    <p class="lead">User name</p>-->
+                <!--                    <div class="input-group has-validation">-->
+                <!--                        <span class="input-group-text">@</span>-->
+                <!--                        <input type="text" name="userName" class="form-control" id="userNameId" placeholder="username"-->
+                <!--                               th:value="${userName}" required="">-->
+                <!--                    </div>-->
+                <!--                    <hr class="my-4">-->
+                <!--                    <p class="lead">Choose type of work to save/read information about bookshelf items</p>-->
+                <!--                    <th:block th:insert="blocks/radioButtons :: generateRadioButtonsCheckedByTypeOfWork"></th:block>-->
+                <!--                    <br>-->
+                <!--                    <button class="w-100 btn btn-primary btn-lg" type="submit">Sign in</button>-->
+                <div class="text-center">
+                    <div>
+                        <h4><a th:href="@{/oauth2/authorization/google}">Login with Google</a></h4>
+                    </div>
+                        <!--                        <button type="button"-->
+                        <!--                                class="w-100 btn btn-lg btn-outline-primary"-->
+                        <!--                               th:onclick="@{/login/oauth2/code/google}"-->
+                        <!--                                th:text="Login with Google">-->
+                        <!--                        </button>-->
+                    <!--                </form>-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,11 +1,14 @@
 package com.vshmaliukh.webstore.entities;
 
-import com.vshmaliukh.webstore.LogInProvider;
+import com.vshmaliukh.webstore.login.LogInProvider;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
@@ -17,6 +20,9 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Table(name = USER_TABLE,
         uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
 public class UserEntity {
+
+    private String password;
+    private boolean enabled;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +38,12 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = USER_LOG_IN_PROVIDER)
     private LogInProvider logInProvider;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = USER_ROLE_TABLE,
+            joinColumns = @JoinColumn(name = USER_ID_COLUMN),
+            inverseJoinColumns = @JoinColumn(name = ROLE_ID_COLUMN))
+    private RoleEntity role;
 
 
 }
