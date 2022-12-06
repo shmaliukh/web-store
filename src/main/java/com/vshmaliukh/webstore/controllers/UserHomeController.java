@@ -19,4 +19,9 @@ public class UserHomeController {
         return new ModelAndView("home-page",attributesUtil.addPageMainComponents(modelMap)); // todo create home page
     }
 
+    @GetMapping("/edit")
+    public ModelAndView showUsersEditPage(ModelMap modelMap){
+        return new ModelAndView("edit-data-users-page",attributesUtil.addPageMainComponents(modelMap)); // todo create users edit page
+    }
+
 }
