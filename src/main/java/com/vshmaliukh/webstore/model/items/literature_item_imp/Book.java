@@ -1,10 +1,9 @@
-package com.vshmaliukh.webstore.model.items.literatureItemImp;
+package com.vshmaliukh.webstore.model.items.literature_item_imp;
 
 import com.vshmaliukh.webstore.model.items.LiteratureItem;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+
+import javax.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
 

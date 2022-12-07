@@ -1,13 +1,15 @@
 package com.vshmaliukh.webstore.model.items;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public abstract class Item implements Serializable {
 
