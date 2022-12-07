@@ -16,22 +16,23 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.*;
 @AllArgsConstructor
 public class MainPageController {
 
+    ModelAttributesUtil attributesUtil;
 
     @GetMapping
     public ModelAndView showMainPage(ModelMap modelMap){
         // todo create main page and draw icons
-        return new ModelAndView(MAIN_PAGE_VIEW);
+        return new ModelAndView(MAIN_PAGE_VIEW,attributesUtil.addPageMainComponents(modelMap));
     }
 
     @GetMapping("/" + CATALOG_PAGE)
     public ModelAndView showCatalogPage(ModelMap modelMap){
         modelMap.addAttribute(PRICE,"$666.00");// todo create constants and tiles genering for catalog
-        return new ModelAndView(CATALOG_VIEW);
+        return new ModelAndView(CATALOG_VIEW,attributesUtil.addPageMainComponents(modelMap));
     }
 
     @GetMapping("/" + CATALOG_PAGE + "/" + CATEGORY_PAGE + "/" + ITEM_PAGE)
     public ModelAndView showItemPage(ModelMap modelMap){
-        return new ModelAndView(ITEM_PAGE_VIEW); // todo create item-page
+        return new ModelAndView(ITEM_PAGE_VIEW,attributesUtil.addPageMainComponents(modelMap)); // todo create item-page
     }
 
 }
