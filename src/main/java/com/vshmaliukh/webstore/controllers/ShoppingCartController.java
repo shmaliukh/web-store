@@ -15,11 +15,9 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
 @AllArgsConstructor
 public class ShoppingCartController {
 
-    ModelAttributesUtil attributesUtil;
-
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap){
-        return new ModelAndView(SHOPPING_CART_VIEW,attributesUtil.addPageMainComponents(modelMap)); // todo create cart-page
+        return new ModelAndView(SHOPPING_CART_VIEW); // todo create cart-page
     }
 
     // todo create post method

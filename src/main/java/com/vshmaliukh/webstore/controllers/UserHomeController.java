@@ -17,16 +17,14 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.HOME_PAGE_VIEW;
 @AllArgsConstructor
 public class UserHomeController {
 
-    ModelAttributesUtil attributesUtil;
-
     @GetMapping
     public ModelAndView showHomePage(ModelMap modelMap){
-        return new ModelAndView(HOME_PAGE_VIEW,attributesUtil.addPageMainComponents(modelMap)); // todo create home page
+        return new ModelAndView(HOME_PAGE_VIEW); // todo create home page
     }
 
     @GetMapping("/" + EDIT_PAGE)
     public ModelAndView showUsersEditPage(ModelMap modelMap){
-        return new ModelAndView(EDIT_DATA_USERS_VIEW,attributesUtil.addPageMainComponents(modelMap)); // todo create users edit page
+        return new ModelAndView(EDIT_DATA_USERS_VIEW); // todo create users edit page
     }
 
 }
