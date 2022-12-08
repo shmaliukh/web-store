@@ -3,7 +3,10 @@ package com.vshmaliukh.webstore.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.*;
+
+import javax.persistence.*;
+
+import com.vshmaliukh.webstore.model.items.Item;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +20,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Setter
 @Entity
 @Table(name = ORDER_TABLE)
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="orderProducts")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderProducts")
 public class Order {
 
     public static final String DD_MM_YYYY_ORDER_DATE_PATTERN_STR = "dd/MM/yyyy";
@@ -27,28 +30,15 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = ORDER_DATE_COLUMN)
     @JsonFormat(pattern = DD_MM_YYYY_ORDER_DATE_PATTERN_STR)
     private LocalDate dateCreated;
 
+    @Column(name = ORDER_STATUS_COLUMN)
     private String status;
 
-    @OneToMany(mappedBy = ORDER_TABLE)
-//    @Valid
-    private List<OrderItem> orderItems = new ArrayList<>();
-
-    @Transient
-    public int getTotalOrderPrice() {
-        int sum = 0;
-        List<OrderItem> orderProducts = getOrderItems();
-        for (OrderItem orderItem : orderProducts) {
-            sum += orderItem.getTotalPrice();
-        }
-        return sum;
-    }
-
-    @Transient
-    public int getNumberOfItems() {
-        return this.orderItems.size();
-    }
+    @OneToMany
+    // TODO config tables relationship
+    private List<Item> orderItems = new ArrayList<>();
 
 }

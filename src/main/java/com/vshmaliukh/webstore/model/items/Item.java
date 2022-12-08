@@ -1,19 +1,21 @@
 package com.vshmaliukh.webstore.model.items;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
 @Getter
 @Setter
-@MappedSuperclass
-public abstract class Item {
+@NoArgsConstructor
+@Entity
+public abstract class Item implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = ID_COLUMN, nullable = false)
+    @Column(name = ITEM_ID_COLUMN, nullable = false)
     private Integer id;
 
     @Column(name = CATEGORY_COLUMN, nullable = false)

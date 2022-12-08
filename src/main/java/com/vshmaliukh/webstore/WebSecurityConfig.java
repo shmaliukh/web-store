@@ -24,7 +24,6 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
     public static final String LOG_IN_SUCCESS_URL_STR = "/" + PAGE_HOME;
@@ -33,7 +32,7 @@ public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Value("${app.webSecurityEnable:true}")
-    public Boolean webSecurityEnable;
+    public boolean webSecurityEnable;
 
     @Autowired
     public WebSecurityConfig(UserService userService,
@@ -65,30 +64,48 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         if (webSecurityEnable) {
-            http.authorizeHttpRequests()
-                    .requestMatchers("/", "/" + PAGE_LOGIN, "/oauth/**").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
-                    .formLogin()
-                    .permitAll()
-                    .loginPage("/" + PAGE_LOGIN)
+            configWithSecurity(http);
+        } else {
+            configWithoutSecurity(http);
+        }
+        return http.build();
+    }
+
+    private void configWithSecurity(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests()
+                .antMatchers("/", "/" + PAGE_LOGIN, "/oauth/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .permitAll()
+                .loginPage("/" + PAGE_LOGIN)
 //                .usernameParameter("email")
 //                .passwordParameter("pass")
 //                .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
-                    .and()
-                    .oauth2Login().permitAll()
+                .and()
+                .oauth2Login().permitAll()
 //                .loginPage("/" + PAGE_LOGIN)
-                    .userInfoEndpoint()
-                    .userService(oauthUserService)
-                    .and()
-                    .successHandler(getAuthenticationSuccessHandler())
-                    .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
-                    .and()
-                    .logout().logoutSuccessUrl("/").permitAll()
-                    .and()
-                    .exceptionHandling().accessDeniedPage("/" + PAGE_403);
-        }
-        return http.build();
+                .userInfoEndpoint()
+                .userService(oauthUserService)
+                .and()
+                .successHandler(getAuthenticationSuccessHandler())
+                .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)
+                .and()
+                .logout().logoutSuccessUrl("/").permitAll()
+                .and()
+                .exceptionHandling().accessDeniedPage("/" + PAGE_403);
+    }
+
+    private static void configWithoutSecurity(HttpSecurity http) throws Exception {
+
+        http.authorizeRequests().antMatchers("/**").permitAll()
+                .and()
+                .authorizeRequests().antMatchers("/h2-console/**").permitAll()
+
+                // TODO set allowed paths to visit without security
+                ;
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
 
     private AuthenticationSuccessHandler getAuthenticationSuccessHandler() {
