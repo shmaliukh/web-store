@@ -1,6 +1,6 @@
 package com.vshmaliukh.webstore.login;
 
-import com.vshmaliukh.webstore.entities.UserEntity;
+import com.vshmaliukh.webstore.model.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,9 +14,9 @@ import java.util.Collections;
 @Setter
 public class MyUserDetails implements UserDetails {
 
-    private UserEntity user;
+    private User user;
 
-    public MyUserDetails(UserEntity user) {
+    public MyUserDetails(User user) {
         this.user = user;
     }
 

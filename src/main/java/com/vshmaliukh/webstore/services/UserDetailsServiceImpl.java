@@ -1,7 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.MyUserDetails;
-import com.vshmaliukh.webstore.entities.UserEntity;
+import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        UserEntity user = userRepository.getUserEntityByUsername(username);
+        User user = userRepository.getUserEntityByUsername(username);
         if (user == null) {
             log.error("Could not find user with '{}' username", username);
         }

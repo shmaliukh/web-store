@@ -2,29 +2,12 @@ server:
   port: 8082
 
 app:
-  webSecurityEnable: !!bool true
+  webSecurityEnable: !!bool false
 
 logging:
   level:
     root: INFO
 
 spring:
-  datasource:
-    url: jdbc:h2:mem:mydb
-    username: sa
-    password: password
-    driverClassName: org.h2.Driver
-    jpa:
-      spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            clientId: 679712692602-5gtv5jtftoq662de6b2h4v177i3m1ijj.apps.googleusercontent.com
-            clientSecret: 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
-            scope:
-              - email
-              - profile
-
-
+  profiles:
+    active:  secrets, database, oath2
