@@ -3,8 +3,11 @@ package com.vshmaliukh.webstore.services;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
+
 import java.util.Collections;
+
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +24,13 @@ public class OrderService {
 
     public void changeOrderStatus(long userId, String newStatusStr) {
         Order orderByUserId = readOrderByUserId(userId);
-        orderByUserId.setStatus(newStatusStr);
-        orderRepository.save(orderByUserId);
-        log.info("userId: '{}' // changed order status, new status: '{}'", userId, newStatusStr);
+        if (orderByUserId != null && StringUtils.isNotBlank(newStatusStr)) {
+            orderByUserId.setStatus(newStatusStr);
+            orderRepository.save(orderByUserId);
+            log.info("userId: '{}' // changed order status, new status: '{}'", userId, newStatusStr);
+        } else {
+            log.warn("userId: '{}' // problem to change order status // order: '{} // status str: '{}'", userId, orderByUserId, newStatusStr);
+        }
     }
 
     public void addItemToOrder(long userId, Item item) {
@@ -46,7 +53,7 @@ public class OrderService {
 
     public List<Item> readOrderItemListByUserId(long userId) {
         Order readOrderByUserId = readOrderByUserId(userId);
-        if(readOrderByUserId != null){
+        if (readOrderByUserId != null) {
             return readOrderByUserId.getItemList();
         }
         log.warn("userId: '{}' // order item list is empty", userId);
