@@ -10,4 +10,4 @@ logging:
 
 spring:
   profiles:
-    active:  secrets, database, oath2
+    active: secrets, database, oath2
