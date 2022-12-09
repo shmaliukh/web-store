@@ -43,4 +43,17 @@ public class UserService {
         return null;
     }
 
+    public void insertUser(String userName) {
+
+    }
+
+    public Long readUserIdByName(String userName) {
+        User user = userRepository.getUserEntityByUsername(userName);
+        if (user != null) {
+            return user.getId();
+        }
+        log.warn("userName: '{}' // not find entity by user name // 'readUserIdByName' return value is NULL", userName);
+        return null;
+    }
+
 }
