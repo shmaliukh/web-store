@@ -60,8 +60,17 @@
     font-size: large;
 }
 .form-for-main{
-    text-align: center;
     align-content: center;
-    margin-left: 10%;
+    margin-left: 20%;
     margin-right: 10%;
+}
+
+a:active, a:link, a:visited{
+    text-decoration: none;
+    color: #363636;
+}
+
+a:hover{
+    text-decoration: none;
+    color: #0e0e0e;
 }
