@@ -21,20 +21,20 @@ import java.util.concurrent.ConcurrentHashMap;
 @AllArgsConstructor
 public final class ItemRepositoryProvider {
 
-    final BookRepository bookRepository;
-    final ComicsRepository comicsRepository;
-    final MagazineRepository magazineRepository;
-    final NewspaperRepository newspaperRepository;
-
-    public final Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> itemClassTypeRepositoryMap = Collections.unmodifiableMap(generateItemClassTypeRepositoryMap());
-
-    private Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> generateItemClassTypeRepositoryMap(){
-        Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> classTypeRepositoryMap = new ConcurrentHashMap<>();
-        classTypeRepositoryMap.put(Book.class, bookRepository);
-        classTypeRepositoryMap.put(Magazine.class, magazineRepository);
-        classTypeRepositoryMap.put(Comics.class, comicsRepository);
-        classTypeRepositoryMap.put(Newspaper.class, newspaperRepository);
-        return classTypeRepositoryMap;
-    }
+//    final BookRepository bookRepository;
+//    final ComicsRepository comicsRepository;
+//    final MagazineRepository magazineRepository;
+//    final NewspaperRepository newspaperRepository;
+//
+//    public final Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> itemClassTypeRepositoryMap = Collections.unmodifiableMap(generateItemClassTypeRepositoryMap());
+//
+//    private Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> generateItemClassTypeRepositoryMap(){
+//        Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> classTypeRepositoryMap = new ConcurrentHashMap<>();
+//        classTypeRepositoryMap.put(Book.class, bookRepository);
+//        classTypeRepositoryMap.put(Magazine.class, magazineRepository);
+//        classTypeRepositoryMap.put(Comics.class, comicsRepository);
+//        classTypeRepositoryMap.put(Newspaper.class, newspaperRepository);
+//        return classTypeRepositoryMap;
+//    }
 
 }

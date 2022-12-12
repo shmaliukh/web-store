@@ -17,17 +17,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean isAdminUser(Long userId){
+    public boolean isAdminUser(Long userId) {
+        User user = null;
         Role userRole = null;
-        if(userId != null){
-            User user = userRepository.getUserById(userId);
-            userRole = user.getRole();
-            if(userRole == null){
+        if (userId != null) {
+            user = userRepository.getUserById(userId);
+            if (user != null) {
+                userRole = user.getRole();
                 String roleName = userRole.getName();
                 return roleName.equals("admin");
             }
         }
-        log.warn("problem to check user 'role' // userId: '{}' // userRole: '{}'", userId, userRole);
+        log.warn("problem to check user 'role' // userId: '{}' // user: '{}'", userId, userRole);
         return false;
     }
 
