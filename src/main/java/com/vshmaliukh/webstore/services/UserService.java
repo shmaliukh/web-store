@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
+import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,22 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public boolean isAdminUser(Long userId){
+        Role userRole = null;
+        if(userId != null){
+            User user = userRepository.getUserById(userId);
+            userRole = user.getRole();
+            if(userRole == null){
+                String roleName = userRole.getName();
+                return roleName.equals("admin");
+            }
+        }
+        log.warn("problem to check user 'role' // userId: '{}' // userRole: '{}'", userId, userRole);
+        return false;
+    }
+
     public void processOAuthPostLogin(String username) {
-        User user = userRepository.getUserEntityByUsername(username);
+        User user = userRepository.getUserByUsername(username);
         if (user == null) {
             insertUser(username, LogInProvider.GOOGLE);
         }
@@ -35,7 +50,7 @@ public class UserService {
     }
 
     public Long readUserIdByName(String userName) {
-        User user = userRepository.getUserEntityByUsername(userName);
+        User user = userRepository.getUserByUsername(userName);
         if (user != null) {
             return user.getId();
         }
