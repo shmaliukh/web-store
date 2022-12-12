@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_PAGE;
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.PAGE_HOME;
+import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.HOME_PAGE;
 
 
 @Slf4j
@@ -59,7 +59,7 @@ public class OrderController {
                                ModelMap modelMap) {
         // TODO update user data
         orderService.changeOrderStatus(userId, POST_MAPPING_ORDER_STATUS_STR);
-        return new ModelAndView("redirect:/" + PAGE_HOME, modelMap);
+        return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 
 }
