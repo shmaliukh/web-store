@@ -59,14 +59,14 @@
 
                     <div class="col">
                         <div class="card shadow-sm">
-                            <div class="item-details">
-                                <div style="text-align: center;"><h4>Item name</h4></div>
+                            <div class="item-details" th:each="item: ${item}">
+                                <div style="text-align: center;"><h4 th:text="${item.getName()}">Item name</h4></div>
                                 <br>
                                 <div>
-                                    <p>Short description</p>
+                                    <p th:text="${item.getInfo()}">Short description</p>
                                 </div>
                                 <div style="text-align: center;">
-                                    <p><b>$666</b></p>
+                                    <p><b th:text="${item.getPrice()}">$666</b></p>
                                 </div>
 
                                 <div style="text-align: center">
@@ -79,7 +79,6 @@
                                                 class="shopping-icon" src="/icons/buy.png"></button>
                                     </div>
                                 </div>
-
                             </div>
 
 
