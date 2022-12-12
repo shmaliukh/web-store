@@ -4,6 +4,8 @@ public final class ConstantsForControllers {
 
     private ConstantsForControllers(){}
 
+
+    public static final String ADMIN_HOME_PAGE = "admin-home";
     public static final String ADD_ITEM_PAGE = "add-item";
     public static final String ORDER_PAGE = "order";
     public static final String PAGE_403 = "403";

@@ -9,32 +9,56 @@ import com.vshmaliukh.webstore.repositories.literature_items_repositories.BookRe
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ComicsRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.MagazineRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.NewspaperRepository;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-@AllArgsConstructor
+@Getter
 public final class ItemRepositoryProvider {
 
-//    final BookRepository bookRepository;
-//    final ComicsRepository comicsRepository;
-//    final MagazineRepository magazineRepository;
-//    final NewspaperRepository newspaperRepository;
-//
-//    public final Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> itemClassTypeRepositoryMap = Collections.unmodifiableMap(generateItemClassTypeRepositoryMap());
-//
-//    private Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> generateItemClassTypeRepositoryMap(){
-//        Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> classTypeRepositoryMap = new ConcurrentHashMap<>();
-//        classTypeRepositoryMap.put(Book.class, bookRepository);
-//        classTypeRepositoryMap.put(Magazine.class, magazineRepository);
-//        classTypeRepositoryMap.put(Comics.class, comicsRepository);
-//        classTypeRepositoryMap.put(Newspaper.class, newspaperRepository);
-//        return classTypeRepositoryMap;
-//    }
+    final BookRepository bookRepository;
+    final ComicsRepository comicsRepository;
+    final MagazineRepository magazineRepository;
+    final NewspaperRepository newspaperRepository;
+
+    public Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> itemClassTypeRepositoryMap;
+    List<JpaRepository<? extends Item, Integer>> itemRepositoryList;
+
+    public ItemRepositoryProvider(BookRepository bookRepository,
+                                  ComicsRepository comicsRepository,
+                                  MagazineRepository magazineRepository,
+                                  NewspaperRepository newspaperRepository) {
+        this.bookRepository = bookRepository;
+        this.comicsRepository = comicsRepository;
+        this.magazineRepository = magazineRepository;
+        this.newspaperRepository = newspaperRepository;
+    }
+
+    @PostConstruct
+    private void postConstruct() {
+        generateItemClassTypeRepositoryMap();
+        generateItemRepositoryList();
+    }
+
+    private void generateItemRepositoryList() {
+        itemRepositoryList = Collections.unmodifiableList(new ArrayList<>(itemClassTypeRepositoryMap.values()));
+    }
+
+    private void generateItemClassTypeRepositoryMap() {
+        Map<Class<? extends Item>, JpaRepository<? extends Item, Integer>> classTypeRepositoryMap = new ConcurrentHashMap<>();
+        classTypeRepositoryMap.put(Book.class, bookRepository);
+        classTypeRepositoryMap.put(Magazine.class, magazineRepository);
+        classTypeRepositoryMap.put(Comics.class, comicsRepository);
+        classTypeRepositoryMap.put(Newspaper.class, newspaperRepository);
+        itemClassTypeRepositoryMap = Collections.unmodifiableMap(classTypeRepositoryMap);
+    }
 
 }
