@@ -3,6 +3,7 @@ package com.vshmaliukh.webstore.controllers;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -10,12 +11,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.*;
+
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
+import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.HOME_PAGE;
 
 @Controller
-@RequestMapping("/" + ADD_ITEM_PAGE)
+@RequestMapping("/" + ADMIN_HOME_PAGE)
 @AllArgsConstructor
-public class AddItemController {
+public class AdminHomeController {
 
     final UserService userService;
     final ItemRepositoryProvider itemRepositoryProvider;
@@ -23,13 +27,17 @@ public class AddItemController {
     @GetMapping
     public ModelAndView doGet(@CookieValue(defaultValue = "0") Long userId,
                               ModelMap modelMap) {
+        Map<String, Integer> categoryItemQuantityMap = Collections.singletonMap("Literature", 3);
+        modelMap.addAttribute("categoryItemQuantityMap", categoryItemQuantityMap);
         boolean isAdminUser = userService.isAdminUser(userId);
         if (
                 ! // TODO remove '!'
-                isAdminUser) {
-            return new ModelAndView(ADD_ITEM_PAGE, modelMap);
+                        isAdminUser) {
+            return new ModelAndView(ADMIN_HOME_PAGE, modelMap);
         }
+        // TODO create interceptor for admin verification
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
+
 
 }
