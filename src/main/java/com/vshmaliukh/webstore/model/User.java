@@ -29,7 +29,7 @@ public class User {
     @Column(name = USER_NAME_COLUMN, nullable = false)
     private String username;
 
-    @Column(name = USER_EMAIL_COLUMN, nullable = false)
+    @Column(name = USER_EMAIL_COLUMN)
     private String email;
 
     @Enumerated(EnumType.STRING)

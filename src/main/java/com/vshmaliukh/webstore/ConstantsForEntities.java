@@ -30,7 +30,6 @@ public final class ConstantsForEntities {
     public static final String QUANTITY_COLUMN = "quantity";
     public static final String CATEGORY_COLUMN = "category";
     public static final String PAGES_COLUMN = "pages";
-    public static final String BORROWED_COLUMN = "borrowed";
     public static final String AUTHOR_COLUMN = "author";
     public static final String DATE_COLUMN = "date";
     public static final String PUBLISHER_COLUMN = "publisher";

@@ -30,6 +30,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = USER_ID_COLUMN)
+    private Long userId;
+
     @Column(name = ORDER_DATE_COLUMN)
     @JsonFormat(pattern = DD_MM_YYYY_ORDER_DATE_PATTERN_STR)
     private LocalDate dateCreated;
@@ -39,6 +42,6 @@ public class Order {
 
     @OneToMany
     // TODO config tables relationship
-    private List<Item> orderItems = new ArrayList<>();
+    private List<Item> itemList = new ArrayList<>();
 
 }
