@@ -28,6 +28,7 @@ public class AdminHomeController {
     public ModelAndView doGet(@CookieValue(defaultValue = "0") Long userId,
                               ModelMap modelMap) {
         Map<String, Integer> categoryItemQuantityMap = Collections.singletonMap("Literature", 3);
+        // TODO implement items by category calc
         modelMap.addAttribute("categoryItemQuantityMap", categoryItemQuantityMap);
         boolean isAdminUser = userService.isAdminUser(userId);
         if (

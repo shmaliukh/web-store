@@ -31,14 +31,16 @@
                 <div class="col-md-3">
                     <div class="card mb-3 box-shadow">
                         <div class="card-header">
-                            <h3 class="my-0 font-weight-normal" th:text="${category}">Item category name</h3>
+                            <h3 class="my-0 font-weight-normal" th:text="${category.getKey()}">Item category name</h3>
                         </div>
                         <div class="card-body ">
                             <div>
-                                <small class="text-muted">Item quantity</small>
+                                <small class="text-muted">Quantity of items:</small>
+                                <small class="text-muted" th:text="${category.getValue()}">quantity</small>
                             </div>
-                            <button type="button" class="btn  btn-block btn-outline-primary m-3">
-                                Edit items by 'category name'
+                            <button type="button" class="btn  btn-block btn-outline-primary m-3"
+                                    th:text="|Edit items by ${category.getKey()} category|">
+                                Edit items by 'name' category
                             </button>
                             <hr>
                             <div class="d-flex justify-content-around align-items-center">
@@ -55,11 +57,12 @@
                     </div>
                 </div>
             </th:block>
-
         </div>
-    </div>
 
-    <footer th:insert="blocks/page-blocks.html :: footer"></footer>
+    </div>
+</div>
+
+<footer th:insert="blocks/page-blocks.html :: footer"></footer>
 
 </body>
 </html>
