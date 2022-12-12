@@ -74,3 +74,11 @@ a:hover{
     text-decoration: none;
     color: #0e0e0e;
 }
+
+.item-details{
+    margin: 10% 10% 10% 8%;
+}
+
+.item-details-block{
+    margin-left: 40%;
+}
