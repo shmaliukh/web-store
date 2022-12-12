@@ -18,13 +18,15 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 public class AddItemController {
 
     final UserService userService;
-    final ItemRepositoryProvider itemRepositoryProvider;
+//    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
     public ModelAndView doGet(@CookieValue(defaultValue = "0") Long userId,
                               ModelMap modelMap) {
         boolean isAdminUser = userService.isAdminUser(userId);
-        if (isAdminUser) {
+        if (
+                ! // TODO remove '!'
+                isAdminUser) {
             return new ModelAndView(ADD_ITEM_PAGE, modelMap);
         }
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
