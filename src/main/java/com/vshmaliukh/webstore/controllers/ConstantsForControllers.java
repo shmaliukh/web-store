@@ -2,6 +2,8 @@ package com.vshmaliukh.webstore.controllers;
 
 public final class ConstantsForControllers {
 
+    public static final String ADD_ITEM_PAGE = "add-item";
+
     private ConstantsForControllers(){}
 
     public static final String ORDER_PAGE = "order";
