@@ -19,15 +19,12 @@ public class AddItemController {
     final UserService userService;
 
     @GetMapping
-    public ModelAndView doGet(@CookieValue(defaultValue = "1") Long userId,
+    public ModelAndView doGet(@CookieValue(defaultValue = "0") Long userId,
                               ModelMap modelMap) {
-        // TODO check for user role
         boolean isAdminUser = userService.isAdminUser(userId);
-
         if (isAdminUser) {
             return new ModelAndView(ADD_ITEM_PAGE, modelMap);
         }
-
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 

@@ -2,13 +2,12 @@ package com.vshmaliukh.webstore.controllers;
 
 public final class ConstantsForControllers {
 
-    public static final String ADD_ITEM_PAGE = "add-item";
-
     private ConstantsForControllers(){}
 
+    public static final String ADD_ITEM_PAGE = "add-item";
     public static final String ORDER_PAGE = "order";
     public static final String PAGE_403 = "403";
-    public static final String OAUTH_LOGIN_PAGE = "oauth_login";
+    public static final String OAUTH_LOGIN_PAGE = "oauth-login";
     public static final String HOME_PAGE = "home";
     public static final String LOGIN_PAGE = "login";
     public static final String MAIN_PAGE = "main";
