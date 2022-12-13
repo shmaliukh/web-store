@@ -98,15 +98,15 @@
 
 
             </div>
-            <script>
-            formElem.onsubmit = async (e) => {
-                e.preventDefault();
-                fetchAddingItemFormWithJsonBody("formElem", "/add-item", "post", "/admin-home");
-            };
-        </script>
+            <script th:inline="javascript">
+                formElem.onsubmit = async (e) => {
+                    e.preventDefault();
+
+                    fetchAddingItemFormWithJsonBodyWithItemClassType("formElem", "/add-item", "post", "/admin-home", [[${itemType}]]);
+                };
+            </script>
         </div>
     </div>
-</div>
 </div>
 
 <footer th:insert="blocks/page-blocks.html :: footer"></footer>

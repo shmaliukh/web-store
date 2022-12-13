@@ -47,7 +47,7 @@ public class AddItemController {
 
     @PostMapping
     public <T extends Item> ModelAndView doPost(@CookieValue(defaultValue = "0") Long userId,
-                                                @RequestBody String item,
+                                                @RequestBody T item,
                                                 ModelMap modelMap) {
 //        System.out.println(item);
         System.out.println(item);

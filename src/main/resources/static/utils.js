@@ -11,10 +11,27 @@ function generateJsonBody(formElemId) {
     return JSON.stringify(formValue);
 }
 
+function generateJsonBodyWithType(formElemId, itemClassType) {
+    let formValue = getJsonObj(formElemId);
+    let jsonType = itemClassType.concat(' ');
+    let jsonBodyStr = JSON.stringify(formValue);
+    return jsonType.concat(jsonBodyStr);
+}
+
 function generateJsonFetch(pageToSend, method, formElemId) {
     return fetch(pageToSend, {
         method: method,
         body: generateJsonBody(formElemId),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
+
+function generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType) {
+    return fetch(pageToSend, {
+        method: method,
+        body: generateJsonBodyWithType(formElemId, itemClassType),
         headers: {
             "Content-Type": "application/json"
         }
@@ -40,21 +57,30 @@ function fetchFormWithJsonBody(formElemId, pageToSend, method, pageToRedirect) {
         });
 }
 
+function informAboutResult(formElemId, pageToRedirect) {
+    return (res) => {
+        try {
+            if (res.ok) {
+                let prettyItemJsonStr = JSON.stringify(getJsonObj(formElemId), null, 2);
+                alert('Item to add: \n' + prettyItemJsonStr)
+                window.location.href = pageToRedirect;
+            } else {
+                alert('Item NOT added');
+                alert('Problem status: ' + res.status);
+            }
+        } catch (e) {
+            informAboutError(e);
+        }
+    };
+}
+
 function fetchAddingItemFormWithJsonBody(formElemId, pageToSend, method, pageToRedirect) {
     generateJsonFetch(pageToSend, method, formElemId)
-        .then((res) => {
-            try {
-                if (res.ok) {
-                    let prettyItemJsonStr = 'Magazine ' +  JSON.stringify(getJsonObj(formElemId), null, 2);
-                    alert('Item to add: \n' + prettyItemJsonStr)
-                    window.location.href = pageToRedirect;
-                } else {
-                    alert('Item NOT added');
-                    alert('Problem status: ' + res.status);
-                }
-            } catch (e) {
-                informAboutError(e);
-            }
-        });
+        .then(informAboutResult(formElemId, pageToRedirect));
+}
+
+function fetchAddingItemFormWithJsonBodyWithItemClassType(formElemId, pageToSend, method, pageToRedirect, itemClassType) {
+    generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType)
+        .then(informAboutResult(formElemId, pageToRedirect));
 }
 
