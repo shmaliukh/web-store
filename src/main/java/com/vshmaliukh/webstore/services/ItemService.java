@@ -1,19 +1,29 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.ActionsWithItem;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+@Slf4j
 @Component
 @AllArgsConstructor
 public class ItemService {
 
-    final ItemRepositoryProvider itemRepositoryProvider;
+    final ActionsWithItemRepositoryProvider actionsWithItemRepositoryProvider;
+
+    public <T extends Item> void saveItem(T item){
+        ActionsWithItem<T> actionsWithItem = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassType(item);
+        if(actionsWithItem != null){
+            actionsWithItem.save(item);
+        } else {
+            log.warn("problem to save '{}' item , repository not found", item);
+        }
+
+
+    }
 
 //    public Integer calcItemsBtCategory(){
 //        Map categoryNameQuantityMap = new HashMap<>();

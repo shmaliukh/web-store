@@ -45,7 +45,9 @@
                             <hr>
                             <div class="d-flex justify-content-around align-items-center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn  btn-outline-secondary">Add</button>
+                                    <a th:href="@{/add-item/${category}}">
+                                        <button type="button" class="btn  btn-outline-secondary">Add</button>
+                                    </a>
                                     <button type="button" class="btn  btn-outline-secondary">View</button>
                                     <button type="button" class="btn  btn-outline-secondary">Edit</button>
                                 </div>
@@ -57,12 +59,11 @@
                     </div>
                 </div>
             </th:block>
+
         </div>
-
     </div>
-</div>
 
-<footer th:insert="blocks/page-blocks.html :: footer"></footer>
+    <footer th:insert="blocks/page-blocks.html :: footer"></footer>
 
 </body>
 </html>

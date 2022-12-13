@@ -1,9 +1,8 @@
 package com.vshmaliukh.webstore.controllers;
 
-import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -22,7 +21,7 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.HOME_P
 public class AdminHomeController {
 
     final UserService userService;
-    final ItemRepositoryProvider itemRepositoryProvider;
+    final ActionsWithItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
     public ModelAndView doGet(@CookieValue(defaultValue = "0") Long userId,
