@@ -44,18 +44,24 @@ public class AddItemController {
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 
+    @PostMapping
+    public <T extends Item> ModelAndView doPost(@CookieValue(defaultValue = "0") Long userId,
+                                                 @RequestBody String item,
+                                                 ModelMap modelMap) {
+        System.out.println(item);
+//        itemService.saveItem(item);
+//        addItem(userId, item);
+        log.info("saved '{}' item", item);
+        return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
+    }
+
     @PutMapping("/add_item_to_db")
     <T extends Item> ResponseEntity<Void> addItem(@CookieValue(defaultValue = "0") Long userId,
                                                   @RequestBody T item) {
-
         itemService.saveItem(item);
-        itemService.isItemSaved(item);
-//        .addItem(item);
-//        read items
-//        List<Item> itemListAfterAction = ;
-//        if (itemListAfterAction.contains(item)) {
-//            return ResponseEntity.ok().build();
-//        }
+        if (itemService.isItemSaved(item)) {
+            return ResponseEntity.ok().build();
+        }
         log.warn("userId: '{}' // item '{}' not added to database", userId, item);
         return ResponseEntity.badRequest().build();
     }

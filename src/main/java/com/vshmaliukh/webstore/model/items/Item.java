@@ -1,5 +1,7 @@
 package com.vshmaliukh.webstore.model.items;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
@@ -19,7 +21,6 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({
@@ -49,5 +50,22 @@ public abstract class Item implements Serializable {
 
     @Column(name = IS_AVAILABLE_IN_STORE_COLUMN, nullable = false)
     boolean isAvailableInStore;
+
+
+    @JsonCreator
+    protected Item(@JsonProperty(ITEM_ID_COLUMN) Integer id,
+                   @JsonProperty(NAME_COLUMN) String name,
+                   @JsonProperty(CATEGORY_COLUMN) String category,
+                   @JsonProperty(PRICE_COLUMN) int price,
+                   @JsonProperty(QUANTITY_COLUMN) int quantity,
+                   @JsonProperty(IS_AVAILABLE_IN_STORE_COLUMN) boolean isAvailableInStore) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.quantity = quantity;
+        this.isAvailableInStore = isAvailableInStore;
+    }
+
 
 }
