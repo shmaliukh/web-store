@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<script src="/utils.js"></script>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script src="/utils.js"></script>
     <title>Add item</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link th:insert="blocks/bootstrap-css-style.html :: style">
@@ -34,7 +34,7 @@
                         <div class="col-12">
                             <label for="itemName" class="form-label">Category</label>
                             <div class="input-group has-validation">
-                                <input type="text" name="CATEGORY" class="form-control" aria-label="Text input with dropdown button"
+                                <input type="text" name="category" class="form-control" aria-label="Text input with dropdown button"
                                        placeholder="Item category" required="">
                                 <div class="input-group-append">
                                     <!--                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"-->
@@ -56,7 +56,7 @@
                             <label for="itemName" class="form-label">Item name</label>
                             <div class="input-group has-validation">
                                 <span class="input-group-text">@</span>
-                                <input type="text" name="NAME" class="form-control" id="itemName" placeholder="Item name"
+                                <input type="text" name="name" class="form-control" id="itemName" placeholder="Item name"
                                        required="">
                                 <div class="invalid-feedback">
                                     Item name is required.
@@ -67,7 +67,7 @@
                             <label for="itemPrice" class="form-label">Price</label>
                             <div class="input-group mb-3 has-validation">
                                 <span class="input-group-text">$</span>
-                                <input type="text" name="PRICE" class="form-control" id="itemPrice" placeholder="0.00" required="">
+                                <input type="text" name="price" class="form-control" id="itemPrice" placeholder="0.00" required="">
                                 <div class="invalid-feedback">
                                     Item price is required.
                                 </div>
@@ -76,7 +76,7 @@
                         <div class="col-12">
                             <label for="itemQuantity" class="form-label">Quantity</label>
                             <div class="input-group mb-3 has-validation">
-                                <input type="text" name="QUANTITY" class="form-control" id="itemQuantity" placeholder="1" required="">
+                                <input type="text" name="quantity" class="form-control" id="itemQuantity" placeholder="1" required="">
                                 <div class="invalid-feedback">
                                     Item quantity is required.
                                 </div>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="d-flex justify-content-around align-items-center">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" name="ISAVAIlABLEONSTORE" type="checkbox" role="switch"
+                                <input class="form-check-input" name="is_available_in_store" type="checkbox" role="switch"
                                        id="flexSwitchCheckChecked" checked>
                                 <label class="form-check-label" for="flexSwitchCheckChecked">Is available</label>
                             </div>
@@ -98,15 +98,15 @@
 
 
             </div>
-            <script>
-            formElem.onsubmit = async (e) => {
-                e.preventDefault();
-                fetchAddingItemFormWithJsonBody("formElem", "/add-item", "post", "/admin-home");
-            };
-        </script>
+            <script th:inline="javascript">
+                formElem.onsubmit = async (e) => {
+                    e.preventDefault();
+
+                    fetchAddingItemFormWithJsonBodyWithItemClassType("formElem", "/add-item", "post", "/admin-home", [[${itemType}]]);
+                };
+            </script>
         </div>
     </div>
-</div>
 </div>
 
 <footer th:insert="blocks/page-blocks.html :: footer"></footer>

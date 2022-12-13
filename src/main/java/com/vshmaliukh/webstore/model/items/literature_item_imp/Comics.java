@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.model.items.literature_item_imp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.vshmaliukh.webstore.model.items.LiteratureItem;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @NoArgsConstructor
 @Entity
 @Table(name = COMICS_TABLE)
+@JsonTypeName("comics")
 public class Comics extends LiteratureItem {
 
     @Column(name = PUBLISHER_COLUMN, nullable = false)

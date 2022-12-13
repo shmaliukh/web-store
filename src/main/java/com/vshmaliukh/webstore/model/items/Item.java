@@ -22,12 +22,12 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @ToString
 @NoArgsConstructor
 @Entity
-@JsonTypeInfo(use = NAME, include = PROPERTY)
+@JsonTypeInfo(use = NAME, include = PROPERTY, property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Book.class, name = "Book"),
-        @JsonSubTypes.Type(value = Magazine.class, name = "Magazine"),
-        @JsonSubTypes.Type(value = Comics.class, name = "Comics"),
-        @JsonSubTypes.Type(value = Newspaper.class, name = "Newspaper"),
+        @JsonSubTypes.Type(value = Book.class, name = "book"),
+        @JsonSubTypes.Type(value = Magazine.class, name = "magazine"),
+        @JsonSubTypes.Type(value = Comics.class, name = "comics"),
+        @JsonSubTypes.Type(value = Newspaper.class, name = "newspaper"),
 })
 public abstract class Item implements Serializable {
 
