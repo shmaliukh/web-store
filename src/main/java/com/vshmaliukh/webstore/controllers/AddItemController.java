@@ -3,6 +3,7 @@ package com.vshmaliukh.webstore.controllers;
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class AddItemController {
 
     public static final String ITEM_TYPE = "itemType";
 
+    final ItemService itemService;
     final UserService userService;
     final ActionsWithItemRepositoryProvider itemRepositoryProvider;
 
@@ -46,6 +48,8 @@ public class AddItemController {
     <T extends Item> ResponseEntity<Void> addItem(@CookieValue(defaultValue = "0") Long userId,
                                                   @RequestBody T item) {
 
+        itemService.saveItem(item);
+        itemService.isItemSaved(item);
 //        .addItem(item);
 //        read items
 //        List<Item> itemListAfterAction = ;

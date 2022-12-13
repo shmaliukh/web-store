@@ -4,11 +4,15 @@ import com.vshmaliukh.webstore.ConstantsForEntities;
 import com.vshmaliukh.webstore.model.items.Item;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 
 public interface ActionsWithItem<T extends Item> {
 
     void deleteById(@Param(ConstantsForEntities.ITEM_ID_COLUMN) Integer itemId);
 
     T save(T itemEntity);
+
+    List<T> findAll();
 
 }
