@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -52,19 +53,19 @@ public class MainPageController {
     @GetMapping("/" + CATALOG_PAGE + "/{" + CATEGORY_PAGE + "}/{id}")
     public ModelAndView showItemPage(ModelMap modelMap,
                                      @PathVariable String category,
-                                     @PathVariable Long id){ // or Integer - idk
+                                     @PathVariable Integer id){
 
         // getting item from db by item id and category name?
 
-        Book book = new Book();
+        Book book = new Book(id,"some name",category,666,4,true,456,"any author",new Date(2022,4,5));
         String itemInfo = book.getName() + " - " + book.getPrice();   // for catalog tiles
-        String itemDetailInfo = book.getAuthor() + " - " + book.getPages() + " - " + book.getDateOfIssue() + " - "; // info for short description
+
+        List<String> details = new ArrayList<>(Arrays.asList("Author: " + book.getAuthor(),"Pages: " + book.getPages(),"Issue date: " + book.getDateOfIssue()));
         String itemPrice = Integer.toString(book.getPrice()); // separate for price ?
         String itemName = book.getName();
 
-        modelMap.addAttribute("itemName", itemName);
-        modelMap.addAttribute("itemPrice",itemPrice);
-        modelMap.addAttribute("itemDetailInfo",itemDetailInfo);
+        modelMap.addAttribute("details",details);
+        modelMap.addAttribute("item",book);
 
 
         return new ModelAndView(ITEM_PAGE_VIEW); // todo create item-page and implement item details printing
