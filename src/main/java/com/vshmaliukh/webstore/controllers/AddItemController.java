@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
@@ -46,12 +47,13 @@ public class AddItemController {
 
     @PostMapping
     public <T extends Item> ModelAndView doPost(@CookieValue(defaultValue = "0") Long userId,
-                                                 @RequestBody String item,
-                                                 ModelMap modelMap) {
+                                                @RequestBody String item,
+                                                ModelMap modelMap) {
+//        System.out.println(item);
         System.out.println(item);
 //        itemService.saveItem(item);
 //        addItem(userId, item);
-        log.info("saved '{}' item", item);
+//        log.info("saved '{}' item", item);
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 

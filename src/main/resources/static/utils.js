@@ -45,7 +45,7 @@ function fetchAddingItemFormWithJsonBody(formElemId, pageToSend, method, pageToR
         .then((res) => {
             try {
                 if (res.ok) {
-                    let prettyItemJsonStr = JSON.stringify(getJsonObj(formElemId), null, 2);
+                    let prettyItemJsonStr = 'Magazine ' +  JSON.stringify(getJsonObj(formElemId), null, 2);
                     alert('Item to add: \n' + prettyItemJsonStr)
                     window.location.href = pageToRedirect;
                 } else {
