@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore.controllers;
+package com.vshmaliukh.webstore.controllers.admin.item;
 
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.model.items.Item;
@@ -13,11 +13,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 
 @Slf4j
 @Controller
-@RequestMapping("/" + ADD_ITEM_PAGE)
+@RequestMapping("/admin/item/add")
 @AllArgsConstructor
 public class AddItemController {
 
@@ -29,19 +33,13 @@ public class AddItemController {
 
     @GetMapping("/{" + ITEM_TYPE + "}")
     public ModelAndView doGet(@PathVariable(ITEM_TYPE) String itemType,
-                              @CookieValue(defaultValue = "0") Long userId,
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
             modelMap.addAttribute(ITEM_TYPE, itemType);
-            boolean isAdminUser = userService.isAdminUser(userId);
-            if (
-                    ! // TODO remove '!'
-                            isAdminUser) {
-                return new ModelAndView(ADD_ITEM_PAGE, modelMap);
-            }
+            return new ModelAndView(ADD_ITEM_PAGE, modelMap);
         }
-        return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
+        return new ModelAndView("redirect:/admin", modelMap);
     }
 
     @PostMapping
@@ -52,7 +50,7 @@ public class AddItemController {
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 
-    @PutMapping("/add-item-to-db")
+    @PutMapping
     <T extends Item> ResponseEntity<Void> addItem(@CookieValue(defaultValue = "0") Long userId,
                                                   @RequestBody T item) {
         itemService.saveItem(item);

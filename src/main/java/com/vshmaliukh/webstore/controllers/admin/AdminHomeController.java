@@ -1,6 +1,7 @@
-package com.vshmaliukh.webstore.controllers;
+package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,11 +17,12 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.HOME_PAGE;
 
 @Controller
-@RequestMapping("/" + ADMIN_HOME_PAGE)
+@RequestMapping("/admin")
 @AllArgsConstructor
 public class AdminHomeController {
 
     final UserService userService;
+    final ItemService itemService;
     final ActionsWithItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
@@ -39,5 +41,10 @@ public class AdminHomeController {
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 
-
+    @GetMapping("/exit")
+    public ModelAndView exit(ModelMap modelMap) {
+        // TODO implement exit
+        return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
+    }
 }
+
