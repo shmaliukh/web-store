@@ -18,11 +18,13 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = COMICS_TABLE)
-@JsonTypeName("comics")
+@Table(name = COMICS_TABLE,
+        uniqueConstraints = {@UniqueConstraint(columnNames = {
+                NAME_COLUMN
+        })})
 public class Comics extends LiteratureItem {
 
-    @Column(name = PUBLISHER_COLUMN, nullable = false)
+    @Column(name = PUBLISHER_COLUMN)
     String publisher;
 
     @JsonCreator

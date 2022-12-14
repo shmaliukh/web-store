@@ -1,0 +1,30 @@
+<div th:fragment="input-pages">
+    <div class="col-12">
+        <label for="itemPages" class="form-label">Pages</label>
+        <div class="input-group mb-3 has-validation">
+            <input type="text" name="pages" class="form-control" id="itemPages" placeholder="1" required="">
+            <div class="invalid-feedback">
+                Item pages is required.
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="magazine">
+    <div th:insert=" :: input-pages"></div>
+</div>
+
+<div th:fragment="newspaper">
+    <div th:insert=" :: input-pages"></div>
+</div>
+
+<div th:fragment="book">
+    <div th:insert=" :: input-pages"></div>
+    <div th:insert=" :: input-author"></div>
+    <div th:insert=" :: input-date"></div>
+</div>
+
+<div th:fragment="comics">
+    <div th:insert=" :: input-pages"></div>
+    <div th:insert=" :: input-publisher"></div>
+</div>

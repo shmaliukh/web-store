@@ -17,6 +17,7 @@ public class ItemService {
     final ActionsWithItemRepositoryProvider actionsWithItemRepositoryProvider;
 
     public <T extends Item> void saveItem(T item) {
+
         ActionsWithItem<T> actionsWithItem = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassType(item);
         if (actionsWithItem != null) {
             actionsWithItem.save(item);

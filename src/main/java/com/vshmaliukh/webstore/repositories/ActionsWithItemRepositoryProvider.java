@@ -29,6 +29,7 @@ public final class ActionsWithItemRepositoryProvider {
 
     public List<ActionsWithItem<? extends Item>> itemActionsWithRepositoryList;
     public Map<Class<? extends Item>, ActionsWithItem<? extends Item>> itemClassTypeActionsWithRepositoryMap;
+    public Map<String, ActionsWithItem<? extends Item>> itemClassNameActionsWithRepositoryMap;
 
     public ActionsWithItemRepositoryProvider(ActionsWithItem<Book> bookRepository,
                                              ActionsWithItem<Comics> comicsRepository,
@@ -44,6 +45,7 @@ public final class ActionsWithItemRepositoryProvider {
     @PostConstruct
     private void postConstruct() {
         generateItemClassTypeRepositoryMap();
+        generateItemClassNameRepositoryMap();
         generateItemRepositoryList();
     }
 
@@ -60,8 +62,22 @@ public final class ActionsWithItemRepositoryProvider {
         itemClassTypeActionsWithRepositoryMap = Collections.unmodifiableMap(classTypeRepositoryMap);
     }
 
+    private void generateItemClassNameRepositoryMap() {
+        Map<String, ActionsWithItem<? extends Item>> classNameRepositoryMap = new ConcurrentHashMap<>();
+        classNameRepositoryMap.put(Book.class.getSimpleName(), bookRepository);
+        classNameRepositoryMap.put(Magazine.class.getSimpleName(), magazineRepository);
+        classNameRepositoryMap.put(Comics.class.getSimpleName(), comicsRepository);
+        classNameRepositoryMap.put(Newspaper.class.getSimpleName(), newspaperRepository);
+        itemClassNameActionsWithRepositoryMap = Collections.unmodifiableMap(classNameRepositoryMap);
+    }
+
     public <T extends Item> ActionsWithItem<T> getActionsWithItemRepositoryByItemClassType(T item) {
         return (ActionsWithItem<T>) itemClassTypeActionsWithRepositoryMap.getOrDefault(item.getClass(), null);
+
+    }
+
+    public ActionsWithItem<? extends Item> getActionsWithItemRepositoryByItemClassName(String itemClassName) {
+        return itemClassNameActionsWithRepositoryMap.getOrDefault(itemClassName, null);
     }
 
 }

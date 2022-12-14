@@ -20,9 +20,9 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Getter
 @Setter
 @ToString
+@MappedSuperclass
 @NoArgsConstructor
-@Entity
-@JsonTypeInfo(use = NAME, include = PROPERTY, property = "type")
+@JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Book.class, name = "book"),
         @JsonSubTypes.Type(value = Magazine.class, name = "magazine"),
