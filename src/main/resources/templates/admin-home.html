@@ -46,21 +46,28 @@
                                 <small class="text-muted">Quantity of items:</small>
                                 <small class="text-muted" th:text="${category.getValue()}">quantity</small>
                             </div>
-                            <button type="button" class="btn  btn-block btn-outline-primary m-3"
-                                    th:text="|Edit items by ${category.getKey()} category|">
-                                Edit items by 'name' category
-                            </button>
+                            <a th:href="@{/admin/item}">
+                                <button type="button" class="btn  btn-block btn-outline-primary m-3"
+                                        th:text="|${category.getKey()} admin panel|">
+                                </button>
+                            </a>
                             <hr>
                             <div class="d-flex justify-content-around align-items-center">
                                 <div class="btn-group">
-                                    <a th:href="@{/add-item/${category}}">
+                                    <a th:href="@{/admin/item/catalog}">
                                         <button type="button" class="btn  btn-outline-secondary">Add</button>
                                     </a>
+                                    <a th:href="@{/admin/item}">
                                     <button type="button" class="btn  btn-outline-secondary">View</button>
+                                    </a>
+                                    <a th:href="@{/admin/item}">
                                     <button type="button" class="btn  btn-outline-secondary">Edit</button>
+                                    </a>
                                 </div>
                                 <div>
+                                    <a th:href="@{/admin/item}">
                                     <button type="button" class="btn  btn-outline-danger">Delete</button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
