@@ -28,12 +28,24 @@ public class MainPageController {
 
     @GetMapping
     public ModelAndView showMainPage(ModelMap modelMap){
-        // todo create main page and draw icons
-        return new ModelAndView(MAIN_PAGE_VIEW);
+        // todo implement template for links
+
+        // get categories and types from db
+
+
+        List<String> categories = new ArrayList<>(Arrays.asList("Literature","Another category"));
+        List<List<String>> types = new ArrayList<>(Arrays.asList(
+                Arrays.asList("Books","Newspapers","Comics","Magazines"),
+                Arrays.asList("Another type","And another one"))); // todo refactor
+        modelMap.addAttribute("categories",categories);
+        modelMap.addAttribute("types",categories);
+        return new ModelAndView(MAIN_PAGE_VIEW,modelMap);
+
     }
 
     @GetMapping("/" + CATALOG_PAGE)
     public ModelAndView showCatalogPage(ModelMap modelMap){
+
         // todo
         List itemList = getTestItemOrderList();
         modelMap.addAttribute("itemList", itemList);
