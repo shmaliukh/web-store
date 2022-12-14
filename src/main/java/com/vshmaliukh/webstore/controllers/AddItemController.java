@@ -2,7 +2,6 @@ package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
@@ -49,18 +48,16 @@ public class AddItemController {
     public <T extends Item> ModelAndView doPost(@CookieValue(defaultValue = "0") Long userId,
                                                 @RequestBody T item,
                                                 ModelMap modelMap) {
-
-        itemService.saveItem(item);
-//        addItem(userId, item);
-        log.info("saved '{}' item, item type: '{}'", item, item.getClass().getSimpleName());
+        addItem(userId, item);
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 
-    @PutMapping("/add_item_to_db")
+    @PutMapping("/add-item-to-db")
     <T extends Item> ResponseEntity<Void> addItem(@CookieValue(defaultValue = "0") Long userId,
                                                   @RequestBody T item) {
         itemService.saveItem(item);
         if (itemService.isItemSaved(item)) {
+            log.info("saved item to database: '{}'", item);
             return ResponseEntity.ok().build();
         }
         log.warn("userId: '{}' // item '{}' not added to database", userId, item);

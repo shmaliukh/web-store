@@ -6,12 +6,13 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ItemUtil {
+
+    public static final String DATE_FORMAT_STR = "yyyy-MM-dd";
 
     public static List<String> itemNameList;
     public static List<String> categoryNameList;
@@ -37,7 +38,5 @@ public final class ItemUtil {
         nameClassMap.put(NEWSPAPER_CLASS.getSimpleName(), NEWSPAPER_CLASS);
         itemNameClassTypeMap = Collections.unmodifiableMap(nameClassMap);
     }
-
-
 
 }

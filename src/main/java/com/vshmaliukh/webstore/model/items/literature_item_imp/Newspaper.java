@@ -2,7 +2,6 @@ package com.vshmaliukh.webstore.model.items.literature_item_imp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.vshmaliukh.webstore.model.items.LiteratureItem;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -33,6 +32,18 @@ public class Newspaper extends LiteratureItem {
                      @JsonProperty(IS_AVAILABLE_IN_STORE_COLUMN) boolean isAvailableInStore,
                      @JsonProperty(PAGES_COLUMN) int pages) {
         super(id, name, category, price, quantity, isAvailableInStore, pages);
+    }
+
+    @Override
+    public String toString() {
+        return "Newspaper{" +
+                "id=" + getId() + 
+                ", name=" + getName() +
+                ", category=" + getCategory() +
+                ", price=" + getPrice() +
+                ", quantity=" + getQuantity() +
+                ", pages=" + getPages() +
+                '}';
     }
 
 }

@@ -2,7 +2,6 @@ package com.vshmaliukh.webstore.model.items.literature_item_imp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.vshmaliukh.webstore.model.items.LiteratureItem;
 
 import javax.persistence.*;
@@ -10,7 +9,6 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
@@ -38,6 +36,37 @@ public class Comics extends LiteratureItem {
                   @JsonProperty(PUBLISHER_COLUMN) String publisher) {
         super(id, name, category, price, quantity, isAvailableInStore, pages);
         this.publisher = publisher;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Comics)) return false;
+        if (!super.equals(o)) return false;
+
+        Comics comics = (Comics) o;
+
+        return getPublisher() != null ? getPublisher().equals(comics.getPublisher()) : comics.getPublisher() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (getPublisher() != null ? getPublisher().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Comics{" +
+                "id=" + getId() + 
+                ", name=" + getName() +
+                ", category=" + getCategory() +
+                ", price=" + getPrice() +
+                ", quantity=" + getQuantity() +
+                ", pages=" + getPages() +
+                ", publisher=" + getPublisher() +
+                '}';
     }
 
 }
