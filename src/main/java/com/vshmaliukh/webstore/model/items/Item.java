@@ -19,9 +19,8 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
 @Getter
 @Setter
-@ToString
-@MappedSuperclass
 @NoArgsConstructor
+@MappedSuperclass
 @JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Book.class, name = "book"),
@@ -51,7 +50,6 @@ public abstract class Item implements Serializable {
     @Column(name = IS_AVAILABLE_IN_STORE_COLUMN, nullable = false)
     boolean isAvailableInStore;
 
-
     @JsonCreator
     protected Item(@JsonProperty(ITEM_ID_COLUMN) Integer id,
                    @JsonProperty(NAME_COLUMN) String name,
@@ -67,5 +65,30 @@ public abstract class Item implements Serializable {
         this.isAvailableInStore = isAvailableInStore;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Item item = (Item) o;
+
+        if (price != item.price) return false;
+        if (quantity != item.quantity) return false;
+        if (isAvailableInStore != item.isAvailableInStore) return false;
+        if (!id.equals(item.id)) return false;
+        if (!category.equals(item.category)) return false;
+        return name.equals(item.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + category.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + price;
+        result = 31 * result + quantity;
+        result = 31 * result + (isAvailableInStore ? 1 : 0);
+        return result;
+    }
 
 }

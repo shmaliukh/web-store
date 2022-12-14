@@ -6,10 +6,6 @@ function getJsonObj(formElemId) {
     return Object.fromEntries(formData);
 }
 
-function generateJsonBody(formElemId) {
-    let formValue = getJsonObj(formElemId);
-    return JSON.stringify(formValue);
-}
 
 function generateJsonBodyWithType(formElemId, itemClassType) {
     let formValue = getJsonObj(formElemId);
@@ -19,15 +15,6 @@ function generateJsonBodyWithType(formElemId, itemClassType) {
     return jsonWithType;
 }
 
-function generateJsonFetch(pageToSend, method, formElemId) {
-    return fetch(pageToSend, {
-        method: method,
-        body: generateJsonBody(formElemId),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-}
 
 function generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType) {
     return fetch(pageToSend, {
@@ -43,26 +30,12 @@ function informAboutError(e) {
     alert('Error: ' + e.name + ":" + e.message + "\n" + e.stack);
 }
 
-function fetchFormWithJsonBody(formElemId, pageToSend, method, pageToRedirect) {
-    generateJsonFetch(pageToSend, method, formElemId)
-        .then((res) => {
-            try {
-                if (res.ok) {
-                    window.location.href = pageToRedirect;
-                } else {
-                    alert('Problem status: ' + res.status);
-                }
-            } catch (e) {
-                informAboutError(e);
-            }
-        });
-}
 
-function informAboutResult(formElemId, pageToRedirect) {
+function informAboutResult(formElemId, pageToRedirect, itemClassType) {
     return (res) => {
         try {
             if (res.ok) {
-                let prettyItemJsonStr = JSON.stringify(getJsonObj(formElemId), null, 2);
+                let prettyItemJsonStr = itemClassType.concat(': ',JSON.stringify(getJsonObj(formElemId), null, 2));
                 alert('Item to add: \n' + prettyItemJsonStr)
                 window.location.href = pageToRedirect;
             } else {
@@ -75,13 +48,8 @@ function informAboutResult(formElemId, pageToRedirect) {
     };
 }
 
-function fetchAddingItemFormWithJsonBody(formElemId, pageToSend, method, pageToRedirect) {
-    generateJsonFetch(pageToSend, method, formElemId)
-        .then(informAboutResult(formElemId, pageToRedirect));
-}
-
 function fetchAddingItemFormWithJsonBodyWithItemClassType(formElemId, pageToSend, method, pageToRedirect, itemClassType) {
     generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType)
-        .then(informAboutResult(formElemId, pageToRedirect));
+        .then(informAboutResult(formElemId, pageToRedirect, itemClassType));
 }
 
