@@ -82,10 +82,13 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div th:insert="blocks/add-item-form-blocks.html :: ${itemType}"></div>
+
                         <div class="d-flex justify-content-around align-items-center">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" name="is_available_in_store" type="checkbox" role="switch"
-                                       id="flexSwitchCheckChecked" checked>
+                                       id="flexSwitchCheckChecked" value="true" checked>
                                 <label class="form-check-label" for="flexSwitchCheckChecked">Is available</label>
                             </div>
                         </div>

@@ -2,7 +2,7 @@ package com.vshmaliukh.webstore.model.items.literature_item_imp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import com.vshmaliukh.webstore.model.items.LiteratureItem;
 
 import javax.persistence.*;
@@ -19,14 +19,16 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = BOOK_TABLE)
-@JsonTypeName("book")
+@Table(name = BOOK_TABLE,
+        uniqueConstraints = {@UniqueConstraint(columnNames = {
+                NAME_COLUMN
+        })})
 public class Book extends LiteratureItem {
 
-    @Column(name = AUTHOR_COLUMN, nullable = false)
+    @Column(name = AUTHOR_COLUMN)
     String author;
 
-    @Column(name = DATE_COLUMN, nullable = false)
+    @Column(name = DATE_COLUMN)
     Date dateOfIssue;
 
     @JsonCreator

@@ -49,11 +49,10 @@ public class AddItemController {
     public <T extends Item> ModelAndView doPost(@CookieValue(defaultValue = "0") Long userId,
                                                 @RequestBody T item,
                                                 ModelMap modelMap) {
-//        System.out.println(item);
-        System.out.println(item);
-//        itemService.saveItem(item);
+
+        itemService.saveItem(item);
 //        addItem(userId, item);
-//        log.info("saved '{}' item", item);
+        log.info("saved '{}' item, item type: '{}'", item, item.getClass().getSimpleName());
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 

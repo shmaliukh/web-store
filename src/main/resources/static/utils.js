@@ -13,9 +13,10 @@ function generateJsonBody(formElemId) {
 
 function generateJsonBodyWithType(formElemId, itemClassType) {
     let formValue = getJsonObj(formElemId);
-    let jsonType = itemClassType.concat(' ');
+    let jsonType =  "\"@type\":\"".concat(itemClassType, "\",");
     let jsonBodyStr = JSON.stringify(formValue);
-    return jsonType.concat(jsonBodyStr);
+    let jsonWithType = [jsonBodyStr.slice(0, 1), jsonType, jsonBodyStr.slice(1)].join('');
+    return jsonWithType;
 }
 
 function generateJsonFetch(pageToSend, method, formElemId) {
