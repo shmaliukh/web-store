@@ -38,6 +38,10 @@ public class ItemService {
         return false;
     }
 
+    public List<? extends Item> readAllItemsByTypeName(String itemTypeName) {
+        ActionsWithItem<? extends Item> itemRepositoryByItemTypeName = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(itemTypeName);
+        return itemRepositoryByItemTypeName.findAll();
+    }
 
 //    public Integer calcItemsBtCategory(){
 //        Map categoryNameQuantityMap = new HashMap<>();
