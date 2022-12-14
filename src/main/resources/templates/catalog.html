@@ -72,10 +72,12 @@
 <!--                                <p class="card-text" >Short description</p>-->
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary"><img
-                                                class="shopping-icon" src="/icons/shopping-cart.png"></button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary"><img
-                                                class="shopping-icon" src="/icons/buy.png"></button>
+                                        <a href="/shopping-cart" class="btn btn-sm btn-outline-secondary">
+                                            <img class="shopping-icon" src="/icons/shopping-cart.png">
+                                        </a>
+                                        <a href="/shopping-cart" class="btn btn-sm btn-outline-secondary">
+                                            <img class="shopping-icon" src="/icons/buy.png">
+                                        </a>
                                     </div>
                                     <b  class="price">$<text th:text="${item.getPrice()}"></text></b>
                                 </div>
