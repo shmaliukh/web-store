@@ -56,13 +56,13 @@
                 </thead>
                 <tbody>
                 <tr th:each="item, iterator: ${itemList}">
-                    <th scope="row" th:text="${iterator.count}">#</th>
-                    <td th:text="${item.getClass().getSimpleName()}">Type</td>
-                    <td th:text="${item.getId()}">Id</td>
-                    <td th:text="${item.getCategory()}">Category</td>
-                    <td th:text="${item.getName()}">Name</td>
-                    <td th:text="${item.getPrice()}">Price</td>
-                    <td th:text="${item.getQuantity()}">Quantity</td>
+                    <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                    <td class="align-middle" th:text="${item.getClass().getSimpleName()}">Type</td>
+                    <td class="align-middle" th:text="${item.getId()}">Id</td>
+                    <td class="align-middle" th:text="${item.getCategory()}">Category</td>
+                    <td class="align-middle" th:text="${item.getName()}">Name</td>
+                    <td class="align-middle" th:text="${item.getPrice()}">Price</td>
+                    <td class="align-middle" th:text="${item.getQuantity()}">Quantity</td>
                     <td><input class="form-check-input" type="checkbox" name="isAvailableInStore"
                                th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}"
                                disabled>

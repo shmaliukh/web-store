@@ -6,27 +6,27 @@
 
 <div th:fragment="newspaper">
     <td>
-        <input class="form-control" type="number" name="pages" th:value="${item.getPages()}">
+        <input class="form-control align-middle" type="number" name="pages" th:value="${item.getPages()}">
     </td>
 </div>
 
 <div th:fragment="book">
     <td>
-        <input class="form-control" type="number" name="pages" th:value="${item.getPages()}">
+        <input class="form-control align-middle" type="number" name="pages" th:value="${item.getPages()}">
     </td>
     <td>
-        <input class="form-control" type="text" name="author" th:value="${item.getAuthor()}">
+        <input class="form-control align-middle" type="text" name="author" th:value="${item.getAuthor()}">
     </td>
     <td>
-        <input class="form-control" type="date" name="date" th:value="${#dates.format(item.getDateOfIssue(), 'yyyy-MM-dd')}">
+        <input class="form-control align-middle" type="date" name="date" th:value="${#dates.format(item.getDateOfIssue(), 'yyyy-MM-dd')}">
     </td>
 </div>
 
 <div th:fragment="comics">
     <td>
-        <input class="form-control" type="number" name="pages" th:value="${item.getPages()}">
+        <input class="form-control align-middle" type="number" name="pages" th:value="${item.getPages()}">
     </td>
     <td>
-        <input class="form-control" type="text" name="publisher" th:value="${item.getPublisher()}">
+        <input class="form-control align-middle" type="text" name="publisher" th:value="${item.getPublisher()}">
     </td>
 </div>
