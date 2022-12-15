@@ -58,7 +58,7 @@
                 </thead>
                 <tbody class="table-group-divider">
                 <tr th:each="item, iterator: ${itemList}">
-                    <form id="formElem" class="needs-validation">
+                    <form th:id="'formElem' +${iterator.count}" class="needs-validation">
                         <th scope="row" th:text="${iterator.count}">#</th>
                         <td th:text="${item.getClass().getSimpleName()}">Type</td>
                         <td th:text="${item.getId()}" name="id">Id</td>
@@ -79,17 +79,22 @@
                             <input class="form-check-input" type="checkbox" name="isAvailableInStore"
                                    th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}">
                         </td>
-
                         <td>
                             <button class="btn btn-outline-success" type="submit">Edit item</button>
                         </td>
+                        <script th:utext="
+                        'formElem' + ${iterator.count} + '.onsubmit = async (e) => {'
+                            + 'e.preventDefault(); '
+                            + 'fetchAddingItemFormWithJsonBodyWithItemClassType('
+                            + '&quot;formElem' +${iterator.count} + '&quot;'
+                            + ',&quot;/admin/item/add&quot;'
+                            + ',&quot;post&quot;'
+                            + ',&quot;/admin/item&quot;'
+                            + ',&quot;'+${item.getClass().getSimpleName()} + '&quot;'
+                            + ');};'">
+                        </script>
+
                     </form>
-                    <script th:inline="javascript">
-                        formElem.onsubmit = async (e) => {
-                            e.preventDefault();
-                            fetchAddingItemFormWithJsonBodyWithItemClassType("formElem", "/admin/item/add", "post", "/admin/item", [[${item.getClass().getSimpleName()}]]);
-                        };
-                    </script>
                 </tr>
                 </tbody>
             </table>
