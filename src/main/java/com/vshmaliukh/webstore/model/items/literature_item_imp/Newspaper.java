@@ -42,6 +42,7 @@ public class Newspaper extends LiteratureItem {
                 ", category=" + getCategory() +
                 ", price=" + getPrice() +
                 ", quantity=" + getQuantity() +
+                ", isAvailableInStore=" + isAvailableInStore() +
                 ", pages=" + getPages() +
                 '}';
     }

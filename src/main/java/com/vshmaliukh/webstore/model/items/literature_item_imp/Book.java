@@ -56,6 +56,7 @@ public class Book extends LiteratureItem {
                 ", category=" + getCategory() +
                 ", price=" + getPrice() +
                 ", quantity=" + getQuantity() +
+                ", isAvailableInStore=" + isAvailableInStore() +
                 ", pages=" + getPages() +
                 ", author=" + getAuthor() +
                 ", dateOfIssue=" + new SimpleDateFormat(DATE_FORMAT_STR).format(getDateOfIssue()) +
