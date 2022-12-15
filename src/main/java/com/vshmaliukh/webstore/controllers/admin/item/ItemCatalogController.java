@@ -21,7 +21,7 @@ public class ItemCatalogController {
 
     final ItemService itemService;
 
-    @GetMapping
+    @GetMapping("/**")
     public ModelAndView doRedirectToCatalog(ModelMap modelMap) {
         return new ModelAndView("redirect:/admin/item/catalog", modelMap);
     }
