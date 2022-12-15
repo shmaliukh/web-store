@@ -9,7 +9,7 @@ function getJsonObj(formElemId) {
 
 function generateJsonBodyWithType(formElemId, itemClassType) {
     let formValue = getJsonObj(formElemId);
-    let jsonType =  "\"@type\":\"".concat(itemClassType, "\",");
+    let jsonType =  "\"@type\":\"".concat(itemClassType.toLowerCase(), "\",");
     let jsonBodyStr = JSON.stringify(formValue);
     let jsonWithType = [jsonBodyStr.slice(0, 1), jsonType, jsonBodyStr.slice(1)].join('');
     return jsonWithType;

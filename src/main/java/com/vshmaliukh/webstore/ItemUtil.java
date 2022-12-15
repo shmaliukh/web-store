@@ -6,6 +6,7 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
+import com.vshmaliukh.webstore.services.ItemService;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,4 +40,14 @@ public final class ItemUtil {
         itemNameClassTypeMap = Collections.unmodifiableMap(nameClassMap);
     }
 
+    public static List<Item> readAllItems(ItemService itemService) {
+        List<Item> itemAllTypeList = new ArrayList<>();
+        for (String itemTypeStr : itemNameList) {
+            List<? extends Item> itemListByType = itemService.readAllItemsByTypeName(itemTypeStr);
+            if(itemListByType != null){
+                itemAllTypeList.addAll(itemListByType);
+            }
+        }
+        return itemAllTypeList;
+    }
 }
