@@ -64,10 +64,10 @@ public final class ActionsWithItemRepositoryProvider {
 
     private void generateItemClassNameRepositoryMap() {
         Map<String, ActionsWithItem<? extends Item>> classNameRepositoryMap = new ConcurrentHashMap<>();
-        classNameRepositoryMap.put(Book.class.getSimpleName(), bookRepository);
-        classNameRepositoryMap.put(Magazine.class.getSimpleName(), magazineRepository);
-        classNameRepositoryMap.put(Comics.class.getSimpleName(), comicsRepository);
-        classNameRepositoryMap.put(Newspaper.class.getSimpleName(), newspaperRepository);
+        classNameRepositoryMap.put(Book.class.getSimpleName().toLowerCase(), bookRepository);
+        classNameRepositoryMap.put(Magazine.class.getSimpleName().toLowerCase(), magazineRepository);
+        classNameRepositoryMap.put(Comics.class.getSimpleName().toLowerCase(), comicsRepository);
+        classNameRepositoryMap.put(Newspaper.class.getSimpleName().toLowerCase(), newspaperRepository);
         itemClassNameActionsWithRepositoryMap = Collections.unmodifiableMap(classNameRepositoryMap);
     }
 
@@ -77,7 +77,7 @@ public final class ActionsWithItemRepositoryProvider {
     }
 
     public ActionsWithItem<? extends Item> getActionsWithItemRepositoryByItemClassName(String itemClassName) {
-        return itemClassNameActionsWithRepositoryMap.getOrDefault(itemClassName, null);
+        return itemClassNameActionsWithRepositoryMap.getOrDefault(itemClassName.toLowerCase(), null);
     }
 
 }

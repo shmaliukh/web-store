@@ -17,7 +17,6 @@ public class ItemService {
     final ActionsWithItemRepositoryProvider actionsWithItemRepositoryProvider;
 
     public <T extends Item> void saveItem(T item) {
-
         ActionsWithItem<T> actionsWithItem = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassType(item);
         if (actionsWithItem != null) {
             actionsWithItem.save(item);
@@ -40,7 +39,11 @@ public class ItemService {
 
     public List<? extends Item> readAllItemsByTypeName(String itemTypeName) {
         ActionsWithItem<? extends Item> itemRepositoryByItemTypeName = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(itemTypeName);
-        return itemRepositoryByItemTypeName.findAll();
+        if (itemRepositoryByItemTypeName != null) {
+            return itemRepositoryByItemTypeName.findAll();
+        }
+        log.warn("problem to read all items by type name // not found repository // itemTypeName: {}", itemTypeName);
+        return null;
     }
 
 //    public Integer calcItemsBtCategory(){

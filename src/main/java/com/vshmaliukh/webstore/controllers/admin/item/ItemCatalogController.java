@@ -16,12 +16,17 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/admin/item/catalog")
+@RequestMapping("/admin/item")
 public class ItemCatalogController {
 
     final ItemService itemService;
 
     @GetMapping
+    public ModelAndView doRedirectToCatalog(ModelMap modelMap) {
+        return new ModelAndView("redirect:/admin/item/catalog", modelMap);
+    }
+
+    @GetMapping("/catalog")
     public ModelAndView doGetCatalog(ModelMap modelMap) {
         Map<String, Integer> itemTypeQuantityMap = new HashMap<>();
         List<String> itemTypeList = ItemUtil.itemNameList;
