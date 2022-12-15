@@ -39,10 +39,10 @@
 
 <div class="album py-5 bg-light text-center">
     <div class="m-2 p-2">
-        <table class="w-100 table-info">
+        <table class="w-100 table table-striped">
             <caption th:text="|${itemType} type table|"></caption>
             <thead>
-            <tr>
+            <tr class="table-dark">
                 <th scope="col">#</th>
                 <th scope="col">TYPE</th>
                 <th scope="col">ID</th>
@@ -52,9 +52,10 @@
                 <th scope="col">QUANTITY</th>
                 <th:block th:insert="blocks/edit-item-table-titles :: ${itemType}"></th:block>
                 <th scope="col">AVAILABLE</th>
+                <th scope="col"></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody class="table-group-divider">
             <tr th:each="item, iterator: ${itemList}">
                 <form id="formElem" class="needs-validation">
                     <th scope="row" th:text="${iterator.count}">#</th>

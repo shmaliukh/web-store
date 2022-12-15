@@ -37,7 +37,7 @@ public class EditItemController {
 
     @GetMapping("/**")
     public ModelAndView doGet(ModelMap modelMap) {
-        return new ModelAndView("redirect:/admin/item/", modelMap);
+        return new ModelAndView("redirect:/admin/item", modelMap);
     }
 
 }
