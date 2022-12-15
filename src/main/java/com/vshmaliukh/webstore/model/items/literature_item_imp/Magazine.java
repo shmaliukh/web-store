@@ -45,6 +45,7 @@ public class Magazine extends LiteratureItem {
                 ", category=" + getCategory() +
                 ", price=" + getPrice() +
                 ", quantity=" + getQuantity() +
+                ", isAvailableInStore=" + isAvailableInStore() +
                 ", pages=" + getPages() +
                 '}';
     }

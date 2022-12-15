@@ -18,7 +18,7 @@
         <input class="form-control" type="text" name="author" th:value="${item.getAuthor()}">
     </td>
     <td>
-        <input class="form-control" type="date" name="dateOfIssue" th:value="${#dates.format(item.getDateOfIssue(), 'yyyy-MM-dd')}">
+        <input class="form-control" type="date" name="date" th:value="${#dates.format(item.getDateOfIssue(), 'yyyy-MM-dd')}">
     </td>
 </div>
 
