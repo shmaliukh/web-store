@@ -39,60 +39,61 @@
 
 <div class="album py-5 bg-light text-center">
     <div class="m-2 p-2">
-        <table class="w-100 table table-striped">
-            <caption th:text="|${itemType} type table|"></caption>
-            <thead>
-            <tr class="table-dark">
-                <th scope="col">#</th>
-                <th scope="col">TYPE</th>
-                <th scope="col">ID</th>
-                <th scope="col">CATEGORY</th>
-                <th scope="col">NAME</th>
-                <th scope="col">PRICE</th>
-                <th scope="col">QUANTITY</th>
-                <th:block th:insert="blocks/edit-item-table-titles :: ${itemType}"></th:block>
-                <th scope="col">AVAILABLE</th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody class="table-group-divider">
-            <tr th:each="item, iterator: ${itemList}">
-                <form id="formElem" class="needs-validation">
-                    <th scope="row" th:text="${iterator.count}">#</th>
-                    <td th:text="${item.getClass().getSimpleName()}">Type</td>
-                    <td th:text="${item.getId()}" name="id">Id</td>
-                    <td>
-                        <input class="form-control" type="text" name="category" th:value="${item.getCategory()}">
-                    </td>
-                    <td>
-                        <input class="form-control" type="text" name="name" th:value="${item.getName()}">
-                    </td>
-                    <td>
-                        <input class="form-control" type="number" name="price" th:value="${item.getPrice()}">
-                    </td>
-                    <td>
-                        <input class="form-control" type="number" name="quantity" th:value="${item.getQuantity()}">
-                    </td>
-                    <th:block th:insert="blocks/edit-item-table-values :: ${itemType}"></th:block>
-                    <td>
-                        <input class="form-check-input" type="checkbox" name="isAvailableInStore"
-                               th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}">
-                    </td>
+        <div class="table-responsive-md ">
+            <table class="w-100 table table-striped">
+                <caption th:text="|${itemType} type table|"></caption>
+                <thead>
+                <tr class="table-dark">
+                    <th scope="col">#</th>
+                    <th scope="col">TYPE</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">CATEGORY</th>
+                    <th scope="col">NAME</th>
+                    <th scope="col">PRICE</th>
+                    <th scope="col">QUANTITY</th>
+                    <th:block th:insert="blocks/edit-item-table-titles :: ${itemType}"></th:block>
+                    <th scope="col">AVAILABLE</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                <tr th:each="item, iterator: ${itemList}">
+                    <form id="formElem" class="needs-validation">
+                        <th scope="row" th:text="${iterator.count}">#</th>
+                        <td th:text="${item.getClass().getSimpleName()}">Type</td>
+                        <td th:text="${item.getId()}" name="id">Id</td>
+                        <td>
+                            <input class="form-control" type="text" name="category" th:value="${item.getCategory()}">
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" name="name" th:value="${item.getName()}">
+                        </td>
+                        <td>
+                            <input class="form-control" type="number" name="price" th:value="${item.getPrice()}">
+                        </td>
+                        <td>
+                            <input class="form-control" type="number" name="quantity" th:value="${item.getQuantity()}">
+                        </td>
+                        <th:block th:insert="blocks/edit-item-table-values :: ${itemType}"></th:block>
+                        <td>
+                            <input class="form-check-input" type="checkbox" name="isAvailableInStore"
+                                   th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}">
+                        </td>
 
-                    <td>
-                        <button class="btn btn-outline-success" type="submit">Edit item</button>
-                    </td>
-                </form>
-                <script th:inline="javascript">
-                    formElem.onsubmit = async (e) => {
-                        e.preventDefault();
-                        fetchAddingItemFormWithJsonBodyWithItemClassType("formElem", "/admin/item/add", "post", "/admin/item", [[${item.getClass().getSimpleName()}]]);
-                    };
-                </script>
-            </tr>
-            </tbody>
-        </table>
-
+                        <td>
+                            <button class="btn btn-outline-success" type="submit">Edit item</button>
+                        </td>
+                    </form>
+                    <script th:inline="javascript">
+                        formElem.onsubmit = async (e) => {
+                            e.preventDefault();
+                            fetchAddingItemFormWithJsonBodyWithItemClassType("formElem", "/admin/item/add", "post", "/admin/item", [[${item.getClass().getSimpleName()}]]);
+                        };
+                    </script>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
