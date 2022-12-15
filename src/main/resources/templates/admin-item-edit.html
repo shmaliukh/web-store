@@ -62,16 +62,16 @@
                     <td th:text="${item.getClass().getSimpleName()}">Type</td>
                     <td th:text="${item.getId()}" name="id">Id</td>
                     <td>
-                        <input type="text" name="category" th:value="${item.getCategory()}">
+                        <input class="form-control" type="text" name="category" th:value="${item.getCategory()}">
                     </td>
                     <td>
-                        <input type="text" name="name" th:value="${item.getName()}">
+                        <input class="form-control" type="text" name="name" th:value="${item.getName()}">
                     </td>
                     <td>
-                        <input type="number" name="price" th:value="${item.getPrice()}">
+                        <input class="form-control" type="number" name="price" th:value="${item.getPrice()}">
                     </td>
                     <td>
-                        <input type="number" name="quantity" th:value="${item.getQuantity()}">
+                        <input class="form-control" type="number" name="quantity" th:value="${item.getQuantity()}">
                     </td>
                     <th:block th:insert="blocks/edit-item-table-values :: ${itemType}"></th:block>
                     <td>
