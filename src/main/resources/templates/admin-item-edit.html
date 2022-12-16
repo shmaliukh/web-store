@@ -39,48 +39,53 @@
 
 <div class="album py-5 bg-light text-center">
     <div class="m-2 p-2">
-        <div class="table-responsive-md ">
-            <table class="w-100 table table-striped">
-                <caption th:text="|${itemType} type table|"></caption>
-                <thead>
-                <tr class="table-dark">
-                    <th scope="col">#</th>
-                    <th scope="col">TYPE</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">CATEGORY</th>
-                    <th scope="col">NAME</th>
-                    <th scope="col">PRICE</th>
-                    <th scope="col">QUANTITY</th>
-                    <th:block th:insert="blocks/edit-item-table-titles :: ${itemType}"></th:block>
-                    <th scope="col">AVAILABLE</th>
-                    <th scope="col"></th>
-                </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                <tr th:each="item, iterator: ${itemList}">
-                    <form th:id="'formElem' +${iterator.count}" class="needs-validation">
-                        <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
-                        <td class="align-middle" th:text="${item.getClass().getSimpleName()}">Type</td>
-                        <td class="align-middle" th:text="${item.getId()}" name="item_id">Id</td>
-                        <input type="hidden" th:value="${item.getId()}" name="item_id">
-                        <td>
-                            <input class="form-control" type="text" name="category" th:value="${item.getCategory()}">
-                        </td>
-                        <td>
-                            <input class="form-control" type="text" name="name" th:value="${item.getName()}">
-                        </td>
-                        <td>
-                            <input class="form-control" type="number" name="price" th:value="${item.getPrice()}">
-                        </td>
-                        <td>
-                            <input class="form-control" type="number" name="quantity" th:value="${item.getQuantity()}">
-                        </td>
-                        <th:block th:insert="blocks/edit-item-table-values :: ${itemType}"></th:block>
-                        <td>
-                            <input th:id="'checkbox'+${iterator.count}" class="form-check-input" name="is_available_in_store" type="checkbox"
-                                   role="switch"
-                                   th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}">
-                            <script th:utext="
+        <th:block th:if="${itemList.size() > 0}">
+            <div class="table-responsive-md ">
+                <table class="w-100 table table-striped">
+                    <caption th:text="|${itemType} type table|"></caption>
+                    <thead>
+                    <tr class="table-dark">
+                        <th scope="col">#</th>
+                        <th scope="col">TYPE</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">CATEGORY</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col">PRICE</th>
+                        <th scope="col">QUANTITY</th>
+                        <th:block th:insert="blocks/item-table-titles :: ${itemType}"></th:block>
+                        <th scope="col">AVAILABLE</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                    <tr th:each="item, iterator: ${itemList}">
+                        <form th:id="'formElem' +${iterator.count}" class="needs-validation">
+                            <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                            <td class="align-middle" th:text="${item.getClass().getSimpleName()}">Type</td>
+                            <td class="align-middle" th:text="${item.getId()}" name="item_id">Id</td>
+                            <input type="hidden" th:value="${item.getId()}" name="item_id">
+                            <td>
+                                <input class="form-control" type="text" name="category"
+                                       th:value="${item.getCategory()}">
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" name="name" th:value="${item.getName()}">
+                            </td>
+                            <td>
+                                <input class="form-control" type="number" name="price" th:value="${item.getPrice()}">
+                            </td>
+                            <td>
+                                <input class="form-control" type="number" name="quantity"
+                                       th:value="${item.getQuantity()}">
+                            </td>
+                            <th:block th:insert="blocks/edit-item-table-values :: ${itemType}"></th:block>
+                            <td>
+                                <input th:id="'checkbox'+${iterator.count}" class="form-check-input"
+                                       name="is_available_in_store" type="checkbox"
+                                       role="switch"
+                                       th:value="${item.isAvailableInStore()}"
+                                       th:checked="${item.isAvailableInStore()}">
+                                <script th:utext="
                                 'const checkboxId' + ${iterator.count}+' = &quot;#checkbox' + ${iterator.count} + '&quot;;'
                                 + 'const checkbox' + ${iterator.count}+' = document.querySelector(checkboxId' + ${iterator.count}+');'
                                 + 'checkbox' + ${iterator.count}+'.addEventListener(&quot;change&quot;, () => {'
@@ -90,12 +95,12 @@
                                         + 'checkbox' + ${iterator.count}+'.value = &quot;false&quot;;'
                                     + '}'
                                 + '});'">
-                            </script>
-                        </td>
-                        <td>
-                            <button class="btn btn-outline-success" type="submit">Edit item</button>
-                        </td>
-                        <script th:utext="
+                                </script>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-success" type="submit">Edit item</button>
+                            </td>
+                            <script th:utext="
                         'formElem' + ${iterator.count} + '.onsubmit = async (e) => {'
                             + 'e.preventDefault(); '
                             + 'fetchAddingItemFormWithJsonBodyWithItemClassType('
@@ -105,13 +110,19 @@
                             + ',&quot;/admin/item&quot;'
                             + ',&quot;'+${item.getClass().getSimpleName()} + '&quot;'
                             + ');};'">
-                        </script>
+                            </script>
 
-                    </form>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+                        </form>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+
+        <th:block th:if="${itemList.size() == 0}">
+            <p class="lead" th:text="|No ${itemType.toUpperCase()} items|"></p>
+        </th:block>
+
     </div>
 </div>
 

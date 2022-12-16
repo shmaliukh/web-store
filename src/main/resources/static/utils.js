@@ -36,10 +36,10 @@ function informAboutResult(formElemId, pageToRedirect, itemClassType) {
         try {
             if (res.ok) {
                 let prettyItemJsonStr = itemClassType.concat(': ',JSON.stringify(getJsonObj(formElemId), null, 2));
-                alert('Item to add: \n' + prettyItemJsonStr)
+                alert('Item to save: \n' + prettyItemJsonStr)
                 window.location.href = pageToRedirect;
             } else {
-                alert('Item NOT added');
+                alert('Item NOT saved');
                 alert('Problem status: ' + res.status);
             }
         } catch (e) {

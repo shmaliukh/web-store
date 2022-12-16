@@ -1,7 +1,5 @@
 package com.vshmaliukh.webstore.controllers.admin.item;
 
-import com.vshmaliukh.webstore.ItemUtil;
-import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
