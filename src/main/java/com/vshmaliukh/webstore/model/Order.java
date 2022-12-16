@@ -40,8 +40,8 @@ public class Order {
     @Column(name = ORDER_STATUS_COLUMN)
     private String status;
 
-    @OneToMany
-    // TODO config tables relationship
-    private List<Item> itemList = new ArrayList<>();
+//    @OneToMany
+//    // TODO config tables relationship
+//    private List<> itemList = new ArrayList<>();
 
 }

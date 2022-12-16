@@ -1,0 +1,19 @@
+<div th:fragment="magazine">
+    <input type="hidden" name="pages" th:value="${item.getPages()}">
+
+</div>
+
+<div th:fragment="newspaper">
+    <input type="hidden" name="pages" th:value="${item.getPages()}">
+</div>
+
+<div th:fragment="book">
+    <input type="hidden" name="pages" th:value="${item.getPages()}">
+    <input type="hidden" name="author" th:value="${item.getAuthor()}">
+    <input type="hidden" name="date" th:value="${#dates.format(item.getDateOfIssue(), 'yyyy-MM-dd')}">
+</div>
+
+<div th:fragment="comics">
+    <input type="hidden" name="pages" th:value="${item.getPages()}">
+    <input type="hidden" name="publisher" th:value="${item.getPublisher()}">
+</div>

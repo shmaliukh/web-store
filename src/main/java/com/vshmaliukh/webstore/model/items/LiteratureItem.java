@@ -24,4 +24,22 @@ public abstract class LiteratureItem extends Item {
         this.pages = pages;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LiteratureItem)) return false;
+        if (!super.equals(o)) return false;
+
+        LiteratureItem that = (LiteratureItem) o;
+
+        return getPages() == that.getPages();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + getPages();
+        return result;
+    }
+
 }
