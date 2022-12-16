@@ -15,26 +15,8 @@
     <hr>
     <caption></caption>
     <p class="lead" th:text="|${itemType.toUpperCase()} items view table|"></p>
-    <hr>
-    <div class="container">
-        <div class="row mt-5 mb-5">
-            <a th:href="@{/admin}">
-                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
-                    Admin home
-                </button>
-            </a>
-            <a th:href="@{/admin/item/catalog}">
-                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
-                    Item catalog panel
-                </button>
-            </a>
-            <a th:href="@{/admin/exit}">
-                <button type="button" class="w-100 btn btn-outline-danger btn-lg btn-block">
-                    Exit
-                </button>
-            </a>
-        </div>
-    </div>
+    <div th:insert="blocks/item-panel-menu.html :: base-menu"></div>
+    <div th:insert="blocks/item-panel-menu.html :: view-menu"></div>
 </div>
 
 <div class="album py-5 bg-light text-center">

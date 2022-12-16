@@ -14,32 +14,8 @@
     <h1 class="display-4">Add item panel</h1>
     <hr>
     <p class="lead">You can add new item</p>
-    <hr>
-    <div class="container">
-        <div class="row mt-5 mb-5">
-            <a th:href="@{/admin/item/catalog}">
-                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
-                    Item catalog
-                </button>
-            </a>
-            <a th:href="@{/admin}">
-                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
-                    Admin home
-                </button>
-            </a>
-            <a th:href="@{/admin/exit}">
-                <button type="button" class="w-100 btn btn-outline-danger btn-lg btn-block">
-                    Exit
-                </button>
-            </a>
-        </div>
-    </div>
-    <!--    <hr>-->
-    <!--    <div class="container">-->
-    <!--        <button type="button" class="btn btn-secondary btn-lg btn-block">-->
-    <!--            Create new category-->
-    <!--        </button>-->
-    <!--    </div>-->
+    <div th:insert="blocks/item-panel-menu.html :: base-menu"></div>
+    <div th:insert="blocks/item-panel-menu.html :: add-menu"></div>
 </div>
 
 <div class="container">
