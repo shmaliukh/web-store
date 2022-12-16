@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_PAGE;
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.PAGE_HOME;
+import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.HOME_PAGE;
 
 
 @Slf4j
@@ -38,7 +38,7 @@ public class OrderController {
         List<Item> itemList = new ArrayList<>();
         itemList.add(new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()));
         itemList.add(new Book(2, "2 book name", "Book category   ", 3, 4, true, 5, "Vlad2", new Date()));
-        itemList.add(new Magazine(3, "Magazine name", "Magazine category", 4, 5, true, 6));
+//        itemList.add(new Magazine(3, "Magazine name", "Magazine category", 4, 5, true, 6));
         itemList.add(new Comics(4, "Comics name", "Comics category", 5, 6, true, 7, "Some publisher"));
         return itemList;
     }
@@ -59,7 +59,7 @@ public class OrderController {
                                ModelMap modelMap) {
         // TODO update user data
         orderService.changeOrderStatus(userId, POST_MAPPING_ORDER_STATUS_STR);
-        return new ModelAndView("redirect:/" + PAGE_HOME, modelMap);
+        return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 
 }

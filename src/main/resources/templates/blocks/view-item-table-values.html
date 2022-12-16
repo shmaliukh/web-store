@@ -1,0 +1,21 @@
+<div th:fragment="magazine">
+    <td class="align-middle" th:text="${item.getPages()}">Pages</td>
+</div>
+
+<div th:fragment="newspaper">
+    <td class="align-middle" th:text="${item.getPages()}">Pages</td>
+</div>
+
+<div th:fragment="book">
+    <td class="align-middle" th:text="${item.getPages()}">Pages</td>
+    <td class="align-middle" th:text="${item.getAuthor()}">Author</td>
+    <td class="align-middle" th:text="${#dates.format(item.getDateOfIssue(), 'yyyy-MM-dd')}">Date</td>
+</div>
+
+<div th:fragment="comics">
+    <td class="align-middle" th:text="${item.getPages()}">Pages</td>
+    <td class="align-middle" th:text="${item.getPublisher()}">Publisher</td>
+</div>
+
+<div th:fragment="all">
+</div>

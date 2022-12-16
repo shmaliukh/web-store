@@ -26,7 +26,7 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    public static final String LOG_IN_SUCCESS_URL_STR = "/" + PAGE_HOME;
+    public static final String LOG_IN_SUCCESS_URL_STR = "/" + HOME_PAGE;
     private final UserService userService;
     private final CustomOAuth2UserService oauthUserService;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
@@ -73,12 +73,12 @@ public class WebSecurityConfig {
 
     private void configWithSecurity(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .antMatchers("/", "/" + PAGE_LOGIN, "/oauth/**").permitAll()
+                .antMatchers("/", "/" + OAUTH_LOGIN_PAGE, "/oauth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .permitAll()
-                .loginPage("/" + PAGE_LOGIN)
+                .loginPage("/" + OAUTH_LOGIN_PAGE)
 //                .usernameParameter("email")
 //                .passwordParameter("pass")
 //                .defaultSuccessUrl(LOG_IN_SUCCESS_URL_STR)

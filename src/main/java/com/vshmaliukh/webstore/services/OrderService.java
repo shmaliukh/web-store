@@ -35,7 +35,8 @@ public class OrderService {
 
     public void addItemToOrder(long userId, Item item) {
         Order orderByUserId = readOrderByUserId(userId);
-        orderByUserId.getItemList().add(item);
+        // FIXME
+//        orderByUserId.getItemList().add(item);
         orderRepository.save(orderByUserId);
         log.info("userId: '{}' // added new '{}' item to order", userId, item);
     }
@@ -54,7 +55,8 @@ public class OrderService {
     public List<Item> readOrderItemListByUserId(long userId) {
         Order readOrderByUserId = readOrderByUserId(userId);
         if (readOrderByUserId != null) {
-            return readOrderByUserId.getItemList();
+            // FIXME
+//            return readOrderByUserId.getItemList();
         }
         log.warn("userId: '{}' // order item list is empty", userId);
         return Collections.emptyList();
