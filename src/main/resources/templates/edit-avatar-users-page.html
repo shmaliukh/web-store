@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit personal information</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header th:insert="/blocks/page-blocks :: header"></header>
+
+<main class="container">
+    <div class="edit-user-info">
+        <form method="post">
+
+            <div class="d-flex align-items-center p-3 my-3 rounded shadow-sm">
+                <div class="col-12">
+                    <label for="avatar" class="form-label">Avatar</label>
+                    <input type="file" class="form-control" id="avatar" placeholder="avatar" required="">
+                </div>
+            </div>
+
+            <div class="my-3 p-3 bg-body rounded shadow-sm">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">Save</button>
+            </div>
+
+
+        </form>
+    </div>
+
+</main>
+
+
+<footer th:insert="/blocks/page-blocks :: footer"></footer>
+</body>
+</html>
