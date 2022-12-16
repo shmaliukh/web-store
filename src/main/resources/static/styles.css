@@ -108,6 +108,12 @@ a:hover{
     margin: 5% 5% 4% 5%;
 }
 
+.flex-row-center{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
 .navbar-cart-block{
     display: flex;
     flex-direction: row;
