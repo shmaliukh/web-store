@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers;
 
+import com.vshmaliukh.webstore.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,7 +20,11 @@ public class UserHomeController {
 
     @GetMapping
     public ModelAndView showHomePage(ModelMap modelMap){
-        return new ModelAndView(HOME_PAGE_VIEW); // todo create home page
+        User user = new User();
+        user.setEmail("user@gmail.com");
+        user.setUsername("Your First User");
+        modelMap.addAttribute("user",user);
+        return new ModelAndView(HOME_PAGE_VIEW,modelMap); // todo create home page
     }
 
     @GetMapping("/" + EDIT_PAGE)

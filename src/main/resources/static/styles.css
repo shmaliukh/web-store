@@ -121,4 +121,9 @@ a:hover{
     width: 10%;
 }
 
+.personal-info-text-block{
+    display: flex;
+    margin-left: 1%;
+}
+
 
