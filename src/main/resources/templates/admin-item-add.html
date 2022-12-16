@@ -124,7 +124,7 @@
             <script th:inline="javascript">
                 formElem.onsubmit = async (e) => {
                     e.preventDefault();
-                    fetchAddingItemFormWithJsonBodyWithItemClassType("formElem", "/admin/item/add", "post", "/admin", [[${itemType}]]);
+                    fetchAddingItemFormWithJsonBodyWithItemClassType("formElem", "/admin/item/add", "post", "/admin/item/catalog", [[${itemType}]]);
                 };
             </script>
         </div>

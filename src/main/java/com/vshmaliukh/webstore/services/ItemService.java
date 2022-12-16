@@ -46,6 +46,20 @@ public class ItemService {
         return null;
     }
 
+    public <T extends Item> void deleteItem(T item) {
+        ActionsWithItem<T> actionsWithItem = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassType(item);
+        if (actionsWithItem != null) {
+            Integer itemId = item.getId();
+            if (itemId != null) {
+                actionsWithItem.deleteById(itemId);
+            } else{
+                log.warn("problem to save '{}' item , item id is NULL", item);
+            }
+        } else {
+            log.warn("problem to save '{}' item , repository not found", item);
+        }
+    }
+
 //    public Integer calcItemsBtCategory(){
 //        Map categoryNameQuantityMap = new HashMap<>();
 //        Collection<JpaRepository<? extends Item, Integer>> jpaRepositories = itemRepositoryProvider.getItemClassTypeRepositoryMap().values();

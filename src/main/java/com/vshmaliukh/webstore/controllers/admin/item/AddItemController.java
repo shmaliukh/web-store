@@ -36,7 +36,7 @@ public class AddItemController {
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
-            modelMap.addAttribute(ITEM_TYPE, itemType);
+            modelMap.addAttribute(ITEM_TYPE, itemType.toLowerCase());
             return new ModelAndView(ADD_ITEM_PAGE, modelMap);
         }
         return new ModelAndView("redirect:/admin", modelMap);

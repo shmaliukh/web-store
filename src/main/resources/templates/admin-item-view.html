@@ -66,7 +66,7 @@
                         <td class="align-middle" th:text="${item.getPrice()}">Price</td>
                         <td class="align-middle" th:text="${item.getQuantity()}">Quantity</td>
                         <th:block th:insert="blocks/view-item-table-values :: ${itemType}"></th:block>
-                        <td><input class="form-check-input" type="checkbox" name="isAvailableInStore"
+                        <td><input class="form-check-input align-middle" type="checkbox" name="isAvailableInStore"
                                    th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}"
                                    disabled>
                         </td>
