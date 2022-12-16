@@ -133,12 +133,26 @@
 <!--                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>-->
 
 <!--            </div>-->
-                <div th:each="category: ${categories}">
+<!--                <div th:each="category: ${categories}">-->
+<!--                    <div class="form-for-main" >-->
+<!--                        <a href="/main/catalog"><h4 th:text="${category}">Category</h4></a>-->
+<!--                        <p th:each="type: ${types}">-->
+<!--                            <a href="/main/catalog" th:text="${type}"></a><br>-->
+<!--                        </p>-->
+
+<!--                        &lt;!&ndash; todo refactor this template&ndash;&gt;-->
+
+<!--                    </div>-->
+<!--                </div> -->
+                <div>
                     <div class="form-for-main" >
-                        <a href="/main/catalog"><h4 th:text="${category}">Category</h4></a>
-                        <p th:each="type: ${types}">
-                            <a href="/main/catalog" th:text="${type}"></a><br>
-                        </p>
+                        <div th:each="type: ${types}">
+                            <p th:each="oneType: ${type}">
+                                <a href="/main/catalog"  th:text="${oneType}"></a><br>
+                            </p>
+                        </div>
+
+                        <!-- todo refactor this template-->
 
                     </div>
                 </div>

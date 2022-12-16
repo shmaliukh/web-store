@@ -32,13 +32,12 @@ public class MainPageController {
 
         // get categories and types from db
 
-
         List<String> categories = new ArrayList<>(Arrays.asList("Literature","Another category"));
         List<List<String>> types = new ArrayList<>(Arrays.asList(
                 Arrays.asList("Books","Newspapers","Comics","Magazines"),
                 Arrays.asList("Another type","And another one"))); // todo refactor
         modelMap.addAttribute("categories",categories);
-        modelMap.addAttribute("types",categories);
+        modelMap.addAttribute("types",types);
         return new ModelAndView(MAIN_PAGE_VIEW,modelMap);
 
     }
