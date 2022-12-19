@@ -21,20 +21,15 @@
 <div class="album py-5 bg-light text-center">
     <div class="container">
         <th:block th:if="${itemList.size() > 0}">
+
+            <th:block th:insert="blocks/navigation :: tools('/admin/item/delete/' + ${itemType})"></th:block>
+
             <div class="table-responsive-md ">
                 <table class="w-100 table table-striped">
                     <caption th:text="|${itemType} type table|"></caption>
                     <thead>
                     <tr class="table-dark">
-                        <th scope="col">#</th>
-                        <th scope="col">TYPE</th>
-                        <th scope="col">ID</th>
-                        <th scope="col">CATEGORY</th>
-                        <th scope="col">NAME</th>
-                        <th scope="col">PRICE</th>
-                        <th scope="col">QUANTITY</th>
-                        <th:block th:insert="blocks/item-table-titles :: ${itemType}"></th:block>
-                        <th scope="col">AVAILABLE</th>
+                        <th:block th:insert="blocks/item-table-titles :: base-item-titles('/admin/item/delete/' + ${itemType})"></th:block>
                         <th scope="col"></th>
                     </tr>
                     </thead>
@@ -79,6 +74,9 @@
                     </tr>
                     </tbody>
                 </table>
+
+                <th:block th:insert="blocks/navigation :: pagination('/admin/item/delete/' + ${itemType})"></th:block>
+
             </div>
         </th:block>
         <th:block th:if="${itemList.size() == 0}">

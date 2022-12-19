@@ -1,5 +1,5 @@
-<a th:fragment="paging(pageNum, label, tooltip)" class="page-link"
-   th:href="@{'/admin/item/view/' + ${itemType} + '?'
+<a th:fragment="paging(pageNum, label, tooltip, pageToRedirect)" class="page-link"
+   th:href="@{${pageToRedirect} + '?'
                            + ${keyword!=null && keyword!=''? 'keyword=' + keyword + '&' : ''}
                            + 'page=' + ${pageNum} + '&size=' + ${pageSize}
                            + ${sortField!=null ? '&sort=' + sortField + ',' + sortDirection : ''}}"

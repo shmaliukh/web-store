@@ -19,64 +19,18 @@
     <div th:insert="blocks/item-panel-menu.html :: view-menu"></div>
 </div>
 
-<div>
-    <form th:action="${'/admin/item/view/'+ itemType}" id="searchForm">
-        <div>
-            <div class="col-md-6 mt-2">
-                <div class="search">
-                    <i class="fa fa-search"></i>
-                    <input id="keyword" type="search" name="keyword" th:value="${keyword}" required class="form-control"
-                           placeholder="Enter keyword">
-                    <button type="submit" class="btn btn-secondary">Search</button>
-                </div>
-            </div>
-            <div class="col-md-3 input-group mt-2">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="pageSize">Items per page:</label>
-                </div>
-                <select form="searchForm" name="size" th:value="${pageSize}" onchange="changePageSize()"
-                        class="size-select"
-                        id="pageSize">
-                    <option th:each="s : ${ {3, 6, 9, 18} }"
-                            th:value="${s}"
-                            th:text="${s}"
-                            th:selected="${s == pageSize}">
-                    </option>
-                </select>
-            </div>
-            <div class="col-md-1 mt-2">
-                <button id="btnClear" class="btn btn-info"
-                        th:onclick="'window.location.href=''/' + ${itemType} + ''''"
-                >
-                    Clear
-                </button>
-            </div>
-        </div>
-    </form>
-    <script type="javascript">
-        function changePageSize() {
-            $("#searchForm").submit();
-        }
-    </script>
-</div>
-
 <div class="album py-5 bg-light text-center">
     <div class="container">
         <th:block th:if="${itemList.size() > 0}">
+
+            <th:block th:insert="blocks/navigation :: tools('/admin/item/view/' + ${itemType})"></th:block>
+
             <div class="table-responsive-md ">
                 <table class="w-100 table table-striped">
                     <caption th:text="|${itemType} type table|"></caption>
                     <thead>
                     <tr class="table-dark">
-                        <th scope="col">#</th>
-                        <th scope="col">TYPE</th>
-                        <th th:replace="blocks/sorting :: sorting('id','ID')"></th>
-                        <th th:replace="blocks/sorting :: sorting('category','CATEGORY')"></th>
-                        <th th:replace="blocks/sorting :: sorting('name','NAME')"></th>
-                        <th th:replace="blocks/sorting :: sorting('price','PRICE')"></th>
-                        <th th:replace="blocks/sorting :: sorting('quantity','QUANTITY')"></th>
-                        <th:block th:insert="blocks/item-table-titles :: ${itemType}"></th:block>
-                        <th scope="col">AVAILABLE</th>
+                        <th:block th:insert="blocks/item-table-titles :: base-item-titles('/admin/item/view/' + ${itemType})"></th:block>
                     </tr>
                     </thead>
                     <tbody>
@@ -97,34 +51,10 @@
                     </tbody>
                 </table>
 
-                <nav aria-label="Pagination" th:if="${totalPages > 0}">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                            <a th:replace="blocks/paging :: paging(1, '<<', 'First Page')"></a>
-                        </li>
-                        <li class="page-item font-weight-bold" th:classappend="${currentPage == 1} ? 'disabled'">
-                            <a th:replace="blocks/paging :: paging(${currentPage - 1}, 'Prev', 'Previous Page')"></a>
-                        </li>
-                        <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
-                            <a class="page-link" href="#">...</a>
-                        </li>
-                        <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
-                            th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1 , currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
-                            <a th:replace="blocks/paging :: paging(${page}, ${page}, 'Page ' + ${page})"></a>
-                        </li>
-                        <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
-                            <a class="page-link" href="#">...</a>
-                        </li>
-                        <li class="page-item font-weight-bold"
-                            th:classappend="${currentPage == totalPages} ? 'disabled'">
-                            <a th:replace="blocks/paging :: paging(${currentPage + 1},'Next', 'Next Page')"></a>
-                        </li>
-                        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                            <a th:replace="blocks/paging :: paging(${totalPages}, '>>', 'Last Page')"></a>
-                        </li>
-                    </ul>
-                </nav>
+                <th:block th:insert="blocks/navigation :: pagination('/admin/item/view/' + ${itemType})"></th:block>
+
             </div>
+
         </th:block>
         <th:block th:if="${itemList.isEmpty()}">
             <p class="lead" th:text="|No ${itemType.toUpperCase()} items|"></p>

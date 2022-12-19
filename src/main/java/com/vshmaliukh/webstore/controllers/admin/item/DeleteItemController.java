@@ -1,6 +1,9 @@
 package com.vshmaliukh.webstore.controllers.admin.item;
 
+import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.ActionsWithItem;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +23,22 @@ import java.util.List;
 public class DeleteItemController {
 
     final ItemService itemService;
+    final ActionsWithItemRepositoryProvider actionsWithItemRepositoryProvider;
 
     @GetMapping("/{itemType}")
-    public ModelAndView doGet(@PathVariable("itemType") String itemType,
+    public ModelAndView doGet(@RequestParam(required = false) String keyword,
+                              @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(defaultValue = "6") int size,
+                              @RequestParam(defaultValue = "id,asc") String[] sort,
+                              @PathVariable("itemType") String itemType,
                               ModelMap modelMap) {
         List<? extends Item> itemList = itemService.readAllItemsByTypeName(itemType);
         if (itemList == null) {
             return new ModelAndView("redirect:/admin/item/delete", modelMap);
         }
+        ActionsWithItem<? extends Item> repositoryByItemClassName = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(itemType);
+        itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, repositoryByItemClassName);
+
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
         return new ModelAndView("admin-item-delete", modelMap);

@@ -10,6 +10,7 @@ import org.springframework.ui.ModelMap;
 
 import java.util.List;
 
+
 public final class AdminControllerUtils {
 
     public static void addAttributesForSortingAndPaging(int size, ModelMap modelMap, String sortField, String sortDirection, Page<? extends Item> pageWithItems) {
