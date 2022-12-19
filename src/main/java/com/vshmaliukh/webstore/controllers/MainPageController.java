@@ -28,14 +28,14 @@ public class MainPageController {
 
     @GetMapping
     public ModelAndView showMainPage(ModelMap modelMap){
-        // todo implement template for links
+        // todo refactor template for links
 
         // get categories and types from db
 
         List<String> categories = new ArrayList<>(Arrays.asList("Literature","Another category"));
         List<List<String>> types = new ArrayList<>(Arrays.asList(
                 Arrays.asList("Books","Newspapers","Comics","Magazines"),
-                Arrays.asList("Another type","And another one"))); // todo refactor
+                Arrays.asList("Another type","And another one")));
         modelMap.addAttribute("categories",categories);
         modelMap.addAttribute("types",types);
         return new ModelAndView(MAIN_PAGE_VIEW,modelMap);
@@ -45,10 +45,10 @@ public class MainPageController {
     @GetMapping("/" + CATALOG_PAGE)
     public ModelAndView showCatalogPage(ModelMap modelMap){
 
-        // todo
+        // todo implement getting list from db
         List itemList = getTestItemOrderList();
         modelMap.addAttribute("itemList", itemList);
-        modelMap.addAttribute(PRICE,"$666.00");// todo create constants and tiles genering for catalog
+        modelMap.addAttribute(PRICE,"$666.00");
         return new ModelAndView(CATALOG_VIEW);
     }
 
@@ -78,7 +78,7 @@ public class MainPageController {
         modelMap.addAttribute("item",book);
 
 
-        return new ModelAndView(ITEM_PAGE_VIEW); // todo create item-page and implement item details printing
+        return new ModelAndView(ITEM_PAGE_VIEW,modelMap);
     }
 
 }
