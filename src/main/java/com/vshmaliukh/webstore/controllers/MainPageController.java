@@ -4,6 +4,9 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
+import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.services.ItemService;
+import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,6 +29,10 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.*;
 @AllArgsConstructor
 public class MainPageController {
 
+    final ItemService itemService;
+    final UserService userService;
+    final ActionsWithItemRepositoryProvider itemRepositoryProvider;
+
     @GetMapping
     public ModelAndView showMainPage(ModelMap modelMap){
         // todo refactor template for links
@@ -42,13 +49,13 @@ public class MainPageController {
 
     }
 
-    @GetMapping("/" + CATALOG_PAGE)
-    public ModelAndView showCatalogPage(ModelMap modelMap){
+    @GetMapping("/" + CATALOG_PAGE + "/{type}")
+    public ModelAndView showCatalogPage(ModelMap modelMap,
+                                        @PathVariable String type){
 
-        // todo implement getting list from db
-        List itemList = getTestItemOrderList();
-        modelMap.addAttribute("itemList", itemList);
-        modelMap.addAttribute(PRICE,"$666.00");
+        List<? extends Item> items = itemService.readAllItemsByTypeName(type);
+
+        modelMap.addAttribute("itemList", items);
         return new ModelAndView(CATALOG_VIEW);
     }
 
