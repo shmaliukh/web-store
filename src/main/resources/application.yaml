@@ -1,0 +1,13 @@
+server:
+  port: 8082
+
+app:
+  webSecurityEnable: !!bool false
+
+logging:
+  level:
+    root: INFO
+
+spring:
+  profiles:
+    active: secrets, database, oath2
