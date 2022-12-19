@@ -28,7 +28,6 @@ public class UserHomeController {
 
     @GetMapping("/{data}")
     public ModelAndView showUsersEditPage(@PathVariable String data, ModelMap modelMap){
-        System.out.println(data);
         modelMap.addAttribute("form",data);
         return new ModelAndView("edit-data-users-page",modelMap);
     }
