@@ -17,7 +17,8 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap){
-        return new ModelAndView(SHOPPING_CART_VIEW); // todo create cart-page
+//        return new ModelAndView(SHOPPING_CART_VIEW); // todo create cart-page
+        return new ModelAndView("order"); // temporarily
     }
 
     // todo create post method
