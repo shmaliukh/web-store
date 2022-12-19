@@ -62,10 +62,8 @@
                 <div class="card shadow-sm">
                     <div class="item-info" th:each="item: ${item}">
                         <div>
-                            <div th:each="detail: ${details}">
-                                <p th:text="${detail}">
-                                    Short description
-                                </p>
+                            <div th:insert="/blocks/item-details :: ${type}">
+
                             </div>
                         </div>
                     </div>

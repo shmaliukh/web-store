@@ -1,0 +1,26 @@
+<div th:fragment="book">
+  <div th:each="book : ${item}">
+    Author: <p th:text="${book.getAuthor()}"></p>
+    Publishing date: <p th:text="${book.getDate()}"></p>
+    pages: <p th:text="${book.getPages()}"></p>
+  </div>
+</div>
+
+<div th:fragment="comics">
+  <div th:each="comics : ${item}">
+    Publisher: <p th:text="${comics.getPublisher()}"></p>
+    Pages: <p th:text="${comics.getPages()}"></p>
+  </div>
+</div>
+
+<div th:fragment="magazine">
+  <div th:each="magazine : ${item}">
+    Pages: <p th:text="${magazine.getPages}"></p>
+  </div>
+</div>
+
+<div th:fragment="newspaper">
+  <div th:each="newspaper : ${item}">
+    Pages: <p th:text="${newspaper.getPages()}"></p>
+  </div>
+</div>
