@@ -36,7 +36,7 @@
                     <tbody>
                     <tr th:each="item, iterator: ${itemList}">
                         <form th:id="'formElem' +${iterator.count}" class="needs-validation">
-                            <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                            <th class="align-middle" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
                             <td class="align-middle" th:text="${item.getClass().getSimpleName()}">Type</td>
                             <td class="align-middle" th:text="${item.getId()}">Id</td>
                             <td class="align-middle" th:text="${item.getCategory()}">Category</td>

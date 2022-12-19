@@ -1,5 +1,5 @@
 <th scope="col" th:fragment="sorting(field, label, pageToRedirect)">
-  <a th:href="@{${pageToRedirect} + '?'
+  <a class="link-light" th:href="@{${pageToRedirect} + '?'
                 + ${keyword!=null && keyword!=''? 'keyword=' + keyword + '&' : ''}
                 + 'page=' + ${currentPage} + '&size=' + ${pageSize}
                 + ${sortField!=null ? '&sort=' + field + ',' + (sortField == field ? reverseSortDirection : sortDirection) : ''}}">
