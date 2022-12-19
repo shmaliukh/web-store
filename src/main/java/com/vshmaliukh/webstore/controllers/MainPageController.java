@@ -69,7 +69,6 @@ public class MainPageController {
         // getting item from db by item id and category name?
 
         Book book = new Book(id,"some name",category,666,4,true,456,"any author",new Date(2022,4,5));
-        String itemInfo = book.getName() + " - " + book.getPrice();   // for catalog tiles
 
         List<String> details = new ArrayList<>(Arrays.asList("Author: " + book.getAuthor(),"Pages: " + book.getPages(),"Issue date: " + book.getDateOfIssue()));
         String itemPrice = Integer.toString(book.getPrice()); // separate for price ?
