@@ -44,7 +44,7 @@ public class Order {
     @Column(name = ITEM_ID_COLUMN, nullable = false)
     private Integer itemId;
 
-    @Column(name = ITEM_ID_COLUMN, nullable = false)
+    @Column(name = ITEM_CLASS_TYPE_COLUMN, nullable = false)
     private Class<Item> itemClassType;
 
 //    @OneToMany
