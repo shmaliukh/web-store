@@ -18,17 +18,14 @@
         <form method="post">
 
             <div class="d-flex align-items-center p-3 my-3 rounded shadow-sm">
-                <div class="col-12">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="user" required="">
-                    <div class="invalid-feedback">
-                        Please enter correct name.
-                    </div>
+                <div class="col-12" th:insert="/blocks/forms-for-users-edit-page :: ${form}">
+
                 </div>
+
             </div>
 
             <div class="my-3 p-3 bg-body rounded shadow-sm">
-                <button class="w-100 btn btn-primary btn-lg" type="submit">Save</button>
+                <button class="w-100 btn btn-primary btn-lg" style="background-color: #1c1c1c" type="submit">Save</button>
             </div>
 
 

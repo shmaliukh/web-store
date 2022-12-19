@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.EDIT_PAGE;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.USER_HOME;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.HOME_PAGE_VIEW;
 
@@ -24,12 +23,14 @@ public class UserHomeController {
         user.setEmail("user@gmail.com");
         user.setUsername("Your First User");
         modelMap.addAttribute("user",user);
-        return new ModelAndView(HOME_PAGE_VIEW,modelMap); // todo create home page
+        return new ModelAndView(HOME_PAGE_VIEW,modelMap);
     }
 
     @GetMapping("/{data}")
     public ModelAndView showUsersEditPage(@PathVariable String data, ModelMap modelMap){
-        return new ModelAndView(data); // todo create users edit page
+        System.out.println(data);
+        modelMap.addAttribute("form",data);
+        return new ModelAndView("edit-data-users-page",modelMap);
     }
 
 }
