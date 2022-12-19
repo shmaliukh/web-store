@@ -11,8 +11,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
@@ -30,15 +28,24 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = USER_ID_COLUMN)
+    @Column(name = USER_ID_COLUMN, nullable = false)
     private Long userId;
 
-    @Column(name = ORDER_DATE_COLUMN)
+    @Column(name = ORDER_DATE_COLUMN, nullable = false)
     @JsonFormat(pattern = DD_MM_YYYY_ORDER_DATE_PATTERN_STR)
     private LocalDate dateCreated;
 
     @Column(name = ORDER_STATUS_COLUMN)
     private String status;
+
+    @Column(name = ORDER_COMMENT_COLUMN)
+    private String comment;
+
+    @Column(name = ITEM_ID_COLUMN, nullable = false)
+    private Integer itemId;
+
+    @Column(name = ITEM_ID_COLUMN, nullable = false)
+    private Class<Item> itemClassType;
 
 //    @OneToMany
 //    // TODO config tables relationship
