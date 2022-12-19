@@ -48,9 +48,18 @@ public class ViewItemController {
         return new ModelAndView("admin-item-view", modelMap);
     }
 
-    @GetMapping("/**")
-    public ModelAndView doGet(ModelMap modelMap) {
+    @GetMapping(value = {"/all"})
+    public ModelAndView doGet(@RequestParam(required = false) String keyword,
+                              @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(defaultValue = "6") int size,
+                              @RequestParam(defaultValue = "id,asc") String[] sort,
+                              ModelMap modelMap) {
+
         List<Item> itemAllTypeList = ItemUtil.readAllItems(itemService);
+        for (ActionsWithItem<? extends Item> actionsWithItem : actionsWithItemRepositoryProvider.itemActionsWithRepositoryList) {
+            itemAllTypeList.addAll(AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, actionsWithItem));
+        }
+
         modelMap.addAttribute("itemType", "all");
         modelMap.addAttribute("itemList", itemAllTypeList);
         return new ModelAndView("admin-item-view", modelMap);
