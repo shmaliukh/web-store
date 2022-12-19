@@ -15,4 +15,6 @@ public interface ActionsWithItem<T extends Item> {
 
     List<T> findAll();
 
+    T getItemById(Integer id);
+
 }

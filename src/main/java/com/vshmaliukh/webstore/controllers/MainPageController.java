@@ -68,22 +68,16 @@ public class MainPageController {
         return itemList;
     }
 
-    @GetMapping("/" + CATALOG_PAGE + "/{" + CATEGORY_PAGE + "}/{id}")
+    @GetMapping("/" + CATALOG_PAGE + "/{type}/{id}")
     public ModelAndView showItemPage(ModelMap modelMap,
-                                     @PathVariable String category,
+                                     @PathVariable String type,
                                      @PathVariable Integer id){
 
-        // getting item from db by item id and category name?
+        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
 
-        Book book = new Book(id,"some name",category,666,4,true,456,"any author",new Date(2022,4,5));
+        modelMap.addAttribute("type", type.toLowerCase());
 
-        List<String> details = new ArrayList<>(Arrays.asList("Author: " + book.getAuthor(),"Pages: " + book.getPages(),"Issue date: " + book.getDateOfIssue()));
-        String itemPrice = Integer.toString(book.getPrice()); // separate for price ?
-        String itemName = book.getName();
-
-        modelMap.addAttribute("details",details);
-        modelMap.addAttribute("item",book);
-
+        modelMap.addAttribute("item",item);
 
         return new ModelAndView(ITEM_PAGE_VIEW,modelMap);
     }
