@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -73,14 +74,20 @@ public class MainPageController {
                                      @PathVariable String type,
                                      @PathVariable Integer id){
 
-        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
+//        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
 
         modelMap.addAttribute("type", type.toLowerCase());
 
-        modelMap.addAttribute("item",item);
-//        Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
-//        modelMap.addAttribute("item",book);
+//        modelMap.addAttribute("item",item);
+        Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
+        modelMap.addAttribute("item",book);
+        modelMap.addAttribute("href","/" + MAIN_PAGE + "/" + CATALOG_PAGE + "/" + type + "/" + id);
         return new ModelAndView(ITEM_PAGE_VIEW,modelMap);
     }
 
+    @PostMapping("/" + CATALOG_PAGE + "/{type}/{id}")
+    public String addToOrder(@PathVariable String type,
+                             @PathVariable Integer id){
+        return "redirect:/main/catalog/"+ type;
+    }
 }
