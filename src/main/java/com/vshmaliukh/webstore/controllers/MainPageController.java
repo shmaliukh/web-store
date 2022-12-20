@@ -55,17 +55,12 @@ public class MainPageController {
                                         @PathVariable String type){
 
         List<? extends Item> items = itemService.readAllItemsByTypeName(type);
-        List<String> urls = genURLForItemsPages(items);
+
         List<Item> itemList = getTestItemOrderList(); // for test
-        List<String> urlsTest = genURLForItemsPages(itemList);
+
         modelMap.addAttribute("itemList", itemList);
-        modelMap.addAttribute("urls",urlsTest);
-
-
-
 
 //        modelMap.addAttribute("itemList", items);
-//        modelMap.addAttribute("urls",urls);
         return new ModelAndView(CATALOG_VIEW);
     }
 
@@ -81,7 +76,7 @@ public class MainPageController {
     @GetMapping("/" + CATALOG_PAGE + "/{type}/{id}")
     public ModelAndView showItemPage(ModelMap modelMap,
                                      @PathVariable String type,
-                                     @PathVariable Integer id){
+                                     @PathVariable Long id){
 
 //        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
 
@@ -90,13 +85,12 @@ public class MainPageController {
 //        modelMap.addAttribute("item",item);
         Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
         modelMap.addAttribute("item",book);
-        modelMap.addAttribute("href","/" + MAIN_PAGE + "/" + CATALOG_PAGE + "/" + type + "/" + id);
         return new ModelAndView(ITEM_PAGE_VIEW,modelMap);
     }
 
     @PostMapping("/" + CATALOG_PAGE + "/{type}/{id}")
     public String addToOrder(@PathVariable String type,
-                             @PathVariable Integer id,
+                             @PathVariable Long id,
                              @RequestHeader String referer){
         // todo implement adding
         return "redirect:" + referer;
