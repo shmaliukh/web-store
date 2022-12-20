@@ -5,7 +5,8 @@
                 + ${sortField!=null ? '&sort=' + field + ',' + (sortField == field ? reverseSortDirection : sortDirection) : ''}}">
     [[${label}]]
   </a>
-  <span th:if="${sortField == field}"
-    th:class="${sortDirection == 'asc' ? 'fas fa-arrow-down-short-wide' : 'fas fa-arrow-down-wide-short'}">
+  <span th:if="${sortField == field}" style="color:white"
+    th:text="${sortDirection == 'asc' ? '▲' : '▼'}">
   </span>
+  <span ▼</span>
 </th>
