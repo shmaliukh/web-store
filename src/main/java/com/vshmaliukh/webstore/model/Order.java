@@ -6,16 +6,19 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 
-import com.vshmaliukh.webstore.model.items.Item;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = ORDER_TABLE)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderProducts")
@@ -31,12 +34,9 @@ public class Order {
     @Column(name = USER_ID_COLUMN, nullable = false)
     private Long userId;
 
-    @Column(name = USER_NAME_COLUMN, nullable = false)
-    private String username;
-
     @Column(name = ORDER_DATE_COLUMN, nullable = false)
     @JsonFormat(pattern = DD_MM_YYYY_ORDER_DATE_PATTERN_STR)
-    private LocalDate dateCreated;
+    private Date dateCreated;
 
     @Column(name = ORDER_STATUS_COLUMN)
     private String status;
@@ -48,7 +48,10 @@ public class Order {
     private Integer itemId;
 
     @Column(name = ITEM_CLASS_TYPE_COLUMN, nullable = false)
-    private Class<Item> itemClassType;
+    private String itemClassType;
+
+    @Column(name = QUANTITY_COLUMN, nullable = false)
+    private Integer quantity;
 
 //    @OneToMany
 //    // TODO config tables relationship

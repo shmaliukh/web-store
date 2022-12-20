@@ -29,7 +29,7 @@
                     <caption th:text="|${itemType} type table|"></caption>
                     <thead>
                     <tr class="table-dark">
-                        <th:block th:insert="blocks/item-table-titles :: base-item-titles('/admin/item/delete/' + ${itemType})"></th:block>
+                        <th:block th:insert="blocks/table-titles :: base-item-titles('/admin/item/delete/' + ${itemType})"></th:block>
                         <th scope="col"></th>
                     </tr>
                     </thead>

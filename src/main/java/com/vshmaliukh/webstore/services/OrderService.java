@@ -22,6 +22,10 @@ public class OrderService {
 
     final OrderRepository orderRepository;
 
+    public void saveOrder(Order order){
+        orderRepository.save(order);
+    }
+
     public void changeOrderStatus(long userId, String newStatusStr) {
         Order orderByUserId = readOrderByUserId(userId);
         if (orderByUserId != null && StringUtils.isNotBlank(newStatusStr)) {

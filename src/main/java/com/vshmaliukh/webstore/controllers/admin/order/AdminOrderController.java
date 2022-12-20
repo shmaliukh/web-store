@@ -18,11 +18,11 @@ import java.util.List;
 @AllArgsConstructor
 @Controller
 @RequestMapping("/admin/order")
-public class OrderController {
+public class AdminOrderController {
 
     final OrderService orderService;
 
-    @GetMapping("/view")
+    @GetMapping("/view/**")
     public ModelAndView doGet(@RequestParam(required = false) String keyword,
                               @RequestParam(defaultValue = "1") int page,
                               @RequestParam(defaultValue = "6") int size,
@@ -31,7 +31,7 @@ public class OrderController {
         List<Order> orderList = AdminControllerUtils.getSortedOrderContent(keyword, page, size, sort, modelMap, orderService.getOrderRepository());
 
         modelMap.addAttribute("orderList", orderList);
-        return new ModelAndView("admin-order-view", modelMap);
+        return new ModelAndView("admin/order/view", modelMap);
     }
 
 }
