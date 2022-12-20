@@ -71,9 +71,12 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <a href="/shopping-cart" class="btn btn-sm btn-outline-secondary">
-                                            <img class="shopping-icon" src="/icons/shopping-cart.png">
-                                        </a>
+                                        <form method="post" th:action="'/main/catalog/' + ${item.getCategory()} + '/' + ${item.getId()}">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                                <img class="shopping-icon" src="/icons/shopping-cart.png">
+                                            </button>
+                                        </form>
+
                                         <a href="/shopping-cart" class="btn btn-sm btn-outline-secondary">
                                             <img class="shopping-icon" src="/icons/buy.png">
                                         </a>

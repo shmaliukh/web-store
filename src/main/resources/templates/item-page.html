@@ -52,7 +52,7 @@
                                     </form>
                                 </div>
                                 <div class="btn-group">
-                                    <form method="post" th:action="${href}">
+                                    <form method="post" th:action="'/main/catalog' + ${item.getCategory()} + '/' + ${item.getId()}">
                                     <button type="submit" class="btn btn-sm btn-outline-secondary"><img
                                             class="shopping-icon" src="/icons/buy.png"></button>
                                     </form>
