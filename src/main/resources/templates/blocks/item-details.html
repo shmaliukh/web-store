@@ -1,7 +1,7 @@
 <div th:fragment="book">
   <div th:each="book : ${item}">
     Author: <p th:text="${book.getAuthor()}"></p>
-    Publishing date: <p th:text="${book.getDate()}"></p>
+    Publishing date: <p th:text="${book.getDateOfIssue()}"></p>
     pages: <p th:text="${book.getPages()}"></p>
   </div>
 </div>

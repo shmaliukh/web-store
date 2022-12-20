@@ -78,7 +78,8 @@ public class MainPageController {
         modelMap.addAttribute("type", type.toLowerCase());
 
         modelMap.addAttribute("item",item);
-
+//        Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
+//        modelMap.addAttribute("item",book);
         return new ModelAndView(ITEM_PAGE_VIEW,modelMap);
     }
 
