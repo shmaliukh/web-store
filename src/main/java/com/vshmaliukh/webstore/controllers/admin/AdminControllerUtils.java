@@ -15,7 +15,9 @@ import java.util.List;
 
 public final class AdminControllerUtils {
 
-    public static void addAttributesForSortingAndPaging(int size, ModelMap modelMap, String sortField, String sortDirection, Page pageWithItems) {
+    private AdminControllerUtils(){}
+
+    public static void addAttributesForSortingAndPaging(int size, ModelMap modelMap, String sortField, String sortDirection, Page<?> pageWithItems) {
         modelMap.addAttribute("currentPage", pageWithItems.getNumber() + 1);
         modelMap.addAttribute("totalItems", pageWithItems.getTotalElements());
         modelMap.addAttribute("totalPages", pageWithItems.getTotalPages());
@@ -25,7 +27,8 @@ public final class AdminControllerUtils {
         modelMap.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
     }
 
-    public static List<? extends Item> getSortedItemsContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, ActionsWithItem<? extends Item> repositoryByItemClassName) {
+    public static <T extends Item>  List<T> getSortedItemsContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, ActionsWithItem<T> repositoryByItemClassName) {
+//      TODO refactor duplicate
         String sortField = sort[0];
         String sortDirection = sort[1];
 
@@ -34,14 +37,14 @@ public final class AdminControllerUtils {
 
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
 
-        Page<? extends Item> pageWithItems;
+        Page<T> pageWithItems;
         if (keyword == null) {
             pageWithItems = repositoryByItemClassName.findAll(pageable);
         } else {
             pageWithItems = repositoryByItemClassName.findByNameContainingIgnoreCase(keyword, pageable);
             modelMap.addAttribute("keyword", keyword);
         }
-        List<? extends Item> content = pageWithItems.getContent();
+        List<T> content = pageWithItems.getContent();
         addAttributesForSortingAndPaging(size, modelMap, sortField, sortDirection, pageWithItems);
         return content;
     }
