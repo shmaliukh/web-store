@@ -14,7 +14,7 @@ import java.util.List;
 public final class AdminControllerUtils {
 
     public static void addAttributesForSortingAndPaging(int size, ModelMap modelMap, String sortField, String sortDirection, Page<? extends Item> pageWithItems) {
-        modelMap.addAttribute("currentPage", pageWithItems.getNumber());
+        modelMap.addAttribute("currentPage", pageWithItems.getNumber() + 1);
         modelMap.addAttribute("totalItems", pageWithItems.getTotalElements());
         modelMap.addAttribute("totalPages", pageWithItems.getTotalPages());
         modelMap.addAttribute("pageSize", size);
@@ -43,4 +43,5 @@ public final class AdminControllerUtils {
         addAttributesForSortingAndPaging(size, modelMap, sortField, sortDirection, pageWithItems);
         return content;
     }
+
 }

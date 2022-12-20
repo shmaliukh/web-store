@@ -54,7 +54,6 @@ public class ViewItemController {
                               @RequestParam(defaultValue = "6") int size,
                               @RequestParam(defaultValue = "id,asc") String[] sort,
                               ModelMap modelMap) {
-
         List<Item> itemAllTypeList = ItemUtil.readAllItems(itemService);
         for (ActionsWithItem<? extends Item> actionsWithItem : actionsWithItemRepositoryProvider.itemActionsWithRepositoryList) {
             itemAllTypeList.addAll(AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, actionsWithItem));
