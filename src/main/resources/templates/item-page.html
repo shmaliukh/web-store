@@ -46,12 +46,16 @@
                             <h5>Price: $<b th:text="${item.getPrice()}">0</b></h5>
                             <div style="text-align: center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary"><img
-                                            class="shopping-icon" src="/icons/shopping-cart.png"></button>
+                                    <form method="post" th:action="${href}">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary"><img
+                                                class="shopping-icon" src="/icons/shopping-cart.png"></button>
+                                    </form>
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary"><img
+                                    <form method="post" th:action="${href}">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary"><img
                                             class="shopping-icon" src="/icons/buy.png"></button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
