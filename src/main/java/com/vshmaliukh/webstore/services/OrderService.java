@@ -6,6 +6,8 @@ import com.vshmaliukh.webstore.repositories.OrderRepository;
 
 import java.util.Collections;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -14,13 +16,11 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Getter
+@AllArgsConstructor
 public class OrderService {
 
     final OrderRepository orderRepository;
-
-    public OrderService(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
 
     public void changeOrderStatus(long userId, String newStatusStr) {
         Order orderByUserId = readOrderByUserId(userId);

@@ -31,6 +31,9 @@ public class Order {
     @Column(name = USER_ID_COLUMN, nullable = false)
     private Long userId;
 
+    @Column(name = USER_NAME_COLUMN, nullable = false)
+    private String username;
+
     @Column(name = ORDER_DATE_COLUMN, nullable = false)
     @JsonFormat(pattern = DD_MM_YYYY_ORDER_DATE_PATTERN_STR)
     private LocalDate dateCreated;
