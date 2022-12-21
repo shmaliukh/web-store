@@ -1,4 +1,4 @@
-<th:block th:fragment="base-order-titles(pageToRedirect)">
+<th:block th:fragment="order-titles-with-sorting(pageToRedirect)">
     <th scope="col">#</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('userId','UserID', ${pageToRedirect})"></th>
@@ -8,6 +8,17 @@
     <th th:replace="blocks/sorting :: sorting('quantity','QUANTITY', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('comment','COMMENT', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('status','STATUS', ${pageToRedirect})"></th>
+</th:block>
+
+<th:block th:fragment="base-order-titles">
+    <th scope="col">ID</th>
+    <th scope="col">UserID</th>
+    <th scope="col">DATE</th>
+    <th scope="col">TYPE</th>
+    <th scope="col">ItemID</th>
+    <th scope="col">QUANTITY</th>
+    <th scope="col">COMMENT</th>
+    <th scope="col">STATUS</th>
 </th:block>
 
 <th:block th:fragment="base-item-titles(pageToRedirect)">
@@ -37,6 +48,7 @@
 </div>
 
 <div th:fragment="comics(pageToRedirect)">
+    <th th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('publisher','PUBLISHER', ${pageToRedirect})"></th>
 </div>
 

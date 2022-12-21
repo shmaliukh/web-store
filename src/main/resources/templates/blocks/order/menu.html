@@ -14,3 +14,47 @@
         </div>
     </div>
 </div>
+
+<div th:fragment="view-addition-menu(orderId)">
+    <hr>
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <div th:fragment="edit(orderId)"></div>
+            <div th:fragment="delete(orderId)"></div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="edit-addition-menu(orderId)">
+    <hr>
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <div th:fragment="view(orderId)"></div>
+            <div th:fragment="delete(orderId)"></div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="view(orderId)">
+    <a th:href="|@{/admin/order/view/}${orderId}|">
+        <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+            View this order
+        </button>
+    </a>
+</div>
+
+<div th:fragment="edit(orderId)">
+    <a th:href="|@{/admin/order/edit/}${orderId}|">
+        <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+            Edit this order
+        </button>
+    </a>
+</div>
+
+<div th:fragment="delete(orderId)">
+    <a th:href="|@{/admin/order/delete/}${orderId}|">
+        <button type="button" class="w-100 btn btn-outline-danger btn-lg btn-block">
+            Delete this order
+        </button>
+    </a>
+</div>
