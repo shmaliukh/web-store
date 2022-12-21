@@ -24,7 +24,7 @@ public class ItemService {
             if(optionalItem.isPresent()){
                 return optionalItem.get();
             } else {
-                log.warn("problem to find '{}' item by '{}' id", id, type);
+                log.warn("problem to find '{}' type item by '{}' id", type, id);
             }
         } else {
             log.warn("problem to find repository by '{}' type", type);
