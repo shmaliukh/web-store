@@ -53,6 +53,21 @@ public class CartService {
         }
     }
 
+    void decItemQuantityInCart(Item item, String userName){
+        Long userId = userRepository.getUserByUsername(userName).getId();
+        List<Cart> carts = getCartsByUserId(userId);
+        for (Cart cart : carts) {
+            if (Objects.equals(cart.getItemId(),item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
+                cart.setItemQuantity(cart.getItemQuantity()-1);
+                if(cart.getItemQuantity()==0){
+                    cartRepository.delete(cart);
+                }
+                break;
+            }
+        }
+    }
+
+
     List<Cart> getCartsByUserId(Long id){
         return cartRepository.findCartsByUserId(id);
     }
