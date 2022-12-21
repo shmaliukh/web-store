@@ -19,7 +19,7 @@ public class CartService {
     final CartRepository cartRepository;
     final UserRepository userRepository;
 
-    void addItemToCart(Item item, String userName){
+    public void addItemToCart(Item item, String userName){
         Long userId = userRepository.getUserByUsername(userName).getId();
         List<Cart> carts = getCartsByUserId(userId);
         boolean found = false;
@@ -42,7 +42,7 @@ public class CartService {
         }
     }
 
-    void removeItemFromCart(Item item, String userName){
+    public void removeItemFromCart(Item item, String userName){
         Long userId = userRepository.getUserByUsername(userName).getId();
         List<Cart> carts = getCartsByUserId(userId);
         for (Cart cart : carts) {
@@ -53,7 +53,7 @@ public class CartService {
         }
     }
 
-    void decItemQuantityInCart(Item item, String userName){
+    public void decItemQuantityInCart(Item item, String userName){
         Long userId = userRepository.getUserByUsername(userName).getId();
         List<Cart> carts = getCartsByUserId(userId);
         for (Cart cart : carts) {
@@ -67,8 +67,7 @@ public class CartService {
         }
     }
 
-
-    List<Cart> getCartsByUserId(Long id){
+    public List<Cart> getCartsByUserId(Long id){
         return cartRepository.findCartsByUserId(id);
     }
 

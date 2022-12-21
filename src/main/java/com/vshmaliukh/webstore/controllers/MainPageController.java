@@ -5,6 +5,8 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.ActionsWithItem;
+import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ public class MainPageController {
 
     final ItemService itemService;
     final UserService userService;
+    final CartService cartService;
     final ActionsWithItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
@@ -89,10 +92,12 @@ public class MainPageController {
     }
 
     @PostMapping("/" + CATALOG_PAGE + "/{type}/{id}")
-    public String addToOrder(@PathVariable String type,
-                             @PathVariable Long id,
+    public String addToCart(@PathVariable String type,
+                             @PathVariable Integer id,
                              @RequestHeader String referer){
-        // todo implement adding
+        ActionsWithItem actionsWithItem = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type);
+        Item item = actionsWithItem.getItemById(id);
+        cartService.addItemToCart(item,"username"); // todo implement username usage
         return "redirect:" + referer;
     }
 
