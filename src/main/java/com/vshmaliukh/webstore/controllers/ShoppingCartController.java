@@ -23,13 +23,18 @@ public class ShoppingCartController {
         return new ModelAndView("order"); // temporarily
     }
 
-    @PostMapping("/add/{type}/{id}")
+    @PostMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                         @PathVariable Integer id){
         // todo implement item adding
         return "redirect:/" + SHOPPING_CART;
     }
 
-    // todo implement item decrementing
+    @PostMapping("/remove-one/{type}/{id}")
+    public String decItemQuantity(@PathVariable String type,
+                                  @PathVariable Integer id){
+        // todo implement item decrementing
+        return "redirect:/" + SHOPPING_CART;
+    }
 
 }
