@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,6 +23,13 @@ public class ShoppingCartController {
         return new ModelAndView("order"); // temporarily
     }
 
-    // todo create post method
+    @PostMapping("/add/{type}/{id}")
+    public String incItemQuantity(@PathVariable String type,
+                                        @PathVariable Integer id){
+        // todo implement item adding
+        return "redirect:/" + SHOPPING_CART;
+    }
+
+    // todo implement item decrementing
 
 }
