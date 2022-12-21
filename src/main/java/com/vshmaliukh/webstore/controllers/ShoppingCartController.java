@@ -1,5 +1,10 @@
 package com.vshmaliukh.webstore.controllers;
 
+import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.services.CartService;
+import com.vshmaliukh.webstore.services.ItemService;
+import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -17,6 +22,11 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
 @AllArgsConstructor
 public class ShoppingCartController {
 
+    final ItemService itemService;
+    final UserService userService;
+    final CartService cartService;
+    final ActionsWithItemRepositoryProvider itemRepositoryProvider;
+
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap){
 //        return new ModelAndView(SHOPPING_CART_VIEW); // todo create cart-page
@@ -26,7 +36,8 @@ public class ShoppingCartController {
     @PostMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                         @PathVariable Integer id){
-        // todo implement item adding
+        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
+        cartService.addItemToCart(item,"");
         return "redirect:/" + SHOPPING_CART;
     }
 
