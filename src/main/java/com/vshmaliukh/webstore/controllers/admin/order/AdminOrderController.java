@@ -27,6 +27,11 @@ public class AdminOrderController {
 
     final OrderService orderService;
 
+    @GetMapping("/**")
+    public ModelAndView doGet(ModelMap modelMap) {
+        return new ModelAndView("redirect:/admin/order/catalog", modelMap);
+    }
+
     @GetMapping("/catalog/**")
     public ModelAndView doGet(@RequestParam(required = false) String keyword,
                               @RequestParam(defaultValue = "1") int page,

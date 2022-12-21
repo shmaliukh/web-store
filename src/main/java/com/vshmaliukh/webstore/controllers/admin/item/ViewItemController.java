@@ -3,8 +3,8 @@ package com.vshmaliukh.webstore.controllers.admin.item;
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
-import com.vshmaliukh.webstore.repositories.literature_items_repositories.ActionsWithItem;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import java.util.List;
 public class ViewItemController {
 
     final ItemService itemService;
-    final ActionsWithItemRepositoryProvider actionsWithItemRepositoryProvider;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
 
     @GetMapping("/{itemType}")
@@ -40,7 +40,7 @@ public class ViewItemController {
         if (itemList == null) {
             return new ModelAndView("redirect:/admin/item/view", modelMap);
         }
-        ActionsWithItem<? extends Item> repositoryByItemClassName = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(itemType);
+        ItemRepository<? extends Item> repositoryByItemClassName = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
         itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, repositoryByItemClassName);
 
         modelMap.addAttribute("itemType", itemType.toLowerCase());
@@ -55,8 +55,8 @@ public class ViewItemController {
                               @RequestParam(defaultValue = "id,asc") String[] sort,
                               ModelMap modelMap) {
         List<Item> itemAllTypeList = ItemUtil.readAllItems(itemService);
-        for (ActionsWithItem<? extends Item> actionsWithItem : actionsWithItemRepositoryProvider.itemActionsWithRepositoryList) {
-            itemAllTypeList.addAll(AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, actionsWithItem));
+        for (ItemRepository<? extends Item> itemRepository : itemRepositoryProvider.itemRepositoryList) {
+            itemAllTypeList.addAll(AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository));
         }
 
         modelMap.addAttribute("itemType", "all");

@@ -18,29 +18,28 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Getter
-public final class ActionsWithItemRepositoryProvider {
+public final class ItemRepositoryProvider {
 
     // TODO refactor
 
-    final ActionsWithItem<Book> bookRepository;
-    final ActionsWithItem<Comics> comicsRepository;
-    final ActionsWithItem<Magazine> magazineRepository;
-    final ActionsWithItem<Newspaper> newspaperRepository;
+    final ItemRepository<Book> bookRepository;
+    final ItemRepository<Comics> comicsRepository;
+    final ItemRepository<Magazine> magazineRepository;
+    final ItemRepository<Newspaper> newspaperRepository;
 
-    public List<ActionsWithItem<? extends Item>> itemActionsWithRepositoryList;
-    public Map<Class<? extends Item>, ActionsWithItem<? extends Item>> itemClassTypeActionsWithRepositoryMap;
-    public Map<String, ActionsWithItem<? extends Item>> itemClassNameActionsWithRepositoryMap;
+    public List<ItemRepository<? extends Item>> itemRepositoryList;
+    public Map<Class<? extends Item>, ItemRepository<? extends Item>> itemClassTypeRepositoryMap;
+    public Map<String, ItemRepository<? extends Item>> itemClassNameRepositoryMap;
 
-    public ActionsWithItemRepositoryProvider(ActionsWithItem<Book> bookRepository,
-                                             ActionsWithItem<Comics> comicsRepository,
-                                             ActionsWithItem<Magazine> magazineRepository,
-                                             ActionsWithItem<Newspaper> newspaperRepository) {
+    public ItemRepositoryProvider(ItemRepository<Book> bookRepository,
+                                  ItemRepository<Comics> comicsRepository,
+                                  ItemRepository<Magazine> magazineRepository,
+                                  ItemRepository<Newspaper> newspaperRepository) {
         this.bookRepository = bookRepository;
         this.comicsRepository = comicsRepository;
         this.magazineRepository = magazineRepository;
         this.newspaperRepository = newspaperRepository;
     }
-
 
     @PostConstruct
     private void postConstruct() {
@@ -50,34 +49,34 @@ public final class ActionsWithItemRepositoryProvider {
     }
 
     private void generateItemRepositoryList() {
-        itemActionsWithRepositoryList = Collections.unmodifiableList(new ArrayList<>(itemClassTypeActionsWithRepositoryMap.values()));
+        itemRepositoryList = Collections.unmodifiableList(new ArrayList<>(itemClassTypeRepositoryMap.values()));
     }
 
     private void generateItemClassTypeRepositoryMap() {
-        Map<Class<? extends Item>, ActionsWithItem<? extends Item>> classTypeRepositoryMap = new ConcurrentHashMap<>();
+        Map<Class<? extends Item>, ItemRepository<? extends Item>> classTypeRepositoryMap = new ConcurrentHashMap<>();
         classTypeRepositoryMap.put(Book.class, bookRepository);
         classTypeRepositoryMap.put(Magazine.class, magazineRepository);
         classTypeRepositoryMap.put(Comics.class, comicsRepository);
         classTypeRepositoryMap.put(Newspaper.class, newspaperRepository);
-        itemClassTypeActionsWithRepositoryMap = Collections.unmodifiableMap(classTypeRepositoryMap);
+        itemClassTypeRepositoryMap = Collections.unmodifiableMap(classTypeRepositoryMap);
     }
 
     private void generateItemClassNameRepositoryMap() {
-        Map<String, ActionsWithItem<? extends Item>> classNameRepositoryMap = new ConcurrentHashMap<>();
+        Map<String, ItemRepository<? extends Item>> classNameRepositoryMap = new ConcurrentHashMap<>();
         classNameRepositoryMap.put(Book.class.getSimpleName().toLowerCase(), bookRepository);
         classNameRepositoryMap.put(Magazine.class.getSimpleName().toLowerCase(), magazineRepository);
         classNameRepositoryMap.put(Comics.class.getSimpleName().toLowerCase(), comicsRepository);
         classNameRepositoryMap.put(Newspaper.class.getSimpleName().toLowerCase(), newspaperRepository);
-        itemClassNameActionsWithRepositoryMap = Collections.unmodifiableMap(classNameRepositoryMap);
+        itemClassNameRepositoryMap = Collections.unmodifiableMap(classNameRepositoryMap);
     }
 
-    public <T extends Item> ActionsWithItem<T> getActionsWithItemRepositoryByItemClassType(T item) {
-        return (ActionsWithItem<T>) itemClassTypeActionsWithRepositoryMap.getOrDefault(item.getClass(), null);
+    public <T extends Item> ItemRepository<T> getItemRepositoryByItemClassType(T item) {
+        return (ItemRepository<T>) itemClassTypeRepositoryMap.getOrDefault(item.getClass(), null);
 
     }
 
-    public ActionsWithItem<? extends Item> getActionsWithItemRepositoryByItemClassName(String itemClassName) {
-        return itemClassNameActionsWithRepositoryMap.getOrDefault(itemClassName.toLowerCase(), null);
+    public ItemRepository<? extends Item> getItemRepositoryByItemClassName(String itemClassName) {
+        return itemClassNameRepositoryMap.getOrDefault(itemClassName.toLowerCase(), null);
     }
 
 }

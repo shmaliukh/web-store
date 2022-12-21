@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface ActionsWithItem<T extends Item> {
+public interface ItemRepository<T extends Item> {
 
     void deleteById(@Param(ConstantsForEntities.ITEM_ID_COLUMN) Integer itemId);
 

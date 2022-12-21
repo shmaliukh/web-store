@@ -1,6 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
-import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ public class AdminHomeController {
 
     final UserService userService;
     final ItemService itemService;
-    final ActionsWithItemRepositoryProvider itemRepositoryProvider;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
     public ModelAndView doGet(@CookieValue(defaultValue = "0") Long userId,

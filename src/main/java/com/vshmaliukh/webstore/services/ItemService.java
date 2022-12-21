@@ -1,8 +1,8 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
-import com.vshmaliukh.webstore.repositories.literature_items_repositories.ActionsWithItem;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,10 +15,10 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ItemService {
 
-    final ActionsWithItemRepositoryProvider actionsWithItemRepositoryProvider;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     public Item readItemByIdAndType(Integer id, String type){
-        ActionsWithItem<? extends Item> repositoryByType = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type);
+        ItemRepository<? extends Item> repositoryByType = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         if(repositoryByType != null){
             Optional<? extends Item> optionalItem = repositoryByType.findById(id);
             if(optionalItem.isPresent()){
@@ -33,18 +33,18 @@ public class ItemService {
     }
 
     public <T extends Item> void saveItem(T item) {
-        ActionsWithItem<T> actionsWithItem = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassType(item);
-        if (actionsWithItem != null) {
-            actionsWithItem.save(item);
+        ItemRepository<T> itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
+        if (itemRepository != null) {
+            itemRepository.save(item);
         } else {
             log.warn("problem to save '{}' item , repository not found", item);
         }
     }
 
     public boolean isItemSaved(Item item) {
-        ActionsWithItem<? extends Item> actionsWithItem = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassType(item);
-        if (actionsWithItem != null) {
-            List<? extends Item> allItemList = actionsWithItem.findAll();
+        ItemRepository<? extends Item> itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
+        if (itemRepository != null) {
+            List<? extends Item> allItemList = itemRepository.findAll();
             return allItemList.contains(item);
 
         } else {
@@ -54,7 +54,7 @@ public class ItemService {
     }
 
     public List<? extends Item> readAllItemsByTypeName(String itemTypeName) {
-        ActionsWithItem<? extends Item> itemRepositoryByItemTypeName = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(itemTypeName);
+        ItemRepository<? extends Item> itemRepositoryByItemTypeName = itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeName);
         if (itemRepositoryByItemTypeName != null) {
             return itemRepositoryByItemTypeName.findAll();
         }
@@ -63,11 +63,11 @@ public class ItemService {
     }
 
     public <T extends Item> void deleteItem(T item) {
-        ActionsWithItem<T> actionsWithItem = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassType(item);
-        if (actionsWithItem != null) {
+        ItemRepository<T> itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
+        if (itemRepository != null) {
             Integer itemId = item.getId();
             if (itemId != null) {
-                actionsWithItem.deleteById(itemId);
+                itemRepository.deleteById(itemId);
             } else{
                 log.warn("problem to save '{}' item , item id is NULL", item);
             }
