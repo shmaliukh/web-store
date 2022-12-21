@@ -37,14 +37,15 @@ public class ShoppingCartController {
     public String incItemQuantity(@PathVariable String type,
                                         @PathVariable Integer id){
         Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
-        cartService.addItemToCart(item,"");
+        cartService.addItemToCart(item,"username"); // todo implement username usage
         return "redirect:/" + SHOPPING_CART;
     }
 
     @PostMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id){
-        // todo implement item decrementing
+        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
+        cartService.decItemQuantityInCart(item,"username"); // todo implement username usage
         return "redirect:/" + SHOPPING_CART;
     }
 
