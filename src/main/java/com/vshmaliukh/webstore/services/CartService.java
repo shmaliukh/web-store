@@ -24,7 +24,7 @@ public class CartService {
         List<Cart> carts = getCartsByUserId(userId);
         boolean found = false;
         for (Cart cart : carts) {
-            if (Objects.equals(cart.getItemId(), item.getId())) {
+            if (Objects.equals(cart.getItemId(), item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
                 cart.setItemQuantity(cart.getItemQuantity() + 1);
                 found = true;
                 break;
@@ -39,6 +39,17 @@ public class CartService {
             cartRepository.save(newCart);
         } else {
             cartRepository.saveAll(carts);
+        }
+    }
+
+    void removeItemFromCart(Item item, String userName){
+        Long userId = userRepository.getUserByUsername(userName).getId();
+        List<Cart> carts = getCartsByUserId(userId);
+        for (Cart cart : carts) {
+            if (Objects.equals(cart.getItemId(),item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
+                cartRepository.delete(cart);
+                break;
+            }
         }
     }
 
