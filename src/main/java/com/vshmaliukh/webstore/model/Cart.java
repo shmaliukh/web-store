@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -23,11 +22,14 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
+    @JoinTable(name = USER_TABLE)
     @Column(name = USER_ID_COLUMN, nullable = false)
     private Long userId;
 
+    @JoinTable // item table? - todo ask Vlad
     @Column(name = CATEGORY_ID_COLUMN, nullable = false)
     private Long categoryId;
+
 
     @Column(name = ITEM_ID_COLUMN, nullable = false)
     private Long itemId;
