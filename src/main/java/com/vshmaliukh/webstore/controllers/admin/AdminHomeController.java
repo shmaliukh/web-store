@@ -22,7 +22,6 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.HOME_P
 public class AdminHomeController {
 
     final UserService userService;
-    final ItemService itemService;
     final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
@@ -46,5 +45,6 @@ public class AdminHomeController {
         // TODO implement exit
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
+
 }
 

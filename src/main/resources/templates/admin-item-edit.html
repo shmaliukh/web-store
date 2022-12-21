@@ -13,7 +13,6 @@
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 text-center">
     <h1 class="display-4">Item edit panel</h1>
     <hr>
-    <caption></caption>
     <p class="lead" th:text="|${itemType.toUpperCase()} items edit table|"></p>
     <div th:insert="blocks/item-panel-menu.html :: base-menu"></div>
     <div th:insert="blocks/item-panel-menu.html :: edit-menu"></div>
@@ -30,7 +29,7 @@
                     <caption th:text="|${itemType} type table|"></caption>
                     <thead>
                     <tr class="table-dark">
-                        <th:block th:insert="blocks/table-titles :: base-item-titles('/admin/item/edit/' + ${itemType})"></th:block>
+                        <th:block th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/item/edit/' + ${itemType})"></th:block>
                         <th scope="col"></th>
                     </tr>
                     </thead>

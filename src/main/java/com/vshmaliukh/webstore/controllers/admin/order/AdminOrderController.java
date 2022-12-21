@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -73,7 +74,9 @@ public class AdminOrderController {
             String itemClassType = order.getItemClassType();
             Item item = itemService.readItemByIdAndType(itemId, itemClassType);
 
-            modelMap.addAttribute("item", item);
+            List<Item> itemList = Collections.singletonList(item);
+            modelMap.addAttribute("itemType", itemClassType.toLowerCase());
+            modelMap.addAttribute("itemList", itemList);
             modelMap.addAttribute("order", order);
             return new ModelAndView("/admin/order/view", modelMap);
         }

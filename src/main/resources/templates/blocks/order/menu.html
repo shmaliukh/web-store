@@ -15,6 +15,28 @@
     </div>
 </div>
 
+<div th:fragment="view-menu">
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <a th:href="@{/admin}">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Admin home
+                </button>
+            </a>
+            <a th:href="@{/admin/order/catalog}">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Order catalog
+                </button>
+            </a>
+            <a th:href="@{/admin/exit}">
+                <button type="button" class="w-100 btn btn-outline-danger btn-lg btn-block">
+                    Exit
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
 <div th:fragment="view-addition-menu(orderId)">
     <hr>
     <div class="container">

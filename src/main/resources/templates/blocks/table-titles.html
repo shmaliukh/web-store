@@ -21,7 +21,38 @@
     <th scope="col">STATUS</th>
 </th:block>
 
-<th:block th:fragment="base-item-titles(pageToRedirect)">
+<th:block th:fragment="base-item-titles(itemType)">
+    <th scope="col">#</th>
+    <th scope="col">TYPE</th>
+    <th scope="col">ID</th>
+    <th scope="col">CATEGORY</th>
+    <th scope="col">NAME</th>
+    <th scope="col">PRICE</th>
+    <th scope="col">QUANTITY</th>
+    <th:block th:insert="blocks/table-titles :: ${itemType + '-additional-item-titles'}"></th:block>
+    <th scope="col">AVAILABLE</th>
+</th:block>
+
+<th:block th:fragment="book-additional-item-titles">
+    <th scope="col">PAGES</th>
+    <th scope="col">AUTHOR</th>
+    <th scope="col">DATE</th>
+</th:block>
+
+<th:block th:fragment="comics-additional-item-titles">
+    <th scope="col">PAGES</th>
+    <th scope="col">PUBLISHER</th>
+</th:block>
+
+<th:block th:fragment="magazine-additional-item-titles">
+    <th scope="col">PAGES</th>
+</th:block>
+
+<th:block th:fragment="newspaper-additional-item-titles">
+    <th scope="col">PAGES</th>
+</th:block>
+
+<th:block th:fragment="item-titles-with-sorting(pageToRedirect)">
     <th scope="col">#</th>
     <th scope="col">TYPE</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
@@ -44,7 +75,7 @@
 <div th:fragment="book(pageToRedirect)">
     <th th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('author','AUTHOR', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('dateOfIssue','PAGES', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('dateOfIssue','DATE', ${pageToRedirect})"></th>
 </div>
 
 <div th:fragment="comics(pageToRedirect)">

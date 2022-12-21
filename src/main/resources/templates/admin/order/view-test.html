@@ -32,7 +32,7 @@
                         <caption>Order table</caption>
                         <thead>
                         <tr class="table-dark">
-                            <th:block th:insert="blocks/table-titles :: base-item-titles('/admin/order/view')"></th:block>
+                            <th:block th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/order/view')"></th:block>
                             <th:block th:insert="blocks/table-titles :: ${element.getKey()}('/admin/order/view')"></th:block>
                         </tr>
                         </thead>
