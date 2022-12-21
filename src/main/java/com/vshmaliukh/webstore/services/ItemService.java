@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -15,6 +16,21 @@ import java.util.List;
 public class ItemService {
 
     final ActionsWithItemRepositoryProvider actionsWithItemRepositoryProvider;
+
+    public Item readItemByIdAndType(Integer id, String type){
+        ActionsWithItem<? extends Item> repositoryByType = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type);
+        if(repositoryByType != null){
+            Optional<? extends Item> optionalItem = repositoryByType.findById(id);
+            if(optionalItem.isPresent()){
+                return optionalItem.get();
+            } else {
+                log.warn("problem to find '{}' item by '{}' id", id, type);
+            }
+        } else {
+            log.warn("problem to find repository by '{}' type", type);
+        }
+        return null;
+    }
 
     public <T extends Item> void saveItem(T item) {
         ActionsWithItem<T> actionsWithItem = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassType(item);

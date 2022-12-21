@@ -20,42 +20,46 @@
 </div>
 
 <div class="album py-5 bg-light text-center">
-    <div class="container">
-        <th:block th:if="${orderList.size() > 0}">
 
-            <th:block th:insert="blocks/navigation :: tools('/admin/order/view')"></th:block>
+    <th:block th:each="element : ${typeItemListMap}">
+        <div class="container">
+            <th:block th:if="${element.value.size() > 0}">
 
-            <div class="table-responsive-md ">
-                <table class="w-100 table table-striped">
-                    <caption>Order table</caption>
-                    <thead>
-                    <tr class="table-dark">
-                        <th:block th:insert="blocks/table-titles :: base-order-titles('/admin/order/view')"></th:block>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="order, iterator: ${orderList}">
-                        <th class="align-middle" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
-                        <td class="align-middle" th:text="${order.getId()}">Id</td>
-                        <td class="align-middle" th:text="${order.getUsername()}">User</td>
-                        <td class="align-middle" th:text="${order.getDateCreated()}">Date</td>
-                        <td class="align-middle" th:text="${order.getItemClassType()}">Type</td>
-                        <td class="align-middle" th:text="${order.getItemId()}">ItemId</td>
-                        <td class="align-middle" th:text="${order.getComment()}">Comment</td>
-                        <td class="align-middle" th:text="${order.getStatus()()}">Status</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <th:block th:insert="blocks/navigation :: tools('/admin/order/view')"></th:block>
 
-                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view')"></th:block>
+                <div class="table-responsive-md ">
+                    <table class="w-100 table table-striped">
+                        <caption>Order table</caption>
+                        <thead>
+                        <tr class="table-dark">
+                            <th:block th:insert="blocks/table-titles :: base-item-titles('/admin/order/view')"></th:block>
+                            <th:block th:insert="blocks/table-titles :: ${element.getKey()}('/admin/order/view')"></th:block>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item, iterator: ${element.getValue()}">
+                            <th class="align-middle" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
+                            <td class="align-middle" th:text="${item.getClass().getSimpleName()}">Type</td>
+                            <td class="align-middle" th:text="${item.getId()}">Id</td>
+                            <td class="align-middle" th:text="${item.getCategory()}">Category</td>
+                            <td class="align-middle" th:text="${item.getName()}">Name</td>
+                            <td class="align-middle" th:text="${item.getPrice()}">Price</td>
+                            <td class="align-middle" th:text="${item.getQuantity()}">Quantity</td>
+                            <th:block th:insert="blocks/view-item-table-values :: ${element.getValue()}"></th:block>
+                        </tr>
+                        </tbody>
+                    </table>
 
-            </div>
+                    <th:block th:insert="blocks/navigation :: pagination('/admin/order/view')"></th:block>
 
-        </th:block>
-        <th:block th:if="${orderList.isEmpty()}">
-            <p class="lead" th:text="|No order|"></p>
-        </th:block>
-    </div>
+                </div>
+
+            </th:block>
+            <th:block th:if="${element.getValue().isEmpty()}">
+                <p class="lead" th:text="|No ${element.getKey()} items|"></p>
+            </th:block>
+        </div>
+    </th:block>
 </div>
 
 <footer th:insert="blocks/page-blocks.html :: footer"></footer>

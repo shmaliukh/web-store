@@ -7,11 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ActionsWithItem<T extends Item> {
 
     void deleteById(@Param(ConstantsForEntities.ITEM_ID_COLUMN) Integer itemId);
+
+    Optional<T> findById(Integer id);
 
     T save(T itemEntity);
 

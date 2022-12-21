@@ -6,10 +6,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long> {
 
     Order findByUserId(Long userId);
+
+    List<Order> findAllByUserIdAndDateCreated(Long id, Date date);
+
+    Optional<Order> findById(Long id);
 
     void deleteOrderByUserId(Long userId);
 
@@ -17,6 +25,6 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     Page<Order> findAll(Pageable pageable);
 
-    Page<Order> findByUsernameContainingIgnoreCase(String keyword, Pageable pageable);
+    Page<Order> findByUserIdContainingIgnoreCase(String keyword, Pageable pageable);
 
 }
