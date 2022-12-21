@@ -18,7 +18,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 public class Cart {
 
     @Id
-    @Column(name = ORDER_ID_COLUMN)
+    @Column(name = CART_ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
@@ -27,12 +27,12 @@ public class Cart {
     private Long userId;
 
     @JoinTable // item table? - todo ask Vlad
-    @Column(name = CATEGORY_ID_COLUMN, nullable = false)
-    private Long categoryId;
+    @Column(name = CATEGORY_COLUMN, nullable = false)
+    private String category;
 
 
     @Column(name = ITEM_ID_COLUMN, nullable = false)
-    private Long itemId;
+    private Integer itemId;
 
     @Column(name = QUANTITY_COLUMN, nullable = false)
     private Integer itemQuantity;
