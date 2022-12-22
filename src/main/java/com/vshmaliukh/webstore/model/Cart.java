@@ -37,6 +37,9 @@ public class Cart {
     @Column(name = QUANTITY_COLUMN, nullable = false)
     private Integer itemQuantity;
 
+    @Column(name = PRICE_COLUMN,nullable = false)
+    private Integer price;
+
     // todo implement relationships
 
 }
