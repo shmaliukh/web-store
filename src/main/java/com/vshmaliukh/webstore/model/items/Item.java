@@ -12,7 +12,6 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;

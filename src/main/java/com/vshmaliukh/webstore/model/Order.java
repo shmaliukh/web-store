@@ -24,8 +24,6 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderProducts")
 public class Order extends AuditModel {
 
-    public static final String DD_MM_YYYY_ORDER_DATE_PATTERN_STR = "dd/MM/yyyy";
-
     @Id
     @Column(name = ORDER_ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
