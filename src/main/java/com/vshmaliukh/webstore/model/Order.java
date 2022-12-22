@@ -22,7 +22,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Entity
 @Table(name = ORDER_TABLE)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderProducts")
-public class Order {
+public class Order extends AuditModel {
 
     public static final String DD_MM_YYYY_ORDER_DATE_PATTERN_STR = "dd/MM/yyyy";
 
