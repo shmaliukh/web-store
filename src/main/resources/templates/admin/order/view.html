@@ -14,11 +14,17 @@
     <h1 class="display-4">Order view panel</h1>
     <hr>
     <p class="lead">Order view panel</p>
-    <div th:insert="blocks/order/menu :: base-menu"></div>
+    <div th:insert="blocks/order/menu :: view-menu"></div>
+    <hr>
     <div th:insert="blocks/order/menu :: view-addition-menu(${order.getId()})"></div>
 </div>
 
 <div class="album py-5 bg-light text-center">
+
+    <div class="container">
+        <p class="lead" th:text="|'${order.getId()}' order info|"></p>
+    </div>
+
     <div class="container">
         <div class="table-responsive-md ">
             <table class="w-100 table table-striped">
@@ -44,7 +50,14 @@
         </div>
     </div>
 
-    <th:block th:insert="blocks/order/item-table :: base-item-table"></th:block>
+    <div class="container">
+        <hr>
+        <p class="lead">All order items table</p>
+    </div>
+
+    <div class="container">
+        <th:block th:insert="blocks/order/item-table :: base-order-item-table"></th:block>
+    </div>
 
 </div>
 

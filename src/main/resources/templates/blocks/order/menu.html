@@ -38,21 +38,19 @@
 </div>
 
 <div th:fragment="view-addition-menu(orderId)">
-    <hr>
     <div class="container">
         <div class="row mt-5 mb-5">
-            <div th:fragment="edit(orderId)"></div>
-            <div th:fragment="delete(orderId)"></div>
+            <div th:insert="blocks/order/menu :: edit(${orderId})"></div>
+            <div th:insert="blocks/order/menu :: delete(${orderId})"></div>
         </div>
     </div>
 </div>
 
 <div th:fragment="edit-addition-menu(orderId)">
-    <hr>
     <div class="container">
         <div class="row mt-5 mb-5">
-            <div th:fragment="view(orderId)"></div>
-            <div th:fragment="delete(orderId)"></div>
+            <div th:insert="blocks/order/menu :: view(${orderId})"></div>
+            <div th:insert="blocks/order/menu :: delete(${orderId})"></div>
         </div>
     </div>
 </div>

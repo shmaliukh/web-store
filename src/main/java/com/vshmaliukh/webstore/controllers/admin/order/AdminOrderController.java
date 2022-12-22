@@ -70,11 +70,17 @@ public class AdminOrderController {
                                   ModelMap modelMap) {
         Order order = orderService.readOrderById(id);
         if (order != null) {
+            List<Item> itemList;
+            // TODO refactor to read all order items
             Integer itemId = order.getItemId();
             String itemClassType = order.getItemClassType();
             Item item = itemService.readItemByIdAndType(itemId, itemClassType);
+            if (item != null) {
+                itemList = Collections.singletonList(item);
+            } else {
+                itemList = Collections.emptyList();
+            }
 
-            List<Item> itemList = Collections.singletonList(item);
             modelMap.addAttribute("itemType", itemClassType.toLowerCase());
             modelMap.addAttribute("itemList", itemList);
             modelMap.addAttribute("order", order);

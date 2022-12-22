@@ -1,12 +1,11 @@
-<div th:fragment="base-item-table">
+<div th:fragment="base-order-item-table">
     <th:block th:if="${itemList.size() > 0}">
         <div class="table-responsive-md ">
             <table class="w-100 table table-striped">
-                <caption th:text="|${itemType} type table|"></caption>
+                <caption th:text="|Order ${itemType} type table|"></caption>
                 <thead>
                 <tr class="table-dark">
-                    <th:block th:insert="blocks/table-titles :: base-item-titles(${itemList.get(0).getClass().getSimpleName().toLowerCase()})"></th:block>
-                    <th scope="col"></th>
+                    <th:block th:insert="blocks/table-titles :: base-item-titles(${itemType})"></th:block>
                 </tr>
                 </thead>
                 <tbody class="table-group-divider">
