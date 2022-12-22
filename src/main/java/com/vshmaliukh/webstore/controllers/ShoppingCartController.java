@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers;
 
+import com.vshmaliukh.webstore.model.Cart;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.CartService;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.SHOPPING_CART;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
@@ -29,8 +32,18 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap){
+        List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName("")); // todo add username usage
+        modelMap.addAttribute("items",carts);
+        modelMap.addAttribute("totalItems",carts.size()+1);
+        int totalPrice = 0;
+        for (Cart cart : carts) {
+            totalPrice = totalPrice
+                    + itemRepositoryProvider
+                    .getActionsWithItemRepositoryByItemClassName(cart.getCategory())
+                    .getItemById(cart.getItemId()).getPrice();
+        }
+        modelMap.addAttribute("totalPrice",totalPrice);
         return new ModelAndView(SHOPPING_CART_VIEW);
-//        return new ModelAndView("order"); // temporarily
     }
 
     @PostMapping("/add-one/{type}/{id}")
