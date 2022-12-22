@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.vshmaliukh.webstore.model.AuditModel;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
@@ -28,7 +29,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
         @JsonSubTypes.Type(value = Comics.class, name = "comics"),
         @JsonSubTypes.Type(value = Newspaper.class, name = "newspaper"),
 })
-public abstract class Item implements Serializable {
+public abstract class Item extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

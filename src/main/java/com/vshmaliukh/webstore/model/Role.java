@@ -10,7 +10,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Setter
 @Entity
 @Table(name = ROLE_TABLE)
-public class Role {
+public class Role extends AuditModel{
 
     @Id
     @Column(name = ROLE_ID_COLUMN)
