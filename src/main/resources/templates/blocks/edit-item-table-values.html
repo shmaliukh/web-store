@@ -1,32 +1,32 @@
 <div th:fragment="magazine">
-    <td>
+    <td class="align-middle">
         <input class="form-control align-middle" type="number" name="pages" th:value="${item.getPages()}">
     </td>
 </div>
 
 <div th:fragment="newspaper">
-    <td>
+    <td class="align-middle">
         <input class="form-control align-middle" type="number" name="pages" th:value="${item.getPages()}">
     </td>
 </div>
 
 <div th:fragment="book">
-    <td>
+    <td class="align-middle">
         <input class="form-control align-middle" type="number" name="pages" th:value="${item.getPages()}">
     </td>
-    <td>
+    <td class="align-middle">
         <input class="form-control align-middle" type="text" name="author" th:value="${item.getAuthor()}">
     </td>
-    <td>
+    <td class="align-middle">
         <input class="form-control align-middle" type="date" name="date" th:value="${#dates.format(item.getDateOfIssue(), 'yyyy-MM-dd')}">
     </td>
 </div>
 
 <div th:fragment="comics">
-    <td>
+    <td class="align-middle">
         <input class="form-control align-middle" type="number" name="pages" th:value="${item.getPages()}">
     </td>
-    <td>
+    <td class="align-middle">
         <input class="form-control align-middle" type="text" name="publisher" th:value="${item.getPublisher()}">
     </td>
 </div>

@@ -40,22 +40,22 @@
                             <td class="align-middle" th:text="${item.getClass().getSimpleName()}">Type</td>
                             <td class="align-middle" th:text="${item.getId()}" name="item_id">Id</td>
                             <input type="hidden" th:value="${item.getId()}" name="item_id">
-                            <td>
+                            <td class="align-middle">
                                 <input class="form-control align-middle" type="text" name="category"
                                        th:value="${item.getCategory()}">
                             </td>
-                            <td>
+                            <td class="align-middle">
                                 <input class="form-control align-middle" type="text" name="name" th:value="${item.getName()}">
                             </td>
-                            <td>
+                            <td class="align-middle">
                                 <input class="form-control align-middle" type="number" name="price" th:value="${item.getPrice()}">
                             </td>
-                            <td>
+                            <td class="align-middle">
                                 <input class="form-control align-middle" type="number" name="quantity"
                                        th:value="${item.getQuantity()}">
                             </td>
                             <th:block th:insert="blocks/edit-item-table-values :: ${itemType}"></th:block>
-                            <td>
+                            <td class="align-middle">
                                 <input th:id="'checkbox'+${iterator.count}" class="form-check-input  align-middle"
                                        name="is_available_in_store" type="checkbox"
                                        role="switch"
@@ -73,7 +73,7 @@
                                 + '});'">
                                 </script>
                             </td>
-                            <td>
+                            <td class="align-middle">
                                 <button class="btn btn-outline-success" type="submit">Edit item</button>
                             </td>
                             <script th:utext="

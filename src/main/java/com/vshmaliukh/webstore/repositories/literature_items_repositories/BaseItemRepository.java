@@ -4,23 +4,26 @@ import com.vshmaliukh.webstore.ConstantsForEntities;
 import com.vshmaliukh.webstore.model.items.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
 
-public interface BaseItemRepository<T extends Item> {
+@NoRepositoryBean
+public interface BaseItemRepository<T extends Item>  extends JpaRepository<T, Integer> {
 
-    void deleteById(@Param(ConstantsForEntities.ITEM_ID_COLUMN) Integer itemId);
+//    void deleteById(@Param(ConstantsForEntities.ITEM_ID_COLUMN) Integer itemId);
 
-    Optional<T> findById(Integer id);
+//    Optional<T> findById(Integer id);
 
-    T save(T itemEntity);
+//    T save(T itemEntity);
 
-    List<T> findAll();
+//    List<T> findAll();
 
-    Page<T> findAll(Pageable pageable);
+//    Page<T> findAll(Pageable pageable);
 
     Page<T> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
 
