@@ -1,27 +1,10 @@
 package com.vshmaliukh.webstore.repositories.literature_items_repositories;
 
-import com.vshmaliukh.webstore.ConstantsForEntities;
 import com.vshmaliukh.webstore.model.items.Item;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
-
-public interface ItemRepository<T extends Item> {
-
-    void deleteById(@Param(ConstantsForEntities.ITEM_ID_COLUMN) Integer itemId);
-
-    Optional<T> findById(Integer id);
-
-    T save(T itemEntity);
-
-    List<T> findAll();
-
-    Page<T> findAll(Pageable pageable);
-
-    Page<T> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
+@Repository
+public interface ItemRepository extends JpaRepository<Item, Integer>, BaseItemRepository<Item> {
 
 }

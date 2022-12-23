@@ -3,7 +3,7 @@ package com.vshmaliukh.webstore.controllers.admin;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
-import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +27,7 @@ public final class AdminControllerUtils {
         modelMap.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
     }
 
-    public static <T extends Item>  List<T> getSortedItemsContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, ItemRepository<T> repositoryByItemClassName) {
+    public static <T extends Item>  List<T> getSortedItemsContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, BaseItemRepository<T> repositoryByItemClassName) {
 //      TODO refactor duplicate
         String sortField = sort[0];
         String sortDirection = sort[1];

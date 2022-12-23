@@ -3,7 +3,7 @@ package com.vshmaliukh.webstore.controllers.admin.item;
 import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
-import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class DeleteItemController {
         if (itemList == null) {
             return new ModelAndView("redirect:/admin/item/delete", modelMap);
         }
-        ItemRepository<? extends Item> repositoryByItemClassName = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
+        BaseItemRepository<? extends Item> repositoryByItemClassName = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
         itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, repositoryByItemClassName);
 
         modelMap.addAttribute("itemType", itemType.toLowerCase());

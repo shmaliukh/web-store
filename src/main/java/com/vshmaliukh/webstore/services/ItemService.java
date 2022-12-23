@@ -2,7 +2,7 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
-import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class ItemService {
     final ItemRepositoryProvider itemRepositoryProvider;
 
     public Item readItemByIdAndType(Integer id, String type){
-        ItemRepository<? extends Item> repositoryByType = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+        BaseItemRepository<? extends Item> repositoryByType = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         if(repositoryByType != null){
             Optional<? extends Item> optionalItem = repositoryByType.findById(id);
             if(optionalItem.isPresent()){
@@ -33,18 +33,18 @@ public class ItemService {
     }
 
     public <T extends Item> void saveItem(T item) {
-        ItemRepository<T> itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
-        if (itemRepository != null) {
-            itemRepository.save(item);
+        BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
+        if (baseItemRepository != null) {
+            baseItemRepository.save(item);
         } else {
             log.warn("problem to save '{}' item , repository not found", item);
         }
     }
 
     public boolean isItemSaved(Item item) {
-        ItemRepository<? extends Item> itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
-        if (itemRepository != null) {
-            List<? extends Item> allItemList = itemRepository.findAll();
+        BaseItemRepository<? extends Item> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
+        if (baseItemRepository != null) {
+            List<? extends Item> allItemList = baseItemRepository.findAll();
             return allItemList.contains(item);
 
         } else {
@@ -54,20 +54,20 @@ public class ItemService {
     }
 
     public List<? extends Item> readAllItemsByTypeName(String itemTypeName) {
-        ItemRepository<? extends Item> itemRepositoryByItemTypeName = itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeName);
-        if (itemRepositoryByItemTypeName != null) {
-            return itemRepositoryByItemTypeName.findAll();
+        BaseItemRepository<? extends Item> itemRepositoryByItemTypeNameByType = itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeName);
+        if (itemRepositoryByItemTypeNameByType != null) {
+            return itemRepositoryByItemTypeNameByType.findAll();
         }
         log.warn("problem to read all items by type name // not found repository // itemTypeName: {}", itemTypeName);
         return null;
     }
 
     public <T extends Item> void deleteItem(T item) {
-        ItemRepository<T> itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
-        if (itemRepository != null) {
+        BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
+        if (baseItemRepository != null) {
             Integer itemId = item.getId();
             if (itemId != null) {
-                itemRepository.deleteById(itemId);
+                baseItemRepository.deleteById(itemId);
             } else{
                 log.warn("problem to save '{}' item , item id is NULL", item);
             }

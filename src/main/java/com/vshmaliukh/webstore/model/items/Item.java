@@ -20,7 +20,8 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@MappedSuperclass
+@Entity(name = "item")
+@Inheritance(strategy = InheritanceType.JOINED)
 @JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Book.class, name = "book"),
@@ -38,7 +39,7 @@ public abstract class Item extends AuditModel {
     @Column(name = CATEGORY_COLUMN, nullable = false)
     String category;
 
-    @Column(name = NAME_COLUMN, nullable = false)
+    @Column(name = NAME_COLUMN, nullable = false, unique = true)
     String name;
 
     @Column(name = PRICE_COLUMN, nullable = false)

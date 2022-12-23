@@ -22,19 +22,23 @@ public final class ItemRepositoryProvider {
 
     // TODO refactor
 
-    final ItemRepository<Book> bookRepository;
-    final ItemRepository<Comics> comicsRepository;
-    final ItemRepository<Magazine> magazineRepository;
-    final ItemRepository<Newspaper> newspaperRepository;
+    final BaseItemRepository<Item> allItemRepository;
 
-    public List<ItemRepository<? extends Item>> itemRepositoryList;
-    public Map<Class<? extends Item>, ItemRepository<? extends Item>> itemClassTypeRepositoryMap;
-    public Map<String, ItemRepository<? extends Item>> itemClassNameRepositoryMap;
+    final BaseItemRepository<Book> bookRepository;
+    final BaseItemRepository<Comics> comicsRepository;
+    final BaseItemRepository<Magazine> magazineRepository;
+    final BaseItemRepository<Newspaper> newspaperRepository;
 
-    public ItemRepositoryProvider(ItemRepository<Book> bookRepository,
-                                  ItemRepository<Comics> comicsRepository,
-                                  ItemRepository<Magazine> magazineRepository,
-                                  ItemRepository<Newspaper> newspaperRepository) {
+    public List<BaseItemRepository<? extends Item>> baseItemRepositoryList;
+    public Map<Class<? extends Item>, BaseItemRepository<? extends Item>> itemClassTypeRepositoryMap;
+    public Map<String, BaseItemRepository<? extends Item>> itemClassNameRepositoryMap;
+
+    public ItemRepositoryProvider(BaseItemRepository<Item> allItemRepository,
+                                  BaseItemRepository<Book> bookRepository,
+                                  BaseItemRepository<Comics> comicsRepository,
+                                  BaseItemRepository<Magazine> magazineRepository,
+                                  BaseItemRepository<Newspaper> newspaperRepository) {
+        this.allItemRepository = allItemRepository;
         this.bookRepository = bookRepository;
         this.comicsRepository = comicsRepository;
         this.magazineRepository = magazineRepository;
@@ -49,11 +53,11 @@ public final class ItemRepositoryProvider {
     }
 
     private void generateItemRepositoryList() {
-        itemRepositoryList = Collections.unmodifiableList(new ArrayList<>(itemClassTypeRepositoryMap.values()));
+        baseItemRepositoryList = Collections.unmodifiableList(new ArrayList<>(itemClassTypeRepositoryMap.values()));
     }
 
     private void generateItemClassTypeRepositoryMap() {
-        Map<Class<? extends Item>, ItemRepository<? extends Item>> classTypeRepositoryMap = new ConcurrentHashMap<>();
+        Map<Class<? extends Item>, BaseItemRepository<? extends Item>> classTypeRepositoryMap = new ConcurrentHashMap<>();
         classTypeRepositoryMap.put(Book.class, bookRepository);
         classTypeRepositoryMap.put(Magazine.class, magazineRepository);
         classTypeRepositoryMap.put(Comics.class, comicsRepository);
@@ -62,7 +66,7 @@ public final class ItemRepositoryProvider {
     }
 
     private void generateItemClassNameRepositoryMap() {
-        Map<String, ItemRepository<? extends Item>> classNameRepositoryMap = new ConcurrentHashMap<>();
+        Map<String, BaseItemRepository<? extends Item>> classNameRepositoryMap = new ConcurrentHashMap<>();
         classNameRepositoryMap.put(Book.class.getSimpleName().toLowerCase(), bookRepository);
         classNameRepositoryMap.put(Magazine.class.getSimpleName().toLowerCase(), magazineRepository);
         classNameRepositoryMap.put(Comics.class.getSimpleName().toLowerCase(), comicsRepository);
@@ -70,12 +74,11 @@ public final class ItemRepositoryProvider {
         itemClassNameRepositoryMap = Collections.unmodifiableMap(classNameRepositoryMap);
     }
 
-    public <T extends Item> ItemRepository<T> getItemRepositoryByItemClassType(T item) {
-        return (ItemRepository<T>) itemClassTypeRepositoryMap.getOrDefault(item.getClass(), null);
-
+    public <T extends Item> BaseItemRepository<T> getItemRepositoryByItemClassType(T item) {
+        return (BaseItemRepository<T>) itemClassTypeRepositoryMap.getOrDefault(item.getClass(), null);
     }
 
-    public ItemRepository<? extends Item> getItemRepositoryByItemClassName(String itemClassName) {
+    public BaseItemRepository<? extends Item> getItemRepositoryByItemClassName(String itemClassName) {
         return itemClassNameRepositoryMap.getOrDefault(itemClassName.toLowerCase(), null);
     }
 

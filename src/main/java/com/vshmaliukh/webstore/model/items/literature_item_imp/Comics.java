@@ -16,10 +16,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = COMICS_TABLE,
-        uniqueConstraints = {@UniqueConstraint(columnNames = {
-                NAME_COLUMN
-        })})
+@Table(name = COMICS_TABLE)
 public class Comics extends LiteratureItem {
 
     @Column(name = PUBLISHER_COLUMN)
@@ -59,7 +56,7 @@ public class Comics extends LiteratureItem {
     @Override
     public String toString() {
         return "Comics{" +
-                "id=" + getId() + 
+                "id=" + getId() +
                 ", name=" + getName() +
                 ", category=" + getCategory() +
                 ", price=" + getPrice() +
