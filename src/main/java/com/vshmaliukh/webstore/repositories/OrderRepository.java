@@ -20,9 +20,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findById(Long id);
 
     void deleteOrderByUserId(Long userId);
-
-    Order findOrderByUserId(Long userId);
-
+    
     Page<Order> findAll(Pageable pageable);
 
     Page<Order> findByItemClassTypeContainingIgnoreCase(String keyword, Pageable pageable);
