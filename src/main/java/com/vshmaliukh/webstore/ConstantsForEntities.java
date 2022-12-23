@@ -14,7 +14,8 @@ public final class ConstantsForEntities {
     public static final String MAGAZINE_TABLE = "Magazines";
     public static final String NEWSPAPER_TABLE = "Newspapers";
     public static final String ORDER_TABLE = "Orders";
-    public static final String INVOICE_TABLE = "Invoice";
+    public static final String INVOICE_TABLE = "Invoices";
+    public static final String ORDER_ITEM_TABLE = "Order_items";
 
     public static final String USER_NAME_COLUMN = "user_name";
     public static final String USER_EMAIL_COLUMN = "user_email";
@@ -25,6 +26,7 @@ public final class ConstantsForEntities {
     public static final String USER_ID_COLUMN = "user_id";
     public static final String ROLE_ID_COLUMN = "role_id";
     public static final String ORDER_ID_COLUMN = "order_id";
+    public static final String ORDER_ITEM_ID_COLUMN = "order_item_id";
     public static final String INVOICE_ID_COLUMN = "invoice_id";
 
     public static final String ORDER_DATE_COLUMN = "date_created";
