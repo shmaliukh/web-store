@@ -2,6 +2,8 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.model.items.OrderItem;
+import com.vshmaliukh.webstore.repositories.OrderItemRepository;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
 
 import java.util.*;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+
 @Slf4j
 @Service
 @Getter
@@ -20,32 +23,48 @@ public class OrderService {
 
     final ItemService itemService;
     final OrderRepository orderRepository;
+    final OrderItemRepository orderItemRepository;
 
-    public Map<String, Item> readOrderTypeItemMap(Long userId, Date date) {
-        Map<String, Item> typeItemMap = new HashMap<>();
-        List<Order> orderList = orderRepository.findAllByUserIdAndDateCreated(userId, date);
-        if (orderList != null) {
-            findItemsByOrders(typeItemMap, orderList);
-        } else {
-            log.warn("problem to find order by user id '{}' and '{}' date", userId, date);
+    public Integer calcTotalOrderPrice(Order order) {
+        List<OrderItem> orderProducts = orderItemRepository.readOrderItemsByOrder(order);
+        if(orderProducts != null){
+            return orderProducts.stream()
+                    .map(orderItem -> orderItem.getOrderItemPrice() * orderItem.getQuantity())
+                    .mapToInt(Integer::intValue).sum();
         }
-        return typeItemMap;
+        return 0;
     }
 
-    private void findItemsByOrders(Map<String, Item> typeItemMap, List<Order> orderList) {
-        for (Order order : orderList) {
-            Integer itemId = order.getItemId();
-            String itemClassType = order.getItemClassType();
-            Item item = itemService.readItemByIdAndType(itemId, itemClassType);
-            if (item != null) {
-                typeItemMap.put(itemClassType, item);
-            }
-        }
-    }
+//    public Map<String, Item> readOrderTypeItemMap(Long userId, Date date) {
+//        Map<String, Item> typeItemMap = new HashMap<>();
+//        List<Order> orderList = orderRepository.findAllByUserIdAndDateCreated(userId, date);
+//        if (orderList != null) {
+//            findItemsByOrders(typeItemMap, orderList);
+//        } else {
+//            log.warn("problem to find order by user id '{}' and '{}' date", userId, date);
+//        }
+//        return typeItemMap;
+//    }
+
+//    private void findItemsByOrders(Map<String, Item> typeItemMap, List<Order> orderList) {
+//        for (Order order : orderList) {
+//            Integer itemId = order.getItemId();
+//            String itemClassType = order.getItemClassType();
+//            Item item = itemService.readItemByIdAndType(itemId, itemClassType);
+//            if (item != null) {
+//                typeItemMap.put(itemClassType, item);
+//            }
+//        }
+//    }
 
     public Order readOrderById(Long id) {
         Optional<Order> orderOptional = orderRepository.findById(id);
         return orderOptional.orElse(null);
+    }
+
+    public List<OrderItem> readOrderItemListByOrderId(Long id) {
+        Order order = readOrderById(id);
+        return orderItemRepository.readOrderItemsByOrder(order);
     }
 
     public void saveOrder(Order order) {
@@ -71,8 +90,8 @@ public class OrderService {
         log.info("userId: '{}' // added new '{}' item to order", userId, item);
     }
 
-    public int calcOrderTotalSumByUserId(long userId) {
-        List<Item> itemListByUserId = readOrderItemListByUserId(userId);
+    public int calcOrderTotalSumByUserId(long orderId) {
+        List<Item> itemListByUserId = readOrderItemListByUserId(orderId);
         if (itemListByUserId != null) {
             return itemListByUserId.stream()
                     .filter(Item::isAvailableInStore)

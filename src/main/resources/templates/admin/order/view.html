@@ -22,7 +22,7 @@
 <div class="album py-5 bg-light text-center">
 
     <div class="container">
-        <p class="lead" th:text="|'${order.getId()}' order info|"></p>
+        <p class="lead" th:text="|${order.getUser().getUsername()} order info|"></p>
     </div>
 
     <div class="container">
@@ -31,19 +31,22 @@
                 <caption>Order</caption>
                 <thead>
                 <tr class="table-dark">
-                    <th:block th:insert="blocks/table-titles :: base-order-titles"></th:block>
+                    <th scope="col">ID</th>
+                    <th scope="col">DATE</th>
+                    <th scope="col">USER</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col">COMMENT</th>
+                    <th scope="col">TOTAL</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td class="align-middle" th:text="${order.getId()}">Id</td>
-                    <td class="align-middle" th:text="${order.getUserId()}">UserId</td>
                     <td class="align-middle" th:text="${#dates.format(order.getDateCreated(), 'yyyy-MM-dd')}">Date</td>
-                    <td class="align-middle" th:text="${order.getItemClassType()}">Type</td>
-                    <td class="align-middle" th:text="${order.getItemId()}">ItemId</td>
-                    <td class="align-middle" th:text="${order.getQuantity()}">Quantity</td>
-                    <td class="align-middle" th:text="${order.getComment()}">Comment</td>
+                    <td class="align-middle" th:text="${order.getUser().getUsername()}">Username</td>
                     <td class="align-middle" th:text="${order.getStatus()}">Status</td>
+                    <td class="align-middle" th:text="${order.getComment()}">Comment</td>
+                    <td class="align-middle" th:text="${totalOrderPrice}">Sum</td>
                 </tr>
                 </tbody>
             </table>
@@ -56,7 +59,45 @@
     </div>
 
     <div class="container">
-        <th:block th:insert="blocks/order/item-table :: base-order-item-table"></th:block>
+        <th:block th:unless="${orderItemList.isEmpty()}">
+            <div class="table-responsive-md ">
+                <table class="w-100 table table-striped">
+                    <caption th:text="|Order items|"></caption>
+                    <thead>
+                    <tr class="table-dark">
+                        <th scope="col">#</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">UPDATED</th>
+                        <th scope="col">CATEGORY</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col">PRICE</th>
+                        <th scope="col">QUANTITY</th>
+                        <th scope="col">SUM</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                    <tr th:each="orderItem, iterator: ${orderItemList}">
+                        <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                        <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
+                        <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
+                        <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
+                        <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
+                        <td class="align-middle" th:text="${orderItem.getOrderItemPrice()}">Price</td>
+                        <td class="align-middle" th:text="${orderItem.getQuantity()}">Quantity</td>
+                        <td class="align-middle" th:text="${orderItem.getOrderItemPrice() * orderItem.getQuantity()}">
+                            Total
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+<!--                TODO implement pagination               -->
+<!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
+            </div>
+        </th:block>
+
+        <th:block th:if="${orderItemList.size() == 0}">
+            <p class="lead" th:text="|No order items|"></p>
+        </th:block>
     </div>
 
 </div>

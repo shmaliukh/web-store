@@ -62,7 +62,7 @@ public final class AdminControllerUtils {
         if (keyword == null) {
             pageWithOrders = orderRepository.findAll(pageable);
         } else {
-            pageWithOrders = orderRepository.findByItemClassTypeContainingIgnoreCase(keyword, pageable);
+            pageWithOrders = orderRepository.findByStatusIgnoreCase(keyword, pageable);
             modelMap.addAttribute("keyword", keyword);
         }
         List<Order> content = pageWithOrders.getContent();

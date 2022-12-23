@@ -2,7 +2,8 @@ package com.vshmaliukh.webstore.controllers.admin.order;
 
 import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.Order;
-import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.model.items.OrderItem;
+import com.vshmaliukh.webstore.repositories.OrderItemRepository;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.OrderService;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +24,7 @@ import java.util.List;
 @RequestMapping("/admin/order")
 public class AdminOrderController {
 
+    final OrderItemRepository orderItemRepository;
     final OrderService orderService;
     final ItemService itemService;
 
@@ -44,46 +45,17 @@ public class AdminOrderController {
         return new ModelAndView("/admin/order/catalog", modelMap);
     }
 
-    //    @GetMapping("/view/{id}")
-//    public ModelAndView doGetInfo(@PathVariable(name = "id") Long id,
-//                                  ModelMap modelMap) {
-//
-//        Order order = orderService.readOrderById(id);
-//        if(order != null){
-//            Long userId = order.getUserId();
-//            Date dateCreated = order.getDateCreated();
-//            Map<String, Item> typeItemMap = orderService.readOrderTypeItemMap(userId, dateCreated);
-//            Map<String, List<Item>> typeItemListMap = new HashMap<>();
-//            for (String itemType : typeItemMap.keySet()) {
-//                List<Item> itemByTypeList = typeItemListMap.get(itemType);
-//                typeItemListMap.put(itemType, itemByTypeList);
-//            }
-//
-//            modelMap.addAttribute("typeItemListMap", typeItemListMap);
-//            return new ModelAndView("view-test", modelMap);
-//        }
-//        return new ModelAndView("/admin/order/catalog", modelMap);
-//    }
-//
     @GetMapping("/view/{id}")
     public ModelAndView doGetInfo(@PathVariable(name = "id") Long id,
                                   ModelMap modelMap) {
         Order order = orderService.readOrderById(id);
         if (order != null) {
-            List<Item> itemList;
-            // TODO refactor to read all order items
-            Integer itemId = order.getItemId();
-            String itemClassType = order.getItemClassType();
-            Item item = itemService.readItemByIdAndType(itemId, itemClassType);
-            if (item != null) {
-                itemList = Collections.singletonList(item);
-            } else {
-                itemList = Collections.emptyList();
-            }
+            List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(id);
+            Integer totalOrderPrice = orderService.calcTotalOrderPrice(order);
 
-            modelMap.addAttribute("itemType", itemClassType.toLowerCase());
-            modelMap.addAttribute("itemList", itemList);
+            modelMap.addAttribute("orderItemList", orderItemList);
             modelMap.addAttribute("order", order);
+            modelMap.addAttribute("totalOrderPrice", totalOrderPrice);
             return new ModelAndView("/admin/order/view", modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);

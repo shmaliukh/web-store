@@ -6,12 +6,14 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 
+import com.vshmaliukh.webstore.model.items.OrderItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
@@ -29,8 +31,8 @@ public class Order extends AuditModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = USER_ID_COLUMN, nullable = false)
-    private Long userId;
+    @ManyToOne
+    private User user;
 
     @Column(name = ORDER_DATE_COLUMN, nullable = false)
     @JsonFormat(pattern = DD_MM_YYYY_ORDER_DATE_PATTERN_STR)
@@ -42,17 +44,7 @@ public class Order extends AuditModel {
     @Column(name = ORDER_COMMENT_COLUMN)
     private String comment;
 
-    @Column(name = ITEM_ID_COLUMN, nullable = false)
-    private Integer itemId;
-
-    @Column(name = ITEM_CLASS_TYPE_COLUMN, nullable = false)
-    private String itemClassType;
-
-    @Column(name = QUANTITY_COLUMN, nullable = false)
-    private Integer quantity;
-
-//    @OneToMany
-//    // TODO config tables relationship
-//    private List<> itemList = new ArrayList<>();
+    @OneToMany
+    private List<OrderItem> itemList;
 
 }

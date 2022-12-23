@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.model.items;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vshmaliukh.webstore.model.AuditModel;
 import com.vshmaliukh.webstore.model.Order;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @NoArgsConstructor
 @Entity
 @Table(name = ORDER_ITEM_TABLE)
-public class OrderItem {
+public class OrderItem extends AuditModel {
 
     @Id
     @Column(name = ORDER_ITEM_ID_COLUMN)
@@ -24,7 +25,7 @@ public class OrderItem {
 
     private int quantity;
 
-    private double orderItemPrice;
+    private int orderItemPrice;
 
     @ManyToOne
     private Item item;

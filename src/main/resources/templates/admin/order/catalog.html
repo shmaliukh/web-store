@@ -35,11 +35,8 @@
                 <tr th:each="order, iterator: ${orderList}">
                     <th class="align-middle" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
                     <td class="align-middle" th:text="${order.getId()}">Id</td>
-                    <td class="align-middle" th:text="${order.getUserId()}">UserId</td>
+                    <td class="align-middle" th:text="${order.getUser().getUsername()}">Username</td>
                     <td class="align-middle" th:text="${#dates.format(order.getDateCreated(), 'yyyy-MM-dd')}">Date</td>
-                    <td class="align-middle" th:text="${order.getItemClassType()}">Type</td>
-                    <td class="align-middle" th:text="${order.getItemId()}">ItemId</td>
-                    <td class="align-middle" th:text="${order.getQuantity()}">Quantity</td>
                     <td class="align-middle" th:text="${order.getComment()}">Comment</td>
                     <td class="align-middle" th:text="${order.getStatus()}">Status</td>
 

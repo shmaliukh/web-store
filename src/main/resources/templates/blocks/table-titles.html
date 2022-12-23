@@ -3,22 +3,8 @@
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('userId','UserID', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('dateCreated','DATE', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('itemClassType','TYPE', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('itemId','ItemID', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('quantity','QUANTITY', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('comment','COMMENT', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('status','STATUS', ${pageToRedirect})"></th>
-</th:block>
-
-<th:block th:fragment="base-order-titles">
-    <th scope="col">ID</th>
-    <th scope="col">UserID</th>
-    <th scope="col">DATE</th>
-    <th scope="col">TYPE</th>
-    <th scope="col">ItemID</th>
-    <th scope="col">QUANTITY</th>
-    <th scope="col">COMMENT</th>
-    <th scope="col">STATUS</th>
 </th:block>
 
 <th:block th:fragment="base-item-titles(itemType)">
