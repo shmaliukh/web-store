@@ -2,6 +2,9 @@ package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.model.Cart;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.SHOPPING_CART;
@@ -33,17 +37,20 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap){
+        List<Item> items = getTestItemOrderList();
+        modelMap.addAttribute("items",items); // todo implement items adding to template
+        modelMap.addAttribute("totalItems",items.size());
+
+
 //        List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName("")); // todo add username usage
-        List<Cart> carts = getTestCarts();
-        modelMap.addAttribute("items",carts);
-        modelMap.addAttribute("totalItems",carts.size()+1);
+
         int totalPrice = 0;
-        for (Cart cart : carts) {
-            totalPrice = totalPrice
-                    + itemRepositoryProvider
-                    .getActionsWithItemRepositoryByItemClassName(cart.getCategory())
-                    .getItemById(cart.getItemId()).getPrice();
+
+        for (Item item : items) {  // for tests
+            totalPrice = totalPrice + item.getPrice();
         }
+
+
         modelMap.addAttribute("totalPrice",totalPrice);
         return new ModelAndView(SHOPPING_CART_VIEW);
     }
@@ -83,6 +90,15 @@ public class ShoppingCartController {
         carts.add(first);
         carts.add(second);
         return carts;
+    }
+
+    private static List<Item> getTestItemOrderList() {
+        List<Item> itemList = new ArrayList<>();
+        itemList.add(new Book(1, "1 book name", "book", 2, 3, true, 4, "Vlad1", new Date()));
+        itemList.add(new Book(2, "2 book name", "book", 3, 4, true, 5, "Vlad2", new Date()));
+        itemList.add(new Magazine(3, "Magazine name", "magazine", 4, 5, true, 6));
+        itemList.add(new Comics(4, "Comics name", "comics", 5, 6, true, 7, "Some publisher"));
+        return itemList;
     }
 
 }
