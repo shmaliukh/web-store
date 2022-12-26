@@ -25,6 +25,20 @@ public class OrderService {
     final OrderRepository orderRepository;
     final OrderItemRepository orderItemRepository;
 
+    public void saveOrderItem(OrderItem orderItem){
+        orderItemRepository.save(orderItem);
+    }
+
+    public OrderItem readOrderItemById(Long id){
+        Optional<OrderItem> optionalOrderItem = orderItemRepository.readOrderItemByOrderItemId(id);
+        if(optionalOrderItem.isPresent()){
+            return optionalOrderItem.get();
+        } else {
+            log.warn("problem to find order item by '{}' id", id);
+            return null;
+        }
+    }
+
     public Integer calcTotalOrderPrice(Order order) {
         List<OrderItem> orderProducts = orderItemRepository.readOrderItemsByOrder(order);
         if(orderProducts != null){
@@ -34,28 +48,6 @@ public class OrderService {
         }
         return 0;
     }
-
-//    public Map<String, Item> readOrderTypeItemMap(Long userId, Date date) {
-//        Map<String, Item> typeItemMap = new HashMap<>();
-//        List<Order> orderList = orderRepository.findAllByUserIdAndDateCreated(userId, date);
-//        if (orderList != null) {
-//            findItemsByOrders(typeItemMap, orderList);
-//        } else {
-//            log.warn("problem to find order by user id '{}' and '{}' date", userId, date);
-//        }
-//        return typeItemMap;
-//    }
-
-//    private void findItemsByOrders(Map<String, Item> typeItemMap, List<Order> orderList) {
-//        for (Order order : orderList) {
-//            Integer itemId = order.getItemId();
-//            String itemClassType = order.getItemClassType();
-//            Item item = itemService.readItemByIdAndType(itemId, itemClassType);
-//            if (item != null) {
-//                typeItemMap.put(itemClassType, item);
-//            }
-//        }
-//    }
 
     public Order readOrderById(Long id) {
         Optional<Order> orderOptional = orderRepository.findById(id);

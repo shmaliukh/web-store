@@ -13,10 +13,10 @@
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 text-center">
     <h1 class="display-4">Order edit panel</h1>
     <hr>
-    <p class="lead">Order view panel</p>
+    <p class="lead">Order edit panel</p>
     <div th:insert="blocks/order/menu :: order-menu"></div>
     <hr>
-    <div th:insert="blocks/order/menu :: view-addition-menu(${order.getId()})"></div>
+    <div th:insert="blocks/order/menu :: edit-addition-menu(${order.getId()})"></div>
 </div>
 
 <div class="album py-5 bg-light text-center">
@@ -72,26 +72,35 @@
                         <th scope="col">NAME</th>
                         <th scope="col">PRICE</th>
                         <th scope="col">QUANTITY</th>
-                        <th scope="col">SUM</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody class="table-group-divider">
                     <tr th:each="orderItem, iterator: ${orderItemList}">
-                        <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
-                        <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
-                        <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
-                        <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
-                        <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
-                        <td class="align-middle" th:text="${orderItem.getOrderItemPrice()}">Price</td>
-                        <td class="align-middle" th:text="${orderItem.getQuantity()}">Quantity</td>
-                        <td class="align-middle" th:text="${orderItem.getOrderItemPrice() * orderItem.getQuantity()}">
-                            Total
-                        </td>
+                        <form th:action="'/admin/order/edit/'+${order.getId()}" method="post" class="needs-validation">
+                            <input type="hidden" th:name="orderItemId" th:value="${orderItem.getOrderItemId()}">
+                            <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                            <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
+                            <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
+                            <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
+                            <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
+                            <td class="align-middle">
+                                <input class="form-control align-middle" type="number" name="price"
+                                       th:value="${orderItem.getQuantity()}">
+                            </td>
+                            <td class="align-middle">
+                                <input class="form-control align-middle" type="number" name="quantity"
+                                       th:value="${orderItem.getQuantity()}">
+                            </td>
+                            <td class="align-middle">
+                                <button class="btn btn-outline-success" type="submit">Edit item</button>
+                            </td>
+                        </form>
                     </tr>
                     </tbody>
                 </table>
-<!--                TODO implement pagination               -->
-<!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
+                <!--                TODO implement pagination               -->
+                <!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
             </div>
         </th:block>
 

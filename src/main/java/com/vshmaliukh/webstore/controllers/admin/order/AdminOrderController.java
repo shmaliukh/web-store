@@ -10,10 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -35,10 +32,10 @@ public class AdminOrderController {
 
     @GetMapping("/catalog/**")
     public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
-                              @RequestParam(defaultValue = "1") int page,
-                              @RequestParam(defaultValue = "6") int size,
-                              @RequestParam(defaultValue = "id,asc") String[] sort,
-                              ModelMap modelMap) {
+                                     @RequestParam(defaultValue = "1") int page,
+                                     @RequestParam(defaultValue = "6") int size,
+                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     ModelMap modelMap) {
         List<Order> orderList = AdminControllerUtils.getSortedOrderContent(keyword, page, size, sort, modelMap, orderService.getOrderRepository());
 
         modelMap.addAttribute("orderList", orderList);
@@ -62,17 +59,37 @@ public class AdminOrderController {
     }
 
     @GetMapping("/edit/{id}")
-    public ModelAndView doGetIEdit(@PathVariable(name = "id") Long id,
-                                  ModelMap modelMap) {
-        Order order = orderService.readOrderById(id);
+    public ModelAndView doGetIEdit(@PathVariable(name = "id") Long orderId,
+                                   ModelMap modelMap) {
+        Order order = orderService.readOrderById(orderId);
         if (order != null) {
-            List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(id);
+            List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(orderId);
 
             modelMap.addAttribute("orderItemList", orderItemList);
             modelMap.addAttribute("order", order);
-            return new ModelAndView("/admin/order/view", modelMap);
+            return new ModelAndView("/admin/order/edit", modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
+    }
+
+    @PostMapping("/edit/{id}")
+    public ModelAndView doPostEdit(@PathVariable(name = "id") Long orderId,
+                                   @RequestParam(value = "orderItemId") Long orderItemId,
+                                   @RequestParam(value = "price") Integer price,
+                                   @RequestParam(value = "quantity") Integer quantity,
+                                   ModelMap modelMap) {
+        Order order = orderService.readOrderById(orderId);
+        if (order != null) {
+            OrderItem orderItem = orderService.readOrderItemById(orderItemId);
+            if (orderItem != null) {
+                orderItem.setQuantity(price);
+                orderItem.setQuantity(quantity);
+                orderService.saveOrderItem(orderItem);
+            }
+        } else {
+            return new ModelAndView("redirect:/admin/catalog", modelMap);
+        }
+        return new ModelAndView("redirect:/admin/order/edit/" + orderId, modelMap);
     }
 
 }
