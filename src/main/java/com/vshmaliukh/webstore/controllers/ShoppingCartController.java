@@ -13,10 +13,7 @@ import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -37,20 +34,30 @@ public class ShoppingCartController {
     final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
-    public ModelAndView showCartPage(ModelMap modelMap){
-        List<Item> items = getTestItemOrderList();
-        modelMap.addAttribute("items",items); // todo implement items adding to template
-        modelMap.addAttribute("totalItems",items.size());
+    public ModelAndView showCartPage(ModelMap modelMap,
+//                                     @CookieValue  // if cookies will be used
+                                     String userName){  // todo add username usage
+        List<Item> testItems = getTestItemOrderList(); // for tests
 
-
-//        List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName("")); // todo add username usage
-
+        List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName(userName));
+        List<Item> items = new ArrayList<>();
+        for (Cart cart : carts) {
+            items.add(
+                    itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getCategory())
+                            .getById(cart.getItemId()));
+        }
         int totalPrice = 0;
+//        for (Item item : items) {
+//            totalPrice = totalPrice + item.getPrice();
+//        }
 
-        for (Item item : items) {  // for tests
+
+        for (Item item : testItems) {  // for tests
             totalPrice = totalPrice + item.getPrice();
         }
 
+        modelMap.addAttribute("items",testItems);
+        modelMap.addAttribute("totalItems",testItems.size());
 
         modelMap.addAttribute("totalPrice",totalPrice);
         return new ModelAndView(SHOPPING_CART_VIEW);
