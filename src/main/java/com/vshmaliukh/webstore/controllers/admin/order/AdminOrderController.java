@@ -34,7 +34,7 @@ public class AdminOrderController {
     }
 
     @GetMapping("/catalog/**")
-    public ModelAndView doGet(@RequestParam(required = false) String keyword,
+    public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
                               @RequestParam(defaultValue = "1") int page,
                               @RequestParam(defaultValue = "6") int size,
                               @RequestParam(defaultValue = "id,asc") String[] sort,
@@ -46,7 +46,7 @@ public class AdminOrderController {
     }
 
     @GetMapping("/view/{id}")
-    public ModelAndView doGetInfo(@PathVariable(name = "id") Long id,
+    public ModelAndView doGetView(@PathVariable(name = "id") Long id,
                                   ModelMap modelMap) {
         Order order = orderService.readOrderById(id);
         if (order != null) {
@@ -56,6 +56,20 @@ public class AdminOrderController {
             modelMap.addAttribute("orderItemList", orderItemList);
             modelMap.addAttribute("order", order);
             modelMap.addAttribute("totalOrderPrice", totalOrderPrice);
+            return new ModelAndView("/admin/order/view", modelMap);
+        }
+        return new ModelAndView("redirect:/admin/order/catalog", modelMap);
+    }
+
+    @GetMapping("/edit/{id}")
+    public ModelAndView doGetIEdit(@PathVariable(name = "id") Long id,
+                                  ModelMap modelMap) {
+        Order order = orderService.readOrderById(id);
+        if (order != null) {
+            List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(id);
+
+            modelMap.addAttribute("orderItemList", orderItemList);
+            modelMap.addAttribute("order", order);
             return new ModelAndView("/admin/order/view", modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
