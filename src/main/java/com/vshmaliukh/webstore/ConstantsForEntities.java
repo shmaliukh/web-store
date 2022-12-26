@@ -42,4 +42,17 @@ public final class ConstantsForEntities {
     public static final String IS_AVAILABLE_IN_STORE_COLUMN = "is_available_in_store";
 
 
+    public static final String DD_MM_YYYY_ORDER_DATE_PATTERN_STR = "dd/MM/yyyy";
+
+    public static final String INVOICE_TABLE = "Invoices";
+    public static final String ORDER_ITEM_TABLE = "Order_items";
+
+    public static final String ORDER_ITEM_ID_COLUMN = "order_item_id";
+    public static final String INVOICE_ID_COLUMN = "invoice_id";
+
+    public static final String INVOICE_DATE_COLUMN = "date";
+    public static final String INVOICE_STATUS_COLUMN = "status";
+    public static final String INVOICE_TOTAL_AMOUNT_COLUMN = "total_amount";
+
+
 }
