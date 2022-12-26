@@ -4,15 +4,12 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
-import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
-import com.vshmaliukh.webstore.repositories.literature_items_repositories.ActionsWithItem;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
-import static com.vshmaliukh.webstore.controllers.ModelAttributesConstants.PRICE;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.*;
 
 @Controller
@@ -35,7 +31,7 @@ public class MainPageController {
     final ItemService itemService;
     final UserService userService;
     final CartService cartService;
-    final ActionsWithItemRepositoryProvider itemRepositoryProvider;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
     public ModelAndView showMainPage(ModelMap modelMap){
@@ -95,8 +91,8 @@ public class MainPageController {
     public String addToCart(@PathVariable String type,
                              @PathVariable Integer id,
                              @RequestHeader String referer){
-        ActionsWithItem actionsWithItem = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type);
-        Item item = actionsWithItem.getItemById(id);
+        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+        Item item = itemRepository.getById(id);
         cartService.addItemToCart(item,"username"); // todo implement username usage
         return "redirect:" + referer;
     }

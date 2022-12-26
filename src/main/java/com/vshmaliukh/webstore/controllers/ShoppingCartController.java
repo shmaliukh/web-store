@@ -5,7 +5,8 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
-import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
@@ -33,7 +34,7 @@ public class ShoppingCartController {
     final ItemService itemService;
     final UserService userService;
     final CartService cartService;
-    final ActionsWithItemRepositoryProvider itemRepositoryProvider;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap){
@@ -58,7 +59,9 @@ public class ShoppingCartController {
     @PostMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                         @PathVariable Integer id){
-        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
+
+        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+        Item item = itemRepository.getById(id);
         cartService.addItemToCart(item,"username"); // todo implement username usage
         return "redirect:/" + SHOPPING_CART;
     }
@@ -66,7 +69,8 @@ public class ShoppingCartController {
     @PostMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id){
-        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
+        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+        Item item = itemRepository.getById(id);
         cartService.decItemQuantityInCart(item,"username"); // todo implement username usage
         return "redirect:/" + SHOPPING_CART;
     }
