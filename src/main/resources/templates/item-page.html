@@ -46,12 +46,16 @@
                             <h5>Price: $<b th:text="${item.getPrice()}">0</b></h5>
                             <div style="text-align: center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary"><img
-                                            class="shopping-icon" src="/icons/shopping-cart.png"></button>
+                                    <form method="post" th:action="${href}">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary"><img
+                                                class="shopping-icon" src="/icons/shopping-cart.png"></button>
+                                    </form>
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary"><img
+                                    <form method="post" th:action="'/main/catalog' + ${item.getCategory()} + '/' + ${item.getId()}">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary"><img
                                             class="shopping-icon" src="/icons/buy.png"></button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -62,10 +66,8 @@
                 <div class="card shadow-sm">
                     <div class="item-info" th:each="item: ${item}">
                         <div>
-                            <div th:each="detail: ${details}">
-                                <p th:text="${detail}">
-                                    Short description
-                                </p>
+                            <div th:insert="/blocks/item-details :: ${type}">
+
                             </div>
                         </div>
                     </div>
