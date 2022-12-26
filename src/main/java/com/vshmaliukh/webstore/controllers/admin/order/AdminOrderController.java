@@ -92,4 +92,20 @@ public class AdminOrderController {
         return new ModelAndView("redirect:/admin/order/edit/" + orderId, modelMap);
     }
 
+    @PostMapping("/edit/{id}")
+    public ModelAndView doPostEditOrder(@PathVariable(name = "id") Long orderId,
+                                       @RequestParam(value = "status") String status,
+                                       @RequestParam(value = "comment") String comment,
+                                       ModelMap modelMap) {
+        Order order = orderService.readOrderById(orderId);
+        if (order != null) {
+            order.setStatus(status);
+            order.setComment(comment);
+            orderService.saveOrder(order);
+        } else {
+            return new ModelAndView("redirect:/admin/catalog", modelMap);
+        }
+        return new ModelAndView("redirect:/admin/order/edit/" + orderId, modelMap);
+    }
+
 }

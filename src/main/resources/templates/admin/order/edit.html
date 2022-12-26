@@ -100,7 +100,7 @@
                             </td>
                         </form>
                         <script th:utext="
-                        'formElem' +${iterator.count}'.onsubmit = async (e) => {'
+                        |'formElem' +${iterator.count}'.onsubmit = async (e) => {'
                                 + 'e.preventDefault();'
                                 + 'fetchAddingItemFormWithJsonBody('
                                     + '&quot;formElem'+${iterator.count}+'&quot; , '
@@ -108,7 +108,7 @@
                                     + '&quot;post&quot; , '
                                     + '&quot;/admin/order/edit/'+${order.getId()}+'&quot;'
                                 + ');'
-                        + '};'">
+                        + '};'|">
                         </script>
                     </tr>
                     </tbody>
