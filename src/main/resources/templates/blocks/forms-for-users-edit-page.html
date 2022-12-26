@@ -1,0 +1,20 @@
+<div th:fragment="edit-username-users-page">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" class="form-control" id="username" placeholder="user" required="">
+    <div class="invalid-feedback">
+        Please enter correct name.
+    </div>
+</div>
+
+<div th:fragment="edit-email-users-page">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control" id="email" placeholder="you@example.com">
+    <div class="invalid-feedback">
+        Please enter a valid email address for shipping updates.
+    </div>
+</div>
+
+<div th:fragment="edit-avatar-users-page">
+    <label for="avatar" class="form-label">Avatar</label>
+    <input type="file" class="form-control" id="avatar" placeholder="avatar" required="">
+</div>

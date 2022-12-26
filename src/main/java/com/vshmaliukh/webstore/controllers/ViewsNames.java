@@ -6,7 +6,9 @@ public class ViewsNames {
     public static final String ITEM_PAGE_VIEW = "item-page";
     public static final String MAIN_PAGE_VIEW = "main-page";
     public static final String SHOPPING_CART_VIEW = "shopping-cart";
-    public static final String HOME_PAGE_VIEW = "home-page";
-    public static final String EDIT_DATA_USERS_VIEW = "edit-data-users-page";
+    public static final String HOME_PAGE_VIEW = "user-home-page";
+    public static final String EDIT_AVATAR_USERS_VIEW = "edit-avatar-users-page";
+    public static final String EDIT_EMAIL_USERS_VIEW = "edit-email-users-page";
+    public static final String EDIT_USERNAME_USERS_VIEW = "edit-username-users-page";
 
 }
