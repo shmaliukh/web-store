@@ -81,9 +81,11 @@
                         <th scope="col">ID</th>
                         <th scope="col">UPDATED</th>
                         <th scope="col">CATEGORY</th>
+                        <th scope="col">TYPE</th>
                         <th scope="col">NAME</th>
                         <th scope="col">PRICE</th>
                         <th scope="col">QUANTITY</th>
+                        <th scope="col">ACTIVE</th>
                         <th colspan="2">TOOLS</th>
                     </tr>
                     </thead>
@@ -93,6 +95,7 @@
                         <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
                         <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
                         <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
+                        <td class="align-middle" th:text="${orderItem.getItem().getClass().getSimpleName().toLowerCase()}">Type</td>
                         <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
                         <form th:id="'formElem' +${iterator.count}"
                               th:action="'/admin/order/edit/'+${order.getId()}+'/order-item/'+${orderItem.getOrderItemId()}"
@@ -106,20 +109,16 @@
                                        th:value="${orderItem.getQuantity()}">
                             </td>
                             <td class="align-middle">
-                                <button class="btn btn-outline-success" type="submit">Edit item</button>
+                                <input th:id="'checkbox'+${iterator.count}" class="form-check-input"
+                                       name="active" type="checkbox" role="switch"
+                                       th:value="${orderItem.isActive()}"
+                                       th:checked="${orderItem.isActive()}">
+                                <script th:replace="/blocks/generatedScripts :: checkBox"></script>
+                            </td>
+                            <td class="align-middle">
+                                <button class="btn btn-outline-success" type="submit">Edit</button>
                             </td>
                         </form>
-                        <script th:utext="
-                        |'formElem' +${iterator.count}'.onsubmit = async (e) => {'
-                                + 'e.preventDefault();'
-                                + 'fetchAddingItemFormWithJsonBody('
-                                    + '&quot;formElem'+${iterator.count}+'&quot; , '
-                                    + '&quot;/admin/order/edit/'+${order.getId()}+'/order-item/'+${orderItem.getOrderItemId()}'&quot; , '
-                                    + '&quot;post&quot; , '
-                                    + '&quot;/admin/order/edit/'+${order.getId()}+'&quot;'
-                                + ');'
-                        + '};'|">
-                        </script>
                     </tr>
                     </tbody>
                 </table>

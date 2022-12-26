@@ -27,6 +27,8 @@ public class OrderItem extends AuditModel {
 
     private int orderItemPrice;
 
+    private boolean active;
+
     @ManyToOne
     private Item item;
 

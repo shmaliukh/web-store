@@ -1,0 +1,13 @@
+<th:block th:fragment="checkBox">
+    <script th:utext="
+        'const checkboxId' + ${iterator.count}+' = &quot;#checkbox' + ${iterator.count} + '&quot;;'
+        + 'const checkbox' + ${iterator.count}+' = document.querySelector(checkboxId' + ${iterator.count}+');'
+        + 'checkbox' + ${iterator.count}+'.addEventListener(&quot;change&quot;, () => {'
+            + 'if (checkbox' + ${iterator.count}+'.checked) {'
+                + 'checkbox' + ${iterator.count}+'.value = &quot;true&quot;;'
+            + '} else {'
+                + 'checkbox' + ${iterator.count}+'.value = &quot;false&quot;;'
+            + '}'
+        + '});'">
+    </script>
+</th:block>

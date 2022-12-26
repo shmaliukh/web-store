@@ -21,9 +21,7 @@ import java.util.List;
 @RequestMapping("/admin/order")
 public class AdminOrderController {
 
-    final OrderItemRepository orderItemRepository;
     final OrderService orderService;
-    final ItemService itemService;
 
     @GetMapping("/**")
     public ModelAndView doGet(ModelMap modelMap) {
@@ -42,8 +40,8 @@ public class AdminOrderController {
         return new ModelAndView("/admin/order/catalog", modelMap);
     }
 
-    @GetMapping("/view/{id}")
-    public ModelAndView doGetView(@PathVariable(name = "id") Long id,
+    @GetMapping("/view/{oderId}")
+    public ModelAndView doGetView(@PathVariable(name = "oderId") Long id,
                                   ModelMap modelMap) {
         Order order = orderService.readOrderById(id);
         if (order != null) {
@@ -58,8 +56,8 @@ public class AdminOrderController {
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
     }
 
-    @GetMapping("/edit/{id}")
-    public ModelAndView doGetEdit(@PathVariable(name = "id") Long orderId,
+    @GetMapping("/edit/{oderId}")
+    public ModelAndView doGetEdit(@PathVariable(name = "oderId") Long orderId,
                                    ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
@@ -72,28 +70,8 @@ public class AdminOrderController {
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
     }
 
-    @PostMapping("/edit/{id}/order-item/{orderItemId}")
-    public ModelAndView doPostEditItem(@PathVariable(name = "id") Long orderId,
-                                       @PathVariable(value = "orderItemId") Long orderItemId,
-                                       @RequestParam(value = "price") Integer price,
-                                       @RequestParam(value = "quantity") Integer quantity,
-                                       ModelMap modelMap) {
-        Order order = orderService.readOrderById(orderId);
-        if (order != null) {
-            OrderItem orderItem = orderService.readOrderItemById(orderItemId);
-            if (orderItem != null) {
-                orderItem.setOrderItemPrice(price);
-                orderItem.setQuantity(quantity);
-                orderService.saveOrderItem(orderItem);
-            }
-        } else {
-            return new ModelAndView("redirect:/admin/catalog", modelMap);
-        }
-        return new ModelAndView("redirect:/admin/order/edit/" + orderId, modelMap);
-    }
-
-    @PostMapping("/edit/{id}")
-    public ModelAndView doPostEditOrder(@PathVariable(name = "id") Long orderId,
+    @PostMapping("/edit/{oderId}")
+    public ModelAndView doPostEditOrder(@PathVariable(name = "oderId") Long orderId,
                                        @RequestParam(value = "status") String status,
                                        @RequestParam(value = "comment") String comment,
                                        ModelMap modelMap) {
@@ -102,6 +80,29 @@ public class AdminOrderController {
             order.setStatus(status);
             order.setComment(comment);
             orderService.saveOrder(order);
+        } else {
+            return new ModelAndView("redirect:/admin/catalog", modelMap);
+        }
+        return new ModelAndView("redirect:/admin/order/edit/" + orderId, modelMap);
+    }
+
+
+    @PostMapping("/edit/{oderId}/order-item/{orderItemId}")
+    public ModelAndView doPostEditItem(@PathVariable(name = "oderId") Long orderId,
+                                       @PathVariable(value = "orderItemId") Long orderItemId,
+                                       @RequestParam(value = "price") Integer price,
+                                       @RequestParam(value = "quantity") Integer quantity,
+                                       @RequestParam(value = "active", defaultValue = "false") boolean active,
+                                       ModelMap modelMap) {
+        Order order = orderService.readOrderById(orderId);
+        if (order != null) {
+            OrderItem orderItem = orderService.readOrderItemById(orderItemId);
+            if (orderItem != null) {
+                orderItem.setOrderItemPrice(price);
+                orderItem.setQuantity(quantity);
+                orderItem.setActive(active);
+                orderService.saveOrderItem(orderItem);
+            }
         } else {
             return new ModelAndView("redirect:/admin/catalog", modelMap);
         }

@@ -11,6 +11,8 @@ import java.util.Optional;
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
+    void deleteOrderItemByOrderItemId(Long id);
+
     Optional<OrderItem> readOrderItemByOrderItemId(Long id);
 
     List<OrderItem> readOrderItemsByOrder(Order order);

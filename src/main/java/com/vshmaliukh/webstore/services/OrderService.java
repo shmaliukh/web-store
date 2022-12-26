@@ -24,10 +24,6 @@ public class OrderService {
     final OrderRepository orderRepository;
     final OrderItemRepository orderItemRepository;
 
-    public void deleteOrderItem(OrderItem orderItem){
-        orderItemRepository.delete(orderItem);
-    }
-
     public void saveOrderItem(OrderItem orderItem){
         orderItemRepository.save(orderItem);
     }
@@ -46,6 +42,7 @@ public class OrderService {
         List<OrderItem> orderProducts = orderItemRepository.readOrderItemsByOrder(order);
         if(orderProducts != null){
             return orderProducts.stream()
+                    .filter(OrderItem::isActive)
                     .map(orderItem -> orderItem.getOrderItemPrice() * orderItem.getQuantity())
                     .mapToInt(Integer::intValue).sum();
         }
@@ -77,14 +74,6 @@ public class OrderService {
         }
     }
 
-    public void addItemToOrder(long userId, Item item) {
-        Order orderByUserId = readOrderByUserId(userId);
-        // FIXME
-//        orderByUserId.getItemList().add(item);
-        orderRepository.save(orderByUserId);
-        log.info("userId: '{}' // added new '{}' item to order", userId, item);
-    }
-
     public int calcOrderTotalSumByUserId(long orderId) {
         List<Item> itemListByUserId = readOrderItemListByUserId(orderId);
         if (itemListByUserId != null) {
@@ -108,10 +97,6 @@ public class OrderService {
 
     public Order readOrderByUserId(long userId) {
         return orderRepository.findByUserId(userId);
-    }
-
-    public void deleteOrderByUserId(long userId) {
-        orderRepository.deleteOrderByUserId(userId);
     }
 
 }
