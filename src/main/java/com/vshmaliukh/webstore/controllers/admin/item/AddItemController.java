@@ -2,7 +2,7 @@ package com.vshmaliukh.webstore.controllers.admin.item;
 
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
@@ -13,11 +13,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
+
 
 @Slf4j
 @Controller
@@ -29,7 +26,7 @@ public class AddItemController {
 
     final ItemService itemService;
     final UserService userService;
-    final ActionsWithItemRepositoryProvider itemRepositoryProvider;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping("/{" + ITEM_TYPE + "}")
     public ModelAndView doGet(@PathVariable(ITEM_TYPE) String itemType,
