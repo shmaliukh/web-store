@@ -1,0 +1,47 @@
+package com.vshmaliukh.webstore.controllers.admin;
+
+import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.ActionsWithItem;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.ui.ModelMap;
+
+import java.util.List;
+
+
+public final class AdminControllerUtils {
+
+    public static void addAttributesForSortingAndPaging(int size, ModelMap modelMap, String sortField, String sortDirection, Page<? extends Item> pageWithItems) {
+        modelMap.addAttribute("currentPage", pageWithItems.getNumber() + 1);
+        modelMap.addAttribute("totalItems", pageWithItems.getTotalElements());
+        modelMap.addAttribute("totalPages", pageWithItems.getTotalPages());
+        modelMap.addAttribute("pageSize", size);
+        modelMap.addAttribute("sortField", sortField);
+        modelMap.addAttribute("sortDirection", sortDirection);
+        modelMap.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
+    }
+
+    public static List<? extends Item> getSortedItemsContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, ActionsWithItem<? extends Item> repositoryByItemClassName) {
+        String sortField = sort[0];
+        String sortDirection = sort[1];
+
+        Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Order order = new Sort.Order(direction, sortField);
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+
+        Page<? extends Item> pageWithItems;
+        if (keyword == null) {
+            pageWithItems = repositoryByItemClassName.findAll(pageable);
+        } else {
+            pageWithItems = repositoryByItemClassName.findByNameContainingIgnoreCase(keyword, pageable);
+            modelMap.addAttribute("keyword", keyword);
+        }
+        List<? extends Item> content = pageWithItems.getContent();
+        addAttributesForSortingAndPaging(size, modelMap, sortField, sortDirection, pageWithItems);
+        return content;
+    }
+
+}

@@ -1,0 +1,63 @@
+<div th:fragment="pagination(pageToRedirect)">
+    <nav aria-label="Pagination" th:if="${totalPages > 0}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a th:replace="blocks/paging :: paging(1, '<<', 'First Page', ${pageToRedirect})"></a>
+            </li>
+            <li class="page-item font-weight-bold" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a th:replace="blocks/paging :: paging(${currentPage - 1}, 'Prev', 'Previous Page', ${pageToRedirect})"></a>
+            </li>
+            <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+                <a class="page-link" href="#">...</a>
+            </li>
+            <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+                th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1 , currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+                <a th:replace="blocks/paging :: paging(${page}, ${page}, 'Page ' + ${page}, ${pageToRedirect})"></a>
+            </li>
+            <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+                <a class="page-link" href="#">...</a>
+            </li>
+            <li class="page-item font-weight-bold"
+                th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <a th:replace="blocks/paging :: paging(${currentPage + 1},'Next', 'Next Page', ${pageToRedirect})"></a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <a th:replace="blocks/paging :: paging(${totalPages}, '>>', 'Last Page', ${pageToRedirect})"></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div th:fragment="tools(pageToRedirect)">
+    <form th:action="${pageToRedirect}" id="searchForm">
+        <div class="d-flex mb-3">
+            <div class="ms-auto p-2">
+                <div class="input-group">
+                    <input id="keyword" type="search" name="keyword" th:value="${keyword}" class="form-control"
+                           placeholder="Enter keyword">
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </div>
+            </div>
+            <div class="p-2">
+                <div class="input-group mb-3">
+                    <select form="searchForm" name="size" th:value="${pageSize}"
+                            class="size-select flex-fill" id="pageSize">
+                        <option th:each="s : ${ {3, 6, 9, 18, 36} }"
+                                th:value="${s}"
+                                th:text="${s}"
+                                th:selected="${s == pageSize}">
+                        </option>
+                    </select>
+                    <button class="btn btn-secondary flex-fill" type="submit">Submit</button>
+                </div>
+            </div>
+            <div class="p-2">
+                <div class="input-group mb-3">
+                    <a th:href="${pageToRedirect}" class="flex-fill">
+                        <button type="button" class="btn btn-secondary flex-fill">Clear</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
