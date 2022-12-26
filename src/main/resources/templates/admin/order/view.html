@@ -23,6 +23,7 @@
 
     <div class="container">
         <p class="lead" th:text="|${order.getUser().getUsername()} order info|"></p>
+        <p class="lead" th:text="|Status: ${order.getStatus()} ${orderStatusDescriptionMap.getOrDefault(order.getStatus(), '')} |"></p>
     </div>
 
     <div class="container">

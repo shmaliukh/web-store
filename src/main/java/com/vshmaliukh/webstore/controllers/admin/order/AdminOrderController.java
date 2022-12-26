@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin.order;
 
+import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.items.OrderItem;
@@ -51,6 +52,7 @@ public class AdminOrderController {
             modelMap.addAttribute("orderItemList", orderItemList);
             modelMap.addAttribute("order", order);
             modelMap.addAttribute("totalOrderPrice", totalOrderPrice);
+            modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);
             return new ModelAndView("/admin/order/view", modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
@@ -65,6 +67,7 @@ public class AdminOrderController {
 
             modelMap.addAttribute("orderItemList", orderItemList);
             modelMap.addAttribute("order", order);
+            modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);
             return new ModelAndView("/admin/order/edit", modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
@@ -110,3 +113,4 @@ public class AdminOrderController {
     }
 
 }
+
