@@ -1,5 +1,3 @@
-//return "fetchFormWithJsonBody(" + formElemId + ", " + pageToSend + ", " + method + ", " + pageToRedirect + ")";
-
 function getJsonObj(formElemId) {
     let form = document.getElementById(formElemId);
     let formData = new FormData(form);

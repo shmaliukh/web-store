@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script src="/utils.js"></script>
+    <script src="/formToJson.js"></script>
     <title>Order view</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link th:insert="blocks/bootstrap-css-style.html :: style">
@@ -46,7 +46,9 @@
                     <td class="align-middle" th:text="${order.getUser().getUsername()}">Username</td>
                     <td class="align-middle" th:text="${order.getStatus()}">Status</td>
                     <td class="align-middle" th:text="${order.getComment()}">Comment</td>
-                    <td class="align-middle" th:text="${totalOrderPrice}">Sum</td>
+                    <td class="align-middle">
+                        <button class="btn btn-outline-success" type="submit">Edit order</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -72,13 +74,14 @@
                         <th scope="col">NAME</th>
                         <th scope="col">PRICE</th>
                         <th scope="col">QUANTITY</th>
-                        <th scope="col"></th>
+                        <th colspan="2">TOOLS</th>
                     </tr>
                     </thead>
                     <tbody class="table-group-divider">
                     <tr th:each="orderItem, iterator: ${orderItemList}">
-                        <form th:action="'/admin/order/edit/'+${order.getId()}" method="post" class="needs-validation">
-                            <input type="hidden" th:name="orderItemId" th:value="${orderItem.getOrderItemId()}">
+                        <form th:id="'formElem' +${iterator.count}"
+                              th:action="'/admin/order/edit/'+${order.getId()}+'/order-item/'+${orderItem.getOrderItemId()}"
+                              method="post" class="needs-validation">
                             <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
                             <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
                             <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
@@ -96,6 +99,17 @@
                                 <button class="btn btn-outline-success" type="submit">Edit item</button>
                             </td>
                         </form>
+                        <script th:utext="
+                        'formElem' +${iterator.count}'.onsubmit = async (e) => {'
+                                + 'e.preventDefault();'
+                                + 'fetchAddingItemFormWithJsonBody('
+                                    + '&quot;formElem'+${iterator.count}+'&quot; , '
+                                    + '&quot;/admin/order/edit/'+${order.getId()}+'/order-item/'+${orderItem.getOrderItemId()}'&quot; , '
+                                    + '&quot;post&quot; , '
+                                    + '&quot;/admin/order/edit/'+${order.getId()}+'&quot;'
+                                + ');'
+                        + '};'">
+                        </script>
                     </tr>
                     </tbody>
                 </table>

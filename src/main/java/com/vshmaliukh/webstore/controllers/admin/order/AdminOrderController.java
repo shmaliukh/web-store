@@ -59,7 +59,7 @@ public class AdminOrderController {
     }
 
     @GetMapping("/edit/{id}")
-    public ModelAndView doGetIEdit(@PathVariable(name = "id") Long orderId,
+    public ModelAndView doGetEdit(@PathVariable(name = "id") Long orderId,
                                    ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
@@ -72,12 +72,12 @@ public class AdminOrderController {
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
     }
 
-    @PostMapping("/edit/{id}")
-    public ModelAndView doPostEdit(@PathVariable(name = "id") Long orderId,
-                                   @RequestParam(value = "orderItemId") Long orderItemId,
-                                   @RequestParam(value = "price") Integer price,
-                                   @RequestParam(value = "quantity") Integer quantity,
-                                   ModelMap modelMap) {
+    @PostMapping("/edit/{id}/order-item/{orderItemId}")
+    public ModelAndView doPostEditItem(@PathVariable(name = "id") Long orderId,
+                                       @PathVariable(value = "orderItemId") Long orderItemId,
+                                       @RequestParam(value = "price") Integer price,
+                                       @RequestParam(value = "quantity") Integer quantity,
+                                       ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
             OrderItem orderItem = orderService.readOrderItemById(orderItemId);

@@ -21,9 +21,12 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class OrderService {
 
-    final ItemService itemService;
     final OrderRepository orderRepository;
     final OrderItemRepository orderItemRepository;
+
+    public void deleteOrderItem(OrderItem orderItem){
+        orderItemRepository.delete(orderItem);
+    }
 
     public void saveOrderItem(OrderItem orderItem){
         orderItemRepository.save(orderItem);
