@@ -44,11 +44,21 @@
                     <td class="align-middle" th:text="${order.getId()}">Id</td>
                     <td class="align-middle" th:text="${#dates.format(order.getDateCreated(), 'yyyy-MM-dd')}">Date</td>
                     <td class="align-middle" th:text="${order.getUser().getUsername()}">Username</td>
-                    <td class="align-middle" th:text="${order.getStatus()}">Status</td>
-                    <td class="align-middle" th:text="${order.getComment()}">Comment</td>
-                    <td class="align-middle">
-                        <button class="btn btn-outline-success" type="submit">Edit order</button>
-                    </td>
+                    <form th:id="'formEditOrderInfo'"
+                          th:action="'/admin/order/edit/'+${order.getId()}"
+                          method="post" class="needs-validation">
+                        <td class="align-middle">
+                            <input class="form-control align-middle" type="text" name="status"
+                                   th:value="${order.getStatus()}">
+                        </td>
+                        <td class="align-middle">
+                            <input class="form-control align-middle" type="text" name="comment"
+                                   th:value="${order.getComment()}">
+                        </td>
+                        <td class="align-middle">
+                            <button class="btn btn-outline-success" type="submit">Edit order</button>
+                        </td>
+                    </form>
                 </tr>
                 </tbody>
             </table>
@@ -79,14 +89,14 @@
                     </thead>
                     <tbody class="table-group-divider">
                     <tr th:each="orderItem, iterator: ${orderItemList}">
+                        <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                        <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
+                        <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
+                        <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
+                        <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
                         <form th:id="'formElem' +${iterator.count}"
                               th:action="'/admin/order/edit/'+${order.getId()}+'/order-item/'+${orderItem.getOrderItemId()}"
                               method="post" class="needs-validation">
-                            <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
-                            <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
-                            <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
-                            <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
-                            <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
                             <td class="align-middle">
                                 <input class="form-control align-middle" type="number" name="price"
                                        th:value="${orderItem.getOrderItemPrice()}">
