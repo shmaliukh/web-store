@@ -16,7 +16,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Entity
 @Table(name = USER_TABLE,
         uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
-public class User {
+public class User extends AuditModel{
 
     private String password;
     private boolean enabled;

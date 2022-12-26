@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.vshmaliukh.webstore.model.AuditModel;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
@@ -11,7 +12,6 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
@@ -20,7 +20,8 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@MappedSuperclass
+@Entity(name = "item")
+@Inheritance(strategy = InheritanceType.JOINED)
 @JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Book.class, name = "book"),
@@ -28,7 +29,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
         @JsonSubTypes.Type(value = Comics.class, name = "comics"),
         @JsonSubTypes.Type(value = Newspaper.class, name = "newspaper"),
 })
-public abstract class Item implements Serializable {
+public abstract class Item extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +39,7 @@ public abstract class Item implements Serializable {
     @Column(name = CATEGORY_COLUMN, nullable = false)
     String category;
 
-    @Column(name = NAME_COLUMN, nullable = false)
+    @Column(name = NAME_COLUMN, nullable = false, unique = true)
     String name;
 
     @Column(name = PRICE_COLUMN, nullable = false)

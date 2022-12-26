@@ -1,10 +1,10 @@
 package com.vshmaliukh.webstore.repositories;
 
-import com.vshmaliukh.webstore.model.Role;
+import com.vshmaliukh.webstore.model.Invoice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
-    
+public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
+
 }

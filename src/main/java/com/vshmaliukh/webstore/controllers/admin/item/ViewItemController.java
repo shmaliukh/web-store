@@ -1,10 +1,9 @@
 package com.vshmaliukh.webstore.controllers.admin.item;
 
-import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
-import com.vshmaliukh.webstore.repositories.literature_items_repositories.ActionsWithItem;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +25,7 @@ import java.util.List;
 public class ViewItemController {
 
     final ItemService itemService;
-    final ActionsWithItemRepositoryProvider actionsWithItemRepositoryProvider;
-
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping("/{itemType}")
     public ModelAndView doGet(@RequestParam(required = false) String keyword,
@@ -36,32 +34,23 @@ public class ViewItemController {
                               @RequestParam(defaultValue = "id,asc") String[] sort,
                               @PathVariable("itemType") String itemType,
                               ModelMap modelMap) {
-        List<? extends Item> itemList = itemService.readAllItemsByTypeName(itemType);
-        if (itemList == null) {
-            return new ModelAndView("redirect:/admin/item/view", modelMap);
-        }
-        ActionsWithItem<? extends Item> repositoryByItemClassName = actionsWithItemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(itemType);
-        itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, repositoryByItemClassName);
+        BaseItemRepository itemRepository = getItemRepository(itemType);
+        List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository);
 
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
         return new ModelAndView("admin-item-view", modelMap);
     }
 
-    @GetMapping(value = {"/all"})
-    public ModelAndView doGet(@RequestParam(required = false) String keyword,
-                              @RequestParam(defaultValue = "1") int page,
-                              @RequestParam(defaultValue = "6") int size,
-                              @RequestParam(defaultValue = "id,asc") String[] sort,
-                              ModelMap modelMap) {
-        List<Item> itemAllTypeList = ItemUtil.readAllItems(itemService);
-        for (ActionsWithItem<? extends Item> actionsWithItem : actionsWithItemRepositoryProvider.itemActionsWithRepositoryList) {
-            itemAllTypeList.addAll(AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, actionsWithItem));
+    private BaseItemRepository getItemRepository(String itemType) {
+        // TODO solve 'Raw use of parameterized class 'BaseItemRepository''
+        BaseItemRepository itemRepository;
+        if(itemType.equals("all")){
+            itemRepository = itemRepositoryProvider.getAllItemRepository();
+        } else {
+            itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
         }
-
-        modelMap.addAttribute("itemType", "all");
-        modelMap.addAttribute("itemList", itemAllTypeList);
-        return new ModelAndView("admin-item-view", modelMap);
+        return itemRepository;
     }
 
 }

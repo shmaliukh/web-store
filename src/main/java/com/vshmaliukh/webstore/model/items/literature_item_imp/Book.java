@@ -21,10 +21,7 @@ import static com.vshmaliukh.webstore.ItemUtil.DATE_FORMAT_STR;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = BOOK_TABLE,
-        uniqueConstraints = {@UniqueConstraint(columnNames = {
-                NAME_COLUMN
-        })})
+@Table(name = BOOK_TABLE)
 public class Book extends LiteratureItem {
 
     @Column(name = AUTHOR_COLUMN)
