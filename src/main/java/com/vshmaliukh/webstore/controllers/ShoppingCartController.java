@@ -42,38 +42,48 @@ public class ShoppingCartController {
         List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName(userName));
         List<Item> items = new ArrayList<>();
         for (Cart cart : carts) {
-            items.add(
-                    itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getCategory())
-                            .getById(cart.getItemId()));
+            Item item = itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getCategory())
+                    .getById(cart.getItemId());
+            item.setPrice(item.getPrice()*item.getQuantity());
+            items.add(item);
         }
+
+        for (Item item : testItems) { // for tests
+            item.setPrice(item.getPrice()* item.getQuantity());
+        }
+
+        int totalCount = 0;
         int totalPrice = 0;
 //        for (Item item : items) {
 //            totalPrice = totalPrice + item.getPrice();
 //        }
-
+//        for (Item item : items) {
+//            totalCount = totalCount + item.getQuantity();
+//        }
 
         for (Item item : testItems) {  // for tests
             totalPrice = totalPrice + item.getPrice();
         }
+        for (Item item : testItems) { // for tests
+            totalCount = totalCount + item.getQuantity();
+        }
 
         modelMap.addAttribute("items",testItems);
-        modelMap.addAttribute("totalItems",testItems.size());
-
+        modelMap.addAttribute("totalItems",totalCount);
         modelMap.addAttribute("totalPrice",totalPrice);
         return new ModelAndView(SHOPPING_CART_VIEW);
     }
 
-    @PostMapping("/add-one/{type}/{id}")
+    @GetMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                         @PathVariable Integer id){
-
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
         cartService.addItemToCart(item,"username"); // todo implement username usage
         return "redirect:/" + SHOPPING_CART;
     }
 
-    @PostMapping("/remove-one/{type}/{id}")
+    @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id){
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);

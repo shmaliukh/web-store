@@ -30,7 +30,6 @@ public class Cart {
     @Column(name = CATEGORY_COLUMN, nullable = false)
     private String category;
 
-
     @Column(name = ITEM_ID_COLUMN, nullable = false)
     private Integer itemId;
 
