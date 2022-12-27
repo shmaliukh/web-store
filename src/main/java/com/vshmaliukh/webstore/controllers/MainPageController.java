@@ -89,11 +89,12 @@ public class MainPageController {
 
     @PostMapping("/" + CATALOG_PAGE + "/{type}/{id}")
     public String addToCart(@PathVariable String type,
-                             @PathVariable Integer id,
-                             @RequestHeader String referer){
+                            @PathVariable Integer id,
+                            @RequestHeader String referer,
+                            @CookieValue String username){ // todo continue implementation of username usage
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
-        cartService.addItemToCart(item,"username"); // todo implement username usage
+        cartService.addItemToCart(item,username);
         return "redirect:" + referer;
     }
 

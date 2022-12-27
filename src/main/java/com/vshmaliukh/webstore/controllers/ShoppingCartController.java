@@ -35,8 +35,7 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
-//                                     @CookieValue  // if cookies will be used
-                                     String userName){  // todo add username usage
+                                   @CookieValue String userName){  // todo add username usage
         List<Item> testItems = getTestItemOrderList(); // for tests
 
         List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName(userName));
@@ -76,19 +75,24 @@ public class ShoppingCartController {
 
     @GetMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
-                                        @PathVariable Integer id){
+                                  @PathVariable Integer id,
+                                  @CookieValue String username){ // todo continue username usage implementation
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
-        cartService.addItemToCart(item,"username"); // todo implement username usage
+        cartService.addItemToCart(item,username);
         return "redirect:/" + SHOPPING_CART;
     }
 
     @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
-                                  @PathVariable Integer id){
+                                  @PathVariable Integer id,
+                                  @CookieValue String username){ // todo continue implementation with db usage
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
-        cartService.decItemQuantityInCart(item,"username"); // todo implement username usage
+        if (username==null){
+            // todo implement db usage
+        }
+        cartService.decItemQuantityInCart(item,username);
         return "redirect:/" + SHOPPING_CART;
     }
 
