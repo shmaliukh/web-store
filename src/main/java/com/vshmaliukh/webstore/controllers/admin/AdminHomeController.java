@@ -35,10 +35,10 @@ public class AdminHomeController {
         if (
                 ! // TODO remove '!'
                         isAdminUser) {
-            return new ModelAndView(ADMIN_HOME_PAGE, modelMap);
+            return new ModelAndView("admin/admin-home", modelMap);
         }
         // TODO create interceptor for admin verification
-        return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
+        return new ModelAndView("redirect:/home", modelMap);
     }
 
     private long calcAllItem() {
@@ -50,7 +50,7 @@ public class AdminHomeController {
     @GetMapping("/exit")
     public ModelAndView exit(ModelMap modelMap) {
         // TODO implement exit
-        return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
+        return new ModelAndView("redirect:/home", modelMap);
     }
 
 }
