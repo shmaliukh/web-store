@@ -35,7 +35,7 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
-                                     @RequestParam Long id){  // todo add username usage
+                                     @RequestParam Long id){  // todo continue username usage implementation
         List<Item> testItems = getTestItemOrderList(); // for tests
         List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(id).getId());
         List<Item> items = new ArrayList<>();
@@ -78,7 +78,7 @@ public class ShoppingCartController {
                                   @RequestParam Long userId){ // todo continue username usage implementation
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
-        cartService.addItemToCart(item,userService.getUserById(userId).getUsername());
+        cartService.addItemToCart(item,userId);
         return "redirect:/" + SHOPPING_CART;
     }
 
@@ -91,7 +91,7 @@ public class ShoppingCartController {
 
             // todo implement db usage
 
-        cartService.decItemQuantityInCart(item,userService.getUserById(userId).getUsername());
+        cartService.decItemQuantityInCart(item,userId);
         return "redirect:/" + SHOPPING_CART;
     }
 
