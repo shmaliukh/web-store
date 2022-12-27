@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -18,6 +19,12 @@ public class ItemService {
 
     final ItemRepositoryProvider itemRepositoryProvider;
 
+    public Optional<Item> readItemById(Integer itemId){
+        ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
+        return allItemRepository.findById(itemId);
+    }
+
+    // TODO implement read items via repository
     public List<Item> readItemsAvailableToBuy(){
         ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
 //        return allItemRepository.findAllByQuantityGreaterThanEqualAndAvailableInStoreEquals(1, true);

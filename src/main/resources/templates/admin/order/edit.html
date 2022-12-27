@@ -156,6 +156,12 @@
         <th:block th:if="${orderItemList.size() == 0}">
             <p class="lead" th:text="|No order items|"></p>
         </th:block>
+
+        <a th:href="'/admin/order/'+${order.getId()}+'/add-item'">
+            <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                Add item
+            </button>
+        </a>
     </div>
 
 </div>

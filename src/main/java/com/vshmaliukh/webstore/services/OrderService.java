@@ -21,16 +21,57 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class OrderService {
 
+    final ItemService itemService;
     final OrderRepository orderRepository;
     final OrderItemRepository orderItemRepository;
 
-    public void saveOrderItem(OrderItem orderItem){
+    public void insertItemToOrder(Long orderId, Integer itemId, Integer quantity) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            Optional<Item> optionalItem = itemService.readItemById(itemId);
+            if (optionalItem.isPresent()) {
+                Item item = optionalItem.get();
+                OrderItem orderItem = formOrderItem(quantity, item);
+                orderItem.setOrder(order);
+                orderItem.setItem(item);
+
+                orderItemRepository.save(orderItem);
+            } else {
+                log.warn("problem to insert item to order // not found item by '{}' id", itemId);
+            }
+        } else {
+            log.warn("problem to insert item to order // not found order by '{}' id", orderId);
+        }
+
+
+    }
+
+    private static OrderItem formOrderItem(Integer quantity, Item item) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrderItemPrice(item.getPrice());
+        orderItem.setQuantity(quantity);
+        orderItem.setActive(true);
+        return orderItem;
+    }
+
+    public void saveOrderItem(OrderItem orderItem) {
         orderItemRepository.save(orderItem);
     }
 
-    public OrderItem readOrderItemById(Long id){
+    public Integer calcTotalOrderItems(Order order) {
+        List<OrderItem> orderProducts = orderItemRepository.readOrderItemsByOrder(order);
+        if (orderProducts != null) {
+            return orderProducts.stream()
+                    .mapToInt(OrderItem::getQuantity)
+                    .sum();
+        }
+        return 0;
+    }
+
+    public OrderItem readOrderItemById(Long id) {
         Optional<OrderItem> optionalOrderItem = orderItemRepository.readOrderItemByOrderItemId(id);
-        if(optionalOrderItem.isPresent()){
+        if (optionalOrderItem.isPresent()) {
             return optionalOrderItem.get();
         } else {
             log.warn("problem to find order item by '{}' id", id);
@@ -40,7 +81,7 @@ public class OrderService {
 
     public Integer calcTotalOrderPrice(Order order) {
         List<OrderItem> orderProducts = orderItemRepository.readOrderItemsByOrder(order);
-        if(orderProducts != null){
+        if (orderProducts != null) {
             return orderProducts.stream()
                     .filter(OrderItem::isActive)
                     .map(orderItem -> orderItem.getOrderItemPrice() * orderItem.getQuantity())

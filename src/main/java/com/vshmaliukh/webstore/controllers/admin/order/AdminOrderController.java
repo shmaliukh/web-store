@@ -5,6 +5,7 @@ import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.OrderService;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.List;
 @RequestMapping("/admin/order")
 public class AdminOrderController {
 
+    final ItemRepositoryProvider itemRepositoryProvider;
     final ItemService itemService;
     final OrderService orderService;
 
@@ -114,15 +116,37 @@ public class AdminOrderController {
     }
 
     @GetMapping("/{oderId}/add-item")
-    public ModelAndView doGetAddItem(@PathVariable(name = "oderId") Long orderId,
-                                  ModelMap modelMap) {
+    public ModelAndView doGetAddItem(@RequestParam(required = false) String keyword,
+                                     @RequestParam(defaultValue = "1") int page,
+                                     @RequestParam(defaultValue = "6") int size,
+                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     @PathVariable(name = "oderId") Long orderId,
+                                     ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
-            List<Item> itemsAvailableToBuy = itemService.readItemsAvailableToBuy();
+            List<Item> itemsAvailableToBuy = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepositoryProvider.getAllItemRepository());
+            Integer totalOrderItems = orderService.calcTotalOrderItems(order);
+//            List<Item> itemsAvailableToBuy = itemService.readItemsAvailableToBuy();
 
             modelMap.addAttribute("order", order);
+            modelMap.addAttribute("totalOrderItems", totalOrderItems);
             modelMap.addAttribute("itemList", itemsAvailableToBuy);
             return new ModelAndView("admin/order/add-item", modelMap);
+        }
+        return new ModelAndView("redirect:/admin/order/catalog", modelMap);
+    }
+
+    @PostMapping("/{oderId}/add-item")
+    public ModelAndView doPostAddItem(@PathVariable(name = "oderId") Long orderId,
+                                      @RequestParam(name = "itemId") Integer itemId,
+                                      @RequestParam(name = "quantityToBuy") Integer quantityToBuy,
+                                      ModelMap modelMap) {
+        Order order = orderService.readOrderById(orderId);
+        if (order != null) {
+            orderService.insertItemToOrder(orderId, itemId, quantityToBuy);
+
+            modelMap.addAttribute("order", order);
+            return new ModelAndView("redirect:/admin/order/view/" + orderId, modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
     }

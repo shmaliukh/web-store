@@ -63,7 +63,7 @@
                             <label for="itemPrice" class="form-label">Price</label>
                             <div class="input-group mb-3 has-validation">
                                 <span class="input-group-text">$</span>
-                                <input type="number" name="price" class="form-control" id="itemPrice" placeholder="0" required="">
+                                <input type="number" name="price" class="form-control" id="itemPrice" placeholder="0" min="0" required="">
                                 <div class="invalid-feedback">
                                     Item price is required.
                                 </div>
@@ -72,7 +72,7 @@
                         <div class="col-12">
                             <label for="itemQuantity" class="form-label">Quantity</label>
                             <div class="input-group mb-3 has-validation">
-                                <input type="number" name="quantity" class="form-control" id="itemQuantity" placeholder="1" required="">
+                                <input type="number" name="quantity" class="form-control" id="itemQuantity" placeholder="1" min="0" required="">
                                 <div class="invalid-feedback">
                                     Item quantity is required.
                                 </div>

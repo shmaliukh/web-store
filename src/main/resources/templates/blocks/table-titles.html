@@ -37,6 +37,16 @@
 <th:block th:fragment="newspaper-additional-item-titles">
     <th scope="col">PAGES</th>
 </th:block>
+<th:block th:fragment="base-item-titles-with-sorting(pageToRedirect)">
+    <th scope="col">#</th>
+    <th scope="col">TYPE</th>
+    <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('category','CATEGORY', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('price','PRICE', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('quantity','QUANTITY', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('isAvailableInStore','AVAILABLE', ${pageToRedirect})"></th>
+</th:block>
 
 <th:block th:fragment="item-titles-with-sorting(pageToRedirect)">
     <th scope="col">#</th>
