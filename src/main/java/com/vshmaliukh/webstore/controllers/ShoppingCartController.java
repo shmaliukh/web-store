@@ -35,9 +35,9 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
-                                     @RequestParam String userName){  // todo add username usage
+                                     @RequestParam Long id){  // todo add username usage
         List<Item> testItems = getTestItemOrderList(); // for tests
-        List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName(userName));
+        List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(id).getId());
         List<Item> items = new ArrayList<>();
         for (Cart cart : carts) {
             Item item = itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getCategory())
@@ -75,23 +75,23 @@ public class ShoppingCartController {
     @GetMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @RequestParam String username){ // todo continue username usage implementation
+                                  @RequestParam Long userId){ // todo continue username usage implementation
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
-        cartService.addItemToCart(item,username);
+        cartService.addItemToCart(item,userService.getUserById(userId).getUsername());
         return "redirect:/" + SHOPPING_CART;
     }
 
     @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @RequestParam String username){ // todo continue implementation with db usage
+                                  @RequestParam Long userId){ // todo continue implementation with db usage
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
-        if (username==null){
+
             // todo implement db usage
-        }
-        cartService.decItemQuantityInCart(item,username);
+
+        cartService.decItemQuantityInCart(item,userService.getUserById(userId).getUsername());
         return "redirect:/" + SHOPPING_CART;
     }
 

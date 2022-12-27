@@ -59,4 +59,13 @@ public class UserService {
         return null;
     }
 
+    public User getUserById(Long id){
+        User user = userRepository.getUserById(id);
+        if (user!=null){
+            return user;
+        }
+        log.warn("problem to find user entity with '{}'id // return NULL", id);
+        return null;
+    }
+
 }
