@@ -13,8 +13,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
-
 
 @Slf4j
 @Controller
@@ -34,7 +32,7 @@ public class AddItemController {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
             modelMap.addAttribute(ITEM_TYPE, itemType.toLowerCase());
-            return new ModelAndView(ADD_ITEM_PAGE, modelMap);
+            return new ModelAndView("/admin/item/add", modelMap);
         }
         return new ModelAndView("redirect:/admin", modelMap);
     }
@@ -44,7 +42,7 @@ public class AddItemController {
                                                 @RequestBody T item,
                                                 ModelMap modelMap) {
         addItem(userId, item);
-        return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
+        return new ModelAndView("redirect:/home", modelMap);
     }
 
     @PutMapping

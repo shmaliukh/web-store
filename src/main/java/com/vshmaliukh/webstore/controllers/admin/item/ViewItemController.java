@@ -39,7 +39,7 @@ public class ViewItemController {
 
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
-        return new ModelAndView("admin-item-view", modelMap);
+        return new ModelAndView("/admin/item/view", modelMap);
     }
 
     private BaseItemRepository getItemRepository(String itemType) {

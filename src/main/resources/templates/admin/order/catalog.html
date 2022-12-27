@@ -28,7 +28,7 @@
                 <thead>
                 <tr class="table-dark">
                     <th:block th:insert="blocks/table-titles :: order-titles-with-sorting('/admin/order/catalog')"></th:block>
-                    <th colspan="3">TOOLS</th>
+                    <th colspan="2">TOOLS</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,7 +39,6 @@
                     <td class="align-middle" th:text="${#dates.format(order.getDateCreated(), 'yyyy-MM-dd')}">Date</td>
                     <td class="align-middle" th:text="${order.getComment()}">Comment</td>
                     <td class="align-middle" th:text="${order.getStatus()}">Status</td>
-
                     <td class="align-middle">
                         <a th:href="|@{/admin/order/view/}${order.getId()}|">
                             <button type="button" class="w-100 btn btn-outline-secondary">
@@ -51,13 +50,6 @@
                         <a th:href="|@{/admin/order/edit/}${order.getId()}|">
                             <button type="button" class="w-100 btn btn-outline-secondary">
                                 Edit
-                            </button>
-                        </a>
-                    </td>
-                    <td class="align-middle">
-                        <a th:href="|@{/admin/order/delete/}${order.getId()}|">
-                            <button type="button" class="w-100 btn btn-outline-danger">
-                                Delete
                             </button>
                         </a>
                     </td>

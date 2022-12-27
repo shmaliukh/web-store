@@ -21,41 +21,33 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class OrderService {
 
-    final ItemService itemService;
     final OrderRepository orderRepository;
     final OrderItemRepository orderItemRepository;
+
+    public void saveOrderItem(OrderItem orderItem){
+        orderItemRepository.save(orderItem);
+    }
+
+    public OrderItem readOrderItemById(Long id){
+        Optional<OrderItem> optionalOrderItem = orderItemRepository.readOrderItemByOrderItemId(id);
+        if(optionalOrderItem.isPresent()){
+            return optionalOrderItem.get();
+        } else {
+            log.warn("problem to find order item by '{}' id", id);
+            return null;
+        }
+    }
 
     public Integer calcTotalOrderPrice(Order order) {
         List<OrderItem> orderProducts = orderItemRepository.readOrderItemsByOrder(order);
         if(orderProducts != null){
             return orderProducts.stream()
+                    .filter(OrderItem::isActive)
                     .map(orderItem -> orderItem.getOrderItemPrice() * orderItem.getQuantity())
                     .mapToInt(Integer::intValue).sum();
         }
         return 0;
     }
-
-//    public Map<String, Item> readOrderTypeItemMap(Long userId, Date date) {
-//        Map<String, Item> typeItemMap = new HashMap<>();
-//        List<Order> orderList = orderRepository.findAllByUserIdAndDateCreated(userId, date);
-//        if (orderList != null) {
-//            findItemsByOrders(typeItemMap, orderList);
-//        } else {
-//            log.warn("problem to find order by user id '{}' and '{}' date", userId, date);
-//        }
-//        return typeItemMap;
-//    }
-
-//    private void findItemsByOrders(Map<String, Item> typeItemMap, List<Order> orderList) {
-//        for (Order order : orderList) {
-//            Integer itemId = order.getItemId();
-//            String itemClassType = order.getItemClassType();
-//            Item item = itemService.readItemByIdAndType(itemId, itemClassType);
-//            if (item != null) {
-//                typeItemMap.put(itemClassType, item);
-//            }
-//        }
-//    }
 
     public Order readOrderById(Long id) {
         Optional<Order> orderOptional = orderRepository.findById(id);
@@ -82,14 +74,6 @@ public class OrderService {
         }
     }
 
-    public void addItemToOrder(long userId, Item item) {
-        Order orderByUserId = readOrderByUserId(userId);
-        // FIXME
-//        orderByUserId.getItemList().add(item);
-        orderRepository.save(orderByUserId);
-        log.info("userId: '{}' // added new '{}' item to order", userId, item);
-    }
-
     public int calcOrderTotalSumByUserId(long orderId) {
         List<Item> itemListByUserId = readOrderItemListByUserId(orderId);
         if (itemListByUserId != null) {
@@ -113,10 +97,6 @@ public class OrderService {
 
     public Order readOrderByUserId(long userId) {
         return orderRepository.findByUserId(userId);
-    }
-
-    public void deleteOrderByUserId(long userId) {
-        orderRepository.deleteOrderByUserId(userId);
     }
 
 }

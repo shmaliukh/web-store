@@ -43,7 +43,7 @@ public class EditItemController {
 
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
-        return new ModelAndView("admin-item-edit", modelMap);
+        return new ModelAndView("/admin/item/edit", modelMap);
     }
 
     @GetMapping("/**")

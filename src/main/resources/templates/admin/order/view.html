@@ -23,6 +23,7 @@
 
     <div class="container">
         <p class="lead" th:text="|${order.getUser().getUsername()} order info|"></p>
+        <p class="lead" th:text="|Status: ${order.getStatus()} ${orderStatusDescriptionMap.getOrDefault(order.getStatus(), '')} |"></p>
     </div>
 
     <div class="container">
@@ -72,26 +73,44 @@
                         <th scope="col">NAME</th>
                         <th scope="col">PRICE</th>
                         <th scope="col">QUANTITY</th>
+                        <th scope="col">ACTIVE</th>
                         <th scope="col">SUM</th>
                     </tr>
                     </thead>
                     <tbody class="table-group-divider">
                     <tr th:each="orderItem, iterator: ${orderItemList}">
-                        <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
-                        <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
-                        <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
-                        <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
-                        <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
-                        <td class="align-middle" th:text="${orderItem.getOrderItemPrice()}">Price</td>
-                        <td class="align-middle" th:text="${orderItem.getQuantity()}">Quantity</td>
-                        <td class="align-middle" th:text="${orderItem.getOrderItemPrice() * orderItem.getQuantity()}">
-                            Total
+                        <th th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
+                            scope="row" th:text="${iterator.count}">#
+                        </th>
+                        <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
+                            th:text="${orderItem.getOrderItemId()}">Id
+                        </td>
+                        <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
+                            th:text="${orderItem.getUpdatedAt()}">Date
+                        </td>
+                        <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
+                            th:text="${orderItem.getItem().getCategory()}">Category
+                        </td>
+                        <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
+                            th:text="${orderItem.getItem().getName()}">Name
+                        </td>
+                        <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
+                            th:text="${orderItem.getOrderItemPrice()}">Price
+                        </td>
+                        <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
+                            th:text="${orderItem.getQuantity()}">Quantity
+                        </td>
+                        <td><input class="form-check-input align-middle" type="checkbox" name="isAvailableInStore"
+                                   th:value="${orderItem.isActive()}" th:checked="${orderItem.isActive()}" disabled>
+                        </td>
+                        <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle text-decoration-line-through'"
+                            th:text="${orderItem.getOrderItemPrice() * orderItem.getQuantity()}">Total
                         </td>
                     </tr>
                     </tbody>
                 </table>
-<!--                TODO implement pagination               -->
-<!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
+                <!--                TODO implement pagination               -->
+                <!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
             </div>
         </th:block>
 

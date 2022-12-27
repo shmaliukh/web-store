@@ -41,7 +41,7 @@ public class DeleteItemController {
 
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
-        return new ModelAndView("admin-item-delete", modelMap);
+        return new ModelAndView("/admin/item/delete", modelMap);
     }
 
     @GetMapping("/**")
