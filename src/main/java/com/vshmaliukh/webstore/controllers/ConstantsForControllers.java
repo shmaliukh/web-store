@@ -9,9 +9,6 @@ public final class ConstantsForControllers {
     private ConstantsForControllers() {
     }
 
-    public static final String ADMIN_HOME_PAGE = "admin-home.html";
-    public static final String ADD_ITEM_PAGE = "admin-item-add.html";
-    public static final String ADMIN_ITEM_CATALOG_PAGE = "admin-item-catalog.html";
     public static final String ORDER_PAGE = "order";
     public static final String PAGE_403 = "403";
     public static final String OAUTH_LOGIN_PAGE = "oauth-login";

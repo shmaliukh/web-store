@@ -34,7 +34,7 @@ public class ItemCatalogController {
 
         itemTypeList.forEach(o -> itemTypeQuantityMap.put(o, itemService.readAllItemsByTypeName(o).size()));
         modelMap.addAttribute("itemTypeQuantityMap", itemTypeQuantityMap);
-        return new ModelAndView(ADMIN_ITEM_CATALOG_PAGE, modelMap);
+        return new ModelAndView("/admin/item/catalog", modelMap);
     }
 
 }
