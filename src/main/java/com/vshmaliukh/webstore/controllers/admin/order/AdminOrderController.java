@@ -3,8 +3,8 @@ package com.vshmaliukh.webstore.controllers.admin.order;
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.Order;
+import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
-import com.vshmaliukh.webstore.repositories.OrderItemRepository;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.OrderService;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,7 @@ import java.util.List;
 @RequestMapping("/admin/order")
 public class AdminOrderController {
 
+    final ItemService itemService;
     final OrderService orderService;
 
     @GetMapping("/**")
@@ -60,7 +61,7 @@ public class AdminOrderController {
 
     @GetMapping("/edit/{oderId}")
     public ModelAndView doGetEdit(@PathVariable(name = "oderId") Long orderId,
-                                   ModelMap modelMap) {
+                                  ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
             List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(orderId);
@@ -75,9 +76,9 @@ public class AdminOrderController {
 
     @PostMapping("/edit/{oderId}")
     public ModelAndView doPostEditOrder(@PathVariable(name = "oderId") Long orderId,
-                                       @RequestParam(value = "status") String status,
-                                       @RequestParam(value = "comment") String comment,
-                                       ModelMap modelMap) {
+                                        @RequestParam(value = "status") String status,
+                                        @RequestParam(value = "comment") String comment,
+                                        ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
             order.setStatus(status);
@@ -110,6 +111,20 @@ public class AdminOrderController {
             return new ModelAndView("redirect:/admin/catalog", modelMap);
         }
         return new ModelAndView("redirect:/admin/order/edit/" + orderId, modelMap);
+    }
+
+    @GetMapping("/{oderId}/add-item")
+    public ModelAndView doGetAddItem(@PathVariable(name = "oderId") Long orderId,
+                                  ModelMap modelMap) {
+        Order order = orderService.readOrderById(orderId);
+        if (order != null) {
+            List<Item> itemsAvailableToBuy = itemService.readItemsAvailableToBuy();
+
+            modelMap.addAttribute("order", order);
+            modelMap.addAttribute("itemList", itemsAvailableToBuy);
+            return new ModelAndView("admin/order/add-item", modelMap);
+        }
+        return new ModelAndView("redirect:/admin/order/catalog", modelMap);
     }
 
 }

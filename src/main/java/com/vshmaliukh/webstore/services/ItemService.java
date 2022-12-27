@@ -3,12 +3,13 @@ package com.vshmaliukh.webstore.services;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -17,19 +18,13 @@ public class ItemService {
 
     final ItemRepositoryProvider itemRepositoryProvider;
 
-    public Item readItemByIdAndType(Integer id, String type){
-        BaseItemRepository<? extends Item> repositoryByType = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
-        if(repositoryByType != null){
-            Optional<? extends Item> optionalItem = repositoryByType.findById(id);
-            if(optionalItem.isPresent()){
-                return optionalItem.get();
-            } else {
-                log.warn("problem to find '{}' type item by '{}' id", type, id);
-            }
-        } else {
-            log.warn("problem to find repository by '{}' type", type);
-        }
-        return null;
+    public List<Item> readItemsAvailableToBuy(){
+        ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
+//        return allItemRepository.findAllByQuantityGreaterThanEqualAndAvailableInStoreEquals(1, true);
+        return allItemRepository.findAll().stream()
+                .filter(Item::isAvailableInStore)
+                .filter(item -> item.getQuantity() > 0)
+                .collect(Collectors.toList());
     }
 
     public <T extends Item> void saveItem(T item) {
@@ -46,7 +41,6 @@ public class ItemService {
         if (baseItemRepository != null) {
             List<? extends Item> allItemList = baseItemRepository.findAll();
             return allItemList.contains(item);
-
         } else {
             log.warn("problem to check if the item is saved // item '{}'", item);
         }
@@ -75,19 +69,5 @@ public class ItemService {
             log.warn("problem to save '{}' item , repository not found", item);
         }
     }
-
-//    public Integer calcItemsBtCategory(){
-//        Map categoryNameQuantityMap = new HashMap<>();
-//        Collection<JpaRepository<? extends Item, Integer>> jpaRepositories = itemRepositoryProvider.getItemClassTypeRepositoryMap().values();
-//        jpaRepositories.stream()
-//                .map(JpaRepository::findAll)
-//                .flatMap(Collection::stream)
-//                .map(o->categoryNameQuantityMap.put(o.getCategory()))
-//                .collect(Collectors.toList());
-//
-//
-//        return null;
-//    }
-
 
 }

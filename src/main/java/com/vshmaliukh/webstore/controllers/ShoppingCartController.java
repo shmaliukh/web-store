@@ -5,7 +5,7 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
-import com.vshmaliukh.webstore.repositories.ActionsWithItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.SHOPPING_CART;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
@@ -33,13 +34,13 @@ public class ShoppingCartController {
     final ItemService itemService;
     final UserService userService;
     final CartService cartService;
-    final ActionsWithItemRepositoryProvider itemRepositoryProvider;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
-    public ModelAndView showCartPage(ModelMap modelMap){
+    public ModelAndView showCartPage(ModelMap modelMap) {
         List<Item> items = getTestItemOrderList();
-        modelMap.addAttribute("items",items); // todo implement items adding to template
-        modelMap.addAttribute("totalItems",items.size());
+        modelMap.addAttribute("items", items); // todo implement items adding to template
+        modelMap.addAttribute("totalItems", items.size());
 
 
 //        List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName("")); // todo add username usage
@@ -51,27 +52,28 @@ public class ShoppingCartController {
         }
 
 
-        modelMap.addAttribute("totalPrice",totalPrice);
+        modelMap.addAttribute("totalPrice", totalPrice);
         return new ModelAndView(SHOPPING_CART_VIEW);
     }
 
     @PostMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
-                                        @PathVariable Integer id){
-        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
-        cartService.addItemToCart(item,"username"); // todo implement username usage
+                                  @PathVariable Integer id) {
+        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+        // todo implement username usage
+        optionalItem.ifPresent(item -> cartService.addItemToCart(item, "username"));
         return "redirect:/" + SHOPPING_CART;
     }
 
     @PostMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
-                                  @PathVariable Integer id){
-        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
-        cartService.decItemQuantityInCart(item,"username"); // todo implement username usage
+                                  @PathVariable Integer id) {
+        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, "username")); // todo implement username usage
         return "redirect:/" + SHOPPING_CART;
     }
 
-    public List<Cart> getTestCarts(){
+    public List<Cart> getTestCarts() {
         List<Cart> carts = new ArrayList<>();
 
         Cart first = new Cart();
