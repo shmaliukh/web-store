@@ -97,11 +97,4 @@ public class MainPageController {
         return "redirect:" + referer;
     }
 
-    public List<String> genURLForItemsPages(List<? extends Item> items){
-
-        List<String> urls = new ArrayList<>();
-        String baseURL = "/" + MAIN_PAGE + "/" + CATALOG_PAGE + "/";
-        items.forEach(item->urls.add(baseURL+item.getCategory() + "/" + item.getId()));
-        return urls;
-    }
 }
