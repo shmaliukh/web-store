@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script src="/utils.js"></script>
+    <script src="/formToJson.js"></script>
     <title>Order view</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link th:insert="blocks/bootstrap-css-style.html :: style">
@@ -13,16 +13,17 @@
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 text-center">
     <h1 class="display-4">Order edit panel</h1>
     <hr>
-    <p class="lead">Order view panel</p>
+    <p class="lead">Order edit panel</p>
     <div th:insert="blocks/order/menu :: order-menu"></div>
     <hr>
-    <div th:insert="blocks/order/menu :: view-addition-menu(${order.getId()})"></div>
+    <div th:insert="blocks/order/menu :: edit-addition-menu(${order.getId()})"></div>
 </div>
 
 <div class="album py-5 bg-light text-center">
 
     <div class="container">
         <p class="lead" th:text="|${order.getUser().getUsername()} order info|"></p>
+        <p class="lead" th:text="|Status: ${order.getStatus()} ${orderStatusDescriptionMap.getOrDefault(order.getStatus(), '')} |"></p>
     </div>
 
     <div class="container">
@@ -44,9 +45,32 @@
                     <td class="align-middle" th:text="${order.getId()}">Id</td>
                     <td class="align-middle" th:text="${#dates.format(order.getDateCreated(), 'yyyy-MM-dd')}">Date</td>
                     <td class="align-middle" th:text="${order.getUser().getUsername()}">Username</td>
-                    <td class="align-middle" th:text="${order.getStatus()}">Status</td>
-                    <td class="align-middle" th:text="${order.getComment()}">Comment</td>
-                    <td class="align-middle" th:text="${totalOrderPrice}">Sum</td>
+                    <form th:id="'formEditOrderInfo'"
+                          th:action="'/admin/order/edit/'+${order.getId()}"
+                          method="post" class="needs-validation">
+                        <td class="align-middle">
+                            <select class="form-select" name="status">
+                                <option selected th:value="${order.getStatus()}"
+                                        th:text="${order.getStatus()}">
+                                </option>
+                                <option th:each="status : ${orderStatusDescriptionMap}"
+                                        th:text="${status.getKey()}"
+                                        th:value="${status.getKey()}"
+                                        th:title="${status.getValue()}">
+                                </option>
+                            </select>
+<!--                            modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);-->
+<!--                            <input class="form-control align-middle" type="text" name="status"-->
+<!--                                   th:value="${order.getStatus()}">-->
+                        </td>
+                        <td class="align-middle">
+                            <input class="form-control align-middle" type="text" name="comment"
+                                   th:value="${order.getComment()}">
+                        </td>
+                        <td class="align-middle">
+                            <button class="btn btn-outline-success" type="submit">Edit order</button>
+                        </td>
+                    </form>
                 </tr>
                 </tbody>
             </table>
@@ -69,10 +93,12 @@
                         <th scope="col">ID</th>
                         <th scope="col">UPDATED</th>
                         <th scope="col">CATEGORY</th>
+                        <th scope="col">TYPE</th>
                         <th scope="col">NAME</th>
                         <th scope="col">PRICE</th>
                         <th scope="col">QUANTITY</th>
-                        <th scope="col">SUM</th>
+                        <th scope="col">ACTIVE</th>
+                        <th colspan="2">TOOLS</th>
                     </tr>
                     </thead>
                     <tbody class="table-group-divider">
@@ -81,17 +107,49 @@
                         <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
                         <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
                         <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
+                        <td class="align-middle" th:text="${orderItem.getItem().getClass().getSimpleName().toLowerCase()}">Type</td>
                         <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
-                        <td class="align-middle" th:text="${orderItem.getOrderItemPrice()}">Price</td>
-                        <td class="align-middle" th:text="${orderItem.getQuantity()}">Quantity</td>
-                        <td class="align-middle" th:text="${orderItem.getOrderItemPrice() * orderItem.getQuantity()}">
-                            Total
-                        </td>
+                        <form th:id="'formElem' +${iterator.count}"
+                              th:action="'/admin/order/edit/'+${order.getId()}+'/order-item/'+${orderItem.getOrderItemId()}"
+                              method="post" class="needs-validation">
+                            <td class="align-middle">
+                                <input th:id="'price'+${iterator.count}" class="form-control align-middle" type="number" name="price"
+                                       th:value="${orderItem.getOrderItemPrice()}" th:readonly="${!orderItem.isActive()}">
+                            </td>
+                            <td class="align-middle">
+                                <input th:id="'quantity'+${iterator.count}" class="form-control align-middle" type="number" name="quantity"
+                                       th:value="${orderItem.getQuantity()}" th:readonly="${!orderItem.isActive()}">
+                            </td>
+                            <td class="align-middle">
+                                <input th:id="'checkbox'+${iterator.count}" class="form-check-input"
+                                       name="active" type="checkbox" role="switch"
+                                       th:value="${orderItem.isActive()}"
+                                       th:checked="${orderItem.isActive()}">
+                                <script th:replace="/blocks/generatedScripts :: checkBox"></script>
+                            </td>
+                            <script th:inline="javascript" th:utext="
+                               |var checker${iterator.count} = document.getElementById('checkbox${iterator.count}');
+                                var priceInput${iterator.count} = document.getElementById('price${iterator.count}');
+                                var quantityInput${iterator.count} = document.getElementById('quantity${iterator.count}');
+                                checker${iterator.count}.onchange = function(){
+                                    if(this.checked){
+                                        priceInput${iterator.count}.readOnly = false;
+                                        quantityInput${iterator.count}.readOnly = false;
+                                    } else {
+                                        priceInput${iterator.count}.readOnly = true;
+                                        quantityInput${iterator.count}.readOnly = true;
+                                    }
+                                }|">
+                            </script>
+                            <td class="align-middle">
+                                <button class="btn btn-outline-success" type="submit">Edit</button>
+                            </td>
+                        </form>
                     </tr>
                     </tbody>
                 </table>
-<!--                TODO implement pagination               -->
-<!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
+                <!--                TODO implement pagination               -->
+                <!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
             </div>
         </th:block>
 

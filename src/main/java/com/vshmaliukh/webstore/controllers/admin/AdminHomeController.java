@@ -4,6 +4,7 @@ import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -24,11 +25,11 @@ public class AdminHomeController {
     final UserService userService;
     final ItemRepositoryProvider itemRepositoryProvider;
 
-    @GetMapping
+    @GetMapping("/**")
     public ModelAndView doGet(@CookieValue(defaultValue = "0") Long userId,
                               ModelMap modelMap) {
-        Map<String, Integer> categoryItemQuantityMap = Collections.singletonMap("Literature", 3);
-        // TODO implement items by category calc
+        long allItemTypesQuantity = calcAllItem();
+        Map<String, Long> categoryItemQuantityMap = Collections.singletonMap("Literature", allItemTypesQuantity);
         modelMap.addAttribute("categoryItemQuantityMap", categoryItemQuantityMap);
         boolean isAdminUser = userService.isAdminUser(userId);
         if (
@@ -38,6 +39,12 @@ public class AdminHomeController {
         }
         // TODO create interceptor for admin verification
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
+    }
+
+    private long calcAllItem() {
+        return itemRepositoryProvider.baseItemRepositoryList.stream()
+                .mapToLong(CrudRepository::count)
+                .sum();
     }
 
     @GetMapping("/exit")
