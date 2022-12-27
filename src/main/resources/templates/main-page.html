@@ -48,7 +48,7 @@
                     <div class="form-for-main" >
                         <div th:each="type: ${types}">
                             <p th:each="oneType: ${type}">
-                                <a href="/main/catalog"  th:text="${oneType}"></a><br>
+                                <a th:href="'/main/catalog/' + ${oneType}"  th:text="${oneType}"></a><br>
                             </p>
                         </div>
 
