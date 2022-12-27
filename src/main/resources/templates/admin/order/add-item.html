@@ -73,23 +73,24 @@
                     </thead>
                     <tbody>
                     <tr th:each="item, iterator: ${itemList}">
-                        <th class="align-middle" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
-                        <td class="align-middle" th:text="${item.getClass().getSimpleName()}">Type</td>
-                        <td class="align-middle" th:text="${item.getId()}">Id</td>
-                        <td class="align-middle" th:text="${item.getCategory()}">Category</td>
-                        <td class="align-middle" th:text="${item.getName()}">Name</td>
-                        <td class="align-middle" th:text="${item.getPrice()}">Price</td>
-                        <td class="align-middle" th:text="${item.getQuantity()}">Quantity</td>
+                        <th th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
+                        <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getClass().getSimpleName()}">Type</td>
+                        <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getId()}">Id</td>
+                        <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getCategory()}">Category</td>
+                        <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getName()}">Name</td>
+                        <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getPrice()}">Price</td>
+                        <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getQuantity()}">Quantity</td>
                         <td><input class="form-check-input align-middle" type="checkbox" name="isAvailableInStore"
                                    th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}" disabled>
                         </td>
                         <form method="post" th:action="'/admin/order/' + ${order.getId()} + '/add-item'">
                             <input name="itemId" type="hidden" th:value="${item.getId()}">
                             <td class="align-middle">
-                                <input class="form-control align-middle" type="number" name="quantityToBuy" min="1" th:max="${item.getQuantity()}" value="0">
+                                <input th:disabled="${!item.isAvailableInStore()}" class="form-control align-middle"
+                                       type="number" name="quantityToBuy" min="1" th:max="${item.getQuantity()}" value="0">
                             </td>
                             <td class="align-middle">
-                                <button class="btn btn-outline-success" type="submit">Add item to order</button>
+                                <button th:disabled="${!item.isAvailableInStore()}" class="btn btn-outline-success" type="submit">Add item to order</button>
                             </td>
                         </form>
                     </tr>
