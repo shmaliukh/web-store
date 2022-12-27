@@ -35,9 +35,8 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
-                                   @CookieValue String userName){  // todo add username usage
+                                     @RequestParam String userName){  // todo add username usage
         List<Item> testItems = getTestItemOrderList(); // for tests
-
         List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName(userName));
         List<Item> items = new ArrayList<>();
         for (Cart cart : carts) {
@@ -76,7 +75,7 @@ public class ShoppingCartController {
     @GetMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @CookieValue String username){ // todo continue username usage implementation
+                                  @RequestParam String username){ // todo continue username usage implementation
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
         cartService.addItemToCart(item,username);
@@ -86,7 +85,7 @@ public class ShoppingCartController {
     @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @CookieValue String username){ // todo continue implementation with db usage
+                                  @RequestParam String username){ // todo continue implementation with db usage
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
         if (username==null){
