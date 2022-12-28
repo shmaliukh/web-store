@@ -12,8 +12,7 @@
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 text-center">
     <h1 class="display-4">Admin panel</h1>
     <hr>
-    <p class="lead">You are able to add, view and edit all items</p>
-    <p class="lead">You can create, edit and delete items</p>
+    <p class="lead">Admin home</p>
     <hr>
     <div class="container">
         <div class="row mt-5 mb-5">
@@ -25,6 +24,11 @@
             <a th:href="@{/admin/order/catalog}">
                 <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
                     Order panel
+                </button>
+            </a>
+            <a th:href="@{/admin/user/catalog}">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    User panel
                 </button>
             </a>
             <a th:href="@{/admin/exit}">

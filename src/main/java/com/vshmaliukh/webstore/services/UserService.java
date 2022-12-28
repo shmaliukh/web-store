@@ -5,6 +5,7 @@ import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    final UserRepository userRepository;
 
     public Optional<User> readUserById(Long userId) {
         return userRepository.findById(userId);

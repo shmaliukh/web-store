@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.model.Order;
+import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;

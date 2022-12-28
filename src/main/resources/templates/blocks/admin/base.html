@@ -1,0 +1,38 @@
+<div th:fragment="base-menu">
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <a th:href="@{/admin}">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Admin home
+                </button>
+            </a>
+            <a th:href="@{/admin/exit}">
+                <button type="button" class="w-100 btn btn-outline-danger btn-lg btn-block">
+                    Exit
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="panel-menu">
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <a th:href="@{/admin}">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Admin home
+                </button>
+            </a>
+            <a th:href="@{/admin/user/catalog}">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    User catalog
+                </button>
+            </a>
+            <a th:href="@{/admin/exit}">
+                <button type="button" class="w-100 btn btn-outline-danger btn-lg btn-block">
+                    Exit
+                </button>
+            </a>
+        </div>
+    </div>
+</div>

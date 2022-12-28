@@ -15,11 +15,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findById(Long id);
 
-    void deleteOrderByUserId(Long userId);
-    
     Page<Order> findAll(Pageable pageable);
 
-    // TODO implement pagination
     Page<Order> findByStatusIgnoreCase(String keyword, Pageable pageable);
 
 }
