@@ -37,14 +37,21 @@ public class OrderService {
                 orderItem.setItem(item);
 
                 orderItemRepository.save(orderItem);
+
+                setUpItemAvailableToBuyQuantity(quantity, item, orderItem);
             } else {
                 log.warn("problem to insert item to order // not found item by '{}' id", itemId);
             }
         } else {
             log.warn("problem to insert item to order // not found order by '{}' id", orderId);
         }
+    }
 
-
+    private void setUpItemAvailableToBuyQuantity(Integer quantity, Item item, OrderItem orderItem) {
+        int availableToBuyQuantity = item.getQuantity() - orderItem.getQuantity();
+        item.setQuantity(availableToBuyQuantity);
+        itemService.saveItem(item);
+        log.info("sold '{}' // available to buy '{}' item: '{}'", quantity, item, availableToBuyQuantity);
     }
 
     private static OrderItem formOrderItem(Integer quantity, Item item) {
