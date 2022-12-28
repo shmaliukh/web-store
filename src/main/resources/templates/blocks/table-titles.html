@@ -1,7 +1,8 @@
 <th:block th:fragment="order-titles-with-sorting(pageToRedirect)">
     <th scope="col">#</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('userId','UserID', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('userId','USER_ID', ${pageToRedirect})"></th>
+    <th scope="col">USERNAME</th>
     <th th:replace="blocks/sorting :: sorting('dateCreated','DATE', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('comment','COMMENT', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('status','STATUS', ${pageToRedirect})"></th>
