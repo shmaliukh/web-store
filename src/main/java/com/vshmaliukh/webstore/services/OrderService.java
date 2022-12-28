@@ -1,9 +1,9 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.Order;
+import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
-import com.vshmaliukh.webstore.repositories.OrderItemRepository;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
 
 import java.util.*;
@@ -22,12 +22,13 @@ import org.springframework.stereotype.Service;
 public class OrderService {
 
     final ItemService itemService;
+    final UserService userService;
     final OrderRepository orderRepository;
     final OrderItemService orderItemService;
 
     public void setUpAvailableItemQuantity(OrderItem orderItem, int oldOrderItemQuantity, Integer newQuantity, boolean orderItemPreviousState) {
         Item item = orderItem.getItem();
-        if(item != null) {
+        if (item != null) {
             int quantityToSet;
             // FIXME fix wrong adding quantity to item entity when change order item 'quantity' and set up 'active' = false
             if (!orderItemPreviousState) {
@@ -152,6 +153,20 @@ public class OrderService {
 
     public void saveOrderItem(OrderItem orderItem) {
         orderItemService.save(orderItem);
+    }
+
+    public Optional<Order> createEmptyOrder(Long userId, String status, String comment) {
+        Optional<User> optionalUser = userService.readUserById(userId);
+        if (optionalUser.isPresent()) {
+            Order order = new Order();
+            order.setDateCreated(new Date());
+            order.setUser(optionalUser.get());
+            order.setStatus(status);
+            order.setComment(comment);
+            order.setItemList(Collections.emptyList());
+            return Optional.of(order);
+        }
+        return Optional.empty();
     }
 
 }

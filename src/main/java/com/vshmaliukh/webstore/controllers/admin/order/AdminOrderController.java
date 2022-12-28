@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
@@ -161,12 +162,26 @@ public class AdminOrderController {
     }
 
     @GetMapping("/create")
-    public ModelAndView doGetCreateOrder(ModelMap modelMap){
+    public ModelAndView doGetCreateOrder(ModelMap modelMap) {
         List<User> userList = userService.readAllUserList();
 
         modelMap.addAttribute("userList", userList);
         modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);
         return new ModelAndView("/admin/order/create", modelMap);
+    }
+
+    @PostMapping("/create")
+    public ModelAndView doPostCreateOrder(@RequestParam(name = "userId") Long userId,
+                                          @RequestParam(name = "status") String status,
+                                          @RequestParam(name = "comment", defaultValue = "") String comment,
+                                          ModelMap modelMap) {
+        Optional<Order> optionalOrder = orderService.createEmptyOrder(userId, status, comment);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            orderService.saveOrder(order);
+            return new ModelAndView("redirect:/admin/order/edit/" + order.getId(), modelMap);
+        }
+        return new ModelAndView("redirect:/admin/order/catalog/", modelMap);
     }
 
 }

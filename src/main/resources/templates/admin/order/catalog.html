@@ -16,12 +16,14 @@
     <p class="lead">Order catalog panel</p>
     <div th:insert="blocks/order/menu :: base-menu"></div>
     <hr>
-    <div>
-        <a th:href="'/admin/order/create'">
-            <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
-                Created order
-            </button>
-        </a>
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <a th:href="'/admin/order/create'">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Created order
+                </button>
+            </a>
+        </div>
     </div>
 </div>
 

@@ -15,7 +15,8 @@ import java.util.List;
 
 public final class AdminControllerUtils {
 
-    private AdminControllerUtils(){}
+    private AdminControllerUtils() {
+    }
 
     public static void addAttributesForSortingAndPaging(int size, ModelMap modelMap, String sortField, String sortDirection, Page<?> pageWithItems) {
         modelMap.addAttribute("currentPage", pageWithItems.getNumber() + 1);
@@ -27,7 +28,7 @@ public final class AdminControllerUtils {
         modelMap.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
     }
 
-    public static <T extends Item>  List<T> getSortedItemsContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, BaseItemRepository<T> repositoryByItemClassName) {
+    public static <T extends Item> List<T> getSortedItemsContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, BaseItemRepository<T> repositoryByItemClassName) {
 //      TODO refactor duplicate
         String sortField = sort[0];
         String sortDirection = sort[1];

@@ -18,6 +18,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
         uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
 public class User extends AuditModel{
 
+    @ToString.Exclude
     private String password;
     private boolean enabled;
 
