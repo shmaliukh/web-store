@@ -3,11 +3,13 @@ package com.vshmaliukh.webstore.controllers.admin.order;
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.Order;
+import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.OrderService;
+import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,7 @@ public class AdminOrderController {
     final ItemRepositoryProvider itemRepositoryProvider;
     final ItemService itemService;
     final OrderService orderService;
+    final UserService userService;
 
     @GetMapping("/**")
     public ModelAndView doGet(ModelMap modelMap) {
@@ -155,6 +158,15 @@ public class AdminOrderController {
             return new ModelAndView("redirect:/admin/order/view/" + orderId, modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
+    }
+
+    @GetMapping("/create")
+    public ModelAndView doGetCreateOrder(ModelMap modelMap){
+        List<User> userList = userService.readAllUserList();
+
+        modelMap.addAttribute("userList", userList);
+        modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);
+        return new ModelAndView("/admin/order/create", modelMap);
     }
 
 }
