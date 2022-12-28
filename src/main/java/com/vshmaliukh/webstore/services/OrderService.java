@@ -25,6 +25,23 @@ public class OrderService {
     final OrderRepository orderRepository;
     final OrderItemService orderItemService;
 
+    public void setUpAvailableItemQuantity(OrderItem orderItem, int oldOrderItemQuantity, Integer newQuantity, boolean orderItemPreviousState) {
+        Item item = orderItem.getItem();
+        if(item != null) {
+            int quantityToSet;
+            // FIXME fix wrong adding quantity to item entity when change order item 'quantity' and set up 'active' = false
+            if (!orderItemPreviousState) {
+                quantityToSet = item.getQuantity() - oldOrderItemQuantity;
+            } else if (!orderItem.isActive()) {
+                quantityToSet = item.getQuantity() + newQuantity;
+            } else {
+                quantityToSet = item.getQuantity() - (newQuantity - oldOrderItemQuantity);
+            }
+            item.setQuantity(quantityToSet);
+            itemService.saveItem(item);
+        }
+    }
+
     public void insertItemToOrder(Long orderId, Integer itemId, Integer quantity) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isPresent()) {
@@ -136,4 +153,5 @@ public class OrderService {
     public void saveOrderItem(OrderItem orderItem) {
         orderItemService.save(orderItem);
     }
+
 }

@@ -18,6 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OrderItemService {
 
+    final ItemService itemService;
     final OrderItemRepository orderItemRepository;
 
     static OrderItem formOrderItem(Integer quantity, Item item, Order order) {

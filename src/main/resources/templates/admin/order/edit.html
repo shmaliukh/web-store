@@ -113,12 +113,13 @@
                               th:action="'/admin/order/edit/'+${order.getId()}+'/order-item/'+${orderItem.getOrderItemId()}"
                               method="post" class="needs-validation">
                             <td class="align-middle">
-                                <input th:id="'price'+${iterator.count}" class="form-control align-middle" type="number" name="price"
+                                <input th:id="'price'+${iterator.count}" class="form-control align-middle" type="number" name="price" min="0"
                                        th:value="${orderItem.getOrderItemPrice()}" th:readonly="${!orderItem.isActive()}">
                             </td>
                             <td class="align-middle">
                                 <input th:id="'quantity'+${iterator.count}" class="form-control align-middle" type="number" name="quantity"
-                                       th:value="${orderItem.getQuantity()}" th:readonly="${!orderItem.isActive()}">
+                                       th:value="${orderItem.getQuantity()}" th:readonly="${!orderItem.isActive()}" min="0"
+                                       th:max="${orderItem.getItem().isAvailableInStore() ? orderItem.getItem().getQuantity() + orderItem.getQuantity() : orderItem.getItem().getQuantity()}">
                             </td>
                             <td class="align-middle">
                                 <input th:id="'checkbox'+${iterator.count}" class="form-check-input"
