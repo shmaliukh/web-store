@@ -91,7 +91,7 @@ public class MainPageController {
     public String addToCart(@PathVariable String type,
                             @PathVariable Integer id,
                             @RequestHeader String referer,
-                            @RequestParam Long userId){ // todo continue implementation of username usage
+                            @RequestParam(required = false) Long userId){ // todo continue implementation of username usage
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
         cartService.addItemToCart(item,userId);

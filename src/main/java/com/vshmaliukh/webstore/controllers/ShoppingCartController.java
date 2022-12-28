@@ -35,7 +35,7 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
-                                     @RequestParam Long id){  // todo continue username usage implementation
+                                     @RequestParam(required = false) Long id){
         List<Item> testItems = getTestItemOrderList(); // for tests
         List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(id).getId());
         List<Item> items = new ArrayList<>();
@@ -52,6 +52,7 @@ public class ShoppingCartController {
 
         int totalCount = 0;
         int totalPrice = 0;
+
 //        for (Item item : items) {
 //            totalPrice = totalPrice + item.getPrice();
 //        }
@@ -75,7 +76,7 @@ public class ShoppingCartController {
     @GetMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @RequestParam Long userId){ // todo continue username usage implementation
+                                  @RequestParam(required = false) Long userId){
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
         cartService.addItemToCart(item,userId);
@@ -85,7 +86,7 @@ public class ShoppingCartController {
     @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @RequestParam Long userId){ // todo continue implementation with db usage
+                                  @RequestParam(required = false) Long userId){
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Item item = itemRepository.getById(id);
 
