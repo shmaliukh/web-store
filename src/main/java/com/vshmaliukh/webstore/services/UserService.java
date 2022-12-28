@@ -29,13 +29,12 @@ public class UserService {
 
     public boolean isAdminUser(Long userId) {
         User user = null;
-        Role userRole = null;
+        String userRole = null;
         if (userId != null) {
             user = userRepository.getUserById(userId);
             if (user != null) {
                 userRole = user.getRole();
-                String roleName = userRole.getName();
-                return roleName.equals("admin");
+                return userRole.equals("admin");
             }
         }
         log.warn("problem to check user 'role' // userId: '{}' // user: '{}'", userId, userRole);
