@@ -19,13 +19,13 @@ public class ItemService {
 
     final ItemRepositoryProvider itemRepositoryProvider;
 
-    public Optional<Item> readItemById(Integer itemId){
+    public Optional<Item> readItemById(Integer itemId) {
         ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
         return allItemRepository.findById(itemId);
     }
 
     // TODO implement read items via repository
-    public List<Item> readItemsAvailableToBuy(){
+    public List<Item> readItemsAvailableToBuy() {
         ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
 //        return allItemRepository.findAllByQuantityGreaterThanEqualAndAvailableInStoreEquals(1, true);
         return allItemRepository.findAll().stream()
@@ -37,6 +37,9 @@ public class ItemService {
     public <T extends Item> void saveItem(T item) {
         BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
         if (baseItemRepository != null) {
+            if (item.getQuantity() < 1) {
+                item.setAvailableInStore(false);
+            }
             baseItemRepository.save(item);
         } else {
             log.warn("problem to save '{}' item , repository not found", item);
@@ -69,7 +72,7 @@ public class ItemService {
             Integer itemId = item.getId();
             if (itemId != null) {
                 baseItemRepository.deleteById(itemId);
-            } else{
+            } else {
                 log.warn("problem to save '{}' item , item id is NULL", item);
             }
         } else {

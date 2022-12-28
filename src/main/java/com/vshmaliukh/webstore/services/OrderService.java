@@ -23,7 +23,7 @@ public class OrderService {
 
     final ItemService itemService;
     final OrderRepository orderRepository;
-    final OrderItemRepository orderItemRepository;
+    final OrderItemService orderItemService;
 
     public void insertItemToOrder(Long orderId, Integer itemId, Integer quantity) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
@@ -32,11 +32,9 @@ public class OrderService {
             Optional<Item> optionalItem = itemService.readItemById(itemId);
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                OrderItem orderItem = formOrderItem(quantity, item);
-                orderItem.setOrder(order);
-                orderItem.setItem(item);
+                OrderItem orderItem = OrderItemService.formOrderItem(quantity, item, order);
 
-                orderItemRepository.save(orderItem);
+                orderItemService.save(orderItem);
 
                 setUpItemAvailableToBuyQuantity(quantity, item, orderItem);
             } else {
@@ -54,20 +52,8 @@ public class OrderService {
         log.info("sold '{}' // available to buy '{}' item: '{}'", quantity, item, availableToBuyQuantity);
     }
 
-    private static OrderItem formOrderItem(Integer quantity, Item item) {
-        OrderItem orderItem = new OrderItem();
-        orderItem.setOrderItemPrice(item.getPrice());
-        orderItem.setQuantity(quantity);
-        orderItem.setActive(true);
-        return orderItem;
-    }
-
-    public void saveOrderItem(OrderItem orderItem) {
-        orderItemRepository.save(orderItem);
-    }
-
     public Integer calcTotalOrderItems(Order order) {
-        List<OrderItem> orderProducts = orderItemRepository.readOrderItemsByOrder(order);
+        List<OrderItem> orderProducts = orderItemService.readOrderItemsByOrder(order);
         if (orderProducts != null) {
             return orderProducts.stream()
                     .mapToInt(OrderItem::getQuantity)
@@ -77,7 +63,7 @@ public class OrderService {
     }
 
     public OrderItem readOrderItemById(Long id) {
-        Optional<OrderItem> optionalOrderItem = orderItemRepository.readOrderItemByOrderItemId(id);
+        Optional<OrderItem> optionalOrderItem = orderItemService.readOrderItemByOrderItemId(id);
         if (optionalOrderItem.isPresent()) {
             return optionalOrderItem.get();
         } else {
@@ -87,7 +73,7 @@ public class OrderService {
     }
 
     public Integer calcTotalOrderPrice(Order order) {
-        List<OrderItem> orderProducts = orderItemRepository.readOrderItemsByOrder(order);
+        List<OrderItem> orderProducts = orderItemService.readOrderItemsByOrder(order);
         if (orderProducts != null) {
             return orderProducts.stream()
                     .filter(OrderItem::isActive)
@@ -104,7 +90,7 @@ public class OrderService {
 
     public List<OrderItem> readOrderItemListByOrderId(Long id) {
         Order order = readOrderById(id);
-        return orderItemRepository.readOrderItemsByOrder(order);
+        return orderItemService.readOrderItemsByOrder(order);
     }
 
     public void saveOrder(Order order) {
@@ -147,4 +133,7 @@ public class OrderService {
         return orderRepository.findByUserId(userId);
     }
 
+    public void saveOrderItem(OrderItem orderItem) {
+        orderItemService.save(orderItem);
+    }
 }
