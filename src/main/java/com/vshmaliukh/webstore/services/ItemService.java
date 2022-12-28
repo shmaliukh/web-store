@@ -37,6 +37,9 @@ public class ItemService {
     public <T extends Item> void saveItem(T item) {
         BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
         if (baseItemRepository != null) {
+            if(item.getQuantity() < 1){
+                item.setAvailableInStore(false);
+            }
             baseItemRepository.save(item);
         } else {
             log.warn("problem to save '{}' item , repository not found", item);
