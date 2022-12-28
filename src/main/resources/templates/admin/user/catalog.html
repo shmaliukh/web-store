@@ -45,6 +45,8 @@
                 <tr th:each="user, iterator: ${userList}">
                     <th class="align-middle" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
                     <td class="align-middle" th:text="${user.getId()}">Id</td>
+                    <td class="align-middle" th:text="${user.getCreatedAt()()}">Created</td>
+                    <td class="align-middle" th:text="${user.getUpdatedAt()()}">Updated</td>
                     <td class="align-middle" th:text="${user.getUsername()}">Username</td>
                     <td class="align-middle" th:text="${user.getEmail()}">Email</td>
                     <td class="align-middle" th:text="${user.getLogInProvider()}">Provider</td>

@@ -1,6 +1,8 @@
 <th:block th:fragment="user-titles-with-sorting(pageToRedirect)">
     <th scope="col">#</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('created_at','CREATED', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('updated_at','UPDATED', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('username','USERNAME', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('email','EMAIL', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('logInProvider','PROVIDER', ${pageToRedirect})"></th>
