@@ -17,7 +17,7 @@
     <div th:insert="blocks/admin/user/fragments :: user-menu"></div>
     <hr>
     <div class="container">
-        <div th:insert="blocks/admin/user/fragments :: edit-button(${user.getId()})"></div>
+        <div th:insert="blocks/admin/user/fragments :: view-button(${user.getId()})"></div>
     </div>
 </div>
 
@@ -50,16 +50,10 @@
                         <td class="align-middle">
                             <input class="form-control align-middle" type="text" name="email"
                                    th:value="${user.getEmail()}"></td>
-                        <td class="align-middle" th:text="${user.getLogInProvider()()}">Provider</td>
+                        <td class="align-middle" th:text="${user.getLogInProvider()}">Provider</td>
                         <td class="align-middle">
                             <input class="form-control align-middle" type="text" name="role"
                                    th:value="${user.getRole()}"></td>
-                        <td class="align-middle">
-                            <input class="form-control align-middle" type="text" name="role"
-                                   th:value="${user.getRole()}"></td>
-
-                        <td class="align-middle" th:text="${user.getRole()}">UserRole</td>
-
                         <td><input class="form-check-input align-middle" type="checkbox" name="enable"
                                    th:value="${user.isEnabled()}" th:checked="${user.isEnabled()}"></td>
 

@@ -72,7 +72,7 @@ public class AdminUserController {
                                      @RequestParam(value = "enabled", defaultValue = "false") boolean enabled,
                                      ModelMap modelMap) {
         User user = userService.createBaseUser(userName, email, role, enabled);
-        ResponseEntity<Void> response = createUser(user);
+        ResponseEntity<Void> response = saveUser(user);
         if (response.getStatusCode().is2xxSuccessful()) {
             return new ModelAndView("redirect:/admin/user/catalog", modelMap);
         }
@@ -80,7 +80,7 @@ public class AdminUserController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> createUser(@RequestBody User user) {
+    public ResponseEntity<Void> saveUser(@RequestBody User user) {
         if (user != null) {
             userService.save(user);
             if (userService.isUserSaved(user)) {
@@ -113,6 +113,22 @@ public class AdminUserController {
             User user = optionalUser.get();
             generateUserWithOrdersModel(modelMap, user);
             return new ModelAndView("/admin/user/edit", modelMap);
+        }
+        return new ModelAndView("redirect:/admin/user/catalog", modelMap);
+    }
+
+    @PostMapping("/edit/{userId}")
+    public ModelAndView doPostEdit(@PathVariable(name = "userId") Long userId,
+                                   @RequestParam("userName") String userName,
+                                   @RequestParam("email") String email,
+                                   @RequestParam("role") String role,
+                                   @RequestParam(value = "enabled", defaultValue = "false") boolean enabled,
+                                   ModelMap modelMap) {
+        User user = userService.createBaseUser(userName, email, role, enabled);
+        user.setId(userId);
+        ResponseEntity<Void> response = saveUser(user);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return new ModelAndView("redirect:/admin/user/edit" + userId, modelMap);
         }
         return new ModelAndView("redirect:/admin/user/catalog", modelMap);
     }
