@@ -14,16 +14,10 @@
     <h1 class="display-4">User view panel</h1>
     <hr>
     <p class="lead">User view panel</p>
-    <div th:insert="blocks/admin/base :: base-menu"></div>
+    <div th:insert="blocks/admin/user/fragments :: user-menu"></div>
     <hr>
     <div class="container">
-        <div class="row mt-5 mb-5">
-            <a th:href="'/admin/user/create'">
-                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
-                    Create user
-                </button>
-            </a>
-        </div>
+        <div th:insert="blocks/admin/user/fragments :: edit-button(${user.getId()})"></div>
     </div>
 </div>
 
