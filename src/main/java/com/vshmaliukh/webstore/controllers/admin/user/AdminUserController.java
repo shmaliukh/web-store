@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.addAttributesForSortingAndPaging;
 
@@ -66,7 +67,7 @@ public class AdminUserController {
                                      ModelMap modelMap) {
         User user = userService.createBaseUser(userName, email, role, enabled);
         ResponseEntity<Void> response = createUser(user);
-        if(response.getStatusCode().is2xxSuccessful()){
+        if (response.getStatusCode().is2xxSuccessful()) {
             return new ModelAndView("redirect:/admin/user/catalog", modelMap);
         }
         return new ModelAndView("redirect:/admin/user/create", modelMap);
@@ -74,7 +75,7 @@ public class AdminUserController {
 
     @PutMapping
     public ResponseEntity<Void> createUser(@RequestBody User user) {
-        if(user != null){
+        if (user != null) {
             userService.save(user);
             if (userService.isUserSaved(user)) {
                 log.info("saved user to database: '{}'", user);
@@ -83,6 +84,19 @@ public class AdminUserController {
         }
         log.warn("user entity '{}' not added to database", user);
         return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/view/{userId}")
+    public ModelAndView doGetCreate(@PathVariable(name = "userId") Long userId,
+                                    ModelMap modelMap) {
+        Optional<User> optionalUser = userService.readUserById(userId);
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+
+            modelMap.addAttribute("user", user);
+            return new ModelAndView("/admin/user/view", modelMap);
+        }
+        return new ModelAndView("redirect:/admin/user/catalog", modelMap);
     }
 
     private Page<User> getPageWithUsers(String keyword, ModelMap modelMap, Pageable pageable) {
