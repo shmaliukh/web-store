@@ -5,12 +5,13 @@ import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.vshmaliukh.webstore.login.LogInProvider.LOCAL;
 
 @Slf4j
 @Service
@@ -66,6 +67,17 @@ public class UserService {
         }
         log.warn("problem to find user entity with '{}' username // return NULL", userName);
         return null;
+    }
+
+    public User createUser(String userName, String email, String role, boolean enabled) {
+        User user = new User();
+        user.setUsername(userName);
+        user.setEmail(email);
+        user.setRole(role);
+        user.setLogInProvider(LOCAL);
+        user.setEnabled(enabled);
+        user.setPassword("1234");
+        return user;
     }
 
 }

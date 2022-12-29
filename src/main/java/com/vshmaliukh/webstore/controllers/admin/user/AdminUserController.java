@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -53,6 +54,22 @@ public class AdminUserController {
 
         modelMap.addAttribute("userList", userList);
         return new ModelAndView("/admin/user/catalog", modelMap);
+    }
+
+    @GetMapping("/create")
+    public ModelAndView doGetCreate(ModelMap modelMap) {
+        return new ModelAndView("/admin/user/create");
+    }
+
+    @PostMapping("/create")
+    public ModelAndView doPostCreate(@RequestParam("userName") String userName,
+                                     @RequestParam("email") String email,
+                                     @RequestParam("role") String role,
+                                     @RequestParam("enabled") boolean enabled,
+                                     ModelMap modelMap) {
+        User user = userService.createUser(userName, email, role, enabled);
+
+        return new ModelAndView("/admin/user/create");
     }
 
     private Page<User> getPageWithUsers(String keyword, ModelMap modelMap, Pageable pageable) {
