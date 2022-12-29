@@ -93,21 +93,37 @@ public class AdminUserController {
     }
 
     @GetMapping("/view/{userId}")
-    public ModelAndView doGetCreate(@PathVariable(name = "userId") Long userId,
-                                    ModelMap modelMap) {
+    public ModelAndView doGetView(@PathVariable(name = "userId") Long userId,
+                                  ModelMap modelMap) {
         Optional<User> optionalUser = userService.readUserById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            List<Order> orderList = orderService.findUserOrderList(user);
-            if (orderList == null) {
-                orderList = Collections.emptyList();
-            }
-
-            modelMap.addAttribute("user", user);
-            modelMap.addAttribute("orderList", orderList);
+            generateUserWithOrdersModel(modelMap, user);
             return new ModelAndView("/admin/user/view", modelMap);
         }
         return new ModelAndView("redirect:/admin/user/catalog", modelMap);
+    }
+
+    @GetMapping("/edit/{userId}")
+    public ModelAndView doGetEdit(@PathVariable(name = "userId") Long userId,
+                                  ModelMap modelMap) {
+        // TODO implement another user 'edit' panel
+        Optional<User> optionalUser = userService.readUserById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            generateUserWithOrdersModel(modelMap, user);
+            return new ModelAndView("/admin/user/edit", modelMap);
+        }
+        return new ModelAndView("redirect:/admin/user/catalog", modelMap);
+    }
+
+    private void generateUserWithOrdersModel(ModelMap modelMap, User user) {
+        List<Order> orderList = orderService.findUserOrderList(user);
+        if (orderList == null) {
+            orderList = Collections.emptyList();
+        }
+        modelMap.addAttribute("user", user);
+        modelMap.addAttribute("orderList", orderList);
     }
 
     private Page<User> getPageWithUsers(String keyword, ModelMap modelMap, Pageable pageable) {
