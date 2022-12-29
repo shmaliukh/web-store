@@ -11,6 +11,7 @@ import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import java.util.List;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.SHOPPING_CART;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
 
+@Slf4j
 @Controller
 @RequestMapping("/" + SHOPPING_CART)
 @AllArgsConstructor
@@ -35,8 +37,9 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
-                                     @RequestParam(required = false,defaultValue = "0") Long id){
+                                     @CookieValue(required = false,defaultValue = "0") Long id){
         List<Item> testItems = getTestItemOrderList(); // for tests
+        if(id!=0){}
         List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(id).getId());
         List<Item> items = new ArrayList<>();
         for (Cart cart : carts) {
@@ -76,24 +79,35 @@ public class ShoppingCartController {
     @GetMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @RequestParam(required = false,defaultValue = "0") Long userId){
-        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
-        Item item = itemRepository.getById(id);
-        cartService.addItemToCart(item,userId);
-        return "redirect:/" + SHOPPING_CART;
+                                  @CookieValue(required = false,defaultValue = "0") Long userId){
+        try {
+            BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+
+            Item item = itemRepository.getById(id);
+            cartService.addItemToCart(item, userId);
+            return "redirect:/" + SHOPPING_CART;
+        } catch (Exception exception){
+            log.warn(exception.getMessage(),ShoppingCartController.class);
+            return "redirect:/error"; // todo implement error page mapping
+        }
     }
 
     @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @RequestParam(required = false,defaultValue = "0") Long userId){
-        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
-        Item item = itemRepository.getById(id);
+                                  @CookieValue(required = false,defaultValue = "0") Long userId){
+        try {
+            BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+            Item item = itemRepository.getById(id);
 
-            // todo implement db usage
+            // todo implement username db usage
 
-        cartService.decItemQuantityInCart(item,userId);
-        return "redirect:/" + SHOPPING_CART;
+            cartService.decItemQuantityInCart(item, userId);
+            return "redirect:/" + SHOPPING_CART;
+        } catch (Exception exception){
+            log.warn(exception.getMessage(),ShoppingCartController.class);
+            return "redirect:/error"; // todo implement error page mapping
+        }
     }
 
     public List<Cart> getTestCarts(){
