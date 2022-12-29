@@ -38,6 +38,7 @@
                     <th scope="col">STATUS</th>
                     <th scope="col">COMMENT</th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -68,6 +69,13 @@
                             <button class="btn btn-outline-success" type="submit">Edit order</button>
                         </td>
                     </form>
+                    <td class="align-middle">
+                        <a th:href="|@{/admin/user/view/}${order.getUser().getId()}|">
+                            <button type="button" class="w-100 btn btn-outline-secondary">
+                                View user
+                            </button>
+                        </a>
+                    </td>
                 </tr>
                 </tbody>
             </table>

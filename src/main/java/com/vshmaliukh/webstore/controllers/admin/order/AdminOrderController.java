@@ -136,7 +136,6 @@ public class AdminOrderController {
         if (order != null) {
             List<Item> itemsAvailableToBuy = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepositoryProvider.getAllItemRepository());
             Integer totalOrderItems = orderService.calcTotalOrderItems(order);
-//            List<Item> itemsAvailableToBuy = itemService.readItemsAvailableToBuy();
 
             modelMap.addAttribute("order", order);
             modelMap.addAttribute("totalOrderItems", totalOrderItems);
@@ -162,9 +161,11 @@ public class AdminOrderController {
     }
 
     @GetMapping("/create")
-    public ModelAndView doGetCreateOrder(ModelMap modelMap) {
+    public ModelAndView doGetCreateOrder(@RequestParam(name = "userName", defaultValue = "") String userName,
+                                         ModelMap modelMap) {
         List<User> userList = userService.readAllUserList();
 
+        modelMap.addAttribute("userName", userName);
         modelMap.addAttribute("userList", userList);
         modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);
         return new ModelAndView("/admin/order/create", modelMap);

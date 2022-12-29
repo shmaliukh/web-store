@@ -56,40 +56,58 @@
     </div>
 
     <div class="container">
-        <table class="w-100 table table-striped">
-            <caption>Order table</caption>
-            <thead>
-            <tr class="table-dark">
-                <th:block th:insert="blocks/table-titles :: order-titles-with-sorting('/admin/user/view'+${user.getId()})"></th:block>
-                <th colspan="2">TOOLS</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order, iterator: ${orderList}">
-                <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
-                <td class="align-middle" th:text="${order.getId()}">Id</td>
-                <td class="align-middle" th:text="${order.getUser().getId()}">UserId</td>
-                <td class="align-middle" th:text="${order.getUser().getUsername()}">Username</td>
-                <td class="align-middle" th:text="${#dates.format(order.getDateCreated(), 'yyyy-MM-dd')}">Date</td>
-                <td class="align-middle" th:text="${order.getComment()}">Comment</td>
-                <td class="align-middle" th:text="${order.getStatus()}">Status</td>
-                <td class="align-middle">
-                    <a th:href="|@{/admin/order/view/}${order.getId()}|">
-                        <button type="button" class="w-100 btn btn-outline-secondary">
-                            View
-                        </button>
-                    </a>
-                </td>
-                <td class="align-middle">
-                    <a th:href="|@{/admin/order/edit/}${order.getId()}|">
-                        <button type="button" class="w-100 btn btn-outline-secondary">
-                            Edit
-                        </button>
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <th:block th:unless="${orderList.isEmpty()}">
+            <div class="table-responsive-md ">
+                <table class="w-100 table table-striped">
+                    <caption>Order table</caption>
+                    <thead>
+                    <tr class="table-dark">
+                        <th:block th:insert="blocks/table-titles :: order-titles-with-sorting('/admin/user/view'+${user.getId()})"></th:block>
+                        <th colspan="2">TOOLS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order, iterator: ${orderList}">
+                        <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                        <td class="align-middle" th:text="${order.getId()}">Id</td>
+                        <td class="align-middle" th:text="${order.getUser().getId()}">UserId</td>
+                        <td class="align-middle" th:text="${order.getUser().getUsername()}">Username</td>
+                        <td class="align-middle" th:text="${#dates.format(order.getDateCreated(), 'yyyy-MM-dd')}">Date</td>
+                        <td class="align-middle" th:text="${order.getComment()}">Comment</td>
+                        <td class="align-middle" th:text="${order.getStatus()}">Status</td>
+                        <td class="align-middle">
+                            <a th:href="|@{/admin/order/view/}${order.getId()}|">
+                                <button type="button" class="w-100 btn btn-outline-secondary">
+                                    View
+                                </button>
+                            </a>
+                        </td>
+                        <td class="align-middle">
+                            <a th:href="|@{/admin/order/edit/}${order.getId()}|">
+                                <button type="button" class="w-100 btn btn-outline-secondary">
+                                    Edit
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+    </div>
+
+    <div class="container">
+        <th:block th:if="${orderList.isEmpty()}">
+            <p class="lead" th:text="No order found"></p>
+        </th:block>
+    </div>
+
+    <div class="container">
+        <a th:href="|@{/admin/order/create?userName=}${user.getUsername()}|">
+            <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                Create new order
+            </button>
+        </a>
     </div>
 
 </div>

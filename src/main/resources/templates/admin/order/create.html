@@ -31,7 +31,7 @@
                             <div class="input-group has-validation">
                                 <span class="input-group-text">@</span>
                                 <select id="userName" class="form-select" name="userId" th:placeholder="|Username|"
-                                        required="">
+                                        th:value="${userName}" required="">
                                     <option th:each="user : ${userList}"
                                             th:text="${user.getUsername()}"
                                             th:value="${user.getId()}"
