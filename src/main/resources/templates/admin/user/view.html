@@ -22,31 +22,37 @@
 </div>
 
 <div class="album py-5 bg-light text-center">
-    <div class="table-responsive-md m-3">
-        <table class="w-100 table table-striped">
-            <caption>User info</caption>
-            <thead>
-            <tr class="table-dark">
-                <th:block th:insert="blocks/admin/user/fragments :: user-titles"></th:block>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td class="align-middle" th:text="${user.getId()}">Id</td>
-                <td class="align-middle" th:text="${user.getCreatedAt()}">Created</td>
-                <td class="align-middle" th:text="${user.getUpdatedAt()}">Updated</td>
-                <td class="align-middle" th:text="${user.getUsername()}">Username</td>
-                <td class="align-middle" th:text="${user.getEmail()}">Email</td>
-                <td class="align-middle" th:text="${user.getLogInProvider()}">Provider</td>
-                <td class="align-middle" th:text="${user.getRole()}">UserTole</td>
-                <td><input class="form-check-input align-middle" type="checkbox" name="enable"
-                           th:value="${user.isEnabled()}" th:checked="${user.isEnabled()}"
-                           disabled>
-                </td>
-            </tr>
-            </tbody>
-        </table>
 
+    <div class="container">
+        <p class="lead" th:text="|User ''${user.getUsername()}'' info|"></p>
+    </div>
+
+    <div class="container">
+        <div class="table-responsive-md m-3">
+            <table class="w-100 table table-striped">
+                <caption>User info</caption>
+                <thead>
+                <tr class="table-dark">
+                    <th:block th:insert="blocks/admin/user/fragments :: user-titles"></th:block>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="align-middle" th:text="${user.getId()}">Id</td>
+                    <td class="align-middle" th:text="${user.getCreatedAt()}">Created</td>
+                    <td class="align-middle" th:text="${user.getUpdatedAt()}">Updated</td>
+                    <td class="align-middle" th:text="${user.getUsername()}">Username</td>
+                    <td class="align-middle" th:text="${user.getEmail()}">Email</td>
+                    <td class="align-middle" th:text="${user.getLogInProvider()}">Provider</td>
+                    <td class="align-middle" th:text="${user.getRole()}">UserTole</td>
+                    <td><input class="form-check-input align-middle" type="checkbox" name="enable"
+                               th:value="${user.isEnabled()}" th:checked="${user.isEnabled()}"
+                               disabled>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>
