@@ -1,3 +1,14 @@
+<th:block th:fragment="user-titles-">
+    <th scope="col">ID</th>
+    <th scope="col">CREATED</th>
+    <th scope="col">UPDATED</th>
+    <th scope="col">USERNAME</th>
+    <th scope="col">EMAIL</th>
+    <th scope="col">PROVIDER</th>
+    <th scope="col">ROLE</th>
+    <th scope="col">ENABLE</th>
+</th:block>
+
 <th:block th:fragment="user-titles-with-sorting(pageToRedirect)">
     <th scope="col">#</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
