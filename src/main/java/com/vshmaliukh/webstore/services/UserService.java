@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -69,7 +68,7 @@ public class UserService {
         return null;
     }
 
-    public User createUser(String userName, String email, String role, boolean enabled) {
+    public User createBaseUser(String userName, String email, String role, boolean enabled) {
         User user = new User();
         user.setUsername(userName);
         user.setEmail(email);

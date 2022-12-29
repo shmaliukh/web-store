@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="/utils.js"></script>
+    <title>User catalog</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:insert="blocks/bootstrap-css-style.html :: style">
+    <link/>
+</head>
+<body>
+<header th:insert="blocks/page-blocks.html :: header"></header>
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 text-center">
+    <h1 class="display-4">User catalog panel</h1>
+    <hr>
+    <p class="lead">User catalog panel</p>
+    <div th:insert="blocks/admin/base :: base-menu"></div>
+    <hr>
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <a th:href="'/admin/user/create'">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Create user
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="album py-5 bg-light text-center">
+    <div class="container">
+        <th:block th:insert="blocks/navigation :: tools('/admin/user/catalog')"></th:block>
+    </div>
+    <th:block th:if="${userList.size() > 0}">
+        <div class="table-responsive-md m-3">
+            <table class="w-100 table table-striped">
+                <caption>User table</caption>
+                <thead>
+                <tr class="table-dark">
+                    <th:block th:insert="blocks/admin/user/fragments :: user-titles-with-sorting('/admin/user/catalog')"></th:block>
+                    <th colspan="2">TOOLS</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user, iterator: ${userList}">
+                    <th class="align-middle" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
+                    <td class="align-middle" th:text="${user.getId()}">Id</td>
+                    <td class="align-middle" th:text="${user.getCreatedAt()}">Created</td>
+                    <td class="align-middle" th:text="${user.getUpdatedAt()}">Updated</td>
+                    <td class="align-middle" th:text="${user.getUsername()}">Username</td>
+                    <td class="align-middle" th:text="${user.getEmail()}">Email</td>
+                    <td class="align-middle" th:text="${user.getLogInProvider()}">Provider</td>
+                    <td class="align-middle" th:text="${user.getRole()}">UserTole</td>
+                    <td><input class="form-check-input align-middle" type="checkbox" name="enable"
+                               th:value="${user.isEnabled()}" th:checked="${user.isEnabled()}"
+                               disabled>
+                    </td>
+                    <td class="align-middle">
+                        <a th:href="|@{/admin/user/view/}${user.getId()}|">
+                            <button type="button" class="w-100 btn btn-outline-secondary">
+                                View
+                            </button>
+                        </a>
+                    </td>
+                    <td class="align-middle">
+                        <a th:href="|@{/admin/user/edit/}${user.getId()}|">
+                            <button type="button" class="w-100 btn btn-outline-secondary">
+                                Edit
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <th:block th:insert="blocks/navigation :: pagination('/admin/user/catalog')"></th:block>
+        </div>
+    </th:block>
+
+    <th:block th:if="${userList.isEmpty()}">
+        <p class="lead" th:text="|No available user|"></p>
+    </th:block>
+</div>
+
+
+
+<footer th:insert="blocks/page-blocks.html :: footer"></footer>
+</body>
+</html>
