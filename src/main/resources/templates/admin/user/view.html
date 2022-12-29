@@ -66,7 +66,7 @@
             </thead>
             <tbody>
             <tr th:each="order, iterator: ${orderList}">
-                <th class="align-middle" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
+                <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
                 <td class="align-middle" th:text="${order.getId()}">Id</td>
                 <td class="align-middle" th:text="${order.getUser().getId()}">UserId</td>
                 <td class="align-middle" th:text="${order.getUser().getUsername()}">Username</td>
