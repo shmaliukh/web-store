@@ -73,7 +73,7 @@ public class AdminUserController {
                                      ModelMap modelMap) {
         User user = userService.createBaseUser(userName, email, role, enabled);
         ResponseEntity<Void> response = saveUser(user);
-        if (response.getStatusCode().is2xxSuccessful()) {
+        if (!response.getStatusCode().isError()) {
             return new ModelAndView("redirect:/admin/user/catalog", modelMap);
         }
         return new ModelAndView("redirect:/admin/user/create", modelMap);
@@ -127,7 +127,7 @@ public class AdminUserController {
         User user = userService.createBaseUser(userName, email, role, enabled);
         user.setId(userId);
         ResponseEntity<Void> response = saveUser(user);
-        if (response.getStatusCode().is2xxSuccessful()) {
+        if (!response.getStatusCode().isError()) {
             return new ModelAndView("redirect:/admin/user/edit" + userId, modelMap);
         }
         return new ModelAndView("redirect:/admin/user/catalog", modelMap);

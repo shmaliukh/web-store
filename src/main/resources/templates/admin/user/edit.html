@@ -45,18 +45,20 @@
                           method="post" class="needs-validation">
                         <td class="align-middle" th:text="${user.getId()}">Id</td>
                         <td class="align-middle">
-                            <input class="form-control align-middle" type="text" name="userName"
+                            <input class="form-control" type="text" name="userName"
                                    th:value="${user.getUsername()}"></td>
                         <td class="align-middle">
-                            <input class="form-control align-middle" type="text" name="email"
+                            <input class="form-control" type="text" name="email"
                                    th:value="${user.getEmail()}"></td>
                         <td class="align-middle" th:text="${user.getLogInProvider()}">Provider</td>
                         <td class="align-middle">
-                            <input class="form-control align-middle" type="text" name="role"
+                            <input class="form-control" type="text" name="role"
                                    th:value="${user.getRole()}"></td>
-                        <td><input class="form-check-input align-middle" type="checkbox" name="enable"
-                                   th:value="${user.isEnabled()}" th:checked="${user.isEnabled()}"></td>
-
+                        <td class="align-middle">
+                            <input class="form-check-input" type="checkbox" name="enabled" id="checkbox"
+                                   th:value="${user.isEnabled()}" th:checked="${user.isEnabled()}">
+                        </td>
+                        <th:block th:insert="blocks/generated-scripts :: checkBoxWithName('checkbox')"></th:block>
                         <td class="align-middle">
                             <button class="btn btn-outline-success" type="submit">Edit user</button>
                         </td>
