@@ -7,6 +7,7 @@ import com.vshmaliukh.webstore.services.OrderService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -144,7 +145,7 @@ public class AdminUserController {
 
     private Page<User> getPageWithUsers(String keyword, ModelMap modelMap, Pageable pageable) {
         Page<User> pageWithUsers;
-        if (keyword == null) {
+        if (StringUtils.isBlank(keyword)) {
             pageWithUsers = userRepository.findAll(pageable);
         } else {
             pageWithUsers = userRepository.findByUsernameIgnoreCase(keyword, pageable);
