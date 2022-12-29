@@ -80,4 +80,16 @@ public class UserService {
         return user;
     }
 
+    public void save(User user) {
+        if(user != null){
+            userRepository.save(user);
+        } else {
+            log.warn("user not saved // user == NULL");
+        }
+    }
+
+    public boolean isUserSaved(User user) {
+        return userRepository.existsById(user.getId());
+    }
+
 }

@@ -60,6 +60,14 @@
                             </div>
                         </div>
 
+                        <div class="d-flex justify-content-around align-items-center">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" name="enabled" type="checkbox" role="switch"
+                                       id="flexSwitchCheckChecked" value="true" checked>
+                                <label class="form-check-label" for="flexSwitchCheckChecked">Is active</label>
+                            </div>
+                        </div>
+                        <th:block th:insert="blocks/generated-scripts :: checkBoxWithName('flexSwitchCheckChecked')"></th:block>
 
 
                     </div>
