@@ -1,7 +1,9 @@
 package com.vshmaliukh.webstore.controllers.admin.user;
 
+import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
+import com.vshmaliukh.webstore.services.OrderService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +29,11 @@ import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.add
 @RequestMapping("/admin/user")
 public class AdminUserController {
 
-    final UserService userService;
+    // TODO refactor (do not use repositories)
     final UserRepository userRepository;
+
+    final UserService userService;
+    final OrderService orderService;
 
     @GetMapping("/**")
     public ModelAndView doGet(ModelMap modelMap) {
@@ -92,8 +98,13 @@ public class AdminUserController {
         Optional<User> optionalUser = userService.readUserById(userId);
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
+            List<Order> orderList = orderService.findUserOrderList(user);
+            if(orderList == null){
+                orderList = Collections.emptyList();
+            }
 
             modelMap.addAttribute("user", user);
+            modelMap.addAttribute("orderList", orderList);
             return new ModelAndView("/admin/user/view", modelMap);
         }
         return new ModelAndView("redirect:/admin/user/catalog", modelMap);
