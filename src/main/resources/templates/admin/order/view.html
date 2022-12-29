@@ -109,6 +109,7 @@
                     </tr>
                     </tbody>
                 </table>
+
                 <!--                TODO implement pagination               -->
                 <!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
             </div>
@@ -117,6 +118,14 @@
         <th:block th:if="${orderItemList.size() == 0}">
             <p class="lead" th:text="|No order items|"></p>
         </th:block>
+
+        <div>
+            <a th:href="'/admin/order/'+${order.getId()}+'/add-item'">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Add item
+                </button>
+            </a>
+        </div>
     </div>
 
 </div>

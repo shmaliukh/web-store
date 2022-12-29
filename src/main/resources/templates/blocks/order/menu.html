@@ -37,6 +37,23 @@
     </div>
 </div>
 
+<div th:fragment="add-item-addition-menu(orderId)">
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <a th:href="|@{/admin/order/view/}${orderId}|">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    View this order
+                </button>
+            </a>
+            <a th:href="|@{/admin/order/edit/}${orderId}|">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Edit this order
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
 <div th:fragment="view-addition-menu(orderId)">
     <div class="container">
         <div class="row mt-5 mb-5">

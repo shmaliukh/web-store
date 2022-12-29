@@ -22,7 +22,7 @@ public final class ItemRepositoryProvider {
 
     // TODO refactor
 
-    final BaseItemRepository<Item> allItemRepository;
+    final ItemRepository allItemRepository;
 
     final BaseItemRepository<Book> bookRepository;
     final BaseItemRepository<Comics> comicsRepository;
@@ -33,7 +33,7 @@ public final class ItemRepositoryProvider {
     public Map<Class<? extends Item>, BaseItemRepository<? extends Item>> itemClassTypeRepositoryMap;
     public Map<String, BaseItemRepository<? extends Item>> itemClassNameRepositoryMap;
 
-    public ItemRepositoryProvider(BaseItemRepository<Item> allItemRepository,
+    public ItemRepositoryProvider(ItemRepository allItemRepository,
                                   BaseItemRepository<Book> bookRepository,
                                   BaseItemRepository<Comics> comicsRepository,
                                   BaseItemRepository<Magazine> magazineRepository,

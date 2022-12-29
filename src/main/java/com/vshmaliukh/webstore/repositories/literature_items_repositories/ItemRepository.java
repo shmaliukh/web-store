@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ItemRepository extends BaseItemRepository<Item> {
 
+//    List<Item> findAllByQuantityGreaterThanEqualAndAvailableInStoreEquals(Integer minQuantity, Boolean available);
+
 }

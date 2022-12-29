@@ -10,6 +10,7 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 
@@ -17,6 +18,7 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
+@Slf4j
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,6 +32,9 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
         @JsonSubTypes.Type(value = Newspaper.class, name = "newspaper"),
 })
 public abstract class Item extends AuditModel {
+
+    public static final int DEFAULT_PRICE = 0;
+    public static final int DEFAULT_QUANTITY = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,6 +95,26 @@ public abstract class Item extends AuditModel {
         result = 31 * result + quantity;
         result = 31 * result + (isAvailableInStore ? 1 : 0);
         return result;
+    }
+
+    public void setPrice(int price) {
+        if (price >= 0) {
+            this.price = price;
+        } else {
+            this.price = DEFAULT_PRICE;
+            log.warn("item id: '{}' // invalid price value to set: '{}' // set up default price value: '{}'",
+                    getId(), price, DEFAULT_PRICE);
+        }
+    }
+
+    public void setQuantity(int quantity) {
+        if (quantity >= 0) {
+            this.quantity = quantity;
+        } else {
+            this.quantity = DEFAULT_QUANTITY;
+            log.warn("item id: '{}' // invalid quantity value to set: '{}' // set up default quantity value: '{}'",
+                    getId(), quantity, DEFAULT_QUANTITY);
+        }
     }
 
 }
