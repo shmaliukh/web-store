@@ -96,10 +96,10 @@ public class AdminUserController {
     public ModelAndView doGetCreate(@PathVariable(name = "userId") Long userId,
                                     ModelMap modelMap) {
         Optional<User> optionalUser = userService.readUserById(userId);
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             List<Order> orderList = orderService.findUserOrderList(user);
-            if(orderList == null){
+            if (orderList == null) {
                 orderList = Collections.emptyList();
             }
 

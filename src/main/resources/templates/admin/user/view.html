@@ -28,7 +28,7 @@
     </div>
 
     <div class="container">
-        <div class="table-responsive-md m-3">
+        <div class="table-responsive-md">
             <table class="w-100 table table-striped">
                 <caption>User info</caption>
                 <thead>
@@ -53,6 +53,10 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="container">
+        <hr>
     </div>
 
     <div class="container">
@@ -98,7 +102,7 @@
 
     <div class="container">
         <th:block th:if="${orderList.isEmpty()}">
-            <p class="lead" th:text="No order found"></p>
+            <p class="lead" th:text="'No order found'"></p>
         </th:block>
     </div>
 
