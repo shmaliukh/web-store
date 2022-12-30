@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin.user;
 
+import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
@@ -44,7 +45,7 @@ public class AdminUserController {
     @GetMapping("/catalog")
     public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(defaultValue = "6") int size,
+                                     @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
                                      @RequestParam(defaultValue = "id,asc") String[] sort,
                                      ModelMap modelMap) {
         String sortField = sort[0];

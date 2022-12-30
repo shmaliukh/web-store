@@ -42,7 +42,7 @@
                 <div class="input-group mb-3">
                     <select form="searchForm" name="size" th:value="${pageSize}"
                             class="size-select flex-fill" id="pageSize">
-                        <option th:each="s : ${ {3, 6, 9, 18, 36} }"
+                        <option th:each="s : ${ {5, 10, 20, 50, 100} }"
                                 th:value="${s}"
                                 th:text="${s}"
                                 th:selected="${s == pageSize}">

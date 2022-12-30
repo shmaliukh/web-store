@@ -39,7 +39,7 @@ public class AdminOrderController {
     @GetMapping("/catalog/**")
     public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(defaultValue = "6") int size,
+                                     @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
                                      @RequestParam(defaultValue = "id,asc") String[] sort,
                                      ModelMap modelMap) {
         List<Order> orderList = AdminControllerUtils.getSortedOrderContent(keyword, page, size, sort, modelMap, orderService.getOrderRepository());
@@ -128,7 +128,7 @@ public class AdminOrderController {
     @GetMapping("/{oderId}/add-item")
     public ModelAndView doGetAddItem(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(defaultValue = "6") int size,
+                                     @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
                                      @RequestParam(defaultValue = "id,asc") String[] sort,
                                      @PathVariable(name = "oderId") Long orderId,
                                      ModelMap modelMap) {
