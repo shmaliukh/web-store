@@ -53,6 +53,7 @@ public abstract class Item extends AuditModel {
     @Column(name = QUANTITY_COLUMN, nullable = false)
     int quantity;
 
+    // TODO change boolean value to item status enumeration value
     @Column(name = IS_AVAILABLE_IN_STORE_COLUMN, nullable = false)
     boolean isAvailableInStore;
 
