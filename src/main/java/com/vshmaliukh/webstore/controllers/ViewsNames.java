@@ -1,6 +1,6 @@
 package com.vshmaliukh.webstore.controllers;
 
-public class ViewsNames {
+public class  ViewsNames {
 
     public static final String CATALOG_VIEW = "catalog";
     public static final String ITEM_PAGE_VIEW = "item-page";

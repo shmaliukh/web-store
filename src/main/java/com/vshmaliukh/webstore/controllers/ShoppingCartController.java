@@ -6,16 +6,15 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ import java.util.Optional;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.SHOPPING_CART;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
 
+@Slf4j
 @Controller
 @RequestMapping("/" + SHOPPING_CART)
 @AllArgsConstructor
@@ -37,40 +37,77 @@ public class ShoppingCartController {
     final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping
-    public ModelAndView showCartPage(ModelMap modelMap) {
-        List<Item> items = getTestItemOrderList();
-        modelMap.addAttribute("items", items); // todo implement items adding to template
-        modelMap.addAttribute("totalItems", items.size());
-
-
-//        List<Cart> carts = cartService.getCartsByUserId(userService.readUserIdByName("")); // todo add username usage
-
-        int totalPrice = 0;
-
-        for (Item item : items) {  // for tests
-            totalPrice = totalPrice + item.getPrice();
+    public ModelAndView showCartPage(ModelMap modelMap,
+                                     @CookieValue(required = false,defaultValue = "0") Long id){
+        List<Item> testItems = getTestItemOrderList(); // for tests
+        if(id!=0){}
+        List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(id).getId());
+        List<Item> items = new ArrayList<>();
+        for (Cart cart : carts) {
+            Item item = itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getCategory())
+                    .getById(cart.getItemId());
+            item.setPrice(item.getPrice()*item.getQuantity());
+            items.add(item);
         }
 
+        for (Item item : testItems) { // for tests
+            item.setPrice(item.getPrice()* item.getQuantity());
+        }
 
-        modelMap.addAttribute("totalPrice", totalPrice);
+        int totalCount = 0;
+        int totalPrice = 0;
+
+//        for (Item item : items) {
+//            totalPrice = totalPrice + item.getPrice();
+//        }
+//        for (Item item : items) {
+//            totalCount = totalCount + item.getQuantity();
+//        }
+
+        for (Item item : testItems) {  // for tests
+            totalPrice = totalPrice + item.getPrice();
+        }
+        for (Item item : testItems) { // for tests
+            totalCount = totalCount + item.getQuantity();
+        }
+
+        modelMap.addAttribute("items",testItems);
+        modelMap.addAttribute("totalItems",totalCount);
+        modelMap.addAttribute("totalPrice",totalPrice);
         return new ModelAndView(SHOPPING_CART_VIEW);
     }
 
-    @PostMapping("/add-one/{type}/{id}")
+    @GetMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
-                                  @PathVariable Integer id) {
-        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-        // todo implement username usage
-        optionalItem.ifPresent(item -> cartService.addItemToCart(item, "username"));
-        return "redirect:/" + SHOPPING_CART;
+                                  @PathVariable Integer id,
+                                  @CookieValue(required = false,defaultValue = "0") Long userId){
+        try {
+            BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+            Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+            optionalItem.ifPresent(item -> cartService.addItemToCart(item, userId));
+            return "redirect:/" + SHOPPING_CART;
+        } catch (Exception exception){
+            log.warn(exception.getMessage(),ShoppingCartController.class);
+            return "redirect:/error"; // todo implement error page mapping
+        }
     }
 
-    @PostMapping("/remove-one/{type}/{id}")
+    @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id) {
         Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
         optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, "username")); // todo implement username usage
         return "redirect:/" + SHOPPING_CART;
+                                  @PathVariable Integer id,
+                                  @CookieValue(required = false,defaultValue = "0") Long userId){
+        try {
+            Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId));
+            return "redirect:/" + SHOPPING_CART;
+        } catch (Exception exception){
+            log.warn(exception.getMessage(),ShoppingCartController.class);
+            return "redirect:/error"; // todo implement error page mapping
+        }
     }
 
     public List<Cart> getTestCarts() {

@@ -68,6 +68,7 @@ public class UserService {
         return null;
     }
 
+
     public User createBaseUser(String userName, String email, String role, boolean enabled) {
         User user = new User();
         user.setUsername(userName);
@@ -89,6 +90,15 @@ public class UserService {
 
     public boolean isUserSaved(User user) {
         return userRepository.existsById(user.getId());
+    }
+    
+    public User getUserById(Long id){
+        User user = userRepository.getUserById(id);
+        if (user!=null){
+            return user;
+        }
+        log.warn("problem to find user entity with '{}'id // return NULL", id);
+        return null;
     }
 
 }

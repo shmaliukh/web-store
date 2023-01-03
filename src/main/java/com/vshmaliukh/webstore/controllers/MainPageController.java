@@ -86,20 +86,13 @@ public class MainPageController {
 
     @PostMapping("/" + CATALOG_PAGE + "/{type}/{id}")
     public String addToCart(@PathVariable String type,
-                             @PathVariable Integer id,
-                             @RequestHeader String referer){
-        BaseItemRepository actionsWithItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+                            @PathVariable Integer id,
+                            @RequestHeader String referer,
+                            @CookieValue(required = false,defaultValue = "0") Long userId){ // todo continue implementation of user id usage
+        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = actionsWithItem.findById(id);
-        // todo implement username usage
-        optionalItem.ifPresent(item -> cartService.addItemToCart(item, "username"));
+        optionalItem.ifPresent(item -> cartService.addItemToCart(item, userId));
         return "redirect:" + referer;
     }
 
-    public List<String> genURLForItemsPages(List<? extends Item> items){
-
-        List<String> urls = new ArrayList<>();
-        String baseURL = "/" + MAIN_PAGE + "/" + CATALOG_PAGE + "/";
-        items.forEach(item->urls.add(baseURL+item.getCategory() + "/" + item.getId()));
-        return urls;
-    }
 }

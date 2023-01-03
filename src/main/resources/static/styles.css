@@ -54,7 +54,10 @@
     height: 2pc;
     width: 2pc;
 }
-
+.cart-plus-minus-icon {
+    height: 1pc;
+    width: 1pc;
+}
 .price {
     color:rgb(56, 56, 56);
     font-size: large;
