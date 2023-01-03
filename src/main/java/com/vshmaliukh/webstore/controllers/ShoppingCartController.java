@@ -9,6 +9,7 @@ import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
+import com.vshmaliukh.webstore.services.UnauthorizedUserService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,16 +32,20 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
 @AllArgsConstructor
 public class ShoppingCartController {
 
+
     final ItemService itemService;
     final UserService userService;
     final CartService cartService;
     final ItemRepositoryProvider itemRepositoryProvider;
+    final UnauthorizedUserService unauthorizedUserService;
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
                                      @CookieValue(required = false,defaultValue = "0") Long id){
         List<Item> testItems = getTestItemOrderList(); // for tests
-        if(id!=0){}
+        if(id==0){
+            id = unauthorizedUserService.createUnauthorizedUser().getId();
+        }
         List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(id).getId());
         List<Item> items = new ArrayList<>();
         for (Cart cart : carts) {
@@ -80,11 +85,14 @@ public class ShoppingCartController {
     @GetMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @CookieValue(required = false,defaultValue = "0") Long userId){
+                                  @CookieValue(required = false,defaultValue = "0L") Long userId){
         try {
-            BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+            if(userId==0){
+                userId = unauthorizedUserService.createUnauthorizedUser().getId();
+            }
+            final Long finalUserId = userId;
             Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-            optionalItem.ifPresent(item -> cartService.addItemToCart(item, userId));
+            optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
             return "redirect:/" + SHOPPING_CART;
         } catch (Exception exception){
             log.warn(exception.getMessage(),ShoppingCartController.class);
@@ -97,8 +105,12 @@ public class ShoppingCartController {
                                   @PathVariable Integer id,
                                   @CookieValue(required = false,defaultValue = "0") Long userId){
         try {
+            if(userId==0){
+                userId = unauthorizedUserService.createUnauthorizedUser().getId();
+            }
+            final Long finalUserId = userId;
             Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId));
+        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, finalUserId));
             return "redirect:/" + SHOPPING_CART;
         } catch (Exception exception){
             log.warn(exception.getMessage(),ShoppingCartController.class);
