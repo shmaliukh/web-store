@@ -18,6 +18,7 @@ public final class ConstantsForEntities {
     public static final String ORDER_ITEM_TABLE = "Order_items";
 
     public static final String CART_TABLE = "Carts";
+    public static final String UNAUTHORIZED_USER_TABLE = "Unauthorized_users";
 
     public static final String USER_NAME_COLUMN = "user_name";
     public static final String USER_EMAIL_COLUMN = "user_email";

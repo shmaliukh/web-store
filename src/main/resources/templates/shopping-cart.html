@@ -35,11 +35,11 @@
                         </div>
                         <div class="navbar-cart-block" style="width: 11.5%">
                             <div class=" width: 40%">
-                                <a th:href="'/shopping-cart/add-one/' + ${item.getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
+                                <a th:href="'/shopping-cart/remove-one/' + ${item.getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
                                         <img class="cart-plus-minus-icon" src="/icons/minus-icon.png" alt="">
                                 </a>
                                 <span class="text-muted" th:text=" ${item.getQuantity()}">0</span>
-                                <a th:href="'/shopping-cart/remove-one/' + ${item.getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
+                                <a th:href="'/shopping-cart/add-one/' + ${item.getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
                                     <img class="cart-plus-minus-icon" src="/icons/plus-icon.png">
                                 </a>
                             </div>
