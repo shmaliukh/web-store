@@ -4,6 +4,7 @@ import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,7 @@ public final class AdminControllerUtils {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
 
         Page<T> pageWithItems;
-        if (keyword == null) {
+        if (StringUtils.isBlank(keyword)) {
             pageWithItems = repositoryByItemClassName.findAll(pageable);
         } else {
             pageWithItems = repositoryByItemClassName.findByNameContainingIgnoreCase(keyword, pageable);
@@ -60,7 +61,7 @@ public final class AdminControllerUtils {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
 
         Page<Order> pageWithOrders;
-        if (keyword == null) {
+        if (StringUtils.isBlank(keyword)) {
             pageWithOrders = orderRepository.findAll(pageable);
         } else {
             pageWithOrders = orderRepository.findByStatusIgnoreCase(keyword, pageable);

@@ -3,7 +3,7 @@
 <head>
     <title>Create order</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link th:insert="blocks/bootstrap-css-style.html :: style">
+    <link th:insert="blocks/bootstrap-css-style.html :: additional-files">
     <link/>
 </head>
 <body>
@@ -31,7 +31,7 @@
                             <div class="input-group has-validation">
                                 <span class="input-group-text">@</span>
                                 <select id="userName" class="form-select" name="userId" th:placeholder="|Username|"
-                                        required="">
+                                        th:value="${userName}" required="">
                                     <option th:each="user : ${userList}"
                                             th:text="${user.getUsername()}"
                                             th:value="${user.getId()}"

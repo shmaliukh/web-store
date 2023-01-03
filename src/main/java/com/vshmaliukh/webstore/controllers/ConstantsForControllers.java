@@ -5,6 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class ConstantsForControllers {
 
+    public static final String DEFAULT_ITEM_QUANTITY_ON_PAGE = "5";
+
     private ConstantsForControllers() {
     }
 

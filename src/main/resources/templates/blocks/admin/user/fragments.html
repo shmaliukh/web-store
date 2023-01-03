@@ -1,0 +1,73 @@
+<div th:fragment="navbar">
+    <!-- TODO implement -->
+</div>
+
+<div th:fragment="view-button(userId)">
+    <a th:href="|@{/admin/user/view/}${userId}|">
+        <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block"
+                th:text="|View this user|">View
+        </button>
+    </a>
+</div>
+
+<div th:fragment="edit-button(userId)">
+    <a th:href="|@{/admin/user/edit/}${userId}|">
+        <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block"
+                th:text="|Edit this user|">View
+        </button>
+    </a>
+</div>
+
+<th:block th:fragment="base-user-titles">
+    <th scope="col">ID</th>
+    <th scope="col">USERNAME</th>
+    <th scope="col">EMAIL</th>
+    <th scope="col">PROVIDER</th>
+    <th scope="col">ROLE</th>
+    <th scope="col">ENABLE</th>
+</th:block>
+
+<th:block th:fragment="user-titles">
+    <th scope="col">ID</th>
+    <th scope="col">CREATED</th>
+    <th scope="col">UPDATED</th>
+    <th scope="col">USERNAME</th>
+    <th scope="col">EMAIL</th>
+    <th scope="col">PROVIDER</th>
+    <th scope="col">ROLE</th>
+    <th scope="col">ENABLE</th>
+</th:block>
+
+<th:block th:fragment="user-titles-with-sorting(pageToRedirect)">
+    <th scope="col">#</th>
+    <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('createdAt','CREATED', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('username','USERNAME', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('email','EMAIL', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('logInProvider','PROVIDER', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('role','ROLE', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('enabled','ENABLE', ${pageToRedirect})"></th>
+</th:block>
+
+<div th:fragment="user-menu">
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <a th:href="@{/admin}">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Admin home
+                </button>
+            </a>
+            <a th:href="@{/admin/user/catalog}">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    User catalog
+                </button>
+            </a>
+            <a th:href="@{/admin/exit}">
+                <button type="button" class="w-100 btn btn-outline-danger btn-lg btn-block">
+                    Exit
+                </button>
+            </a>
+        </div>
+    </div>
+</div>

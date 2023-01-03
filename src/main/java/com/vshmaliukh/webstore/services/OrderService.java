@@ -169,4 +169,8 @@ public class OrderService {
         return Optional.empty();
     }
 
+    public List<Order> findUserOrderList(User user) {
+        return orderRepository.findAllByUser(user);
+    }
+
 }
