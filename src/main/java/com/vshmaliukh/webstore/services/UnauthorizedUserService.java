@@ -13,8 +13,15 @@ public class UnauthorizedUserService {
 
     final UnauthorizedUserRepository unauthorizedUserRepository;
 
-    boolean existsById(Long id){
+    public boolean existsById(Long id){
+
         return unauthorizedUserRepository.existsById(id);
+    }
+
+    public UnauthorizedUser createUnauthorizedUser(){
+        UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
+        unauthorizedUserRepository.save(unauthorizedUser);
+        return unauthorizedUser;
     }
 
 }
