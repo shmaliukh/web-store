@@ -94,10 +94,6 @@ public class ShoppingCartController {
 
     @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
-                                  @PathVariable Integer id) {
-        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, "username")); // todo implement username usage
-        return "redirect:/" + SHOPPING_CART;
                                   @PathVariable Integer id,
                                   @CookieValue(required = false,defaultValue = "0") Long userId){
         try {
