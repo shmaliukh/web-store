@@ -18,6 +18,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
         uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
 public class User extends AuditModel{
 
+    @ToString.Exclude
     private String password;
     private boolean enabled;
 
@@ -36,10 +37,6 @@ public class User extends AuditModel{
     @Column(name = USER_LOG_IN_PROVIDER)
     private LogInProvider logInProvider;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = USER_ROLE_TABLE,
-            joinColumns = @JoinColumn(name = USER_ID_COLUMN),
-            inverseJoinColumns = @JoinColumn(name = ROLE_ID_COLUMN))
-    private Role role;
+    private String role;
 
 }

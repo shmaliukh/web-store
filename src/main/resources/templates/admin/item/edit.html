@@ -4,7 +4,7 @@
     <script src="/utils.js"></script>
     <title>Item edit</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link th:insert="blocks/bootstrap-css-style.html :: style">
+    <link th:insert="blocks/bootstrap-css-style.html :: additional-files">
     <link/>
 </head>
 <body>
@@ -48,15 +48,15 @@
                                 <input class="form-control align-middle" type="text" name="name" th:value="${item.getName()}">
                             </td>
                             <td class="align-middle">
-                                <input class="form-control align-middle" type="number" name="price" th:value="${item.getPrice()}">
+                                <input class="form-control align-middle" type="number" name="price" min="0" th:value="${item.getPrice()}">
                             </td>
                             <td class="align-middle">
-                                <input class="form-control align-middle" type="number" name="quantity"
+                                <input class="form-control align-middle" type="number" name="quantity" min="0"
                                        th:value="${item.getQuantity()}">
                             </td>
                             <th:block th:insert="blocks/edit-item-table-values :: ${itemType}"></th:block>
                             <td class="align-middle">
-                                <input th:id="'checkbox'+${iterator.count}" class="form-check-input  align-middle"
+                                <input th:id="'checkbox'+${iterator.count}" class="form-check-input align-middle"
                                        name="is_available_in_store" type="checkbox"
                                        role="switch"
                                        th:value="${item.isAvailableInStore()}"

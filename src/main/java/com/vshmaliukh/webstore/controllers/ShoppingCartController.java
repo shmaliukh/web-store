@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.SHOPPING_CART;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
@@ -82,9 +83,8 @@ public class ShoppingCartController {
                                   @CookieValue(required = false,defaultValue = "0") Long userId){
         try {
             BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
-
-            Item item = itemRepository.getById(id);
-            cartService.addItemToCart(item, userId);
+            Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+            optionalItem.ifPresent(item -> cartService.addItemToCart(item, userId));
             return "redirect:/" + SHOPPING_CART;
         } catch (Exception exception){
             log.warn(exception.getMessage(),ShoppingCartController.class);
@@ -94,15 +94,15 @@ public class ShoppingCartController {
 
     @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
+                                  @PathVariable Integer id) {
+        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, "username")); // todo implement username usage
+        return "redirect:/" + SHOPPING_CART;
                                   @PathVariable Integer id,
                                   @CookieValue(required = false,defaultValue = "0") Long userId){
         try {
-            BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
-            Item item = itemRepository.getById(id);
-
-            // todo implement username db usage
-
-            cartService.decItemQuantityInCart(item, userId);
+            Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId));
             return "redirect:/" + SHOPPING_CART;
         } catch (Exception exception){
             log.warn(exception.getMessage(),ShoppingCartController.class);
@@ -110,7 +110,7 @@ public class ShoppingCartController {
         }
     }
 
-    public List<Cart> getTestCarts(){
+    public List<Cart> getTestCarts() {
         List<Cart> carts = new ArrayList<>();
 
         Cart first = new Cart();

@@ -1,6 +1,24 @@
 <th:block th:fragment="checkBox">
+    <th:block th:insert="blocks/generated-scripts :: checkBoxWithNameAndIterator('checkboxName', ${iterator})"></th:block>
+</th:block>
+
+<th:block th:fragment="checkBoxWithName(checkboxName)">
     <script th:utext="
-        'const checkboxId' + ${iterator.count}+' = &quot;#checkbox' + ${iterator.count} + '&quot;;'
+        'const checkboxId = &quot;#' + ${checkboxName} + '&quot;;'
+        + 'const checkbox = document.querySelector(checkboxId);'
+        + 'checkbox.addEventListener(&quot;change&quot;, () => {'
+            + 'if (checkbox.checked) {'
+                + 'checkbox.value = &quot;true&quot;;'
+            + '} else {'
+                + 'checkbox.value = &quot;false&quot;;'
+            + '}'
+        + '});'">
+    </script>
+</th:block>
+
+<th:block th:fragment="checkBoxWithNameAndIterator(checkboxName, iterator)">
+    <script th:utext="
+        'const checkboxId' + ${iterator.count}+' = &quot;#' + ${checkboxName} + ${iterator.count} + '&quot;;'
         + 'const checkbox' + ${iterator.count}+' = document.querySelector(checkboxId' + ${iterator.count}+');'
         + 'checkbox' + ${iterator.count}+'.addEventListener(&quot;change&quot;, () => {'
             + 'if (checkbox' + ${iterator.count}+'.checked) {'

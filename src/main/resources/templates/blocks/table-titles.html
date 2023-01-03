@@ -1,7 +1,18 @@
+<th:block th:fragment="order-titles">
+    <th scope="col">#</th>
+    <th scope="col">ID</th>
+    <th scope="col">USER_ID</th>
+    <th scope="col">USERNAME</th>
+    <th scope="col">DATE</th>
+    <th scope="col">COMMENT</th>
+    <th scope="col">STATUS</th>
+</th:block>
+
 <th:block th:fragment="order-titles-with-sorting(pageToRedirect)">
     <th scope="col">#</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('userId','UserID', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('userId','USER_ID', ${pageToRedirect})"></th>
+    <th scope="col">USERNAME</th>
     <th th:replace="blocks/sorting :: sorting('dateCreated','DATE', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('comment','COMMENT', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('status','STATUS', ${pageToRedirect})"></th>
@@ -36,6 +47,16 @@
 
 <th:block th:fragment="newspaper-additional-item-titles">
     <th scope="col">PAGES</th>
+</th:block>
+<th:block th:fragment="base-item-titles-with-sorting(pageToRedirect)">
+    <th scope="col">#</th>
+    <th scope="col">TYPE</th>
+    <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('category','CATEGORY', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('price','PRICE', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('quantity','QUANTITY', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('isAvailableInStore','AVAILABLE', ${pageToRedirect})"></th>
 </th:block>
 
 <th:block th:fragment="item-titles-with-sorting(pageToRedirect)">

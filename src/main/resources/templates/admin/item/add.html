@@ -4,7 +4,7 @@
     <script src="/utils.js"></script>
     <title>Add item</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link th:insert="blocks/bootstrap-css-style.html :: style">
+    <link th:insert="blocks/bootstrap-css-style.html :: additional-files">
     <link/>
 </head>
 <body>
@@ -63,7 +63,7 @@
                             <label for="itemPrice" class="form-label">Price</label>
                             <div class="input-group mb-3 has-validation">
                                 <span class="input-group-text">$</span>
-                                <input type="number" name="price" class="form-control" id="itemPrice" placeholder="0" required="">
+                                <input type="number" name="price" class="form-control" id="itemPrice" placeholder="0" min="0" required="">
                                 <div class="invalid-feedback">
                                     Item price is required.
                                 </div>
@@ -72,7 +72,7 @@
                         <div class="col-12">
                             <label for="itemQuantity" class="form-label">Quantity</label>
                             <div class="input-group mb-3 has-validation">
-                                <input type="number" name="quantity" class="form-control" id="itemQuantity" placeholder="1" required="">
+                                <input type="number" name="quantity" class="form-control" id="itemQuantity" placeholder="1" min="0" required="">
                                 <div class="invalid-feedback">
                                     Item quantity is required.
                                 </div>
@@ -88,6 +88,7 @@
                                 <label class="form-check-label" for="flexSwitchCheckChecked">Is available</label>
                             </div>
                         </div>
+
                         <small class="text-muted">Do not forget to fill all fields</small>
 
                     </div>

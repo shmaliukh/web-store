@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <script src="/formToJson.js"></script>
-    <title>Order view</title>
+    <title>Order edit</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link th:insert="blocks/bootstrap-css-style.html :: style">
+    <link th:insert="blocks/bootstrap-css-style.html :: additional-files">
     <link/>
 </head>
 <body>
@@ -38,6 +38,7 @@
                     <th scope="col">STATUS</th>
                     <th scope="col">COMMENT</th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -59,9 +60,6 @@
                                         th:title="${status.getValue()}">
                                 </option>
                             </select>
-<!--                            modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);-->
-<!--                            <input class="form-control align-middle" type="text" name="status"-->
-<!--                                   th:value="${order.getStatus()}">-->
                         </td>
                         <td class="align-middle">
                             <input class="form-control align-middle" type="text" name="comment"
@@ -71,6 +69,13 @@
                             <button class="btn btn-outline-success" type="submit">Edit order</button>
                         </td>
                     </form>
+                    <td class="align-middle">
+                        <a th:href="|@{/admin/user/view/}${order.getUser().getId()}|">
+                            <button type="button" class="w-100 btn btn-outline-secondary">
+                                View user
+                            </button>
+                        </a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -113,12 +118,15 @@
                               th:action="'/admin/order/edit/'+${order.getId()}+'/order-item/'+${orderItem.getOrderItemId()}"
                               method="post" class="needs-validation">
                             <td class="align-middle">
-                                <input th:id="'price'+${iterator.count}" class="form-control align-middle" type="number" name="price"
+                                <input th:id="'price'+${iterator.count}" class="form-control align-middle" type="number" name="price" min="0"
                                        th:value="${orderItem.getOrderItemPrice()}" th:readonly="${!orderItem.isActive()}">
                             </td>
                             <td class="align-middle">
                                 <input th:id="'quantity'+${iterator.count}" class="form-control align-middle" type="number" name="quantity"
-                                       th:value="${orderItem.getQuantity()}" th:readonly="${!orderItem.isActive()}">
+                                       th:value="${orderItem.getQuantity()}" th:readonly="${!orderItem.isActive()}" min="0"
+                                       th:max="${orderItem.getItem().isAvailableInStore()
+                                                    ? orderItem.getItem().getQuantity() + orderItem.getQuantity()
+                                                    : orderItem.getQuantity()}">
                             </td>
                             <td class="align-middle">
                                 <input th:id="'checkbox'+${iterator.count}" class="form-check-input"
@@ -156,6 +164,12 @@
         <th:block th:if="${orderItemList.size() == 0}">
             <p class="lead" th:text="|No order items|"></p>
         </th:block>
+
+        <a th:href="'/admin/order/'+${order.getId()}+'/add-item'">
+            <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                Add item
+            </button>
+        </a>
     </div>
 
 </div>

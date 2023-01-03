@@ -4,7 +4,7 @@
     <script src="/utils.js"></script>
     <title>Order view</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link th:insert="blocks/bootstrap-css-style.html :: style">
+    <link th:insert="blocks/bootstrap-css-style.html :: additional-files">
     <link/>
 </head>
 <body>
@@ -38,6 +38,7 @@
                     <th scope="col">STATUS</th>
                     <th scope="col">COMMENT</th>
                     <th scope="col">TOTAL</th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,6 +49,13 @@
                     <td class="align-middle" th:text="${order.getStatus()}">Status</td>
                     <td class="align-middle" th:text="${order.getComment()}">Comment</td>
                     <td class="align-middle" th:text="${totalOrderPrice}">Sum</td>
+                    <td class="align-middle">
+                        <a th:href="|@{/admin/user/view/}${order.getUser().getId()}|">
+                            <button type="button" class="w-100 btn btn-outline-secondary">
+                                View user
+                            </button>
+                        </a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -109,6 +117,7 @@
                     </tr>
                     </tbody>
                 </table>
+
                 <!--                TODO implement pagination               -->
                 <!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
             </div>
@@ -117,6 +126,14 @@
         <th:block th:if="${orderItemList.size() == 0}">
             <p class="lead" th:text="|No order items|"></p>
         </th:block>
+
+        <div>
+            <a th:href="'/admin/order/'+${order.getId()}+'/add-item'">
+                <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                    Add item
+                </button>
+            </a>
+        </div>
     </div>
 
 </div>

@@ -15,10 +15,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.*;
@@ -93,8 +90,8 @@ public class MainPageController {
                             @RequestHeader String referer,
                             @CookieValue(required = false,defaultValue = "0") Long userId){ // todo continue implementation of user id usage
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
-        Item item = itemRepository.getById(id);
-        cartService.addItemToCart(item,userId);
+        Optional<Item> optionalItem = actionsWithItem.findById(id);
+        optionalItem.ifPresent(item -> cartService.addItemToCart(item, userId));
         return "redirect:" + referer;
     }
 

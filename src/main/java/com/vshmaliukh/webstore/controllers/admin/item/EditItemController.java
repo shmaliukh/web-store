@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin.item;
 
+import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -30,7 +31,7 @@ public class EditItemController {
     @GetMapping("/{itemType}")
     public ModelAndView doGet(@RequestParam(required = false) String keyword,
                               @RequestParam(defaultValue = "1") int page,
-                              @RequestParam(defaultValue = "6") int size,
+                              @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
                               @RequestParam(defaultValue = "id,asc") String[] sort,
                               @PathVariable("itemType") String itemType,
                               ModelMap modelMap) {

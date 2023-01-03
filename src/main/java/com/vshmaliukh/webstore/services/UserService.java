@@ -1,31 +1,40 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
+import static com.vshmaliukh.webstore.login.LogInProvider.LOCAL;
+
 @Slf4j
 @Service
+@AllArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public Optional<User> readUserById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    public List<User> readAllUserList() {
+        return userRepository.findAll();
     }
 
     public boolean isAdminUser(Long userId) {
         User user = null;
-        Role userRole = null;
+        String userRole = null;
         if (userId != null) {
             user = userRepository.getUserById(userId);
             if (user != null) {
                 userRole = user.getRole();
-                String roleName = userRole.getName();
-                return roleName.equals("admin");
+                return userRole.equals("admin");
             }
         }
         log.warn("problem to check user 'role' // userId: '{}' // user: '{}'", userId, userRole);
@@ -59,6 +68,30 @@ public class UserService {
         return null;
     }
 
+
+    public User createBaseUser(String userName, String email, String role, boolean enabled) {
+        User user = new User();
+        user.setUsername(userName);
+        user.setEmail(email);
+        user.setRole(role);
+        user.setLogInProvider(LOCAL);
+        user.setEnabled(enabled);
+        user.setPassword("1234");
+        return user;
+    }
+
+    public void save(User user) {
+        if(user != null){
+            userRepository.save(user);
+        } else {
+            log.warn("user not saved // user == NULL");
+        }
+    }
+
+    public boolean isUserSaved(User user) {
+        return userRepository.existsById(user.getId());
+    }
+    
     public User getUserById(Long id){
         User user = userRepository.getUserById(id);
         if (user!=null){
