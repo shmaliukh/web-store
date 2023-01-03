@@ -37,29 +37,74 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="m-2 p-2">
         <div class="table-responsive-md">
             <table class="w-100 table table-striped">
-                <caption th:text="|${item.getTypeStr()} type table|"></caption>
+                <caption th:text="|Item ${item.getName()} table|"></caption>
                 <thead>
                 <tr class="table-dark">
                     <th:block th:insert="blocks/table-titles :: base-item-titles(${item.getTypeStr()})"></th:block>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td class="align-middle" th:text="${item.getTypeStr()}">Type</td>
-                    <td class="align-middle" th:text="${item.getId()}">Id</td>
-                    <td class="align-middle" th:text="${item.getCategory()}">Category</td>
-                    <td class="align-middle" th:text="${item.getName()}">Name</td>
-                    <td class="align-middle" th:text="${item.getPrice()}">Price</td>
-                    <td class="align-middle" th:text="${item.getQuantity()}">Quantity</td>
-                    <th:block th:insert="blocks/view-item-table-values :: ${item.getTypeStr()}"></th:block>
+                    <form id="formElem" class="needs-validation">
+                        <td class="align-middle" th:text="${item.getTypeStr()}">Type</td>
+                        <td class="align-middle" th:text="${item.getId()}">Id</td>
+                        <input type="hidden" th:value="${item.getId()}" name="item_id">
+                        <td class="align-middle">
+                            <input class="form-control align-middle" type="text" name="category"
+                                   th:value="${item.getCategory()}">
+                        </td>
+                        <td class="align-middle">
+                            <input class="form-control align-middle" type="text" name="name" th:value="${item.getName()}">
+                        </td>
+                        <td class="align-middle">
+                            <input class="form-control align-middle" type="number" name="price" min="0" th:value="${item.getPrice()}">
+                        </td>
+                        <td class="align-middle">
+                            <input class="form-control align-middle" type="number" name="quantity" min="0"
+                                   th:value="${item.getQuantity()}">
+                        </td>
+                        <th:block th:insert="blocks/edit-item-table-values :: ${item.getTypeStr()}"></th:block>
+                        <td class="align-middle">
+                            <input id="checkbox" class="form-check-input align-middle"
+                                   name="is_available_in_store" type="checkbox"
+                                   role="switch"
+                                   th:value="${item.isAvailableInStore()}"
+                                   th:checked="${item.isAvailableInStore()}">
+                            <th:block th:insert="blocks/generated-scripts :: checkBoxWithName(checkbox)"></th:block>
+                        </td>
+                        <td class="align-middle">
+                            <button class="btn btn-outline-success" type="submit">Save changes</button>
+                        </td>
+                        <script th:inline="javascript">
+                            formElem.onsubmit = async (e) => {
+                                e.preventDefault();
+                                fetchAddingItemFormWithJsonBodyWithItemClassType(
+                                    "formElem",
+                                    "/admin/item/add",
+                                    "post",
+                                    "/admin/item/details/" + [[${item.getId()}]],
+                                    [[${item.getTypeStr()}]]
+                                );
+                            };
+                        </script>
+                    </form>
                     <td>
-                        <input class="form-check-input align-middle" type="checkbox" name="isAvailableInStore"
-                               th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}"
-                               disabled>
+                        <button id="deleteButton" class="btn btn-outline-danger" type="submit">Delete item</button>
                     </td>
+                    <script th:inline="javascript">
+                        deleteButton.onclick = async (e) => {
+                            e.preventDefault();
+                            askToDelete(
+                                [[${item.getId()}]],
+                                "/admin/item/catalog/"
+                            );
+                        };
+                    </script>
                 </tr>
                 </tbody>
             </table>

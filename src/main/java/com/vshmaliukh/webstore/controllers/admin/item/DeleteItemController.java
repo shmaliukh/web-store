@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -52,13 +53,32 @@ public class DeleteItemController {
 
     @DeleteMapping
     public <T extends Item> ResponseEntity<Void> doDelete(@RequestBody T item) {
+        ResponseEntity<Void> responseEntity = getDeleteItemResponse(item);
+        if (responseEntity != null) {
+            return responseEntity;
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<Void> doDeleteById(@PathVariable Integer itemId) {
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
+        if (optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            ResponseEntity<Void> responseEntity = getDeleteItemResponse(item);
+            if (responseEntity != null) return responseEntity;
+            log.warn(" item '{}' not deleted from database", item);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    private ResponseEntity<Void> getDeleteItemResponse(Item item) {
         itemService.deleteItem(item);
         if (!itemService.isItemSaved(item)) {
             log.info("deleted item from database: '{}'", item);
             return ResponseEntity.ok().build();
         }
-        log.warn(" item '{}' not deleted from database", item);
-        return ResponseEntity.badRequest().build();
+        return null;
     }
 
 }

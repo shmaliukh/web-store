@@ -74,6 +74,14 @@ function askToDelete(formElemId, pageToSend, method, pageToRedirect, itemClassTy
     }
 }
 
+function askToDelete(itemId, pageToRedirect) {
+    if (window.confirm('Do you really want to delete item with ' + itemId + ' id')) {
+        fetch('/admin/item/delete/' + itemId, {
+            method: "DELETE",
+        }).then(informIfNotDeleted(pageToRedirect));
+    }
+}
+
 function fetchAddingItemFormWithJsonBodyWithItemClassType(formElemId, pageToSend, method, pageToRedirect, itemClassType) {
     generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType)
         .then(informAboutResult(formElemId, pageToRedirect, itemClassType));
