@@ -83,45 +83,6 @@ public class AdminItemController {
         return itemRepositoryProvider.getAllItemRepository();
     }
 
-    @GetMapping("/edit/{itemType}")
-    public ModelAndView doGetEdit(@RequestParam(required = false) String keyword,
-                                  @RequestParam(defaultValue = "1") int page,
-                                  @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                  @RequestParam(defaultValue = "id,asc") String[] sort,
-                                  @PathVariable("itemType") String itemType,
-                                  ModelMap modelMap) {
-        List<? extends Item> itemList = itemService.readAllItemsByTypeName(itemType);
-        if (itemList == null) {
-            return new ModelAndView("redirect:/admin/item/edit", modelMap);
-        }
-        BaseItemRepository<? extends Item> repositoryByItemClassName = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
-        itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, repositoryByItemClassName);
-
-        modelMap.addAttribute("itemType", itemType.toLowerCase());
-        modelMap.addAttribute("itemList", itemList);
-        return new ModelAndView("/admin/item/edit", modelMap);
-    }
-
-    @GetMapping("/delete/{itemType}")
-    public ModelAndView doGet(@RequestParam(required = false) String keyword,
-                              @RequestParam(defaultValue = "1") int page,
-                              @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                              @RequestParam(defaultValue = "id,asc") String[] sort,
-                              @PathVariable("itemType") String itemType,
-                              ModelMap modelMap) {
-        List<? extends Item> itemList = itemService.readAllItemsByTypeName(itemType);
-        if (itemList == null) {
-            return new ModelAndView("redirect:/admin/item/delete", modelMap);
-        }
-        BaseItemRepository<? extends Item> repositoryByItemClassName = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
-        itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, repositoryByItemClassName);
-
-        modelMap.addAttribute("itemType", itemType.toLowerCase());
-        modelMap.addAttribute("itemList", itemList);
-        return new ModelAndView("/admin/item/delete", modelMap);
-    }
-
-
     @DeleteMapping("/delete")
     public <T extends Item> ResponseEntity<Void> doDelete(@RequestBody T item) {
         ResponseEntity<Void> responseEntity = getDeleteItemResponse(item);

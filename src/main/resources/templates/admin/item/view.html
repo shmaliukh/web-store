@@ -13,7 +13,6 @@
     <h1 class="display-4">Item view panel</h1>
     <hr>
     <p class="lead" th:text="|${itemType.toUpperCase()} items view table|"></p>
-    <div th:insert="blocks/item-panel-menu.html :: view-menu"></div>
 </div>
 
 <div class="album py-5 bg-light text-center">
@@ -56,8 +55,10 @@
                 </table>
 
                 <th:block th:insert="blocks/navigation :: pagination('/admin/item/view/' + ${itemType})"></th:block>
-
             </div>
+
+            <!-- TODO implement 'add' item template -->
+            <div th:insert="blocks/item-panel-menu :: add-item-button"></div>
 
         </th:block>
         <th:block th:if="${itemList.isEmpty()}">

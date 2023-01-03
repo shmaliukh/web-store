@@ -40,14 +40,14 @@
                                     <a th:href="@{'/admin/item/view/'+${itemType.getKey().toLowerCase()}}">
                                         <button type="button" class="btn  btn-outline-secondary">View</button>
                                     </a>
-                                    <a th:href="@{'/admin/item/edit/'+${itemType.getKey().toLowerCase()}}">
-                                        <button type="button" class="btn  btn-outline-secondary">Edit</button>
-                                    </a>
+<!--                                    <a th:href="@{'/admin/item/edit/'+${itemType.getKey().toLowerCase()}}">-->
+                                        <button type="button" class="btn  btn-outline-secondary" disabled>Edit</button>
+<!--                                    </a>-->
                                 </div>
                                 <div>
-                                    <a th:href="@{'/admin/item/delete/'+${itemType.getKey().toLowerCase()}}">
-                                        <button type="button" class="btn  btn-outline-danger">Delete</button>
-                                    </a>
+<!--                                    <a th:href="@{'/admin/item/delete/'+${itemType.getKey().toLowerCase()}}">-->
+                                        <button type="button" class="btn  btn-outline-danger" disabled>Delete</button>
+<!--                                    </a>-->
                                 </div>
                             </div>
                         </div>
