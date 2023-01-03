@@ -35,7 +35,7 @@ public class ViewItemController {
                               @RequestParam(defaultValue = "id,asc") String[] sort,
                               @PathVariable("itemType") String itemType,
                               ModelMap modelMap) {
-        BaseItemRepository itemRepository = getItemRepository(itemType);
+        BaseItemRepository itemRepository = getItemRepositoryByItemType(itemType);
         List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository);
 
         modelMap.addAttribute("itemType", itemType.toLowerCase());
@@ -43,15 +43,13 @@ public class ViewItemController {
         return new ModelAndView("/admin/item/view", modelMap);
     }
 
-    private BaseItemRepository getItemRepository(String itemType) {
+    private BaseItemRepository getItemRepositoryByItemType(String itemType) {
         // TODO solve 'Raw use of parameterized class 'BaseItemRepository''
-        BaseItemRepository itemRepository;
-        if(itemType.equals("all")){
-            itemRepository = itemRepositoryProvider.getAllItemRepository();
-        } else {
-            itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
+        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
+        if(itemRepository != null){
+            return itemRepository;
         }
-        return itemRepository;
+        return itemRepositoryProvider.getAllItemRepository();
     }
 
 }
