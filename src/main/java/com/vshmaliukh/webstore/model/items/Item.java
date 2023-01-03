@@ -118,4 +118,8 @@ public abstract class Item extends AuditModel {
         }
     }
 
+    public String getTypeStr(){
+        return getClass().getSimpleName().toLowerCase();
+    }
+
 }
