@@ -13,4 +13,8 @@ public class UnauthorizedUserService {
 
     final UnauthorizedUserRepository unauthorizedUserRepository;
 
+    boolean existsById(Long id){
+        return unauthorizedUserRepository.existsById(id);
+    }
+
 }
