@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.UNAUTHORIZED_USER_TABLE;
 
@@ -19,6 +17,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.UNAUTHORIZED_USER_TAB
 public class UnauthorizedUser extends AuditModel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 }
