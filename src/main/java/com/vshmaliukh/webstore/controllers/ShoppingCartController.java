@@ -30,7 +30,7 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
 
 @Slf4j
 @Controller
-@RequestMapping("/" + SHOPPING_CART)
+@RequestMapping("/shopping-cart")
 @AllArgsConstructor
 public class ShoppingCartController {
 

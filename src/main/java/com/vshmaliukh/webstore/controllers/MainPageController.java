@@ -25,7 +25,7 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.*;
 
 @Controller
-@RequestMapping("/"+MAIN_PAGE)
+@RequestMapping("/main")
 @AllArgsConstructor
 public class MainPageController {
 
@@ -51,7 +51,7 @@ public class MainPageController {
 
     }
 
-    @GetMapping("/" + CATALOG_PAGE + "/{type}")
+    @GetMapping("/catalog/{type}")
     public ModelAndView showCatalogPage(ModelMap modelMap,
                                         @PathVariable String type){
 
@@ -74,7 +74,7 @@ public class MainPageController {
         return itemList;
     }
 
-    @GetMapping("/" + CATALOG_PAGE + "/{type}/{id}")
+    @GetMapping("/catalog/{type}/{id}")
     public ModelAndView showItemPage(ModelMap modelMap,
                                      @PathVariable String type,
                                      @PathVariable Long id){
@@ -89,7 +89,7 @@ public class MainPageController {
         return new ModelAndView(ITEM_PAGE_VIEW,modelMap);
     }
 
-    @PostMapping("/" + CATALOG_PAGE + "/{type}/{id}")
+    @PostMapping("/catalog/{type}/{id}")
     public String addToCart(@PathVariable String type,
                             @PathVariable Integer id,
                             @RequestHeader String referer, HttpServletResponse response,
