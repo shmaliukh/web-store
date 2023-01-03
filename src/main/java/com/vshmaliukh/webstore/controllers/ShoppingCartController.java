@@ -34,7 +34,7 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
 @AllArgsConstructor
 public class ShoppingCartController {
 
-    CookieHandler cookieHandler;
+    final CookieHandler cookieHandler = new CookieHandler();
 
     final ItemService itemService;
     final UserService userService;

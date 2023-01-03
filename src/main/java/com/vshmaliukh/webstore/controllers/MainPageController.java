@@ -93,7 +93,7 @@ public class MainPageController {
     public String addToCart(@PathVariable String type,
                             @PathVariable Integer id,
                             @RequestHeader String referer, HttpServletResponse response,
-                            @CookieValue(required = false,defaultValue = "0") Long userId){ // todo continue implementation of user id usage
+                            @CookieValue(required = false,defaultValue = "0") Long userId){
         if(userId==0){
             userId = unauthorizedUserService.createUnauthorizedUser().getId();
             response.addCookie(new CookieHandler().createUserIdCookie(userId));
