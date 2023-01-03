@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UnauthorizedUserRepository extends JpaRepository<UnauthorizedUser, Long> {
 
-
+    boolean existsById(Long id);
 
 }
