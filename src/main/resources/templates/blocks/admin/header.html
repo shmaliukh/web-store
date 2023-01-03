@@ -1,0 +1,45 @@
+<div th:fragment="header">
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
+         aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">MENU</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="container">
+                <div class="row mt-5 mb-5">
+                    <a th:href="@{/admin/item/catalog}">
+                        <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                            Item panel
+                        </button>
+                    </a>
+                    <a th:href="@{/admin/order/catalog}">
+                        <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                            Order panel
+                        </button>
+                    </a>
+                    <a th:href="@{/admin/user/catalog}">
+                        <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block">
+                            User panel
+                        </button>
+                    </a>
+                    <a th:href="@{/admin/exit}">
+                        <button type="button" class="w-100 btn btn-outline-danger btn-lg btn-block">
+                            Exit
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-dark fixed-top bg-dark gy-5">
+        <div class="container">
+            <button class="navbar-toggler ml-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"
+                    aria-controls="offcanvasWithBothOptions" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand text-white" th:href="@{/admin/home}">Admin home</a>
+        </div>
+    </nav>
+</div>
