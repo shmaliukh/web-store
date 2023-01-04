@@ -25,8 +25,8 @@ public class ImageController {
     public ResponseEntity<byte[]> showProductImage(@PathVariable Long id) {
         Optional<Image> optionalImage = imageService.getImageById(id);
         if (optionalImage.isPresent()) {
-            Image image = optionalImage.get();
-            byte[] compressedImageData = image.getImageData();
+            Image itemImage = optionalImage.get();
+            byte[] compressedImageData = itemImage.getImageData();
             byte[] decompressedImage = ImageUtil.decompressImage(compressedImageData);
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_PNG)
@@ -39,8 +39,8 @@ public class ImageController {
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
         Optional<Image> optionalImage = imageService.getImageById(id);
         if (optionalImage.isPresent()) {
-            Image image = optionalImage.get();
-            imageService.deleteImage(image);
+            Image itemImage = optionalImage.get();
+            imageService.deleteImage(itemImage);
             return ResponseEntity.ok().build();
         }
         log.warn("not found image by '{}' id to delete", id);

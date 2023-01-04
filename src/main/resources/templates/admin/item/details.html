@@ -127,7 +127,7 @@
 
     <hr>
 
-    <th:block th:unless="${imageList.isEmpty()}">
+    <th:block th:unless="${itemImageList.isEmpty()}">
         <div class="m-2">
             <div class="table-responsive-md">
                 <table class="w-100 table table-striped">
@@ -140,31 +140,32 @@
                         <th scope="col">NAME</th>
                         <th scope="col">SIZE</th>
                         <th scope="col">IMAGE</th>
-                        <th colspan="2">TOOLS</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="image, iterator: ${imageList}">
+                    <tr th:each="itemImage, iterator: ${itemImageList}">
                         <td class="align-middle" th:text="${iterator.count}">#</td>
-                        <td class="align-middle" th:text="${image.getId()}">ID</td>
-                        <td class="align-middle" th:text="${image.getUpdatedAt()}">UPDATED</td>
-                        <td class="align-middle" th:text="${image.getName()}">NAME</td>
-                        <td class="align-middle" th:text="${image.getImageData().length}">SIZE</td>
+                        <td class="align-middle" th:text="${itemImage.getId()}">ID</td>
+                        <td class="align-middle" th:text="${itemImage.getUpdatedAt()}">UPDATED</td>
+                        <td class="align-middle" th:text="${itemImage.getName()}">NAME</td>
+                        <td class="align-middle" th:text="${itemImage.getImageData().length}">SIZE</td>
                         <td class="align-middle">
-                            <img th:src="|@{/image/}${image.getId()}|"
-                                 th:alt="${image.getName()}"
+                            <img th:src="|@{/image/}${itemImage.getId()}|"
+                                 th:alt="${itemImage.getName()}"
                                  height="220">
                         </td>
 
                         <td class="align-middle">
-                            <button th:id="${'deleteImageButton'+image.getId()}" type="button" class="w-100 btn btn-outline-danger">
+                            <button th:id="${'deleteImageButton'+itemImage.getId()}" type="button" class="w-100 btn btn-outline-danger">
                                 Delete
                             </button>
                             <script th:inline="javascript">
-                                document.getElementById([[${'deleteImageButton'+image.getId()}]]).onclick = async (e) => {
+                                document.getElementById([[${'deleteImageButton'+itemImage.getId()}]]).onclick = async (e) => {
                                     e.preventDefault();
                                     askToDelete(
-                                        [[${'/image/'+image.getId()}]],
+                                        [[${'/image/'+itemImage.getId()}]],
                                         [[${'/admin/item/details/'+item.getId()}]]
                                     );
                                 };

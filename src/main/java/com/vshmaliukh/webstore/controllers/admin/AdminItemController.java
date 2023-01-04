@@ -2,7 +2,7 @@ package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
-import com.vshmaliukh.webstore.model.Image;
+import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -53,10 +53,10 @@ public class AdminItemController {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
-            List<Image> imageList = imageService.findImageListByItem(item);
+            List<ItemImage> itemImageList = imageService.findImageListByItem(item);
 
             modelMap.addAttribute("item", item);
-            modelMap.addAttribute("imageList", imageList);
+            modelMap.addAttribute("itemImageList", itemImageList);
             return new ModelAndView("/admin/item/details", modelMap);
         }
         log.warn("problem to generate '/item/details/{}' template // not found item with '{}' id", itemId, itemId);

@@ -1,26 +1,32 @@
 package com.vshmaliukh.webstore.model;
 
-
-import com.vshmaliukh.webstore.model.items.Item;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+
 import java.util.Arrays;
+
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
+
 
 @Slf4j
 @Getter
 @Setter
-@Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "image_gallery")
-public class Image extends AuditModel {
+@Entity(name = "image")
+@Inheritance(strategy = InheritanceType.JOINED)
+@JsonTypeInfo(use = NAME, include = PROPERTY)
+@JsonSubTypes({@JsonSubTypes.Type(value = ItemImage.class, name = "itemImage")})
+public class Image extends AuditModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "img_gallery_id", nullable = false)
+    @Column(name = "img_id", nullable = false)
     private Long id;
 
     private String name;
@@ -30,9 +36,6 @@ public class Image extends AuditModel {
     @ToString.Exclude
     @Column(name = "image", length = Integer.MAX_VALUE)
     private byte[] imageData;
-
-    @ManyToOne
-    private Item item;
 
     @Override
     public boolean equals(Object o) {
@@ -44,8 +47,7 @@ public class Image extends AuditModel {
         if (getId() != null ? !getId().equals(image.getId()) : image.getId() != null) return false;
         if (getName() != null ? !getName().equals(image.getName()) : image.getName() != null) return false;
         if (getType() != null ? !getType().equals(image.getType()) : image.getType() != null) return false;
-        if (!Arrays.equals(getImageData(), image.getImageData())) return false;
-        return getItem() != null ? getItem().equals(image.getItem()) : image.getItem() == null;
+        return Arrays.equals(getImageData(), image.getImageData());
     }
 
     @Override
@@ -54,7 +56,6 @@ public class Image extends AuditModel {
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + (getType() != null ? getType().hashCode() : 0);
         result = 31 * result + Arrays.hashCode(getImageData());
-        result = 31 * result + (getItem() != null ? getItem().hashCode() : 0);
         return result;
     }
 

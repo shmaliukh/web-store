@@ -2,8 +2,10 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.ImageUtil;
 import com.vshmaliukh.webstore.model.Image;
+import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ImageRepository;
+import com.vshmaliukh.webstore.repositories.ItemImageRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,22 +22,25 @@ import java.util.Optional;
 public class ImageService {
 
     final ImageRepository imageRepository;
+    final ItemImageRepository itemImageRepository;
 
     public void saveImage(Image image) {
         imageRepository.save(image);
     }
 
-    public Optional<Image> formImageFromFile(Item item, MultipartFile file) {
+    public Optional<ItemImage> formItemImageFromFile(Item item, MultipartFile file) {
         try {
             String filename = file.getOriginalFilename();
             String fileContentType = file.getContentType();
             byte[] compressedImage = ImageUtil.compressImage(file.getBytes());
-            return Optional.ofNullable(Image.builder()
-                    .item(item)
-                    .name(filename)
-                    .type(fileContentType)
-                    .imageData(compressedImage)
-                    .build());
+
+            ItemImage itemImage = new ItemImage();
+            itemImage.setItem(item);
+            itemImage.setName(filename);
+            itemImage.setType(fileContentType);
+            itemImage.setImageData(compressedImage);
+
+            return Optional.of(itemImage);
         } catch (IOException e) {
             log.error("problem to save '{}' image to database", file);
             return Optional.empty();
@@ -46,17 +51,17 @@ public class ImageService {
         return imageRepository.findById(id);
     }
 
-    public List<Image> findImageListByItem(Item item) {
-        List<Image> imagesByItem = imageRepository.findImagesByItem(item);
+    public List<ItemImage> findImageListByItem(Item item) {
+        List<ItemImage> imagesByItem = itemImageRepository.findImagesByItem(item);
         return imagesByItem != null
                 ? imagesByItem
                 : Collections.emptyList();
     }
 
-    public void deleteImage(Image image) {
-        if (image != null) {
-            imageRepository.delete(image);
-            log.info("deleted '{}' image", image);
+    public void deleteImage(Image Image) {
+        if (Image != null) {
+            imageRepository.delete(Image);
+            log.info("deleted '{}' image", Image);
         }
         log.warn("image not deleted // image == NULL");
     }

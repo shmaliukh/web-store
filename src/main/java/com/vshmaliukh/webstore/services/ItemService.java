@@ -1,6 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
-import com.vshmaliukh.webstore.model.Image;
+import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -26,10 +26,10 @@ public class ItemService {
         Optional<Item> optionalItem = readItemById(itemId);
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
-            Optional<Image> optionalImage = imageService.formImageFromFile(item, file);
+            Optional<ItemImage> optionalImage = imageService.formItemImageFromFile(item, file);
             if (optionalImage.isPresent()) {
-                Image imageToSave = optionalImage.get();
-                imageService.saveImage(imageToSave);
+                ItemImage itemImageToSave = optionalImage.get();
+                imageService.saveImage(itemImageToSave);
             }
         } else {
             log.warn("image not added to item with '{}'", itemId);
