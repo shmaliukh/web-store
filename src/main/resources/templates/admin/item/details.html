@@ -111,6 +111,36 @@
         </div>
     </div>
 
+    <th:block th:unless="${item.getImageList().isEmpty()}">
+        <div class="m-2 p-2">
+            <div class="table-responsive-md">
+                <table class="w-100 table table-striped">
+                    <caption th:text="|Item images table|"></caption>
+                    <thead>
+                    <tr class="table-dark">
+                        <!--                        <th:block th:insert="blocks/table-titles :: base-item-titles(${item.getTypeStr()})"></th:block>-->
+                        <th scope="col">#</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col">IMAGE</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="image, iterator: ${item.getImageList()}">
+                        <td class="align-middle" th:text="${iterator}">#</td>
+                        <td class="align-middle" th:text="${item.getTypeStr()}">NAME</td>
+                        <td class="align-middle">
+                            <img class="card-img-top"
+                                 th:src="|@{/image/}@{image.getId()}|"
+                                 th:alt="${image.getName()}"
+                                 height="400">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+
 </div>
 
 <footer th:insert="blocks/page-blocks.html :: footer"></footer>
