@@ -111,7 +111,7 @@
         </div>
     </div>
 
-    <th:block th:unless="true">
+    <th:block th:unless="${imageList.isEmpty()}">
         <div class="m-2 p-2">
             <div class="table-responsive-md">
                 <table class="w-100 table table-striped">
@@ -126,11 +126,11 @@
                     </thead>
                     <tbody>
                     <tr th:each="image, iterator: ${imageList}">
-                        <td class="align-middle" th:text="${iterator}">#</td>
+                        <td class="align-middle" th:text="${iterator.count}">#</td>
                         <td class="align-middle" th:text="${image.getName()}">NAME</td>
                         <td class="align-middle">
                             <img class="card-img-top"
-                                 th:src="|@{/image/}@{image.getId()}|"
+                                 th:src="|@{/image/}${image.getId()}|"
                                  th:alt="${image.getName()}"
                                  height="400">
                         </td>

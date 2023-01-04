@@ -53,7 +53,7 @@ public class AdminItemController {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
-            List<Image> imageList = item.getImageList();
+            List<Image> imageList = imageService.findImageListByItem(item);
 
             modelMap.addAttribute("item", item);
             modelMap.addAttribute("imageList", imageList);
@@ -148,22 +148,12 @@ public class AdminItemController {
         return ResponseEntity.badRequest().build();
     }
 
-//    @PutMapping("/{itemId}/image")
     @PostMapping("/{itemId}/image")
-    ResponseEntity<Void> uploadImage(@PathVariable Integer itemId,
-                                     @RequestParam("imageFile") MultipartFile imageFile) {
+    ModelAndView uploadImage(@PathVariable Integer itemId,
+                             @RequestParam("imageFile") MultipartFile imageFile,
+                             ModelMap modelMap) {
         itemService.addImageToItem(itemId, imageFile);
-        Optional<Item> optionalItem = itemService.readItemById(itemId);
-        Optional<Image> optionalImage = imageService.formImageFromFile(imageFile);
-        if (optionalItem.isPresent() && optionalImage.isPresent()) {
-            Item item = optionalItem.get();
-            Image image = optionalImage.get();
-            List<Image> imageList = item.getImageList();
-            if (imageList.contains(image)) {
-                return ResponseEntity.ok().build();
-            }
-        }
-        return ResponseEntity.badRequest().build();
+        return new ModelAndView("redirect:/admin/item/details/" + itemId, modelMap);
     }
 
 }

@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.ImageUtil;
 import com.vshmaliukh.webstore.model.Image;
+import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ImageRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -22,12 +25,13 @@ public class ImageService {
         imageRepository.save(image);
     }
 
-    public Optional<Image> formImageFromFile(MultipartFile file) {
+    public Optional<Image> formImageFromFile(Item item, MultipartFile file) {
         try {
             String filename = file.getOriginalFilename();
             String fileContentType = file.getContentType();
             byte[] compressedImage = ImageUtil.compressImage(file.getBytes());
             return Optional.ofNullable(Image.builder()
+                    .item(item)
                     .name(filename)
                     .type(fileContentType)
                     .imageData(compressedImage)
@@ -42,8 +46,24 @@ public class ImageService {
         return imageRepository.findById(id);
     }
 
-    public boolean isImageExists(Image image) {
-        return imageRepository.existsById(image.getId());
+    public boolean isSavedImage(Image image) {
+        if(image != null){
+            Long imageId = image.getId();
+            if(imageId != null){
+                Optional<Image> optionalImage = imageRepository.findById(imageId);
+                if(optionalImage.isPresent()){
+                    return image.equals(optionalImage.get());
+                }
+            }
+        }
+        return false;
+    }
+
+    public List<Image> findImageListByItem(Item item) {
+        List<Image> imagesByItem = imageRepository.findImagesByItem(item);
+        return imagesByItem != null
+                ? imagesByItem
+                : Collections.emptyList();
     }
 
 }

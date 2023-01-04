@@ -26,14 +26,13 @@ public class ItemService {
         Optional<Item> optionalItem = readItemById(itemId);
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
-            Optional<Image> optionalImage = imageService.formImageFromFile(file);
+            Optional<Image> optionalImage = imageService.formImageFromFile(item, file);
             if (optionalImage.isPresent()) {
                 Image imageToSave = optionalImage.get();
-                List<Image> itemImageList = item.getImageList();
-                itemImageList.add(imageToSave);
-                item.setImageList(itemImageList);
-                saveItem(item);
+                imageService.saveImage(imageToSave);
             }
+        } else {
+            log.warn("image not added to item with '{}'", itemId);
         }
     }
 
