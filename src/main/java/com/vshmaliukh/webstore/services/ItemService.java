@@ -24,10 +24,10 @@ public class ItemService {
 
     public void addImageToItem(Integer itemId, MultipartFile file) {
         Optional<Item> optionalItem = readItemById(itemId);
-        if(optionalItem.isPresent()){
+        if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
             Optional<Image> optionalImage = imageService.formImageFromFile(file);
-            if(optionalImage.isPresent()){
+            if (optionalImage.isPresent()) {
                 Image imageToSave = optionalImage.get();
                 List<Image> itemImageList = item.getImageList();
                 itemImageList.add(imageToSave);

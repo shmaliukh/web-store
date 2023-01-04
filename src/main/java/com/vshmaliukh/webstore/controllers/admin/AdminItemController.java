@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -148,14 +149,19 @@ public class AdminItemController {
     @PutMapping("/{itemId}/image")
     @PostMapping("/{itemId}/image")
     ResponseEntity<Void> uploadImage(@PathVariable Integer itemId,
-                                     @RequestParam("image") MultipartFile file) {
-        itemService.addImageToItem(itemId, file);
-
-        return ResponseEntity.ok().build();
-
-//        return ResponseEntity.badRequest().build();
+                                     @RequestParam("imageFile") MultipartFile imageFile) {
+        itemService.addImageToItem(itemId, imageFile);
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
+        Optional<Image> optionalImage = imageService.formImageFromFile(imageFile);
+        if (optionalItem.isPresent() && optionalImage.isPresent()) {
+            Item item = optionalItem.get();
+            Image image = optionalImage.get();
+            List<Image> imageList = item.getImageList();
+            if (imageList.contains(image)) {
+                return ResponseEntity.ok().build();
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
-
-
 
 }
