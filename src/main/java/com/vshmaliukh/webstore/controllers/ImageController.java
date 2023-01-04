@@ -1,60 +1,50 @@
 package com.vshmaliukh.webstore.controllers;
 
+import com.vshmaliukh.webstore.ImageUtil;
 import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.services.ImageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
-@RestController
+@RestController("/image")
 @AllArgsConstructor
 public class ImageController {
 
     final ImageService imageService;
 
-//    @GetMapping("/image/{id}")
-//    public ResponseEntity<byte[]> showProductImage(@PathVariable Long id) {
-//        Optional<Image> optionalImage = imageService.getImageById(id);
-//        if (optionalImage.isPresent()) {
-//            Image image = optionalImage.get();
-//            byte[] imageData = image.getImageData();
-//            final HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.IMAGE_PNG);
-////            headers.setContentType(MediaType.IMAGE_JPEG);
-////            headers.setContentType(MediaType.IMAGE_GIF);
-//            return new ResponseEntity (imageData, headers, HttpStatus.OK);
-////            return ResponseEntity.ok()
-////                    .contentType(MediaType.IMAGE_JPEG)
-////                    .contentType(MediaType.IMAGE_PNG)
-////                    .contentType(MediaType.IMAGE_GIF)
-////                    .body(imageData);
-//        }
-//        return ResponseEntity.badRequest().build();
-//    }
-
-
-    @ResponseBody
-    @GetMapping("/image/{id}")
-    void showImage(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+    @GetMapping("/{id}")
+    public ResponseEntity<byte[]> showProductImage(@PathVariable Long id) {
         Optional<Image> optionalImage = imageService.getImageById(id);
         if (optionalImage.isPresent()) {
-
             Image image = optionalImage.get();
-            byte[] imageData = image.getImageData();
-
-            response.setContentType(MediaType.IMAGE_PNG_VALUE);
-            response.getOutputStream().write(imageData);
-            response.getOutputStream().close();
+            byte[] compressedImageData = image.getImageData();
+            byte[] decompressedImage = ImageUtil.decompressImage(compressedImageData);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_PNG)
+                    .body(decompressedImage);
         }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
+        Optional<Image> optionalImage = imageService.getImageById(id);
+        if (optionalImage.isPresent()) {
+            Image image = optionalImage.get();
+            imageService.deleteImage(image);
+            return ResponseEntity.ok().build();
+        }
+        log.warn("not found image by '{}' id to delete", id);
+        return ResponseEntity.badRequest().build();
     }
 
 }

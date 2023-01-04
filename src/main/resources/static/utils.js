@@ -61,22 +61,17 @@ function informIfNotDeleted(pageToRedirect) {
     };
 }
 
-function askToDelete(formElemId, pageToSend, method, pageToRedirect, itemClassType) {
-    let prettyItemJsonStr = getPrettyItemJsonStr(itemClassType, formElemId);
-    if (window.confirm('Do you really want to delete: \n' + prettyItemJsonStr)) {
-        fetch(pageToSend, {
-            method: method,
-            body: generateJsonBodyWithType(formElemId, itemClassType),
-            headers: {
-                "Content-Type": "application/json"
-            }
+function askToDeleteItem(itemId, pageToRedirect) {
+    if (window.confirm('Do you really want to delete item with ' + itemId + ' id')) {
+        fetch('/admin/item/delete/' + itemId, {
+            method: "DELETE",
         }).then(informIfNotDeleted(pageToRedirect));
     }
 }
 
-function askToDelete(itemId, pageToRedirect) {
-    if (window.confirm('Do you really want to delete item with ' + itemId + ' id')) {
-        fetch('/admin/item/delete/' + itemId, {
+function askToDelete(pageToDoDelete, pageToRedirect) {
+    if (window.confirm('Do you really want to delete')) {
+        fetch(pageToDoDelete, {
             method: "DELETE",
         }).then(informIfNotDeleted(pageToRedirect));
     }
@@ -85,9 +80,5 @@ function askToDelete(itemId, pageToRedirect) {
 function fetchAddingItemFormWithJsonBodyWithItemClassType(formElemId, pageToSend, method, pageToRedirect, itemClassType) {
     generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType)
         .then(informAboutResult(formElemId, pageToRedirect, itemClassType));
-}
-
-function fetchDeletingItemFormWithJsonBodyWithItemClassType(formElemId, pageToSend, method, pageToRedirect, itemClassType) {
-    askToDelete(formElemId, pageToSend, method, pageToRedirect, itemClassType);
 }
 

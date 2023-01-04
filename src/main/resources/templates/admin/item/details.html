@@ -99,7 +99,7 @@
                     <script th:inline="javascript">
                         deleteButton.onclick = async (e) => {
                             e.preventDefault();
-                            askToDelete(
+                            askToDeleteItem(
                                 [[${item.getId()}]],
                                 "/admin/item/catalog/"
                             );
@@ -118,21 +118,39 @@
                     <caption th:text="|Item images table|"></caption>
                     <thead>
                     <tr class="table-dark">
-                        <!--                        <th:block th:insert="blocks/table-titles :: base-item-titles(${item.getTypeStr()})"></th:block>-->
                         <th scope="col">#</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">UPDATED</th>
                         <th scope="col">NAME</th>
                         <th scope="col">IMAGE</th>
+                        <th colspan="2">TOOLS</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="image, iterator: ${imageList}">
                         <td class="align-middle" th:text="${iterator.count}">#</td>
+                        <td class="align-middle" th:text="${image.getId()}">ID</td>
+                        <td class="align-middle" th:text="${image.getUpdatedAt()}">UPDATED</td>
                         <td class="align-middle" th:text="${image.getName()}">NAME</td>
                         <td class="align-middle">
-                            <img class="card-img-top"
-                                 th:src="|@{/image/}${image.getId()}|"
+                            <img th:src="|@{/image/}${image.getId()}|"
                                  th:alt="${image.getName()}"
-                                 height="400">
+                                 height="250">
+                        </td>
+                        <td>
+                                <button type="button" class="w-100 btn btn-outline-danger">
+                                    Delete
+                                </button>
+
+                            <script th:inline="javascript">
+                                deleteButton.onclick = async (e) => {
+                                    e.preventDefault();
+                                    askToDelete(
+                                        [[${'/image/'+image.getId()}]],
+                                        [[${'/admin/item/details/'+item.getId()}]]
+                                    );
+                                };
+                            </script>
                         </td>
                     </tr>
                     </tbody>
@@ -145,7 +163,7 @@
         <div class="row">
             <div class="col-md-8 mx-auto">
                 <h2>Upload Image</h2>
-                <form method="post" th:action="@{/admin/item/${item.getId()}/image}" enctype="multipart/form-data">
+                <form method="post" th:action="|@{/admin/item/}${item.getId()}@{/image}|" enctype="multipart/form-data">
                     <div class="form-group">
                         <input type="file" name="imageFile" accept="image/*" class="form-control-file">
                     </div>
