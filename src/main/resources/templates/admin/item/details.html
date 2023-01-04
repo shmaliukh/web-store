@@ -111,6 +111,16 @@
         </div>
     </div>
 
+    <div class="container">
+        <h2>Upload Image</h2>
+        <form method="post" th:action="|@{/admin/item/}${item.getId()}@{/image}|" enctype="multipart/form-data">
+            <div class="form-group w-100">
+                <input type="file" name="imageFile" accept="image/*" class="form-control-file">
+                <button type="submit" class="btn btn-outline-secondary">Upload image</button>
+            </div>
+        </form>
+    </div>
+
     <th:block th:unless="${imageList.isEmpty()}">
         <div class="m-2 p-2">
             <div class="table-responsive-md">
@@ -142,8 +152,7 @@
                                 Delete
                             </button>
                             <script th:inline="javascript">
-                                let button = document.getElementById([[${'deleteImageButton'+image.getId()}]]);
-                                button.onclick = async (e) => {
+                                document.getElementById([[${'deleteImageButton'+image.getId()}]]).onclick = async (e) => {
                                     e.preventDefault();
                                     askToDelete(
                                         [[${'/image/'+image.getId()}]],
@@ -158,20 +167,6 @@
             </div>
         </div>
     </th:block>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 mx-auto">
-                <h2>Upload Image</h2>
-                <form method="post" th:action="|@{/admin/item/}${item.getId()}@{/image}|" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <input type="file" name="imageFile" accept="image/*" class="form-control-file">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Upload image</button>
-                </form>
-            </div>
-        </div>
-    </div>
 
 </div>
 
