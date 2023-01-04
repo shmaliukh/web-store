@@ -5,6 +5,7 @@ import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
+import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,13 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 
 @Slf4j
 @Controller
@@ -28,7 +29,7 @@ public class AdminItemController {
 
     final ItemService itemService;
     final ItemRepositoryProvider itemRepositoryProvider;
-
+    final ImageService imageService;
 
     @GetMapping("/**")
     public ModelAndView doRedirectToCatalog(ModelMap modelMap) {
@@ -61,11 +62,11 @@ public class AdminItemController {
 
     @GetMapping("/view/{itemType}")
     public ModelAndView doGetView(@RequestParam(required = false) String keyword,
-                              @RequestParam(defaultValue = "1") int page,
-                              @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                              @RequestParam(defaultValue = "id,asc") String[] sort,
-                              @PathVariable("itemType") String itemType,
-                              ModelMap modelMap) {
+                                  @RequestParam(defaultValue = "1") int page,
+                                  @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
+                                  @RequestParam(defaultValue = "id,asc") String[] sort,
+                                  @PathVariable("itemType") String itemType,
+                                  ModelMap modelMap) {
         BaseItemRepository itemRepository = getItemRepositoryByItemType(itemType);
         List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository);
 
@@ -125,16 +126,16 @@ public class AdminItemController {
     }
 
     @PostMapping("/add")
-    public <T extends Item> ModelAndView doPost(@CookieValue(defaultValue = "0") Long userId,
-                                                @RequestBody T item,
-                                                ModelMap modelMap) {
-        addItem(userId, item);
+    public <T extends Item> ModelAndView doPostAddItem(@CookieValue(defaultValue = "0") Long userId,
+                                                       @RequestBody T item,
+                                                       ModelMap modelMap) {
+        doPutAddItem(userId, item);
         return new ModelAndView("redirect:/home", modelMap);
     }
 
     @PutMapping("/add")
-    <T extends Item> ResponseEntity<Void> addItem(@CookieValue(defaultValue = "0") Long userId,
-                                                  @RequestBody T item) {
+    <T extends Item> ResponseEntity<Void> doPutAddItem(@CookieValue(defaultValue = "0") Long userId,
+                                                       @RequestBody T item) {
         itemService.saveItem(item);
         if (itemService.isItemSaved(item)) {
             log.info("saved item to database: '{}'", item);
@@ -143,5 +144,18 @@ public class AdminItemController {
         log.warn("userId: '{}' // item '{}' not added to database", userId, item);
         return ResponseEntity.badRequest().build();
     }
+
+    @PutMapping("/{itemId}/image")
+    @PostMapping("/{itemId}/image")
+    ResponseEntity<Void> uploadImage(@PathVariable Integer itemId,
+                                     @RequestParam("image") MultipartFile file) {
+        itemService.addImageToItem(itemId, file);
+
+        return ResponseEntity.ok().build();
+
+//        return ResponseEntity.badRequest().build();
+    }
+
+
 
 }

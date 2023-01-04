@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -7,6 +8,7 @@ import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRe
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,22 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     final ItemRepositoryProvider itemRepositoryProvider;
+    final ImageService imageService;
+
+    public void addImageToItem(Integer itemId, MultipartFile file) {
+        Optional<Item> optionalItem = readItemById(itemId);
+        if(optionalItem.isPresent()){
+            Item item = optionalItem.get();
+            Optional<Image> optionalImage = imageService.formImageFromFile(file);
+            if(optionalImage.isPresent()){
+                Image imageToSave = optionalImage.get();
+                List<Image> itemImageList = item.getImageList();
+                itemImageList.add(imageToSave);
+                item.setImageList(itemImageList);
+                saveItem(item);
+            }
+        }
+    }
 
     public Optional<Item> readItemById(Integer itemId) {
         ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
