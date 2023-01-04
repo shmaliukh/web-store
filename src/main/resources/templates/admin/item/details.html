@@ -145,7 +145,7 @@
         <div class="row">
             <div class="col-md-8 mx-auto">
                 <h2>Upload Image</h2>
-                <form method="post" th:action="|@{/admin/item/}${item.getId()}/image|" enctype="multipart/form-data">
+                <form method="post" th:action="@{/admin/item/${item.getId()}/image}" enctype="multipart/form-data">
                     <div class="form-group">
                         <input type="file" name="imageFile" accept="image/*" class="form-control-file">
                     </div>

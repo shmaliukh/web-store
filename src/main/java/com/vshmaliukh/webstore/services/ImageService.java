@@ -46,19 +46,6 @@ public class ImageService {
         return imageRepository.findById(id);
     }
 
-    public boolean isSavedImage(Image image) {
-        if(image != null){
-            Long imageId = image.getId();
-            if(imageId != null){
-                Optional<Image> optionalImage = imageRepository.findById(imageId);
-                if(optionalImage.isPresent()){
-                    return image.equals(optionalImage.get());
-                }
-            }
-        }
-        return false;
-    }
-
     public List<Image> findImageListByItem(Item item) {
         List<Image> imagesByItem = imageRepository.findImagesByItem(item);
         return imagesByItem != null
