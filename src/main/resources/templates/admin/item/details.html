@@ -149,11 +149,11 @@
                         <td class="align-middle" th:text="${image.getId()}">ID</td>
                         <td class="align-middle" th:text="${image.getUpdatedAt()}">UPDATED</td>
                         <td class="align-middle" th:text="${image.getName()}">NAME</td>
-                        <td class="align-middle" th:text="${image.getImageData().length}">NAME</td>
+                        <td class="align-middle" th:text="${image.getImageData().length}">SIZE</td>
                         <td class="align-middle">
                             <img th:src="|@{/image/}${image.getId()}|"
                                  th:alt="${image.getName()}"
-                                 height="250">
+                                 height="220">
                         </td>
 
                         <td class="align-middle">

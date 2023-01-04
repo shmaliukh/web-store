@@ -27,6 +27,7 @@ public class Image extends AuditModel {
     private String type;
 
     @Lob
+    @ToString.Exclude
     @Column(name = "image", length = Integer.MAX_VALUE)
     private byte[] imageData;
 
