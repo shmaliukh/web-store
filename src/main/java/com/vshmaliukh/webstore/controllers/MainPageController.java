@@ -13,6 +13,7 @@ import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UnauthorizedUserService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.*;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.*;
 
+@Slf4j
 @Controller
 @RequestMapping("/main")
 @AllArgsConstructor
@@ -52,17 +54,25 @@ public class MainPageController {
     }
 
     @GetMapping("/catalog/{type}")
-    public ModelAndView showCatalogPage(ModelMap modelMap,
-                                        @PathVariable String type){
+    public String showCatalogPage(ModelMap modelMap,
+                                  @RequestHeader String referer,
+                                  @PathVariable String type){
+        try {
 
-        List<? extends Item> items = itemService.readAllItemsByTypeName(type);
+            List<? extends Item> items = itemService.readAllItemsByTypeName(type);
 
-        List<Item> itemList = getTestItemOrderList(); // for test
+            List<Item> itemList = getTestItemOrderList(); // for test
 
-        modelMap.addAttribute("itemList", itemList);
+            modelMap.addAttribute("itemList", itemList);
 
 //        modelMap.addAttribute("itemList", items);
-        return new ModelAndView(CATALOG_VIEW);
+            return CATALOG_VIEW;
+
+        } catch (Exception exception){
+            log.warn(exception.getMessage(),ShoppingCartController.class);
+            modelMap.addAttribute("referer",referer);
+            return "redirect:/error";
+        }
     }
 
     private static List<Item> getTestItemOrderList() {
@@ -75,34 +85,49 @@ public class MainPageController {
     }
 
     @GetMapping("/catalog/{type}/{id}")
-    public ModelAndView showItemPage(ModelMap modelMap,
-                                     @PathVariable String type,
-                                     @PathVariable Long id){
-
+    public String showItemPage(ModelMap modelMap,
+                               @RequestHeader String referer,
+                               @PathVariable String type,
+                               @PathVariable Long id){
+        try {
 //        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
 
-        modelMap.addAttribute("type", type.toLowerCase());
+            modelMap.addAttribute("type", type.toLowerCase());
 
 //        modelMap.addAttribute("item",item);
-        Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
-        modelMap.addAttribute("item",book);
-        return new ModelAndView(ITEM_PAGE_VIEW,modelMap);
+            Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
+            modelMap.addAttribute("item", book);
+            return ITEM_PAGE_VIEW;
+        } catch (Exception exception){
+            log.warn(exception.getMessage(),ShoppingCartController.class);
+            modelMap.addAttribute("referer",referer);
+            return "redirect:/error";
+        }
     }
 
     @PostMapping("/catalog/{type}/{id}")
     public String addToCart(@PathVariable String type,
+                            ModelMap modelMap,
                             @PathVariable Integer id,
-                            @RequestHeader String referer, HttpServletResponse response,
+                            @RequestHeader String referer,
+                            HttpServletResponse response,
                             @CookieValue(required = false,defaultValue = "0") Long userId){
-        if(userId==0){
-            userId = unauthorizedUserService.createUnauthorizedUser().getId();
-            response.addCookie(new CookieHandler().createUserIdCookie(userId));
+        try {
+            if (userId == 0) {
+                userId = unauthorizedUserService.createUnauthorizedUser().getId();
+                response.addCookie(new CookieHandler().createUserIdCookie(userId));
+            }
+            final Long finalUserId = userId;
+            BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+            Optional<Item> optionalItem = itemRepository.findById(id);
+            optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
+            return "redirect:" + referer;
+
+        } catch (Exception exception){
+            log.warn(exception.getMessage(),ShoppingCartController.class);
+            modelMap.addAttribute("referer",referer);
+            return "redirect:/error";
         }
-        final Long finalUserId = userId;
-        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
-        Optional<Item> optionalItem = itemRepository.findById(id);
-        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
-        return "redirect:" + referer;
     }
 
 }

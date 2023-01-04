@@ -42,13 +42,17 @@ public class ShoppingCartController {
     final UnauthorizedUserService unauthorizedUserService;
 
     @GetMapping
-    public ModelAndView showCartPage(ModelMap modelMap, HttpServletResponse response,
-                                     @CookieValue(required = false,defaultValue = "0") Long userId){
-        List<Item> testItems = getTestItemOrderList(); // for tests
-        if(userId==0){
-            userId = unauthorizedUserService.createUnauthorizedUser().getId();
-            response.addCookie(cookieHandler.createUserIdCookie(userId));
-        }
+    public String showCartPage(ModelMap modelMap,
+                               @RequestHeader String referer,
+                               HttpServletResponse response,
+                               @CookieValue(required = false,defaultValue = "0") Long userId){
+        try {
+            List<Item> testItems = getTestItemOrderList(); // for tests
+            if (userId == 0) {
+                userId = unauthorizedUserService.createUnauthorizedUser().getId();
+                response.addCookie(cookieHandler.createUserIdCookie(userId));
+            }
+
 //        List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(id).getId()); // todo uncomment when test items will be removed
 //        List<Item> items = new ArrayList<>();
 //        for (Cart cart : carts) {
@@ -58,12 +62,12 @@ public class ShoppingCartController {
 //            items.add(item);
 //        }
 
-        for (Item item : testItems) { // for tests
-            item.setPrice(item.getPrice()* item.getQuantity());
-        }
+            for (Item item : testItems) { // for tests
+                item.setPrice(item.getPrice() * item.getQuantity());
+            }
 
-        int totalCount = 0;
-        int totalPrice = 0;
+            int totalCount = 0;
+            int totalPrice = 0;
 
 //        for (Item item : items) {
 //            totalPrice = totalPrice + item.getPrice();
@@ -72,17 +76,22 @@ public class ShoppingCartController {
 //            totalCount = totalCount + item.getQuantity();
 //        }
 
-        for (Item item : testItems) {  // for tests
-            totalPrice = totalPrice + item.getPrice();
-        }
-        for (Item item : testItems) { // for tests
-            totalCount = totalCount + item.getQuantity();
-        }
+            for (Item item : testItems) {  // for tests
+                totalPrice = totalPrice + item.getPrice();
+            }
+            for (Item item : testItems) { // for tests
+                totalCount = totalCount + item.getQuantity();
+            }
 
-        modelMap.addAttribute("items",testItems);
-        modelMap.addAttribute("totalItems",totalCount);
-        modelMap.addAttribute("totalPrice",totalPrice);
-        return new ModelAndView(SHOPPING_CART_VIEW);
+            modelMap.addAttribute("items", testItems);
+            modelMap.addAttribute("totalItems", totalCount);
+            modelMap.addAttribute("totalPrice", totalPrice);
+            return SHOPPING_CART_VIEW;
+        } catch (Exception exception){
+            log.warn(exception.getMessage(),ShoppingCartController.class);
+            modelMap.addAttribute("referer",referer);
+            return "redirect:/error";
+        }
     }
 
     @GetMapping("/add-one/{type}/{id}")
