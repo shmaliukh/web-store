@@ -138,12 +138,12 @@
                                  height="250">
                         </td>
                         <td>
-                                <button type="button" class="w-100 btn btn-outline-danger">
-                                    Delete
-                                </button>
-
+                            <button th:id="${'deleteImageButton'+image.getId()}" type="button" class="w-100 btn btn-outline-danger">
+                                Delete
+                            </button>
                             <script th:inline="javascript">
-                                deleteButton.onclick = async (e) => {
+                                let button = document.getElementById([[${'deleteImageButton'+image.getId()}]]);
+                                button.onclick = async (e) => {
                                     e.preventDefault();
                                     askToDelete(
                                         [[${'/image/'+image.getId()}]],
