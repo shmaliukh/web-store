@@ -111,7 +111,7 @@
         </div>
     </div>
 
-    <th:block th:unless="${item.getImageList().isEmpty()}">
+    <th:block th:unless="true">
         <div class="m-2 p-2">
             <div class="table-responsive-md">
                 <table class="w-100 table table-striped">
@@ -125,9 +125,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="image, iterator: ${item.getImageList()}">
+                    <tr th:each="image, iterator: ${imageList}">
                         <td class="align-middle" th:text="${iterator}">#</td>
-                        <td class="align-middle" th:text="${item.getTypeStr()}">NAME</td>
+                        <td class="align-middle" th:text="${image.getName()}">NAME</td>
                         <td class="align-middle">
                             <img class="card-img-top"
                                  th:src="|@{/image/}@{image.getId()}|"
@@ -140,6 +140,20 @@
             </div>
         </div>
     </th:block>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <h2>Upload Image</h2>
+                <form method="post" th:action="|@{/admin/item/}${item.getId()}/image|" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="file" name="imageFile" accept="image/*" class="form-control-file">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload image</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
 </div>
 

@@ -16,6 +16,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
@@ -127,6 +128,12 @@ public abstract class Item extends AuditModel {
 
     public String getTypeStr() {
         return getClass().getSimpleName().toLowerCase();
+    }
+
+    public List<Image> getImageList() {
+        return imageList != null
+                ? imageList
+                : Collections.emptyList();
     }
 
 }

@@ -53,8 +53,10 @@ public class AdminItemController {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
+            List<Image> imageList = item.getImageList();
 
             modelMap.addAttribute("item", item);
+            modelMap.addAttribute("imageList", imageList);
             return new ModelAndView("/admin/item/details", modelMap);
         }
         log.warn("problem to generate '/item/details/{}' template // not found item with '{}' id", itemId, itemId);
@@ -146,7 +148,7 @@ public class AdminItemController {
         return ResponseEntity.badRequest().build();
     }
 
-    @PutMapping("/{itemId}/image")
+//    @PutMapping("/{itemId}/image")
     @PostMapping("/{itemId}/image")
     ResponseEntity<Void> uploadImage(@PathVariable Integer itemId,
                                      @RequestParam("imageFile") MultipartFile imageFile) {
