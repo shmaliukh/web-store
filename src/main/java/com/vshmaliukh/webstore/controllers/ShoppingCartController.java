@@ -18,7 +18,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,7 +86,9 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/add-one/{type}/{id}")
-    public String incItemQuantity(@PathVariable String type,
+    public String incItemQuantity(ModelMap modelMap,
+                                  @RequestHeader String referer,
+                                  @PathVariable String type,
                                   @PathVariable Integer id,
                                   @CookieValue Long userId){
         try {
@@ -97,12 +98,15 @@ public class ShoppingCartController {
             return "redirect:/" + SHOPPING_CART;
         } catch (Exception exception){
             log.warn(exception.getMessage(),ShoppingCartController.class);
-            return "redirect:/error"; // todo implement error page mapping
+            modelMap.addAttribute("referer",referer);
+            return "redirect:/error";
         }
     }
 
     @GetMapping("/remove-one/{type}/{id}")
-    public String decItemQuantity(@PathVariable String type,
+    public String decItemQuantity(ModelMap modelMap,
+                                  @RequestHeader String referer,
+                                  @PathVariable String type,
                                   @PathVariable Integer id,
                                   @CookieValue Long userId){
         try {
@@ -111,7 +115,8 @@ public class ShoppingCartController {
             return "redirect:/" + SHOPPING_CART;
         } catch (Exception exception){
             log.warn(exception.getMessage(),ShoppingCartController.class);
-            return "redirect:/error"; // todo implement error page mapping
+            modelMap.addAttribute("referer",referer);
+            return "redirect:/error";
         }
     }
 
