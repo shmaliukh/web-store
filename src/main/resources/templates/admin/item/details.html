@@ -17,27 +17,7 @@
 
 <div class="album py-5 bg-light text-center">
 
-    <div class="container">
-        <div class="table-responsive-md">
-            <table class="w-100 table table-striped">
-                <caption th:text="|Additional info|"></caption>
-                <thead>
-                <tr class="table-dark">
-                    <th scope="col">CREATED</th>
-                    <th scope="col">UPDATED</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="align-middle" th:text="${item.getCreatedAt()}">CreatedAt</td>
-                    <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="m-2 p-2">
+    <div class="m-2">
         <div class="table-responsive-md">
             <table class="w-100 table table-striped">
                 <caption th:text="|Item ${item.getName()} table|"></caption>
@@ -78,7 +58,7 @@
                             <th:block th:insert="blocks/generated-scripts :: checkBoxWithName(checkbox)"></th:block>
                         </td>
                         <td class="align-middle">
-                            <button class="btn btn-outline-success" type="submit">Save changes</button>
+                            <button class="btn btn-outline-success" type="submit">Save</button>
                         </td>
                         <script th:inline="javascript">
                             formElem.onsubmit = async (e) => {
@@ -93,8 +73,8 @@
                             };
                         </script>
                     </form>
-                    <td>
-                        <button id="deleteButton" class="btn btn-outline-danger" type="submit">Delete item</button>
+                    <td class="align-middle">
+                        <button id="deleteButton" class="btn btn-outline-danger" type="submit">Delete</button>
                     </td>
                     <script th:inline="javascript">
                         deleteButton.onclick = async (e) => {
@@ -111,18 +91,44 @@
         </div>
     </div>
 
+    <hr>
+
+    <div class="m-2">
+        <div class="table-responsive-md">
+            <table class="w-100 table table-striped">
+                <caption th:text="|Additional info|"></caption>
+                <thead>
+                <tr class="table-dark">
+                    <th scope="col">CREATED</th>
+                    <th scope="col">UPDATED</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="align-middle" th:text="${item.getCreatedAt()}">CreatedAt</td>
+                    <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <hr>
+
     <div class="container">
         <h2>Upload Image</h2>
         <form method="post" th:action="|@{/admin/item/}${item.getId()}@{/image}|" enctype="multipart/form-data">
-            <div class="form-group w-100">
-                <input type="file" name="imageFile" accept="image/*" class="form-control-file">
-                <button type="submit" class="btn btn-outline-secondary">Upload image</button>
+            <div class="input-group">
+                <input type="file" class="form-control" id="inputGroupFile"  aria-describedby="inputGroupFileAddon04" name="imageFile" accept="image/*" aria-label="Upload">
+                <button class="btn btn-outline-secondary" type="submit" >Upload image</button>
             </div>
         </form>
     </div>
 
+    <hr>
+
     <th:block th:unless="${imageList.isEmpty()}">
-        <div class="m-2 p-2">
+        <div class="m-2">
             <div class="table-responsive-md">
                 <table class="w-100 table table-striped">
                     <caption th:text="|Item images table|"></caption>
@@ -132,6 +138,7 @@
                         <th scope="col">ID</th>
                         <th scope="col">UPDATED</th>
                         <th scope="col">NAME</th>
+                        <th scope="col">SIZE</th>
                         <th scope="col">IMAGE</th>
                         <th colspan="2">TOOLS</th>
                     </tr>
@@ -142,12 +149,14 @@
                         <td class="align-middle" th:text="${image.getId()}">ID</td>
                         <td class="align-middle" th:text="${image.getUpdatedAt()}">UPDATED</td>
                         <td class="align-middle" th:text="${image.getName()}">NAME</td>
+                        <td class="align-middle" th:text="${image.getImageData().length}">NAME</td>
                         <td class="align-middle">
                             <img th:src="|@{/image/}${image.getId()}|"
                                  th:alt="${image.getName()}"
                                  height="250">
                         </td>
-                        <td>
+
+                        <td class="align-middle">
                             <button th:id="${'deleteImageButton'+image.getId()}" type="button" class="w-100 btn btn-outline-danger">
                                 Delete
                             </button>
