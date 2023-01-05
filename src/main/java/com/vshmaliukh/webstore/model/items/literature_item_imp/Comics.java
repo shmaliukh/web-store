@@ -58,11 +58,17 @@ public class Comics extends LiteratureItem {
     public String toString() {
         return "Comics{" +
                 "id=" + getId() +
-                ", name=" + getName() +
-                ", category=" + getCategory() +
-                ", price=" + getPrice() +
-                ", quantity=" + getQuantity() +
+                ", category='" + getCategory() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", currentQuantity=" + getCurrentQuantity() +
+                ", availableToBuyQuantity=" + getAvailableToBuyQuantity() +
+                ", soldOutQuantity=" + getSoldOutQuantity() +
+                ", costPrice=" + getCostPrice() +
+                ", salePrice=" + getSalePrice() +
+                ", description='" + getDescription() + '\'' +
+                ", state='" + getState() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
+                ", imageList=" + getImageList() +
                 ", pages=" + getPages() +
                 ", publisher=" + getPublisher() +
                 '}';

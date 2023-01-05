@@ -3,13 +3,12 @@ package com.vshmaliukh.webstore.model.items.literature_item_imp;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vshmaliukh.webstore.model.items.LiteratureItem;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
@@ -36,12 +35,18 @@ public class Magazine extends LiteratureItem {
     @Override
     public String toString() {
         return "Magazine{" +
-                "id=" + getId() + 
-                ", name=" + getName() +
-                ", category=" + getCategory() +
-                ", price=" + getPrice() +
-                ", quantity=" + getQuantity() +
+                "id=" + getId() +
+                ", category='" + getCategory() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", currentQuantity=" + getCurrentQuantity() +
+                ", availableToBuyQuantity=" + getAvailableToBuyQuantity() +
+                ", soldOutQuantity=" + getSoldOutQuantity() +
+                ", costPrice=" + getCostPrice() +
+                ", salePrice=" + getSalePrice() +
+                ", description='" + getDescription() + '\'' +
+                ", state='" + getState() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
+                ", imageList=" + getImageList() +
                 ", pages=" + getPages() +
                 '}';
     }

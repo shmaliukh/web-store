@@ -48,11 +48,17 @@ public class Book extends LiteratureItem {
     public String toString() {
         return "Book{" +
                 "id=" + getId() +
-                ", name=" + getName() +
-                ", category=" + getCategory() +
-                ", price=" + getPrice() +
-                ", quantity=" + getQuantity() +
+                ", category='" + getCategory() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", currentQuantity=" + getCurrentQuantity() +
+                ", availableToBuyQuantity=" + getAvailableToBuyQuantity() +
+                ", soldOutQuantity=" + getSoldOutQuantity() +
+                ", costPrice=" + getCostPrice() +
+                ", salePrice=" + getSalePrice() +
+                ", description='" + getDescription() + '\'' +
+                ", state='" + getState() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
+                ", imageList=" + getImageList() +
                 ", pages=" + getPages() +
                 ", author=" + getAuthor() +
                 ", dateOfIssue=" + new SimpleDateFormat(DATE_FORMAT_STR).format(getDateOfIssue()) +
