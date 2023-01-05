@@ -20,16 +20,17 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 public class Magazine extends LiteratureItem {
 
     @JsonCreator
-    public Magazine(
-            @JsonProperty(ITEM_ID_COLUMN) Integer id,
-            @JsonProperty(NAME_COLUMN) String name,
-            @JsonProperty(CATEGORY_COLUMN) String category,
-            @JsonProperty(PRICE_COLUMN) int price,
-            @JsonProperty(QUANTITY_COLUMN) int quantity,
-            @JsonProperty(IS_AVAILABLE_IN_STORE_COLUMN) boolean isAvailableInStore,
-            @JsonProperty(PAGES_COLUMN) int pages
-    ) {
-        super(id, name, category, price, quantity, isAvailableInStore, pages);
+    public Magazine(@JsonProperty("item_id") Integer id,
+                    @JsonProperty("category") String category,
+                    @JsonProperty("name") String name,
+                    @JsonProperty("currentQuantity") int currentQuantity,
+                    @JsonProperty("costPrice") int costPrice,
+                    @JsonProperty("salePrice") int salePrice,
+                    @JsonProperty("description") String description,
+                    @JsonProperty("state") String state,
+                    @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
+                    @JsonProperty(PAGES_COLUMN) int pages) {
+        super(id, name, category, currentQuantity, costPrice, salePrice, description, state, isAvailableInStore, pages);
     }
 
     @Override

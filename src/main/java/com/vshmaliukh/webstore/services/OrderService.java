@@ -5,14 +5,16 @@ import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
-
-import java.util.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -31,14 +33,14 @@ public class OrderService {
         if (item != null) {
             int quantityToSet;
             // FIXME fix wrong adding quantity to item entity when change order item 'quantity' and set up 'active' = false
-            if (!orderItemPreviousState) {
-                quantityToSet = item.getQuantity() - oldOrderItemQuantity;
-            } else if (!orderItem.isActive()) {
-                quantityToSet = item.getQuantity() + newQuantity;
-            } else {
-                quantityToSet = item.getQuantity() - (newQuantity - oldOrderItemQuantity);
-            }
-            item.setSoldOutQuantity(quantityToSet);
+//            if (!orderItemPreviousState) {
+//                quantityToSet = item.get() - oldOrderItemQuantity;
+//            } else if (!orderItem.isActive()) {
+//                quantityToSet = item.getQuantity() + newQuantity;
+//            } else {
+//                quantityToSet = item.getQuantity() - (newQuantity - oldOrderItemQuantity);
+//            }
+//            item.setSoldOutQuantity(quantityToSet);
             itemService.saveItem(item);
         }
     }
@@ -64,10 +66,11 @@ public class OrderService {
     }
 
     private void setUpItemAvailableToBuyQuantity(Integer quantity, Item item, OrderItem orderItem) {
-        int availableToBuyQuantity = item.getQuantity() - orderItem.getQuantity();
-        item.setSoldOutQuantity(availableToBuyQuantity);
-        itemService.saveItem(item);
-        log.info("sold '{}' // available to buy '{}' item: '{}'", quantity, item, availableToBuyQuantity);
+//        FIXME
+//        int availableToBuyQuantity = item.getQuantity() - orderItem.getQuantity();
+//        item.setSoldOutQuantity(availableToBuyQuantity);
+//        itemService.saveItem(item);
+//        log.info("sold '{}' // available to buy '{}' item: '{}'", quantity, item, availableToBuyQuantity);
     }
 
     public Integer calcTotalOrderItems(Order order) {
@@ -131,7 +134,7 @@ public class OrderService {
         if (itemListByUserId != null) {
             return itemListByUserId.stream()
                     .filter(Item::isAvailableInStore)
-                    .mapToInt(Item::getPrice)
+                    .mapToInt(Item::getSalePrice)
                     .sum();
         }
         return 0;

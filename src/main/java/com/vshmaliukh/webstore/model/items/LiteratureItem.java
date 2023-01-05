@@ -18,8 +18,17 @@ public abstract class LiteratureItem extends Item {
     @Column(name = PAGES_COLUMN, nullable = false)
     private int pages;
 
-    protected LiteratureItem(Integer id, String category, String name, int price, int quantity, boolean isAvailableInStore, int pages) {
-        super(id, category, name, price, quantity, isAvailableInStore);
+    protected LiteratureItem(Integer id,
+                             String category,
+                             String name,
+                             int currentQuantity,
+                             int costPrice,
+                             int salePrice,
+                             String description,
+                             String state,
+                             boolean isAvailableInStore,
+                             int pages) {
+        super(id, name, category, currentQuantity, costPrice, salePrice, description, state, isAvailableInStore);
         this.pages = pages;
     }
 

@@ -3,9 +3,6 @@ package com.vshmaliukh.webstore.controllers;
 import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
 import com.vshmaliukh.webstore.model.Cart;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
@@ -15,12 +12,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +44,8 @@ public class ShoppingCartController {
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap, HttpServletResponse response,
                                      @CookieValue(required = false,defaultValue = "0") Long userId){
-        List<Item> testItems = getTestItemOrderList(); // for tests
+        List<Item> testItems = Collections.emptyList();
+//                getTestItemOrderList(); // for tests
         if(userId==0){
             userId = unauthorizedUserService.createUnauthorizedUser().getId();
             response.addCookie(cookieHandler.createUserIdCookie(userId));
@@ -134,16 +135,5 @@ public class ShoppingCartController {
         carts.add(second);
         return carts;
     }
-
-    private static List<Item> getTestItemOrderList() {
-        List<Item> itemList = new ArrayList<>();
-        itemList.add(new Book(1, "1 book name", "book", 2, 3, true, 4, "Vlad1", new Date()));
-        itemList.add(new Book(2, "2 book name", "book", 3, 4, true, 5, "Vlad2", new Date()));
-        itemList.add(new Magazine(3, "Magazine name", "magazine", 4, 5, true, 6));
-        itemList.add(new Comics(4, "Comics name", "comics", 5, 6, true, 7, "Some publisher"));
-        return itemList;
-    }
-
-
 
 }

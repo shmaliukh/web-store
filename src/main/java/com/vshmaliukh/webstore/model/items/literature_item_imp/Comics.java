@@ -24,15 +24,18 @@ public class Comics extends LiteratureItem {
     private String publisher;
 
     @JsonCreator
-    public Comics(@JsonProperty(ITEM_ID_COLUMN) Integer id,
-                  @JsonProperty(NAME_COLUMN) String name,
-                  @JsonProperty(CATEGORY_COLUMN) String category,
-                  @JsonProperty(PRICE_COLUMN) int price,
-                  @JsonProperty(QUANTITY_COLUMN) int quantity,
-                  @JsonProperty(IS_AVAILABLE_IN_STORE_COLUMN) boolean isAvailableInStore,
+    public Comics(@JsonProperty("item_id") Integer id,
+                  @JsonProperty("category") String category,
+                  @JsonProperty("name") String name,
+                  @JsonProperty("currentQuantity") int currentQuantity,
+                  @JsonProperty("costPrice") int costPrice,
+                  @JsonProperty("salePrice") int salePrice,
+                  @JsonProperty("description") String description,
+                  @JsonProperty("state") String state,
+                  @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
                   @JsonProperty(PAGES_COLUMN) int pages,
                   @JsonProperty(PUBLISHER_COLUMN) String publisher) {
-        super(id, name, category, price, quantity, isAvailableInStore, pages);
+        super(id, name, category, currentQuantity, costPrice, salePrice, description, state, isAvailableInStore, pages);
         this.publisher = publisher;
     }
 

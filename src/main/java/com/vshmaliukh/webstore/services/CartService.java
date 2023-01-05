@@ -33,7 +33,7 @@ public class CartService {
             Cart newCart = new Cart();
             newCart.setUserId(userId);
             newCart.setItemId(item.getId());
-            newCart.setItemQuantity(item.getQuantity());
+            newCart.setItemQuantity(item.getCurrentQuantity());
             newCart.setCategory(item.getCategory());
             cartRepository.save(newCart);
         } else {

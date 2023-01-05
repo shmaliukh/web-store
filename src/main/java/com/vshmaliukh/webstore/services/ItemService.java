@@ -47,15 +47,14 @@ public class ItemService {
         ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
 //        return allItemRepository.findAllByQuantityGreaterThanEqualAndAvailableInStoreEquals(1, true);
         return allItemRepository.findAll().stream()
-                .filter(Item::isAvailableInStore)
-                .filter(item -> item.getQuantity() > 0)
+                .filter(item -> item.getAvailableToBuyQuantity() > 0)
                 .collect(Collectors.toList());
     }
 
     public <T extends Item> void saveItem(T item) {
         BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
         if (baseItemRepository != null) {
-            if (item.getQuantity() < 1) {
+            if (item.getCurrentQuantity() < 1) {
                 item.setAvailableInStore(false);
             }
             baseItemRepository.save(item);

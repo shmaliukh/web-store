@@ -23,14 +23,10 @@ public class OrderItemService {
 
     static OrderItem formOrderItem(Integer quantity, Item item, Order order) {
         OrderItem orderItem = new OrderItem();
-        orderItem.setOrderItemPrice(item.getPrice());
+        orderItem.setOrderItemPrice(item.getSalePrice());
         orderItem.setQuantity(quantity);
 
-        if (orderItem.getQuantity() < 1) {
-            orderItem.setActive(false);
-        } else {
-            orderItem.setActive(true);
-        }
+        orderItem.setActive(orderItem.getQuantity() >= 1);
 
         orderItem.setOrder(order);
         orderItem.setItem(item);
