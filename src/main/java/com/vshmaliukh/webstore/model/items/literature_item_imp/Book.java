@@ -2,15 +2,14 @@ package com.vshmaliukh.webstore.model.items.literature_item_imp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import com.vshmaliukh.webstore.model.items.LiteratureItem;
-
-import javax.persistence.*;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -25,10 +24,10 @@ import static com.vshmaliukh.webstore.ItemUtil.DATE_FORMAT_STR;
 public class Book extends LiteratureItem {
 
     @Column(name = AUTHOR_COLUMN)
-    String author;
+    private String author;
 
     @Column(name = DATE_COLUMN)
-    Date dateOfIssue;
+    private Date dateOfIssue;
 
     @JsonCreator
     public Book(@JsonProperty(ITEM_ID_COLUMN) Integer id,

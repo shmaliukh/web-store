@@ -1,7 +1,6 @@
-package com.vshmaliukh.webstore.controllers.admin.order;
+package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
-import com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.Item;

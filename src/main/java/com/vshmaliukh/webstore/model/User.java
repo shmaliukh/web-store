@@ -1,11 +1,12 @@
 package com.vshmaliukh.webstore.model;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import javax.persistence.*;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
@@ -16,7 +17,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Entity
 @Table(name = USER_TABLE,
         uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
-public class User extends AuditModel{
+public class User extends AuditModel {
 
     @ToString.Exclude
     private String password;

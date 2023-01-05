@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore.controllers.admin.user;
+package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.model.Order;
@@ -30,9 +30,6 @@ import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.add
 @AllArgsConstructor
 @RequestMapping("/admin/user")
 public class AdminUserController {
-
-    // TODO refactor (do not use repositories)
-    final UserRepository userRepository;
 
     final UserService userService;
     final OrderService orderService;
@@ -147,9 +144,9 @@ public class AdminUserController {
     private Page<User> getPageWithUsers(String keyword, ModelMap modelMap, Pageable pageable) {
         Page<User> pageWithUsers;
         if (StringUtils.isBlank(keyword)) {
-            pageWithUsers = userRepository.findAll(pageable);
+            pageWithUsers = userService.getPageWithUsers(pageable);
         } else {
-            pageWithUsers = userRepository.findByUsernameIgnoreCase(keyword, pageable);
+            pageWithUsers = userService.getPageWithUsersByUsername(keyword, pageable);
             modelMap.addAttribute("keyword", keyword);
         }
         return pageWithUsers;
