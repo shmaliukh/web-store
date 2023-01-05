@@ -1,9 +1,12 @@
 package com.vshmaliukh.webstore;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.ByteArrayOutputStream;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+@Slf4j
 public class ImageUtil {
 
     public static byte[] compressImage(byte[] data) {
@@ -21,6 +24,7 @@ public class ImageUtil {
         try {
             outputStream.close();
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return outputStream.toByteArray();
     }
@@ -36,7 +40,8 @@ public class ImageUtil {
                 outputStream.write(tmp, 0, count);
             }
             outputStream.close();
-        } catch (Exception exception) {
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return outputStream.toByteArray();
     }
