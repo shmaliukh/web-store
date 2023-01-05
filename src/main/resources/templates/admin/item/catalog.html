@@ -32,23 +32,13 @@
                                 <small class="text-muted" th:text="${itemType.getValue()}">quantity</small>
                             </div>
                             <hr>
-                            <div class="d-flex justify-content-around align-items-center">
-                                <div class="btn-group">
-                                    <a th:href="@{'/admin/item/add/'+${itemType.getKey().toLowerCase()}}">
-                                        <button type="button" class="btn  btn-outline-secondary">Add</button>
-                                    </a>
-                                    <a th:href="@{'/admin/item/view/'+${itemType.getKey().toLowerCase()}}">
-                                        <button type="button" class="btn  btn-outline-secondary">View</button>
-                                    </a>
-<!--                                    <a th:href="@{'/admin/item/edit/'+${itemType.getKey().toLowerCase()}}">-->
-                                        <button type="button" class="btn  btn-outline-secondary" disabled>Edit</button>
-<!--                                    </a>-->
-                                </div>
-                                <div>
-<!--                                    <a th:href="@{'/admin/item/delete/'+${itemType.getKey().toLowerCase()}}">-->
-                                        <button type="button" class="btn  btn-outline-danger" disabled>Delete</button>
-<!--                                    </a>-->
-                                </div>
+                            <div class="container">
+                                <a th:href="|@{/admin/item/add/}${itemType.getKey().toLowerCase()}|">
+                                    <button type="button" class="btn btn-outline-secondary w-100">Add</button>
+                                </a>
+                                <a th:href="|@{/admin/item/view/}${itemType.getKey().toLowerCase()}|">
+                                    <button type="button" class="btn btn-outline-secondary w-100">View</button>
+                                </a>
                             </div>
                         </div>
                     </div>

@@ -63,7 +63,7 @@ function informIfNotDeleted(pageToRedirect) {
 
 function askToDeleteItem(itemId, pageToRedirect) {
     if (window.confirm('Do you really want to delete item with ' + itemId + ' id')) {
-        fetch('/admin/item/delete/' + itemId, {
+        fetch('/admin/item/' + itemId + '/delete', {
             method: "DELETE",
         }).then(informIfNotDeleted(pageToRedirect));
     }

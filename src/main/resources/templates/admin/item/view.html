@@ -46,7 +46,7 @@
                                    disabled>
                         </td>
                         <td>
-                            <a th:href="|@{/admin/item/details/}${item.getId()}|">
+                            <a th:href="|@{/admin/item/}${item.getId()}@{/details}|">
                                 <button type="button" class="btn  btn-outline-secondary">Details</button>
                             </a>
                         </td>
@@ -56,14 +56,19 @@
 
                 <th:block th:insert="blocks/navigation :: pagination('/admin/item/view/' + ${itemType})"></th:block>
             </div>
-
-            <!-- TODO implement 'add' item template -->
-            <div th:insert="blocks/item-panel-menu :: add-item-button"></div>
-
         </th:block>
+
         <th:block th:if="${itemList.isEmpty()}">
-            <p class="lead" th:text="|No ${itemType.toUpperCase()} items|"></p>
+            <div class="container">
+                <p class="lead" th:text="|No ${itemType.toUpperCase()} items|"></p>
+                <hr>
+            </div>
         </th:block>
+
+        <!-- TODO implement 'add' item template -->
+        <div th:insert="blocks/item-panel-menu :: add-item-button"></div>
+
+
     </div>
 </div>
 

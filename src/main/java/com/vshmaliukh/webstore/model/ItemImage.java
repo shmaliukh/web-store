@@ -2,11 +2,13 @@ package com.vshmaliukh.webstore.model;
 
 
 import com.vshmaliukh.webstore.model.items.Item;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Slf4j
 @Getter
@@ -36,4 +38,5 @@ public class ItemImage extends Image {
         result = 31 * result + (getItem() != null ? getItem().hashCode() : 0);
         return result;
     }
+
 }

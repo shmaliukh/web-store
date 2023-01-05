@@ -67,7 +67,7 @@
                                     "formElem",
                                     "/admin/item/add",
                                     "post",
-                                    "/admin/item/details/" + [[${item.getId()}]],
+                                    "/admin/item/" + [[${item.getId()}]] + "/details",
                                     [[${item.getTypeStr()}]]
                                 );
                             };
@@ -166,7 +166,7 @@
                                     e.preventDefault();
                                     askToDelete(
                                         [[${'/image/'+itemImage.getId()}]],
-                                        [[${'/admin/item/details/'+item.getId()}]]
+                                        [[${'/admin/item/'+item.getId()+'/details'}]]
                                     );
                                 };
                             </script>

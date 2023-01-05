@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -80,7 +81,7 @@ public class ItemService {
             return itemRepositoryByItemTypeNameByType.findAll();
         }
         log.warn("problem to read all items by type name // not found repository // itemTypeName: {}", itemTypeName);
-        return null;
+        return Collections.emptyList();
     }
 
     public <T extends Item> void deleteItem(T item) {
