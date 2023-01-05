@@ -33,13 +33,13 @@
                     <tbody>
                     <tr th:each="item, iterator: ${itemList}">
                         <th class="align-middle" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
-                        <td class="align-middle" th:text="${item.getClass().getSimpleName()}">Type</td>
+                        <td class="align-middle" th:text="${item.getTypeStr()}">Type</td>
                         <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
                         <td class="align-middle" th:text="${item.getId()}">Id</td>
                         <td class="align-middle" th:text="${item.getCategory()}">Category</td>
                         <td class="align-middle" th:text="${item.getName()}">Name</td>
-                        <td class="align-middle" th:text="${item.getPrice()}">Price</td>
-                        <td class="align-middle" th:text="${item.getQuantity()}">Quantity</td>
+                        <td class="align-middle" th:text="${item.getSalePrice()}">Price</td>
+                        <td class="align-middle" th:text="${item.getAvailableToBuyQuantity()}">Quantity</td>
                         <th:block th:insert="blocks/view-item-table-values :: ${itemType}"></th:block>
                         <td><input class="form-check-input align-middle" type="checkbox" name="isAvailableInStore"
                                    th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}"

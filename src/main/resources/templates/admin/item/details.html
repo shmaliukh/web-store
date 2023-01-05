@@ -46,12 +46,12 @@
                         </td>
                         <td class="align-middle">
                             <input class="form-control align-middle" type="number" name="quantity" min="0"
-                                   th:value="${item.getQuantity()}">
+                                   th:value="${item.getCurrentQuantity()}">
                         </td>
                         <th:block th:insert="blocks/edit-item-table-values :: ${item.getTypeStr()}"></th:block>
                         <td class="align-middle">
                             <input id="checkbox" class="form-check-input align-middle"
-                                   name="is_available_in_store" type="checkbox"
+                                   name="isAvailableInStore" type="checkbox"
                                    role="switch"
                                    th:value="${item.isAvailableInStore()}"
                                    th:checked="${item.isAvailableInStore()}">

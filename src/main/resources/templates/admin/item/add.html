@@ -13,6 +13,7 @@
     <h1 class="display-4">Add item panel</h1>
     <hr>
     <p class="lead">You can add new item</p>
+    <p class="lead">Add item images after submitting form</p>
 </div>
 
 <div class="container">
@@ -57,30 +58,46 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <label for="itemPrice" class="form-label">Price</label>
+                            <label for="costPrice" class="form-label">Cost price</label>
                             <div class="input-group mb-3 has-validation">
                                 <span class="input-group-text">$</span>
-                                <input type="number" name="price" class="form-control" id="itemPrice" placeholder="0" min="0" required="">
+                                <input type="number" name="costPrice" class="form-control" id="costPrice" placeholder="0" min="0" required="">
                                 <div class="invalid-feedback">
-                                    Item price is required.
+                                    Item cost price is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="salePrice" class="form-label">Sale price</label>
+                            <div class="input-group mb-3 has-validation">
+                                <span class="input-group-text">$</span>
+<!--                                TODO implement script to change 'min' value (min value = costPrice)-->
+                                <input type="number" name="salePrice" class="form-control" id="salePrice" placeholder="0" min="0" required="">
+                                <div class="invalid-feedback">
+                                    Valid item sale price is required.
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <label for="itemQuantity" class="form-label">Quantity</label>
                             <div class="input-group mb-3 has-validation">
-                                <input type="number" name="quantity" class="form-control" id="itemQuantity" placeholder="1" min="0" required="">
+                                <input type="number" name="currentQuantity" class="form-control" id="itemQuantity" placeholder="1" min="0" required="">
                                 <div class="invalid-feedback">
                                     Item quantity is required.
                                 </div>
                             </div>
                         </div>
 
+                        <div class="col-12">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea id="description" name="description" class="form-control" placeholder="Product description"></textarea>
+                        </div>
+
                         <div th:insert="blocks/add-item-form-blocks.html :: ${itemType}"></div>
 
                         <div class="d-flex justify-content-around align-items-center">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" name="is_available_in_store" type="checkbox" role="switch"
+                                <input class="form-check-input" name="isAvailableInStore" type="checkbox" role="switch"
                                        id="flexSwitchCheckChecked" value="true" checked>
                                 <label class="form-check-label" for="flexSwitchCheckChecked">Is available</label>
                             </div>
