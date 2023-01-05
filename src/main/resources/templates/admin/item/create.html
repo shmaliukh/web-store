@@ -16,6 +16,7 @@
     <p class="lead">Add item images after submitting form</p>
 </div>
 
+
 <div class="container">
     <div class="album mb-3 bg-light text-center">
         <div class="card mb-4 box-shadow">
@@ -26,20 +27,19 @@
                 <form id="formElem" class="needs-validation">
                     <div class="row g-3">
                         <div class="col-12">
-                            <label for="category" class="form-label">Category</label>
+                            <label for="selectCategory" class="form-label">Category</label>
                             <div class="input-group has-validation">
-                                <select id="category" name="category" class="form-select">
+                                <select id="selectCategory" name="category" class="form-select">
                                     <option selected="">Choose...</option>
-                                    <th:block th:each="categoryName : ${categoryNameList}">
-                                        <option th:value="${categoryName}" th:text="${categoryName}">category name</option>
-                                    </th:block>
+                                    <script th:inline="javascript">
+                                        generateOptionUsingDataFromApi("selectCategory", "http://localhost:8082/admin/item/statusNameList");
+                                    </script>
                                 </select>
                                 <div class="invalid-feedback">
                                     Item category is required.
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-12">
                             <label for="itemName" class="form-label">Item name</label>
                             <div class="input-group has-validation">
@@ -65,7 +65,7 @@
                             <label for="salePrice" class="form-label">Sale price</label>
                             <div class="input-group mb-3 has-validation">
                                 <span class="input-group-text">$</span>
-<!--                                TODO implement script to change 'min' value (min value = costPrice)-->
+                                <!--                                TODO implement script to change 'min' value (min value = costPrice)-->
                                 <input type="number" name="salePrice" class="form-control" id="salePrice" placeholder="0" min="0" required="">
                                 <div class="invalid-feedback">
                                     Valid item sale price is required.
@@ -75,7 +75,8 @@
                         <div class="col-12">
                             <label for="itemQuantity" class="form-label">Quantity</label>
                             <div class="input-group mb-3 has-validation">
-                                <input type="number" name="currentQuantity" class="form-control" id="itemQuantity" placeholder="1" min="0" required="">
+                                <input type="number" name="currentQuantity" class="form-control" id="itemQuantity" placeholder="1" min="0"
+                                       required="">
                                 <div class="invalid-feedback">
                                     Item quantity is required.
                                 </div>
@@ -96,6 +97,9 @@
                                         <option th:value="${status}" th:text="${status}">status name</option>
                                     </th:block>
                                 </select>
+
+
+
                                 <div class="invalid-feedback">
                                     Item status is required.
                                 </div>

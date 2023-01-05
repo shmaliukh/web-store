@@ -11,6 +11,7 @@ import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -167,6 +168,14 @@ public class AdminItemController {
     public ResponseEntity<List<? extends Item>> readItemListByType(@PathVariable(name = "itemType") String itemType){
         List<? extends Item> itemList = itemService.readAllItemsByTypeName(itemType);
         return ResponseEntity.ok().body(itemList);
+    }
+
+    @GetMapping("/statusNameList")
+    public ResponseEntity<List<String>> readItemStatusNameList(){
+        List<String> statusList = itemService.getStatusList();
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(statusList);
     }
 
 }

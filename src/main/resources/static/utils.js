@@ -8,8 +8,7 @@ function generateJsonBodyWithType(formElemId, itemClassType) {
     let formValue = getJsonObj(formElemId);
     let jsonType = "\"@type\":\"".concat(itemClassType.toLowerCase(), "\",");
     let jsonBodyStr = JSON.stringify(formValue);
-    let jsonWithType = [jsonBodyStr.slice(0, 1), jsonType, jsonBodyStr.slice(1)].join('');
-    return jsonWithType;
+    return [jsonBodyStr.slice(0, 1), jsonType, jsonBodyStr.slice(1)].join('');
 }
 
 function generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType) {
@@ -82,3 +81,18 @@ function fetchAddingItemFormWithJsonBodyWithItemClassType(formElemId, pageToSend
         .then(informAboutResult(formElemId, pageToRedirect, itemClassType));
 }
 
+async function getJsonFromApiCall(url) {
+    return (await fetch(url)).json();
+}
+
+async function generateOptionUsingDataFromApi(elementId, url){
+    let select = document.getElementById(elementId);
+    let jsonFromApiCall =  await (getJsonFromApiCall(url));
+    for(let i = 0; i < jsonFromApiCall.length; i++) {
+        let opt = jsonFromApiCall[i];
+        let el = document.createElement("option");
+        el.textContent = opt;
+        el.value = opt;
+        select.appendChild(el);
+    }
+}
