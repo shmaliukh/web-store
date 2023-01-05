@@ -59,7 +59,7 @@ public class ShoppingCartController {
 //        }
 
         for (Item item : testItems) { // for tests
-            item.setCostPrice(item.getPrice()* item.getQuantity());
+            item.setCostPrice(item.getSalePrice()* item.getCurrentQuantity());
         }
 
         int totalCount = 0;
@@ -73,10 +73,10 @@ public class ShoppingCartController {
 //        }
 
         for (Item item : testItems) {  // for tests
-            totalPrice = totalPrice + item.getPrice();
+            totalPrice = totalPrice + item.getSalePrice();
         }
         for (Item item : testItems) { // for tests
-            totalCount = totalCount + item.getQuantity();
+            totalCount = totalCount + item.getCurrentQuantity();
         }
 
         modelMap.addAttribute("items",testItems);

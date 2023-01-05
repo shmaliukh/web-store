@@ -154,4 +154,22 @@ public abstract class Item extends AuditModel {
         return getClass().getSimpleName().toLowerCase();
     }
 
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", category='" + category + '\'' +
+                ", name='" + name + '\'' +
+                ", currentQuantity=" + currentQuantity +
+                ", availableToBuyQuantity=" + availableToBuyQuantity +
+                ", soldOutQuantity=" + soldOutQuantity +
+                ", costPrice=" + costPrice +
+                ", salePrice=" + salePrice +
+                ", description='" + description + '\'' +
+                ", state='" + state + '\'' +
+                ", isAvailableInStore=" + isAvailableInStore +
+                ", imageList=" + imageList +
+                '}';
+    }
+
 }
