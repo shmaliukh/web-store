@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.USER_HOME;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.HOME_PAGE_VIEW;
 
-@Slf4j
 @Controller
 @RequestMapping("/" + USER_HOME)
 @AllArgsConstructor
@@ -22,24 +21,18 @@ public class UserHomeController {
 
     @GetMapping
     public String showHomePage(ModelMap modelMap,
-                                     @RequestHeader String referer){
-        try {
-            User user = new User();
-            user.setEmail("user@gmail.com");
-            user.setUsername("Your First User");
-            modelMap.addAttribute("user", user);
-            return HOME_PAGE_VIEW;
-        } catch (Exception exception){
-            log.warn(exception.getMessage(),ShoppingCartController.class);
-            modelMap.addAttribute("referer",referer);
-            return "redirect:/error";
-        }
+                               @RequestHeader String referer) {
+        User user = new User();
+        user.setEmail("user@gmail.com");
+        user.setUsername("Your First User");
+        modelMap.addAttribute("user", user);
+        return HOME_PAGE_VIEW;
     }
 
     @GetMapping("/{data}")
-    public ModelAndView showUsersEditPage(@PathVariable String data, ModelMap modelMap){
-        modelMap.addAttribute("form",data);
-        return new ModelAndView("edit-data-users-page",modelMap);
+    public ModelAndView showUsersEditPage(@PathVariable String data, ModelMap modelMap) {
+        modelMap.addAttribute("form", data);
+        return new ModelAndView("edit-data-users-page", modelMap);
     }
 
 }

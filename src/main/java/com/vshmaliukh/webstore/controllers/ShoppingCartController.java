@@ -12,7 +12,6 @@ import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UnauthorizedUserService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,6 @@ import java.util.Optional;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.SHOPPING_CART;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
 
-@Slf4j
 @Controller
 @RequestMapping("/shopping-cart")
 @AllArgsConstructor
@@ -42,16 +40,15 @@ public class ShoppingCartController {
     final UnauthorizedUserService unauthorizedUserService;
 
     @GetMapping
-    public String showCartPage(ModelMap modelMap,
-                               @RequestHeader String referer,
-                               HttpServletResponse response,
-                               @CookieValue(required = false,defaultValue = "0") Long userId){
-        try {
-            List<Item> testItems = getTestItemOrderList(); // for tests
-            if (userId == 0) {
-                userId = unauthorizedUserService.createUnauthorizedUser().getId();
-                response.addCookie(cookieHandler.createUserIdCookie(userId));
-            }
+    public ModelAndView showCartPage(ModelMap modelMap,
+                                     @RequestHeader String referer,
+                                     HttpServletResponse response,
+                                     @CookieValue(required = false, defaultValue = "0") Long userId) {
+        List<Item> testItems = getTestItemOrderList(); // for tests
+        if (userId == 0) {
+            userId = unauthorizedUserService.createUnauthorizedUser().getId();
+            response.addCookie(cookieHandler.createUserIdCookie(userId));
+        }
 
 //        List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(id).getId()); // todo uncomment when test items will be removed
 //        List<Item> items = new ArrayList<>();
@@ -62,12 +59,12 @@ public class ShoppingCartController {
 //            items.add(item);
 //        }
 
-            for (Item item : testItems) { // for tests
-                item.setPrice(item.getPrice() * item.getQuantity());
-            }
+        for (Item item : testItems) { // for tests
+            item.setPrice(item.getPrice() * item.getQuantity());
+        }
 
-            int totalCount = 0;
-            int totalPrice = 0;
+        int totalCount = 0;
+        int totalPrice = 0;
 
 //        for (Item item : items) {
 //            totalPrice = totalPrice + item.getPrice();
@@ -76,22 +73,17 @@ public class ShoppingCartController {
 //            totalCount = totalCount + item.getQuantity();
 //        }
 
-            for (Item item : testItems) {  // for tests
-                totalPrice = totalPrice + item.getPrice();
-            }
-            for (Item item : testItems) { // for tests
-                totalCount = totalCount + item.getQuantity();
-            }
-
-            modelMap.addAttribute("items", testItems);
-            modelMap.addAttribute("totalItems", totalCount);
-            modelMap.addAttribute("totalPrice", totalPrice);
-            return SHOPPING_CART_VIEW;
-        } catch (Exception exception){
-            log.warn(exception.getMessage(),ShoppingCartController.class);
-            modelMap.addAttribute("referer",referer);
-            return "redirect:/error";
+        for (Item item : testItems) {  // for tests
+            totalPrice = totalPrice + item.getPrice();
         }
+        for (Item item : testItems) { // for tests
+            totalCount = totalCount + item.getQuantity();
+        }
+
+        modelMap.addAttribute("items", testItems);
+        modelMap.addAttribute("totalItems", totalCount);
+        modelMap.addAttribute("totalPrice", totalPrice);
+        return new ModelAndView(SHOPPING_CART_VIEW);
     }
 
     @GetMapping("/add-one/{type}/{id}")
@@ -99,17 +91,11 @@ public class ShoppingCartController {
                                   @RequestHeader String referer,
                                   @PathVariable String type,
                                   @PathVariable Integer id,
-                                  @CookieValue Long userId){
-        try {
-            final Long finalUserId = userId;
-            Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-            optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
-            return "redirect:/" + SHOPPING_CART;
-        } catch (Exception exception){
-            log.warn(exception.getMessage(),ShoppingCartController.class);
-            modelMap.addAttribute("referer",referer);
-            return "redirect:/error";
-        }
+                                  @CookieValue Long userId) {
+        final Long finalUserId = userId;
+        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
+        return "redirect:/" + SHOPPING_CART;
     }
 
     @GetMapping("/remove-one/{type}/{id}")
@@ -117,16 +103,10 @@ public class ShoppingCartController {
                                   @RequestHeader String referer,
                                   @PathVariable String type,
                                   @PathVariable Integer id,
-                                  @CookieValue Long userId){
-        try {
-            Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+                                  @CookieValue Long userId) {
+        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
         optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId));
-            return "redirect:/" + SHOPPING_CART;
-        } catch (Exception exception){
-            log.warn(exception.getMessage(),ShoppingCartController.class);
-            modelMap.addAttribute("referer",referer);
-            return "redirect:/error";
-        }
+        return "redirect:/" + SHOPPING_CART;
     }
 
     public List<Cart> getTestCarts() {
@@ -158,7 +138,5 @@ public class ShoppingCartController {
         itemList.add(new Comics(4, "Comics name", "comics", 5, 6, true, 7, "Some publisher"));
         return itemList;
     }
-
-
 
 }

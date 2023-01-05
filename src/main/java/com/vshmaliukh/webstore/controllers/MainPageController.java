@@ -25,7 +25,6 @@ import java.util.*;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
 import static com.vshmaliukh.webstore.controllers.ViewsNames.*;
 
-@Slf4j
 @Controller
 @RequestMapping("/main")
 @AllArgsConstructor
@@ -38,41 +37,32 @@ public class MainPageController {
     final UnauthorizedUserService unauthorizedUserService;
 
     @GetMapping
-    public ModelAndView showMainPage(ModelMap modelMap){
+    public ModelAndView showMainPage(ModelMap modelMap) {
         // todo refactor template for links
 
         // get categories and types from db
 
-        List<String> categories = new ArrayList<>(Arrays.asList("Literature","Another category"));
+        List<String> categories = new ArrayList<>(Arrays.asList("Literature", "Another category"));
         List<List<String>> types = new ArrayList<>(Arrays.asList(
-                Arrays.asList("Books","Newspapers","Comics","Magazines"),
-                Arrays.asList("Another type","And another one")));
-        modelMap.addAttribute("categories",categories);
-        modelMap.addAttribute("types",types);
+                Arrays.asList("Books", "Newspapers", "Comics", "Magazines"),
+                Arrays.asList("Another type", "And another one")));
+        modelMap.addAttribute("categories", categories);
+        modelMap.addAttribute("types", types);
         return new ModelAndView(MAIN_PAGE_VIEW,modelMap);
-
     }
 
     @GetMapping("/catalog/{type}")
-    public String showCatalogPage(ModelMap modelMap,
+    public ModelAndView showCatalogPage(ModelMap modelMap,
                                   @RequestHeader String referer,
-                                  @PathVariable String type){
-        try {
+                                  @PathVariable String type) {
+        List<? extends Item> items = itemService.readAllItemsByTypeName(type);
 
-            List<? extends Item> items = itemService.readAllItemsByTypeName(type);
+        List<Item> itemList = getTestItemOrderList(); // for test
 
-            List<Item> itemList = getTestItemOrderList(); // for test
-
-            modelMap.addAttribute("itemList", itemList);
+        modelMap.addAttribute("itemList", itemList);
 
 //        modelMap.addAttribute("itemList", items);
-            return CATALOG_VIEW;
-
-        } catch (Exception exception){
-            log.warn(exception.getMessage(),ShoppingCartController.class);
-            modelMap.addAttribute("referer",referer);
-            return "redirect:/error";
-        }
+        return new ModelAndView(CATALOG_VIEW);
     }
 
     private static List<Item> getTestItemOrderList() {
@@ -85,24 +75,18 @@ public class MainPageController {
     }
 
     @GetMapping("/catalog/{type}/{id}")
-    public String showItemPage(ModelMap modelMap,
+    public ModelAndView showItemPage(ModelMap modelMap,
                                @RequestHeader String referer,
                                @PathVariable String type,
-                               @PathVariable Long id){
-        try {
+                               @PathVariable Long id) {
 //        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
 
-            modelMap.addAttribute("type", type.toLowerCase());
+        modelMap.addAttribute("type", type.toLowerCase());
 
 //        modelMap.addAttribute("item",item);
-            Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
-            modelMap.addAttribute("item", book);
-            return ITEM_PAGE_VIEW;
-        } catch (Exception exception){
-            log.warn(exception.getMessage(),ShoppingCartController.class);
-            modelMap.addAttribute("referer",referer);
-            return "redirect:/error";
-        }
+        Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
+        modelMap.addAttribute("item", book);
+        return new ModelAndView(ITEM_PAGE_VIEW);
     }
 
     @PostMapping("/catalog/{type}/{id}")
@@ -111,23 +95,16 @@ public class MainPageController {
                             @PathVariable Integer id,
                             @RequestHeader String referer,
                             HttpServletResponse response,
-                            @CookieValue(required = false,defaultValue = "0") Long userId){
-        try {
-            if (userId == 0) {
-                userId = unauthorizedUserService.createUnauthorizedUser().getId();
-                response.addCookie(new CookieHandler().createUserIdCookie(userId));
-            }
-            final Long finalUserId = userId;
-            BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
-            Optional<Item> optionalItem = itemRepository.findById(id);
-            optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
-            return "redirect:" + referer;
-
-        } catch (Exception exception){
-            log.warn(exception.getMessage(),ShoppingCartController.class);
-            modelMap.addAttribute("referer",referer);
-            return "redirect:/error";
+                            @CookieValue(required = false, defaultValue = "0") Long userId) {
+        if (userId == 0) {
+            userId = unauthorizedUserService.createUnauthorizedUser().getId();
+            response.addCookie(new CookieHandler().createUserIdCookie(userId));
         }
+        final Long finalUserId = userId;
+        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
+        Optional<Item> optionalItem = itemRepository.findById(id);
+        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
+        return "redirect:" + referer;
     }
 
 }
