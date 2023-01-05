@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -95,6 +96,20 @@ public class ItemService {
         } else {
             log.warn("problem to save '{}' item , repository not found", item);
         }
+    }
+
+    public List<String> getStatusList() {
+        // TODO implement enum
+        return Arrays.asList(
+                "In stock",
+                //You’re currently accepting orders for this product and can fulfill the purchase request. You’re certain that the product will ship (or be in-transit to the customer) in a timely manner because it's available for sale. You can deliver the product to all of the locations that you support in your product data and account shipping settings.
+                "Out of stock",
+                //You’re not currently accepting orders for this product, or the product is not available for purchase or needs to be backordered.
+                "Preorder",
+                //You’re currently taking orders for this product, but it’s not yet been released for sale. You're required to provide the availability date [availability_date] attribute to indicate the day that the product becomes available for delivery.
+                "Backorder"
+                //The product is not available at the moment, but you’re accepting orders and it'll be shipped as soon as it becomes available again. You're required to provide the availability date [availability_date] attribute to indicate the day that the product becomes available for delivery.
+        );
     }
 
 }

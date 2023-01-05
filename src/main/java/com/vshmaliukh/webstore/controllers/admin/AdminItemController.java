@@ -6,6 +6,7 @@ import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
+import com.vshmaliukh.webstore.services.CategoryService;
 import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
@@ -29,8 +30,9 @@ import java.util.Optional;
 public class AdminItemController {
 
     final ItemService itemService;
-    final ItemRepositoryProvider itemRepositoryProvider;
     final ImageService imageService;
+    final CategoryService categoryService;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping("/**")
     public ModelAndView doRedirectToCatalog(ModelMap modelMap) {
@@ -122,8 +124,13 @@ public class AdminItemController {
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
-            modelMap.addAttribute(itemType, itemType.toLowerCase());
-            return new ModelAndView("/admin/item/add", modelMap);
+            List<String> statusList = itemService.getStatusList();
+            List<String> categoryNameList = categoryService.readCategoryNameList();
+
+            modelMap.addAttribute("itemType", itemType.toLowerCase());
+            modelMap.addAttribute("statusList", statusList);
+            modelMap.addAttribute("categoryNameList", categoryNameList);
+            return new ModelAndView("admin/item/create", modelMap);
         }
         return new ModelAndView("redirect:/admin", modelMap);
     }

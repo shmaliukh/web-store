@@ -26,20 +26,14 @@
                 <form id="formElem" class="needs-validation">
                     <div class="row g-3">
                         <div class="col-12">
-                            <label for="itemName" class="form-label">Category</label>
+                            <label for="category" class="form-label">Category</label>
                             <div class="input-group has-validation">
-                                <input type="text" name="category" class="form-control" aria-label="Text input with dropdown button"
-                                       placeholder="Item category" required="">
-                                <div class="input-group-append">
-                                    <!--                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"-->
-                                    <!--                                aria-haspopup="true" aria-expanded="false">Choose-->
-                                    <!--                        </button>-->
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
+                                <select id="category" name="category" class="form-select">
+                                    <option selected="">Choose...</option>
+                                    <th:block th:each="categoryName : ${categoryNameList}">
+                                        <option th:value="${categoryName}" th:text="${categoryName}">category name</option>
+                                    </th:block>
+                                </select>
                                 <div class="invalid-feedback">
                                     Item category is required.
                                 </div>
@@ -91,6 +85,21 @@
                         <div class="col-12">
                             <label for="description" class="form-label">Description</label>
                             <textarea id="description" name="description" class="form-control" placeholder="Product description"></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="status" class="form-label">Status</label>
+                            <div class="input-group has-validation">
+                                <select id="status" name="status" class="form-select">
+                                    <option selected="">Choose...</option>
+                                    <th:block th:each="status : ${statusList}">
+                                        <option th:value="${status}" th:text="${status}">status name</option>
+                                    </th:block>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Item status is required.
+                                </div>
+                            </div>
                         </div>
 
                         <div th:insert="blocks/add-item-form-blocks.html :: ${itemType}"></div>
