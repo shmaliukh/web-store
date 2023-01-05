@@ -38,7 +38,7 @@ public class OrderService {
             } else {
                 quantityToSet = item.getQuantity() - (newQuantity - oldOrderItemQuantity);
             }
-            item.setQuantity(quantityToSet);
+            item.setSoldOutQuantity(quantityToSet);
             itemService.saveItem(item);
         }
     }
@@ -65,7 +65,7 @@ public class OrderService {
 
     private void setUpItemAvailableToBuyQuantity(Integer quantity, Item item, OrderItem orderItem) {
         int availableToBuyQuantity = item.getQuantity() - orderItem.getQuantity();
-        item.setQuantity(availableToBuyQuantity);
+        item.setSoldOutQuantity(availableToBuyQuantity);
         itemService.saveItem(item);
         log.info("sold '{}' // available to buy '{}' item: '{}'", quantity, item, availableToBuyQuantity);
     }

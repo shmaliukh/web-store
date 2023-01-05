@@ -18,7 +18,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,7 +59,7 @@ public class ShoppingCartController {
 //        }
 
         for (Item item : testItems) { // for tests
-            item.setPrice(item.getPrice()* item.getQuantity());
+            item.setCostPrice(item.getPrice()* item.getQuantity());
         }
 
         int totalCount = 0;
