@@ -1,14 +1,13 @@
 package com.vshmaliukh.webstore.model.items;
 
-import javax.persistence.*;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.*;
+import static com.vshmaliukh.webstore.ConstantsForEntities.PAGES_COLUMN;
 
 @Getter
 @Setter
@@ -17,7 +16,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 public abstract class LiteratureItem extends Item {
 
     @Column(name = PAGES_COLUMN, nullable = false)
-    int pages;
+    private int pages;
 
     protected LiteratureItem(Integer id, String category, String name, int price, int quantity, boolean isAvailableInStore, int pages) {
         super(id, category, name, price, quantity, isAvailableInStore);

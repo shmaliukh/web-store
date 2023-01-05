@@ -5,6 +5,8 @@ import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -81,7 +83,7 @@ public class UserService {
     }
 
     public void save(User user) {
-        if(user != null){
+        if (user != null) {
             userRepository.save(user);
         } else {
             log.warn("user not saved // user == NULL");
@@ -99,6 +101,14 @@ public class UserService {
         }
         log.warn("problem to find user entity with '{}'id // return NULL", id);
         return null;
+    }
+
+    public Page<User> getPageWithUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    public Page<User> getPageWithUsersByUsername(String keyword, Pageable pageable) {
+        return userRepository.findByUsernameIgnoreCase(keyword, pageable);
     }
 
 }

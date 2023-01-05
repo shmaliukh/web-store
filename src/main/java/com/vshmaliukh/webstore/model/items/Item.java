@@ -5,14 +5,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.vshmaliukh.webstore.model.AuditModel;
+import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
@@ -42,20 +48,23 @@ public abstract class Item extends AuditModel {
     private Integer id;
 
     @Column(name = CATEGORY_COLUMN, nullable = false)
-    String category;
+    private String category;
 
     @Column(name = NAME_COLUMN, nullable = false, unique = true)
-    String name;
+    private String name;
 
     @Column(name = PRICE_COLUMN, nullable = false)
-    int price;
+    private int price;
 
     @Column(name = QUANTITY_COLUMN, nullable = false)
-    int quantity;
+    private int quantity;
 
     // TODO change boolean value to item status enumeration value
     @Column(name = IS_AVAILABLE_IN_STORE_COLUMN, nullable = false)
-    boolean isAvailableInStore;
+    private boolean isAvailableInStore;
+
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemImage> imageList = new ArrayList<>();
 
     @JsonCreator
     protected Item(@JsonProperty(ITEM_ID_COLUMN) Integer id,
@@ -116,6 +125,10 @@ public abstract class Item extends AuditModel {
             log.warn("item id: '{}' // invalid quantity value to set: '{}' // set up default quantity value: '{}'",
                     getId(), quantity, DEFAULT_QUANTITY);
         }
+    }
+
+    public String getTypeStr() {
+        return getClass().getSimpleName().toLowerCase();
     }
 
 }

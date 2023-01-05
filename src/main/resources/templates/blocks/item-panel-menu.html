@@ -1,31 +1,15 @@
-<div th:fragment="add">
+<div th:fragment="add-item-button">
     <a th:href="|@{/admin/item/add/}${itemType.toLowerCase()}|">
         <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block"
-                th:text="|Add ${itemType.toUpperCase()} form|">Add
+                th:text="|Add item|">Add
         </button>
     </a>
 </div>
 
-<div th:fragment="view">
+<div th:fragment="view-items-button">
     <a th:href="|@{/admin/item/view/}${itemType.toLowerCase()}|">
         <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block"
                 th:text="|View ${itemType.toUpperCase()} panel|">View
-        </button>
-    </a>
-</div>
-
-<div th:fragment="edit">
-    <a th:href="|@{/admin/item/edit/}${itemType.toLowerCase()}|">
-        <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block"
-                th:text="|Edit ${itemType.toUpperCase()} panel|">Edit
-        </button>
-    </a>
-</div>
-
-<div th:fragment="delete">
-    <a th:href="|@{/admin/item/delete/}${itemType.toLowerCase()}|">
-        <button type="button" class="w-100 btn btn-outline-secondary btn-lg btn-block"
-                th:text="|Delete ${itemType.toUpperCase()} panel|">Delete
         </button>
     </a>
 </div>
@@ -35,48 +19,7 @@
         <hr>
         <div class="container">
             <div class="row mt-5 mb-5">
-                <div th:insert="blocks/item-panel-menu.html :: add"></div>
-                <div th:insert="blocks/item-panel-menu.html :: view"></div>
-                <div th:insert="blocks/item-panel-menu.html :: edit"></div>
-            </div>
-        </div>
-    </th:block>
-</div>
-
-<div th:fragment="delete-menu">
-    <th:block th:if="${!itemType.toLowerCase().equals('all')}">
-        <hr>
-        <div class="container">
-            <div class="row mt-5 mb-5">
-                <div th:insert="blocks/item-panel-menu.html :: add"></div>
-                <div th:insert="blocks/item-panel-menu.html :: view"></div>
-                <div th:insert="blocks/item-panel-menu.html :: edit"></div>
-            </div>
-        </div>
-    </th:block>
-</div>
-
-<div th:fragment="edit-menu">
-    <th:block th:if="${!itemType.toLowerCase().equals('all')}">
-        <hr>
-        <div class="container">
-            <div class="row mt-5 mb-5">
-                <div th:insert="blocks/item-panel-menu.html :: add"></div>
-                <div th:insert="blocks/item-panel-menu.html :: view"></div>
-                <div th:insert="blocks/item-panel-menu.html :: delete"></div>
-            </div>
-        </div>
-    </th:block>
-</div>
-
-<div th:fragment="view-menu">
-    <th:block th:if="${!itemType.toLowerCase().equals('all')}">
-        <hr>
-        <div class="container">
-            <div class="row mt-5 mb-5">
-                <div th:insert="blocks/item-panel-menu.html :: add"></div>
-                <div th:insert="blocks/item-panel-menu.html :: edit"></div>
-                <div th:insert="blocks/item-panel-menu.html :: delete"></div>
+                <div th:insert="blocks/item-panel-menu.html :: view-items-button"></div>
             </div>
         </div>
     </th:block>

@@ -19,7 +19,6 @@
 </th:block>
 
 <th:block th:fragment="base-item-titles(itemType)">
-    <th scope="col">#</th>
     <th scope="col">TYPE</th>
     <th scope="col">ID</th>
     <th scope="col">CATEGORY</th>
@@ -51,6 +50,7 @@
 <th:block th:fragment="base-item-titles-with-sorting(pageToRedirect)">
     <th scope="col">#</th>
     <th scope="col">TYPE</th>
+    <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('category','CATEGORY', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>
@@ -62,6 +62,7 @@
 <th:block th:fragment="item-titles-with-sorting(pageToRedirect)">
     <th scope="col">#</th>
     <th scope="col">TYPE</th>
+    <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('category','CATEGORY', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>

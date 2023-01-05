@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -7,7 +8,9 @@ import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRe
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +21,21 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     final ItemRepositoryProvider itemRepositoryProvider;
+    final ImageService imageService;
+
+    public void addImageToItem(Integer itemId, MultipartFile file) {
+        Optional<Item> optionalItem = readItemById(itemId);
+        if (optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            Optional<ItemImage> optionalImage = imageService.formItemImageFromFile(item, file);
+            if (optionalImage.isPresent()) {
+                ItemImage itemImageToSave = optionalImage.get();
+                imageService.saveImage(itemImageToSave);
+            }
+        } else {
+            log.warn("image not added to item with '{}'", itemId);
+        }
+    }
 
     public Optional<Item> readItemById(Integer itemId) {
         ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
@@ -63,7 +81,7 @@ public class ItemService {
             return itemRepositoryByItemTypeNameByType.findAll();
         }
         log.warn("problem to read all items by type name // not found repository // itemTypeName: {}", itemTypeName);
-        return null;
+        return Collections.emptyList();
     }
 
     public <T extends Item> void deleteItem(T item) {

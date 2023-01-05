@@ -3,12 +3,13 @@ package com.vshmaliukh.webstore.model.items.literature_item_imp;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vshmaliukh.webstore.model.items.LiteratureItem;
-
-import javax.persistence.*;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
@@ -20,7 +21,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 public class Comics extends LiteratureItem {
 
     @Column(name = PUBLISHER_COLUMN)
-    String publisher;
+    private String publisher;
 
     @JsonCreator
     public Comics(@JsonProperty(ITEM_ID_COLUMN) Integer id,
