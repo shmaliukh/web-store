@@ -20,8 +20,7 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.HOME_PAGE_VIEW;
 public class UserHomeController {
 
     @GetMapping
-    public String showHomePage(ModelMap modelMap,
-                               @RequestHeader String referer) {
+    public String showHomePage(ModelMap modelMap) {
         User user = new User();
         user.setEmail("user@gmail.com");
         user.setUsername("Your First User");

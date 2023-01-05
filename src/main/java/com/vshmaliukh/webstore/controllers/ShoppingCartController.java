@@ -41,7 +41,6 @@ public class ShoppingCartController {
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
-                                     @RequestHeader String referer,
                                      HttpServletResponse response,
                                      @CookieValue(required = false, defaultValue = "0") Long userId) {
         List<Item> testItems = getTestItemOrderList(); // for tests
@@ -87,9 +86,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/add-one/{type}/{id}")
-    public String incItemQuantity(ModelMap modelMap,
-                                  @RequestHeader String referer,
-                                  @PathVariable String type,
+    public String incItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
                                   @CookieValue Long userId) {
         final Long finalUserId = userId;
@@ -99,9 +96,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/remove-one/{type}/{id}")
-    public String decItemQuantity(ModelMap modelMap,
-                                  @RequestHeader String referer,
-                                  @PathVariable String type,
+    public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
                                   @CookieValue Long userId) {
         Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
