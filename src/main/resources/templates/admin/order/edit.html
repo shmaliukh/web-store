@@ -30,13 +30,13 @@
                 <caption>Order</caption>
                 <thead>
                 <tr class="table-dark">
-                    <th scope="col">ID</th>
-                    <th scope="col">DATE</th>
-                    <th scope="col">USER</th>
-                    <th scope="col">STATUS</th>
-                    <th scope="col">COMMENT</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
+                    <th class="align-middle" scope="col">ID</th>
+                    <th class="align-middle" scope="col">DATE</th>
+                    <th class="align-middle" scope="col">USER</th>
+                    <th class="align-middle" scope="col">STATUS</th>
+                    <th class="align-middle" scope="col">COMMENT</th>
+                    <th class="align-middle" scope="col"></th>
+                    <th class="align-middle" scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -92,15 +92,15 @@
                     <caption th:text="|Order items|"></caption>
                     <thead>
                     <tr class="table-dark">
-                        <th scope="col">#</th>
-                        <th scope="col">ID</th>
-                        <th scope="col">UPDATED</th>
-                        <th scope="col">CATEGORY</th>
-                        <th scope="col">TYPE</th>
-                        <th scope="col">NAME</th>
-                        <th scope="col">PRICE</th>
-                        <th scope="col">QUANTITY</th>
-                        <th scope="col">ACTIVE</th>
+                        <th class="align-middle" scope="col">#</th>
+                        <th class="align-middle" scope="col">ID</th>
+                        <th class="align-middle" scope="col">UPDATED</th>
+                        <th class="align-middle" scope="col">CATEGORY</th>
+                        <th class="align-middle" scope="col">TYPE</th>
+                        <th class="align-middle" scope="col">NAME</th>
+                        <th class="align-middle" scope="col">PRICE</th>
+                        <th class="align-middle" scope="col">QUANTITY</th>
+                        <th class="align-middle" scope="col">ACTIVE</th>
                         <th colspan="2">TOOLS</th>
                     </tr>
                     </thead>
@@ -110,7 +110,7 @@
                         <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
                         <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
                         <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
-                        <td class="align-middle" th:text="${orderItem.getItem().getClass().getSimpleName().toLowerCase()}">Type</td>
+                        <td class="align-middle" th:text="${orderItem.getItem().getTypeStr()}">Type</td>
                         <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
                         <form th:id="'formElem' +${iterator.count}"
                               th:action="'/admin/order/edit/'+${order.getId()}+'/order-item/'+${orderItem.getOrderItemId()}"
@@ -123,7 +123,7 @@
                                 <input th:id="'quantity'+${iterator.count}" class="form-control align-middle" type="number" name="quantity"
                                        th:value="${orderItem.getQuantity()}" th:readonly="${!orderItem.isActive()}" min="0"
                                        th:max="${orderItem.getItem().isAvailableInStore()
-                                                    ? orderItem.getItem().getQuantity() + orderItem.getQuantity()
+                                                    ? orderItem.getItem().getAvailableToBuyQuantity() + orderItem.getQuantity()
                                                     : orderItem.getQuantity()}">
                             </td>
                             <td class="align-middle">

@@ -16,7 +16,7 @@
 </div>
 
 <div class="album py-5 bg-light text-center">
-    <div class="container">
+    <div class="m-2">
         <th:block th:if="${itemList.size() > 0}">
 
             <th:block th:insert="blocks/navigation :: tools('/admin/item/view/' + ${itemType})"></th:block>
@@ -27,7 +27,7 @@
                     <thead>
                     <tr class="table-dark">
                         <th:block th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/item/view/' + ${itemType})"></th:block>
-                        <th scope="col"></th>
+                        <th class="align-middle" scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -38,7 +38,8 @@
                         <td class="align-middle" th:text="${item.getId()}">Id</td>
                         <td class="align-middle" th:text="${item.getCategory()}">Category</td>
                         <td class="align-middle" th:text="${item.getName()}">Name</td>
-                        <td class="align-middle" th:text="${item.getSalePrice()}">Price</td>
+                        <td class="align-middle" th:text="${item.getCostPrice()}">Cost Price</td>
+                        <td class="align-middle" th:text="${item.getSalePrice()}">Sale Price</td>
                         <td class="align-middle" th:text="${item.getAvailableToBuyQuantity()}">Quantity</td>
                         <th:block th:insert="blocks/view-item-table-values :: ${itemType}"></th:block>
                         <td><input class="form-check-input align-middle" type="checkbox" name="isAvailableInStore"
@@ -61,14 +62,13 @@
         <th:block th:if="${itemList.isEmpty()}">
             <div class="container">
                 <p class="lead" th:text="|No ${itemType.toUpperCase()} items|"></p>
-                <hr>
             </div>
         </th:block>
 
-        <!-- TODO implement 'add' item template -->
-        <div th:insert="blocks/item-panel-menu :: add-item-button"></div>
-
-
+        <th:block th:unless="${itemType.equals('all')}">
+            <hr>
+            <div th:insert="blocks/item-panel-menu :: add-item-button"></div>
+        </th:block>
     </div>
 </div>
 
