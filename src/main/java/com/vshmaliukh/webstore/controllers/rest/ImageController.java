@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore.controllers;
+package com.vshmaliukh.webstore.controllers.rest;
 
 import com.vshmaliukh.webstore.ImageUtil;
 import com.vshmaliukh.webstore.model.Image;
@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @Slf4j
-@RestController
+@RestController("/image")
 @AllArgsConstructor
 public class ImageController {
 
     final ImageService imageService;
 
-    @GetMapping("/image/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<byte[]> showProductImage(@PathVariable Long id) {
         Optional<Image> optionalImage = imageService.getImageById(id);
         if (optionalImage.isPresent()) {
@@ -35,7 +35,7 @@ public class ImageController {
         return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/image/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
         Optional<Image> optionalImage = imageService.getImageById(id);
         if (optionalImage.isPresent()) {

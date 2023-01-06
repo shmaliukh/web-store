@@ -32,7 +32,7 @@
                                 <select id="selectCategory" name="category" class="form-select">
                                     <option selected="">Choose...</option>
                                     <script th:inline="javascript">
-                                        generateOptionUsingDataFromApi("selectCategory", "http://localhost:8082/admin/item/statusNameList");
+                                        generateOptionUsingDataFromApi("selectCategory", "http://localhost:8082/category/names");
                                     </script>
                                 </select>
                                 <div class="invalid-feedback">
@@ -89,17 +89,14 @@
                         </div>
 
                         <div class="col-12">
-                            <label for="status" class="form-label">Status</label>
+                            <label for="selectStatus" class="form-label">Status</label>
                             <div class="input-group has-validation">
-                                <select id="status" name="status" class="form-select">
+                                <select id="selectStatus" name="status" class="form-select">
                                     <option selected="">Choose...</option>
-                                    <th:block th:each="status : ${statusList}">
-                                        <option th:value="${status}" th:text="${status}">status name</option>
-                                    </th:block>
+                                    <script th:inline="javascript">
+                                        generateOptionUsingDataFromApi("selectStatus", "http://localhost:8082/item/status-names");
+                                    </script>
                                 </select>
-
-
-
                                 <div class="invalid-feedback">
                                     Item status is required.
                                 </div>

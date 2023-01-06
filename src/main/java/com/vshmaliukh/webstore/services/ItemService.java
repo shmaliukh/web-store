@@ -98,7 +98,7 @@ public class ItemService {
         }
     }
 
-    public List<String> getStatusList() {
+    public List<String> readStatusNameList() {
         // TODO implement enum
         return Arrays.asList(
                 "In stock",

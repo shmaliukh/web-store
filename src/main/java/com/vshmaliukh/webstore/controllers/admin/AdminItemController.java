@@ -11,7 +11,6 @@ import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -125,7 +124,7 @@ public class AdminItemController {
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
-            List<String> statusList = itemService.getStatusList();
+            List<String> statusList = itemService.readStatusNameList();
             List<String> categoryNameList = categoryService.readCategoryNameList();
 
             modelMap.addAttribute("itemType", itemType.toLowerCase());
@@ -170,12 +169,5 @@ public class AdminItemController {
         return ResponseEntity.ok().body(itemList);
     }
 
-    @GetMapping("/statusNameList")
-    public ResponseEntity<List<String>> readItemStatusNameList(){
-        List<String> statusList = itemService.getStatusList();
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(statusList);
-    }
 
 }
