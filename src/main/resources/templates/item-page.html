@@ -33,10 +33,21 @@
 
 <header th:insert="/blocks/page-blocks :: header"></header>
 
+
 <main>
 
     <div class="item-details-block">
         <div class="container">
+            <th:block th:if="${item == null}">
+                <p>
+                    / <a href="/main">main page</a>
+                </p>
+                <div class="col">
+                    <div class="card shadow-sm" >
+                        <p style="display: flex; margin: 3% 4% 3%">There's no such element</p>
+                    </div>
+                </div>
+            </th:block>
             <div class="col" th:each="item: ${item}">
                 <p>
                     / <a href="/main">main page</a>
@@ -73,7 +84,6 @@
                     <div class="item-info" th:each="item: ${item}">
                         <div>
                             <div th:insert="/blocks/item-details :: ${type}">
-
                             </div>
                         </div>
                     </div>
