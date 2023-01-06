@@ -85,10 +85,10 @@ async function getJsonFromApiCall(url) {
     return (await fetch(url)).json();
 }
 
-async function generateOptionUsingDataFromApi(elementId, url){
+async function generateOptionUsingDataFromApi(elementId, url) {
     let select = document.getElementById(elementId);
-    let jsonFromApiCall =  await (getJsonFromApiCall(url));
-    for(let i = 0; i < jsonFromApiCall.length; i++) {
+    let jsonFromApiCall = await (getJsonFromApiCall(url));
+    for (let i = 0; i < jsonFromApiCall.length; i++) {
         let opt = jsonFromApiCall[i];
         let el = document.createElement("option");
         el.textContent = opt;

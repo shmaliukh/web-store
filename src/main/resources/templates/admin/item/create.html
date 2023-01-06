@@ -73,9 +73,20 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <label for="itemQuantity" class="form-label">Quantity</label>
+                            <label for="availableToBuyQuantity" class="form-label">Available quantity to sell</label>
                             <div class="input-group mb-3 has-validation">
-                                <input type="number" name="currentQuantity" class="form-control" id="itemQuantity" placeholder="1" min="0"
+                                <input type="number" name="availableToBuyQuantity" class="form-control" id="availableToBuyQuantity" placeholder="1" min="0"
+                                       required="">
+                                <div class="invalid-feedback">
+                                    Item quantity is required.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="currentQuantity" class="form-label">Current quantity</label>
+                            <div class="input-group mb-3 has-validation">
+                                <input type="number" name="currentQuantity" class="form-control" id="currentQuantity" placeholder="1" min="0"
                                        required="">
                                 <div class="invalid-feedback">
                                     Item quantity is required.

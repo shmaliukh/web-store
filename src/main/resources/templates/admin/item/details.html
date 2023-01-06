@@ -141,7 +141,7 @@
                                     <select id="selectStatus" name="status" class="form-select">
                                         <option th:value="${item.getStatus()}"
                                                 th:text="${item.getStatus()}"
-                                                th:selected="true">
+                                                selected >
                                         </option>
                                         <script th:inline="javascript">
                                             generateOptionUsingDataFromApi("selectStatus", "http://localhost:8082/item/status-names");

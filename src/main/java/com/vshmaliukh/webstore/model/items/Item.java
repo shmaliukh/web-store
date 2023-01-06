@@ -82,10 +82,10 @@ public abstract class Item extends AuditModel {
         this.id = id;
         this.category = category;
         this.name = name;
-        this.currentQuantity = currentQuantity;
-        this.availableToBuyQuantity = availableToBuyQuantity;
-        this.costPrice = costPrice;
-        this.salePrice = salePrice;
+        setCurrentQuantity(currentQuantity);
+        setAvailableToBuyQuantity(availableToBuyQuantity);
+        setCostPrice(costPrice);
+        setSalePrice(salePrice);
         this.description = description;
         this.status = status;
         this.isAvailableInStore = isAvailableInStore;

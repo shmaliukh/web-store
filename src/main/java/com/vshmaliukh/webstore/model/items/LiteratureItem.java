@@ -31,7 +31,7 @@ public abstract class LiteratureItem extends Item {
                              int soldOutQuantity,
                              int pages) {
         super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity);
-        this.pages = pages;
+        setPages(pages);
     }
 
     @Override
@@ -50,6 +50,10 @@ public abstract class LiteratureItem extends Item {
         int result = super.hashCode();
         result = 31 * result + getPages();
         return result;
+    }
+
+    public void setPages(int pages) {
+        this.pages = Math.max(pages, 1);
     }
 
 }
