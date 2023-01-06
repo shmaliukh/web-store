@@ -1,5 +1,5 @@
 <th:block th:fragment="order-titles">
-    <th class="align-middle" scope="col">#</th>
+    <th class="align-middle" scope="row">#</th>
     <th class="align-middle" scope="col">ID</th>
     <th class="align-middle" scope="col">USER_ID</th>
     <th class="align-middle" scope="col">USERNAME</th>
@@ -9,7 +9,7 @@
 </th:block>
 
 <th:block th:fragment="order-titles-with-sorting(pageToRedirect)">
-    <th class="align-middle" scope="col">#</th>
+    <th class="align-middle" scope="row">#</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('userId','USER_ID', ${pageToRedirect})"></th>
     <th class="align-middle" scope="col">USERNAME</th>
@@ -48,7 +48,7 @@
     <th class="align-middle" scope="col">PAGES</th>
 </th:block>
 <th:block th:fragment="base-item-titles-with-sorting(pageToRedirect)">
-    <th class="align-middle" scope="col">#</th>
+    <th class="align-middle" scope="row">#</th>
     <th class="align-middle" scope="col">TYPE</th>
     <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
@@ -61,7 +61,7 @@
 </th:block>
 
 <th:block th:fragment="item-titles-with-sorting(pageToRedirect)">
-    <th class="align-middle" scope="col">#</th>
+    <th class="align-middle" scope="row">#</th>
     <th class="align-middle" scope="col">TYPE</th>
     <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
@@ -75,7 +75,7 @@
 </th:block>
 
 <th:block th:fragment="order-item-titles-with-sorting(pageToRedirect)">
-    <th class="align-middle" scope="col">#</th>
+    <th class="align-middle" scope="row">#</th>
     <th class="align-middle" scope="col">TYPE</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('category','CATEGORY', ${pageToRedirect})"></th>

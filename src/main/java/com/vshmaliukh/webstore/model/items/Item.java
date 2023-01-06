@@ -89,7 +89,7 @@ public abstract class Item extends AuditModel {
         this.description = description;
         this.status = status;
         this.isAvailableInStore = isAvailableInStore;
-        this.soldOutQuantity = soldOutQuantity;
+        setSoldOutQuantity(soldOutQuantity);
     }
 
     @Override
@@ -168,7 +168,7 @@ public abstract class Item extends AuditModel {
                 ", costPrice=" + costPrice +
                 ", salePrice=" + salePrice +
                 ", description='" + description + '\'' +
-                ", state='" + status + '\'' +
+                ", status='" + status + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore +
                 ", imageList=" + imageList +
                 '}';

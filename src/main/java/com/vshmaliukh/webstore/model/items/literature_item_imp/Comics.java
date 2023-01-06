@@ -32,7 +32,7 @@ public class Comics extends LiteratureItem {
                   @JsonProperty("costPrice") int costPrice,
                   @JsonProperty("salePrice") int salePrice,
                   @JsonProperty("description") String description,
-                  @JsonProperty("state") String status,
+                  @JsonProperty("status") String status,
                   @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
                   @JsonProperty("soldOutQuantity") int soldOutQuantity,
                   @JsonProperty(PAGES_COLUMN) int pages,
@@ -71,7 +71,7 @@ public class Comics extends LiteratureItem {
                 ", costPrice=" + getCostPrice() +
                 ", salePrice=" + getSalePrice() +
                 ", description='" + getDescription() + '\'' +
-                ", state='" + getStatus() + '\'' +
+                ", status='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
                 ", imageList=" + getImageList() +
                 ", pages=" + getPages() +

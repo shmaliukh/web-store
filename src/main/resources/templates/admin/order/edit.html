@@ -49,8 +49,9 @@
                           method="post" class="needs-validation">
                         <td class="align-middle">
                             <select class="form-select" name="status">
-                                <option selected th:value="${order.getStatus()}"
-                                        th:text="${order.getStatus()}">
+                                <option th:value="${order.getStatus()}"
+                                        th:text="${order.getStatus()}"
+                                        selected>
                                 </option>
                                 <option th:each="status : ${orderStatusDescriptionMap}"
                                         th:text="${status.getKey()}"
@@ -92,7 +93,7 @@
                     <caption th:text="|Order items|"></caption>
                     <thead>
                     <tr class="table-dark">
-                        <th class="align-middle" scope="col">#</th>
+                        <th class="align-middle" scope="row">#</th>
                         <th class="align-middle" scope="col">ID</th>
                         <th class="align-middle" scope="col">UPDATED</th>
                         <th class="align-middle" scope="col">CATEGORY</th>

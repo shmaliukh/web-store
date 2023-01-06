@@ -38,7 +38,7 @@ public class Book extends LiteratureItem {
                 @JsonProperty("costPrice") int costPrice,
                 @JsonProperty("salePrice") int salePrice,
                 @JsonProperty("description") String description,
-                @JsonProperty("state") String status,
+                @JsonProperty("status") String status,
                 @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
                 @JsonProperty("soldOutQuantity") int soldOutQuantity,
                 @JsonProperty("pages") int pages,
@@ -61,7 +61,7 @@ public class Book extends LiteratureItem {
                 ", costPrice=" + getCostPrice() +
                 ", salePrice=" + getSalePrice() +
                 ", description='" + getDescription() + '\'' +
-                ", state='" + getStatus() + '\'' +
+                ", status='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
                 ", imageList=" + getImageList() +
                 ", pages=" + getPages() +

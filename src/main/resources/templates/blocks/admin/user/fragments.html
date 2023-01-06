@@ -39,7 +39,7 @@
 </th:block>
 
 <th:block th:fragment="user-titles-with-sorting(pageToRedirect)">
-    <th class="align-middle" scope="col">#</th>
+    <th class="align-middle" scope="row">#</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('createdAt','CREATED', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
