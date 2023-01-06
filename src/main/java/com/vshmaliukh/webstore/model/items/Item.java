@@ -60,7 +60,7 @@ public abstract class Item extends AuditModel {
     private int salePrice;
 
     private String description;
-    private String state;
+    private String status;
 
     private boolean isAvailableInStore;
 
@@ -68,26 +68,28 @@ public abstract class Item extends AuditModel {
     private List<ItemImage> imageList = new ArrayList<>();
 
     @JsonCreator
-    protected Item(@JsonProperty("item_id") Integer id,
+    protected Item(@JsonProperty("itemId") Integer id,
                    @JsonProperty("category") String category,
                    @JsonProperty("name") String name,
                    @JsonProperty("currentQuantity") int currentQuantity,
+                   @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,
                    @JsonProperty("costPrice") int costPrice,
                    @JsonProperty("salePrice") int salePrice,
                    @JsonProperty("description") String description,
-                   @JsonProperty("state") String state,
-                   @JsonProperty("isAvailableInStore") boolean isAvailableInStore) {
+                   @JsonProperty("status") String status,
+                   @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
+                   @JsonProperty("soldOutQuantity") int soldOutQuantity) {
         this.id = id;
         this.category = category;
         this.name = name;
         this.currentQuantity = currentQuantity;
-        this.availableToBuyQuantity = currentQuantity;
+        this.availableToBuyQuantity = availableToBuyQuantity;
         this.costPrice = costPrice;
         this.salePrice = salePrice;
         this.description = description;
-        this.state = state;
+        this.status = status;
         this.isAvailableInStore = isAvailableInStore;
-        soldOutQuantity = 0;
+        this.soldOutQuantity = soldOutQuantity;
     }
 
     @Override
@@ -166,7 +168,7 @@ public abstract class Item extends AuditModel {
                 ", costPrice=" + costPrice +
                 ", salePrice=" + salePrice +
                 ", description='" + description + '\'' +
-                ", state='" + state + '\'' +
+                ", state='" + status + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore +
                 ", imageList=" + imageList +
                 '}';

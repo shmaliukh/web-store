@@ -24,18 +24,20 @@ public class Comics extends LiteratureItem {
     private String publisher;
 
     @JsonCreator
-    public Comics(@JsonProperty("item_id") Integer id,
+    public Comics(@JsonProperty("itemId") Integer id,
                   @JsonProperty("category") String category,
                   @JsonProperty("name") String name,
                   @JsonProperty("currentQuantity") int currentQuantity,
+                  @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,
                   @JsonProperty("costPrice") int costPrice,
                   @JsonProperty("salePrice") int salePrice,
                   @JsonProperty("description") String description,
-                  @JsonProperty("state") String state,
+                  @JsonProperty("state") String status,
                   @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
+                  @JsonProperty("soldOutQuantity") int soldOutQuantity,
                   @JsonProperty(PAGES_COLUMN) int pages,
                   @JsonProperty(PUBLISHER_COLUMN) String publisher) {
-        super(id, name, category, currentQuantity, costPrice, salePrice, description, state, isAvailableInStore, pages);
+        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
         this.publisher = publisher;
     }
 
@@ -69,7 +71,7 @@ public class Comics extends LiteratureItem {
                 ", costPrice=" + getCostPrice() +
                 ", salePrice=" + getSalePrice() +
                 ", description='" + getDescription() + '\'' +
-                ", state='" + getState() + '\'' +
+                ", state='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
                 ", imageList=" + getImageList() +
                 ", pages=" + getPages() +

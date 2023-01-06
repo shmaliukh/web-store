@@ -22,13 +22,15 @@ public abstract class LiteratureItem extends Item {
                              String category,
                              String name,
                              int currentQuantity,
+                             int availableToBuyQuantity,
                              int costPrice,
                              int salePrice,
                              String description,
-                             String state,
+                             String status,
                              boolean isAvailableInStore,
+                             int soldOutQuantity,
                              int pages) {
-        super(id, name, category, currentQuantity, costPrice, salePrice, description, state, isAvailableInStore);
+        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity);
         this.pages = pages;
     }
 

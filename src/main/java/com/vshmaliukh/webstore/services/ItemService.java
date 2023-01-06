@@ -58,6 +58,9 @@ public class ItemService {
             if (item.getCurrentQuantity() < 1) {
                 item.setAvailableInStore(false);
             }
+
+            List<ItemImage> imageListByItem = imageService.findImageListByItem(item);
+            item.setImageList(imageListByItem);
             baseItemRepository.save(item);
         } else {
             log.warn("problem to save '{}' item , repository not found", item);

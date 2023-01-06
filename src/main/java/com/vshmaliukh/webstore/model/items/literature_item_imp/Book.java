@@ -30,19 +30,21 @@ public class Book extends LiteratureItem {
     private Date dateOfIssue;
 
     @JsonCreator
-    public Book(@JsonProperty("item_id") Integer id,
+    public Book(@JsonProperty("itemId") Integer id,
                 @JsonProperty("category") String category,
                 @JsonProperty("name") String name,
                 @JsonProperty("currentQuantity") int currentQuantity,
+                @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,
                 @JsonProperty("costPrice") int costPrice,
                 @JsonProperty("salePrice") int salePrice,
                 @JsonProperty("description") String description,
-                @JsonProperty("state") String state,
+                @JsonProperty("state") String status,
                 @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
-                @JsonProperty(PAGES_COLUMN) int pages,
-                @JsonProperty(AUTHOR_COLUMN) String author,
-                @JsonProperty(DATE_COLUMN) Date dateOfIssue) {
-        super(id, name, category, currentQuantity, costPrice, salePrice, description, state, isAvailableInStore, pages);
+                @JsonProperty("soldOutQuantity") int soldOutQuantity,
+                @JsonProperty("pages") int pages,
+                @JsonProperty("author") String author,
+                @JsonProperty("date") Date dateOfIssue) {
+        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
         this.author = author;
         this.dateOfIssue = dateOfIssue;
     }
@@ -59,7 +61,7 @@ public class Book extends LiteratureItem {
                 ", costPrice=" + getCostPrice() +
                 ", salePrice=" + getSalePrice() +
                 ", description='" + getDescription() + '\'' +
-                ", state='" + getState() + '\'' +
+                ", state='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
                 ", imageList=" + getImageList() +
                 ", pages=" + getPages() +

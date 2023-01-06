@@ -17,96 +17,24 @@
 
 <div class="album py-5 bg-light text-center">
 
-    <div class="m-2">
-        <div class="table-responsive-md">
-            <table class="w-100 table table-striped">
-                <caption th:text="|Item ${item.getName()} table|"></caption>
-                <thead>
-                <tr class="table-dark">
-                    <th:block th:insert="blocks/table-titles :: base-item-titles(${item.getTypeStr()})"></th:block>
-                    <th class="align-middle" scope="col"></th>
-                    <th class="align-middle" scope="col"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <form id="formElem" class="needs-validation">
-                        <td class="align-middle" th:text="${item.getTypeStr()}">Type</td>
-                        <td class="align-middle" th:text="${item.getId()}">Id</td>
-                        <input type="hidden" th:value="${item.getId()}" name="item_id">
-                        <td class="align-middle">
-                            <input class="form-control align-middle" type="text" name="category"
-                                   th:value="${item.getCategory()}">
-                        </td>
-                        <td class="align-middle">
-                            <input class="form-control align-middle" type="text" name="name" th:value="${item.getName()}">
-                        </td>
-                        <td class="align-middle">
-                            <input class="form-control align-middle" type="number" name="price" min="0" th:value="${item.getPrice()}">
-                        </td>
-                        <td class="align-middle">
-                            <input class="form-control align-middle" type="number" name="quantity" min="0"
-                                   th:value="${item.getCurrentQuantity()}">
-                        </td>
-                        <th:block th:insert="blocks/edit-item-table-values :: ${item.getTypeStr()}"></th:block>
-                        <td class="align-middle">
-                            <input id="checkbox" class="form-check-input align-middle"
-                                   name="isAvailableInStore" type="checkbox"
-                                   role="switch"
-                                   th:value="${item.isAvailableInStore()}"
-                                   th:checked="${item.isAvailableInStore()}">
-                            <th:block th:insert="blocks/generated-scripts :: checkBoxWithName(checkbox)"></th:block>
-                        </td>
-                        <td class="align-middle">
-                            <button class="btn btn-outline-success" type="submit">Save</button>
-                        </td>
-                        <script th:inline="javascript">
-                            formElem.onsubmit = async (e) => {
-                                e.preventDefault();
-                                fetchAddingItemFormWithJsonBodyWithItemClassType(
-                                    "formElem",
-                                    "/admin/item/add",
-                                    "post",
-                                    "/admin/item/" + [[${item.getId()}]] + "/details",
-                                    [[${item.getTypeStr()}]]
-                                );
-                            };
-                        </script>
-                    </form>
-                    <td class="align-middle">
-                        <button id="deleteButton" class="btn btn-outline-danger" type="submit">Delete</button>
-                    </td>
-                    <script th:inline="javascript">
-                        deleteButton.onclick = async (e) => {
-                            e.preventDefault();
-                            askToDeleteItem(
-                                [[${item.getId()}]],
-                                "/admin/item/catalog/"
-                            );
-                        };
-                    </script>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="m-2">
+    <div class="container">
         <div class="table-responsive-md">
             <table class="w-100 table table-striped">
                 <caption th:text="|Additional info|"></caption>
                 <thead>
                 <tr class="table-dark">
+                    <th class="align-middle" scope="col">ID</th>
                     <th class="align-middle" scope="col">CREATED</th>
                     <th class="align-middle" scope="col">UPDATED</th>
+                    <th class="align-middle" scope="col">SOLD</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
+                    <td class="align-middle" th:text="${item.getId()}">CreatedAt</td>
                     <td class="align-middle" th:text="${item.getCreatedAt()}">CreatedAt</td>
                     <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
+                    <td class="align-middle" th:text="${item.getSoldOutQuantity()}">Sold</td>
                 </tr>
                 </tbody>
             </table>
@@ -116,11 +44,171 @@
     <hr>
 
     <div class="container">
+        <div class="album mb-3 bg-light text-center">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h3 class="my-0 font-weight-normal" th:text="|${item.getTypeStr().toUpperCase()} card|">Item card</h3>
+                </div>
+                <div class="card-body">
+                    <form id="formElem" class="needs-validation">
+                        <input type="hidden" th:value="${item.getId()}" name="itemId">
+                        <input type="hidden" th:value="${item.getSoldOutQuantity()}" name="soldOutQuantity">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="selectCategory" class="form-label">Category</label>
+                                <div class="input-group has-validation">
+                                    <select id="selectCategory" name="category" class="form-select">
+                                        <option th:value="${item.getCategory()}"
+                                                th:text="${item.getCategory()}"
+                                                th:selected="true">
+                                        </option>
+                                        <script th:inline="javascript">
+                                            generateOptionUsingDataFromApi("selectCategory", "http://localhost:8082/category/names");
+                                        </script>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Item category is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="itemName" class="form-label">Item name</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text">@</span>
+                                    <input type="text" name="name" class="form-control" id="itemName" placeholder="Item name"
+                                           th:value="${item.getName()}" required="">
+                                    <div class="invalid-feedback">
+                                        Item name is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="costPrice" class="form-label">Cost price</label>
+                                <div class="input-group mb-3 has-validation">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" name="costPrice" class="form-control" id="costPrice" placeholder="0" min="0"
+                                           th:value="${item.getCostPrice()}" required="">
+                                    <div class="invalid-feedback">
+                                        Item cost price is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="salePrice" class="form-label">Sale price</label>
+                                <div class="input-group mb-3 has-validation">
+                                    <span class="input-group-text">$</span>
+                                    <!--                                TODO implement script to change 'min' value (min value = costPrice)-->
+                                    <input type="number" name="salePrice" class="form-control" id="salePrice" placeholder="0" min="0"
+                                           th:value="${item.getSalePrice()}" required="">
+                                    <div class="invalid-feedback">
+                                        Valid item sale price is required.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="availableToBuyQuantity" class="form-label">Available quantity to sell</label>
+                                <div class="input-group mb-3 has-validation">
+                                    <input type="number" name="availableToBuyQuantity" class="form-control" id="availableToBuyQuantity" placeholder="1" min="0"
+                                           th:value="${item.getAvailableToBuyQuantity()}" required="">
+                                    <div class="invalid-feedback">
+                                        Item quantity is required.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="currentQuantity" class="form-label">Current quantity</label>
+                                <div class="input-group mb-3 has-validation">
+                                    <input type="number" name="currentQuantity" class="form-control" id="currentQuantity" placeholder="1" min="0"
+                                           th:value="${item.getCurrentQuantity()}" required="">
+                                    <div class="invalid-feedback">
+                                        Item quantity is required.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea id="description" name="description" class="form-control" placeholder="Product description"
+                                          th:value="${item.getDescription()}" th:text="${item.getDescription()}">
+                                </textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="selectStatus" class="form-label">Status</label>
+                                <div class="input-group has-validation">
+                                    <select id="selectStatus" name="status" class="form-select">
+                                        <option th:value="${item.getStatus()}"
+                                                th:text="${item.getStatus()}"
+                                                th:selected="true">
+                                        </option>
+                                        <script th:inline="javascript">
+                                            generateOptionUsingDataFromApi("selectStatus", "http://localhost:8082/item/status-names");
+                                        </script>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Item status is required.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:insert="blocks/add-item-form-blocks.html :: ${item.getTypeStr()}"></div>
+
+                            <div class="d-flex justify-content-around align-items-center">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" name="isAvailableInStore" type="checkbox" role="switch"
+                                           id="flexSwitchCheckChecked"
+                                           th:value="${item.isAvailableInStore()}"
+                                           th:checked="${item.isAvailableInStore()}">
+                                    <label class="form-check-label" for="flexSwitchCheckChecked">Is available in store</label>
+                                    <th:block th:insert="blocks/generated-scripts :: checkBoxWithName(flexSwitchCheckChecked)"></th:block>
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr>
+                        <button class="w-100 btn btn-outline-success" type="submit">Save</button>
+                    </form>
+
+                    <script th:inline="javascript">
+                        formElem.onsubmit = async (e) => {
+                            e.preventDefault();
+                            fetchAddingItemFormWithJsonBodyWithItemClassType(
+                                "formElem",
+                                "/admin/item/add",
+                                "post",
+                                "/admin/item/" + [[${item.getId()}]] + "/details",
+                                [[${item.getTypeStr()}]]
+                            );
+                        };
+                    </script>
+
+                    <hr>
+                    <button id="deleteButton" class="btn btn-outline-danger w-100" type="submit">Delete</button>
+                    <script th:inline="javascript">
+                        deleteButton.onclick = async (e) => {
+                            e.preventDefault();
+                            askToDeleteItem(
+                                [[${item.getId()}]],
+                                "/admin/item/catalog/"
+                            );
+                        };
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="container">
         <h2>Upload Image</h2>
         <form method="post" th:action="|@{/admin/item/}${item.getId()}@{/image}|" enctype="multipart/form-data">
             <div class="input-group">
-                <input type="file" class="form-control" id="inputGroupFile"  aria-describedby="inputGroupFileAddon04" name="imageFile" accept="image/*" aria-label="Upload">
-                <button class="btn btn-outline-secondary" type="submit" >Upload image</button>
+                <input type="file" class="form-control" id="inputGroupFile" aria-describedby="inputGroupFileAddon04" name="imageFile" accept="image/*"
+                       aria-label="Upload">
+                <button class="btn btn-outline-secondary" type="submit">Upload image</button>
             </div>
         </form>
     </div>
