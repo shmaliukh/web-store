@@ -23,9 +23,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.SHOPPING_CART;
-import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
-
 @Controller
 @RequestMapping("/shopping-cart")
 @AllArgsConstructor
@@ -82,7 +79,7 @@ public class ShoppingCartController {
         modelMap.addAttribute("items", testItems);
         modelMap.addAttribute("totalItems", totalCount);
         modelMap.addAttribute("totalPrice", totalPrice);
-        return new ModelAndView(SHOPPING_CART_VIEW);
+        return new ModelAndView("shopping-cart");
     }
 
     @GetMapping("/add-one/{type}/{id}")
@@ -92,7 +89,7 @@ public class ShoppingCartController {
         final Long finalUserId = userId;
         Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
         optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
-        return "redirect:/" + SHOPPING_CART;
+        return "redirect:/shopping-cart";
     }
 
     @GetMapping("/remove-one/{type}/{id}")
@@ -101,7 +98,7 @@ public class ShoppingCartController {
                                   @CookieValue Long userId) {
         Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
         optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId));
-        return "redirect:/" + SHOPPING_CART;
+        return "redirect:/shopping-cart";
     }
 
     public List<Cart> getTestCarts() {
