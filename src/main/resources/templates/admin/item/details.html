@@ -273,6 +273,19 @@
                         </td>
 
                         <td class="align-middle">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                </div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                           aria-describedby="inputGroupFileAddon01">
+                                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle">
                             <button th:id="${'deleteImageButton'+itemImage.getId()}" type="button" class="w-100 btn btn-outline-danger">
                                 Delete
                             </button>
@@ -286,6 +299,7 @@
                                 };
                             </script>
                         </td>
+
                     </tr>
                     </tbody>
                 </table>

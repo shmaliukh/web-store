@@ -87,22 +87,22 @@
 </th:block>
 
 <div th:fragment="magazine(pageToRedirect)">
-    <th th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
+    <th class="align-middle" th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
 </div>
 
 <div th:fragment="newspaper(pageToRedirect)">
-    <th th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
+    <th class="align-middle" th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
 </div>
 
 <div th:fragment="book(pageToRedirect)">
-    <th th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('author','AUTHOR', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('dateOfIssue','DATE', ${pageToRedirect})"></th>
+    <th class="align-middle" th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
+    <th class="align-middle" th:replace="blocks/sorting :: sorting('author','AUTHOR', ${pageToRedirect})"></th>
+    <th class="align-middle" th:replace="blocks/sorting :: sorting('dateOfIssue','DATE', ${pageToRedirect})"></th>
 </div>
 
 <div th:fragment="comics(pageToRedirect)">
-    <th th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('publisher','PUBLISHER', ${pageToRedirect})"></th>
+    <th class="align-middle" th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
+    <th class="align-middle" th:replace="blocks/sorting :: sorting('publisher','PUBLISHER', ${pageToRedirect})"></th>
 </div>
 
 <div th:fragment="all(pageToRedirect)">
