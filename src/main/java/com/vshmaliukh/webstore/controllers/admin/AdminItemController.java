@@ -145,7 +145,7 @@ public class AdminItemController {
 
     @PutMapping("/add")
     public <T extends Item> ResponseEntity<Void> doPutAddItem(@CookieValue(defaultValue = "0") Long userId,
-                                                       @RequestBody T item) {
+                                                              @RequestBody T item) {
         itemService.saveItem(item);
         if (itemService.isItemSaved(item)) {
             log.info("saved item to database: '{}'", item);
@@ -157,14 +157,14 @@ public class AdminItemController {
 
     @PostMapping("/{itemId}/image")
     public ModelAndView uploadImage(@PathVariable Integer itemId,
-                             @RequestParam("imageFile") MultipartFile imageFile,
-                             ModelMap modelMap) {
+                                    @RequestParam("imageFile") MultipartFile imageFile,
+                                    ModelMap modelMap) {
         itemService.addImageToItem(itemId, imageFile);
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 
     @GetMapping("/{itemType}")
-    public ResponseEntity<List<? extends Item>> readItemListByType(@PathVariable(name = "itemType") String itemType){
+    public ResponseEntity<List<? extends Item>> readItemListByType(@PathVariable(name = "itemType") String itemType) {
         List<? extends Item> itemList = itemService.readAllItemsByTypeName(itemType);
         return ResponseEntity.ok().body(itemList);
     }
