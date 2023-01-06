@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Slf4j
-@RestController("/category")
+@RestController
 @AllArgsConstructor
 public class CategoryController {
 
     final CategoryService categoryService;
 
-    @GetMapping("/names")
+    @GetMapping("/category/names")
     public ResponseEntity<List<String>> readCatalogNameList(){
         List<String> categoryNameList = categoryService.readCategoryNameList();
         return ResponseEntity.ok()

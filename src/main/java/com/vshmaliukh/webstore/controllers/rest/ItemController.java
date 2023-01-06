@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Slf4j
-@RestController("/item")
+@RestController
 @AllArgsConstructor
 public class ItemController {
 
     final ItemService itemService;
 
-    @GetMapping("/status-names")
+    @GetMapping("/item/status-names")
     public ResponseEntity<List<String>> readItemStatusNameList(){
         List<String> statusList = itemService.readStatusNameList();
         return ResponseEntity.ok()
