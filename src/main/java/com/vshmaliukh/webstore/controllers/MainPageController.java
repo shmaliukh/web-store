@@ -50,35 +50,17 @@ public class MainPageController {
     public ModelAndView showCatalogPage(ModelMap modelMap,
                                   @PathVariable String type) {
         List<? extends Item> items = itemService.readAllItemsByTypeName(type);
-
-        List<Item> itemList = getTestItemOrderList(); // for test
-
-        modelMap.addAttribute("itemList", itemList);
-
-//        modelMap.addAttribute("itemList", items);
+        modelMap.addAttribute("itemList", items);
         return new ModelAndView("catalog");
-    }
-
-    private static List<Item> getTestItemOrderList() {
-        List<Item> itemList = new ArrayList<>();
-        itemList.add(new Book(1, "1 book name", "book", 2, 3, true, 4, "Vlad1", new Date()));
-        itemList.add(new Book(2, "2 book name", "book", 3, 4, true, 5, "Vlad2", new Date()));
-        itemList.add(new Magazine(3, "Magazine name", "magazine", 4, 5, true, 6));
-        itemList.add(new Comics(4, "Comics name", "comics", 5, 6, true, 7, "Some publisher"));
-        return itemList;
     }
 
     @GetMapping("/catalog/{type}/{id}")
     public ModelAndView showItemPage(ModelMap modelMap,
                                @PathVariable String type,
-                               @PathVariable Long id) {
-//        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
-
+                               @PathVariable Integer id) {
+        Item item = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id).get();
         modelMap.addAttribute("type", type.toLowerCase());
-
-//        modelMap.addAttribute("item",item);
-        Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
-        modelMap.addAttribute("item", book);
+        modelMap.addAttribute("item",item);
         return new ModelAndView("item-page");
     }
 
