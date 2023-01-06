@@ -7,6 +7,7 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BookRepository;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UnauthorizedUserService;
@@ -34,14 +35,9 @@ public class MainPageController {
     @GetMapping
     public ModelAndView showMainPage(ModelMap modelMap) {
         // todo refactor template for links
-
-        // get categories and types from db
-
-        List<String> categories = new ArrayList<>(Arrays.asList("Literature", "Another category"));
-        List<List<String>> types = new ArrayList<>(Arrays.asList(
-                Arrays.asList("Books", "Newspapers", "Comics", "Magazines"),
-                Arrays.asList("Another type", "And another one")));
-        modelMap.addAttribute("categories", categories);
+        List<String> types = new ArrayList<>();
+        itemRepositoryProvider.itemClassNameRepositoryMap.forEach((k,o)->types.add(k.toUpperCase()));
+//        modelMap.addAttribute("categories", categories);
         modelMap.addAttribute("types", types);
         return new ModelAndView("main-page",modelMap);
     }
