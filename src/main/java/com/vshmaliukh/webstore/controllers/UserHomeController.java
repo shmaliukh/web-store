@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.USER_HOME;
-import static com.vshmaliukh.webstore.controllers.ViewsNames.HOME_PAGE_VIEW;
 
 @Controller
 @RequestMapping("/" + USER_HOME)
@@ -18,18 +17,18 @@ import static com.vshmaliukh.webstore.controllers.ViewsNames.HOME_PAGE_VIEW;
 public class UserHomeController {
 
     @GetMapping
-    public ModelAndView showHomePage(ModelMap modelMap){
+    public ModelAndView showHomePage(ModelMap modelMap) {
         User user = new User();
         user.setEmail("user@gmail.com");
         user.setUsername("Your First User");
-        modelMap.addAttribute("user",user);
-        return new ModelAndView(HOME_PAGE_VIEW,modelMap);
+        modelMap.addAttribute("user", user);
+        return new ModelAndView("user-home-page");
     }
 
     @GetMapping("/{data}")
-    public ModelAndView showUsersEditPage(@PathVariable String data, ModelMap modelMap){
-        modelMap.addAttribute("form",data);
-        return new ModelAndView("edit-data-users-page",modelMap);
+    public ModelAndView showUsersEditPage(@PathVariable String data, ModelMap modelMap) {
+        modelMap.addAttribute("form", data);
+        return new ModelAndView("edit-data-users-page", modelMap);
     }
 
 }

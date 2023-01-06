@@ -12,23 +12,17 @@ import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UnauthorizedUserService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.SHOPPING_CART;
-import static com.vshmaliukh.webstore.controllers.ViewsNames.SHOPPING_CART_VIEW;
-
-@Slf4j
 @Controller
 @RequestMapping("/shopping-cart")
 @AllArgsConstructor
@@ -43,13 +37,15 @@ public class ShoppingCartController {
     final UnauthorizedUserService unauthorizedUserService;
 
     @GetMapping
-    public ModelAndView showCartPage(ModelMap modelMap, HttpServletResponse response,
-                                     @CookieValue(required = false,defaultValue = "0") Long userId){
+    public ModelAndView showCartPage(ModelMap modelMap,
+                                     HttpServletResponse response,
+                                     @CookieValue(required = false, defaultValue = "0") Long userId) {
         List<Item> testItems = getTestItemOrderList(); // for tests
-        if(userId==0){
+        if (userId == 0) {
             userId = unauthorizedUserService.createUnauthorizedUser().getId();
             response.addCookie(cookieHandler.createUserIdCookie(userId));
         }
+
 //        List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(id).getId()); // todo uncomment when test items will be removed
 //        List<Item> items = new ArrayList<>();
 //        for (Cart cart : carts) {
@@ -60,7 +56,7 @@ public class ShoppingCartController {
 //        }
 
         for (Item item : testItems) { // for tests
-            item.setPrice(item.getPrice()* item.getQuantity());
+            item.setPrice(item.getPrice() * item.getQuantity());
         }
 
         int totalCount = 0;
@@ -80,39 +76,29 @@ public class ShoppingCartController {
             totalCount = totalCount + item.getQuantity();
         }
 
-        modelMap.addAttribute("items",testItems);
-        modelMap.addAttribute("totalItems",totalCount);
-        modelMap.addAttribute("totalPrice",totalPrice);
-        return new ModelAndView(SHOPPING_CART_VIEW);
+        modelMap.addAttribute("items", testItems);
+        modelMap.addAttribute("totalItems", totalCount);
+        modelMap.addAttribute("totalPrice", totalPrice);
+        return new ModelAndView("shopping-cart");
     }
 
     @GetMapping("/add-one/{type}/{id}")
     public String incItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @CookieValue Long userId){
-        try {
-            final Long finalUserId = userId;
-            Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-            optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
-            return "redirect:/" + SHOPPING_CART;
-        } catch (Exception exception){
-            log.warn(exception.getMessage(),ShoppingCartController.class);
-            return "redirect:/error"; // todo implement error page mapping
-        }
+                                  @CookieValue Long userId) {
+        final Long finalUserId = userId;
+        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
+        return "redirect:/shopping-cart";
     }
 
     @GetMapping("/remove-one/{type}/{id}")
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
-                                  @CookieValue Long userId){
-        try {
-            Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
+                                  @CookieValue Long userId) {
+        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
         optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId));
-            return "redirect:/" + SHOPPING_CART;
-        } catch (Exception exception){
-            log.warn(exception.getMessage(),ShoppingCartController.class);
-            return "redirect:/error"; // todo implement error page mapping
-        }
+        return "redirect:/shopping-cart";
     }
 
     public List<Cart> getTestCarts() {
@@ -144,7 +130,5 @@ public class ShoppingCartController {
         itemList.add(new Comics(4, "Comics name", "comics", 5, 6, true, 7, "Some publisher"));
         return itemList;
     }
-
-
 
 }
