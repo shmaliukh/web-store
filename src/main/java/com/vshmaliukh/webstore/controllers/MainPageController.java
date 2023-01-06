@@ -43,8 +43,7 @@ public class MainPageController {
                 Arrays.asList("Another type", "And another one")));
         modelMap.addAttribute("categories", categories);
         modelMap.addAttribute("types", types);
-        throw new RuntimeException();
-//        return new ModelAndView(MAIN_PAGE_VIEW,modelMap);
+        return new ModelAndView("main-page",modelMap);
     }
 
     @GetMapping("/catalog/{type}")
