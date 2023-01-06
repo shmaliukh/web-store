@@ -55,7 +55,17 @@
                         <input type="hidden" th:value="${item.getSoldOutQuantity()}" name="soldOutQuantity">
 
                         <div class="mb-3 row">
-                            <label for="selectCategory" class="col-sm-2 col-form-label d-flex justify-content-end d-flex justify-content-end">Category</label>
+                            <label for="selectCategory"
+                                   class="col-sm-2 col-form-label d-flex justify-content-end d-flex justify-content-end">Id</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" th:value="${item.getId()}" disabled="">
+                            </div>
+                        </div>
+
+
+                        <div class="mb-3 row">
+                            <label for="selectCategory"
+                                   class="col-sm-2 col-form-label d-flex justify-content-end d-flex justify-content-end">Category</label>
                             <div class="col-sm-10">
                                 <select id="selectCategory" name="category" class="form-select">
                                     <option th:value="${item.getCategory()}"
@@ -116,7 +126,8 @@
                         </div>
 
                         <div class="mb-3 row">
-                            <label for="availableToBuyQuantity" class="col-sm-2 col-form-label d-flex justify-content-end">Available quantity to sell</label>
+                            <label for="availableToBuyQuantity" class="col-sm-2 col-form-label d-flex justify-content-end">Available quantity to
+                                sell</label>
                             <div class="col-sm-10">
                                 <div class="input-group has-validation">
                                     <input type="number" name="availableToBuyQuantity" class="form-control" id="availableToBuyQuantity"
@@ -141,7 +152,6 @@
                                 </div>
                             </div>
                         </div>
-
 
 
                         <div class="mb-3 row">
