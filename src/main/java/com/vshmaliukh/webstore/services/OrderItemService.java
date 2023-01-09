@@ -41,7 +41,9 @@ public class OrderItemService {
     private OrderItem generateOrderItemIfExist(Integer quantity, OrderItem orderItem) {
         int orderItemQuantity = orderItem.getQuantity();
         orderItem.setQuantity(orderItemQuantity + quantity);
-        orderItem.setActive(true);
+        if (orderItem.getQuantity() >= 1) {
+            orderItem.setActive(false);
+        }
         return orderItem;
     }
 
