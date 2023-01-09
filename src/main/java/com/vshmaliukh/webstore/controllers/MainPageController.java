@@ -31,8 +31,7 @@ public class MainPageController {
     final UnauthorizedUserService unauthorizedUserService;
 
     @GetMapping
-    public ModelAndView showMainPage(ModelMap modelMap) {
-        // todo refactor template for links
+    public ModelAndView showMainPage(ModelMap modelMap) { // todo refactor template for links
         List<String> types = new ArrayList<>();
         itemRepositoryProvider.itemClassNameRepositoryMap.forEach((k, o) -> types.add(k.toUpperCase()));
 //        modelMap.addAttribute("categories", categories);
