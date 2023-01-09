@@ -36,6 +36,9 @@ public class ShoppingCartController {
     public ModelAndView showCartPage(ModelMap modelMap,
                                      HttpServletResponse response,
                                      @CookieValue(required = false, defaultValue = "0") Long userId) {
+
+        // todo add checking for user authorizing
+
         if (userId == 0) {
             userId = unauthorizedUserService.createUnauthorizedUser().getId();
             response.addCookie(cookieHandler.createUserIdCookie(userId));
