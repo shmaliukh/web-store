@@ -33,6 +33,9 @@ public class Cart {
     @Column(name = ITEM_ID_COLUMN, nullable = false)
     private Integer itemId;
 
+    @Column(name = "authorization", nullable = false)
+    private Boolean authorization;
+
     @Column(name = QUANTITY_COLUMN, nullable = false)
     private Integer itemQuantity;
 
