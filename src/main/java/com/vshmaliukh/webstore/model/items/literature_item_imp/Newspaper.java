@@ -31,7 +31,7 @@ public class Newspaper extends LiteratureItem {
                      @JsonProperty("status") String status,
                      @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
                      @JsonProperty("soldOutQuantity") int soldOutQuantity,
-                     @JsonProperty(PAGES_COLUMN) int pages) {
+                     @JsonProperty("pages") int pages) {
         super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
     }
 

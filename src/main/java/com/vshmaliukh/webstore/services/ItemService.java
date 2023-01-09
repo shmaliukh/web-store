@@ -38,6 +38,21 @@ public class ItemService {
         }
     }
 
+    public void changeItemImage(Integer itemId, Long imageId, MultipartFile file) {
+        Optional<Item> optionalItem = readItemById(itemId);
+        if (optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            Optional<ItemImage> optionalImage = imageService.formItemImageFromFile(item, file);
+            if (optionalImage.isPresent()) {
+                ItemImage itemImageToSave = optionalImage.get();
+                itemImageToSave.setId(imageId);
+                imageService.saveImage(itemImageToSave);
+            }
+        } else {
+            log.warn("image not changed // item id: '{}' // image id: '{}'", itemId, imageId);
+        }
+    }
+
     public Optional<Item> readItemById(Integer itemId) {
         ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
         return allItemRepository.findById(itemId);

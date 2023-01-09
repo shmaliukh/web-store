@@ -35,8 +35,8 @@ public class Comics extends LiteratureItem {
                   @JsonProperty("status") String status,
                   @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
                   @JsonProperty("soldOutQuantity") int soldOutQuantity,
-                  @JsonProperty(PAGES_COLUMN) int pages,
-                  @JsonProperty(PUBLISHER_COLUMN) String publisher) {
+                  @JsonProperty("pages") int pages,
+                  @JsonProperty("publisher") String publisher) {
         super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
         this.publisher = publisher;
     }

@@ -273,16 +273,14 @@
                         </td>
 
                         <td class="align-middle">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                            <form method="post" th:action="|@{/admin/item/}${item.getId()}@{/image/}${itemImage.getId()}|"
+                                  enctype="multipart/form-data">
+                                <div class="input-group">
+                                    <input type="file" class="form-control" aria-describedby="inputGroupFileAddon04" aria-label="Upload"
+                                           name="imageFile" accept="image/*">
+                                    <button class="btn btn-outline-success" type="submit">Upload</button>
                                 </div>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="inputGroupFile01"
-                                           aria-describedby="inputGroupFileAddon01">
-                                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                </div>
-                            </div>
+                            </form>
                         </td>
 
                         <td class="align-middle">

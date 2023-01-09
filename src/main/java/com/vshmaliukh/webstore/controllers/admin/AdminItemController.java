@@ -163,11 +163,19 @@ public class AdminItemController {
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 
+    @PostMapping("/{itemId}/image/{imageId}")
+    public ModelAndView uploadImage(@PathVariable Integer itemId,
+                                    @PathVariable Long imageId,
+                                    @RequestParam("imageFile") MultipartFile imageFile,
+                                    ModelMap modelMap) {
+        itemService.changeItemImage(itemId, imageId, imageFile);
+        return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
+    }
+
     @GetMapping("/{itemType}")
     public ResponseEntity<List<? extends Item>> readItemListByType(@PathVariable(name = "itemType") String itemType) {
         List<? extends Item> itemList = itemService.readAllItemsByTypeName(itemType);
         return ResponseEntity.ok().body(itemList);
     }
-
 
 }
