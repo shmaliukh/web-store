@@ -39,9 +39,15 @@ public class ShoppingCartController {
 
         // todo add checking for user authorizing
 
+        unauthorizedUserService.removeOldUsers(); // todo refactor usage of old unauthorized users removing
+
         if (userId == 0) {
-            userId = unauthorizedUserService.createUnauthorizedUser().getId();
-            response.addCookie(cookieHandler.createUserIdCookie(userId));
+            userId = unauthorizedUserService
+                    .createUnauthorizedUser()
+                    .getId();
+            response.addCookie(
+                    cookieHandler.createUserIdCookie(userId)
+            );
         }
         List<Cart> carts = cartService.getCartsByUserId(unauthorizedUserService.getUserById(userId).getId());
         List<Item> items = new ArrayList<>();
