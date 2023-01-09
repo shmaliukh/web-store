@@ -40,7 +40,7 @@ public class ShoppingCartController {
             userId = unauthorizedUserService.createUnauthorizedUser().getId();
             response.addCookie(cookieHandler.createUserIdCookie(userId));
         }
-        List<Cart> carts = cartService.getCartsByUserId(userService.getUserById(userId).getId());
+        List<Cart> carts = cartService.getCartsByUserId(unauthorizedUserService.getUserById(userId).getId());
         List<Item> items = new ArrayList<>();
         for (Cart cart : carts) {
             Item item = itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getCategory())
