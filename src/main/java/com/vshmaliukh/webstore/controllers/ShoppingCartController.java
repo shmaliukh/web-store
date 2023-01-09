@@ -37,19 +37,21 @@ public class ShoppingCartController {
                                      HttpServletResponse response,
                                      @CookieValue(required = false, defaultValue = "0") Long userId) {
 
+
         // todo add checking for user authorizing
 
         boolean authorization = false;
+        if(!authorization) {
+            unauthorizedUserService.removeOldUsers(); // todo refactor usage of old unauthorized users removing
 
-        unauthorizedUserService.removeOldUsers(); // todo refactor usage of old unauthorized users removing
-
-        if (userId == 0) {
-            userId = unauthorizedUserService
-                    .createUnauthorizedUser()
-                    .getId();
-            response.addCookie(
-                    cookieHandler.createUserIdCookie(userId)
-            );
+            if (userId == 0) {
+                userId = unauthorizedUserService
+                        .createUnauthorizedUser()
+                        .getId();
+                response.addCookie(
+                        cookieHandler.createUserIdCookie(userId)
+                );
+            }
         }
         List<Cart> carts = cartService.getCartsByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
         List<Item> items = new ArrayList<>();

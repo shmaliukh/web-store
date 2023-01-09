@@ -72,9 +72,11 @@ public class MainPageController {
 
         boolean authorization = false;
 
-        if (userId == 0) {
-            userId = unauthorizedUserService.createUnauthorizedUser().getId();
-            response.addCookie(new CookieHandler().createUserIdCookie(userId));
+        if(!authorization){
+            if (userId == 0) {
+                userId = unauthorizedUserService.createUnauthorizedUser().getId();
+                response.addCookie(new CookieHandler().createUserIdCookie(userId));
+            }
         }
         final Long finalUserId = userId;
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
