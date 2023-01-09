@@ -59,6 +59,7 @@ public abstract class Item extends AuditModel {
     private int costPrice;
     private int salePrice;
 
+    @Column(columnDefinition="LONGTEXT")
     private String description;
     private String status;
 
