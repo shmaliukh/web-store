@@ -28,19 +28,15 @@ public class OrderService {
     final OrderRepository orderRepository;
     final OrderItemService orderItemService;
 
-    public void setUpAvailableItemQuantity(OrderItem orderItem, int oldOrderItemQuantity, Integer newQuantity, boolean orderItemPreviousState) {
+    public void setUpItemAvailableQuantity(OrderItem orderItem, int oldOrderItemQuantity) {
         Item item = orderItem.getItem();
         if (item != null) {
-            int quantityToSet;
-            // FIXME fix wrong adding quantity to item entity when change order item 'quantity' and set up 'active' = false
-//            if (!orderItemPreviousState) {
-//                quantityToSet = item.get() - oldOrderItemQuantity;
-//            } else if (!orderItem.isActive()) {
-//                quantityToSet = item.getQuantity() + newQuantity;
-//            } else {
-//                quantityToSet = item.getQuantity() - (newQuantity - oldOrderItemQuantity);
-//            }
-//            item.setSoldOutQuantity(quantityToSet);
+            int newQuantity = orderItem.getQuantity();
+            int availableToBuyQuantity = item.getAvailableToBuyQuantity() + oldOrderItemQuantity - newQuantity;
+            item.setAvailableToBuyQuantity(availableToBuyQuantity);
+            if (newQuantity < 1) {
+                orderItem.setActive(false);
+            }
             itemService.saveItem(item);
         }
     }
@@ -56,7 +52,7 @@ public class OrderService {
 
                 orderItemService.save(orderItem);
 
-                setUpItemAvailableToBuyQuantity(quantity, item, orderItem);
+                setUpItemAvailableToBuyQuantity(item, orderItem);
             } else {
                 log.warn("problem to insert item to order // not found item by '{}' id", itemId);
             }
@@ -65,12 +61,17 @@ public class OrderService {
         }
     }
 
-    private void setUpItemAvailableToBuyQuantity(Integer quantity, Item item, OrderItem orderItem) {
-//        FIXME
-//        int availableToBuyQuantity = item.getQuantity() - orderItem.getQuantity();
-//        item.setSoldOutQuantity(availableToBuyQuantity);
-//        itemService.saveItem(item);
-//        log.info("sold '{}' // available to buy '{}' item: '{}'", quantity, item, availableToBuyQuantity);
+    private void setUpItemAvailableToBuyQuantity(Item item, OrderItem orderItem) {
+        if (item != null && orderItem != null) {
+            int itemAvailableToBuyQuantity = item.getAvailableToBuyQuantity();
+            int orderItemQuantity = orderItem.getQuantity();
+            int availableToBuyQuantity = itemAvailableToBuyQuantity - orderItemQuantity;
+            item.setAvailableToBuyQuantity(availableToBuyQuantity);
+            itemService.saveItem(item);
+            log.info("set up item '{}' available quantity to buy: {} ", item.getName(), availableToBuyQuantity);
+        } else {
+            log.warn("problem to set up item available to buy quantity // item: '{}', orderITem: '{}'", item, orderItem);
+        }
     }
 
     public Integer calcTotalOrderItems(Order order) {

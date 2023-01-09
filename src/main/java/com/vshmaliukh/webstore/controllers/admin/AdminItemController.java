@@ -159,7 +159,11 @@ public class AdminItemController {
     public ModelAndView uploadImage(@PathVariable Integer itemId,
                                     @RequestParam("imageFile") MultipartFile imageFile,
                                     ModelMap modelMap) {
-        itemService.addImageToItem(itemId, imageFile);
+        if (!imageFile.isEmpty()) {
+            itemService.addImageToItem(itemId, imageFile);
+        } else {
+            log.warn("problem to upload image // imageFile == NULL");
+        }
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 
