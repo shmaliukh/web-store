@@ -21,8 +21,16 @@ public class OrderItemService {
     final ItemService itemService;
     final OrderItemRepository orderItemRepository;
 
-    static OrderItem formOrderItem(Integer quantity, Item item, Order order) {
-        OrderItem orderItem = new OrderItem();
+    public OrderItem formOrderItem(Integer quantity, Item item, Order order) {
+        Optional<OrderItem> orderItemByItem = orderItemRepository.findOrderItemByItem(item);
+        return orderItemByItem
+                .map(orderItem -> generateOrderItemIfExist(quantity, orderItem))
+                .orElseGet(() -> generateOrderItemIfNotExist(quantity, item, order));
+    }
+
+    private static OrderItem generateOrderItemIfNotExist(Integer quantity, Item item, Order order) {
+        OrderItem orderItem;
+        orderItem = new OrderItem();
         orderItem.setOrderItemPrice(item.getSalePrice());
         orderItem.setQuantity(quantity);
 
@@ -30,10 +38,17 @@ public class OrderItemService {
 
         orderItem.setOrder(order);
         orderItem.setItem(item);
-
         return orderItem;
     }
 
+    private static OrderItem generateOrderItemIfExist(Integer quantity, OrderItem orderItem) {
+        int orderItemQuantity = orderItem.getQuantity();
+        orderItem.setQuantity(orderItemQuantity + quantity);
+        if (orderItem.getQuantity() >= 1) {
+            orderItem.setActive(false);
+        }
+        return orderItem;
+    }
 
     public void save(OrderItem orderItem) {
         if (orderItem != null) {
@@ -53,4 +68,5 @@ public class OrderItemService {
     public Optional<OrderItem> readOrderItemByOrderItemId(Long id) {
         return orderItemRepository.readOrderItemByOrderItemId(id);
     }
+
 }

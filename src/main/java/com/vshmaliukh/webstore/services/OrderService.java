@@ -48,11 +48,11 @@ public class OrderService {
             Optional<Item> optionalItem = itemService.readItemById(itemId);
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                OrderItem orderItem = OrderItemService.formOrderItem(quantity, item, order);
+                OrderItem orderItem = orderItemService.formOrderItem(quantity, item, order);
 
                 orderItemService.save(orderItem);
 
-                setUpItemAvailableToBuyQuantity(item, orderItem);
+                setUpItemAvailableToBuyQuantity(quantity, item, orderItem);
             } else {
                 log.warn("problem to insert item to order // not found item by '{}' id", itemId);
             }
@@ -61,11 +61,10 @@ public class OrderService {
         }
     }
 
-    private void setUpItemAvailableToBuyQuantity(Item item, OrderItem orderItem) {
+    private void setUpItemAvailableToBuyQuantity(Integer quantity, Item item, OrderItem orderItem) {
         if (item != null && orderItem != null) {
             int itemAvailableToBuyQuantity = item.getAvailableToBuyQuantity();
-            int orderItemQuantity = orderItem.getQuantity();
-            int availableToBuyQuantity = itemAvailableToBuyQuantity - orderItemQuantity;
+            int availableToBuyQuantity = itemAvailableToBuyQuantity - quantity;
             item.setAvailableToBuyQuantity(availableToBuyQuantity);
             itemService.saveItem(item);
             log.info("set up item '{}' available quantity to buy: {} ", item.getName(), availableToBuyQuantity);
