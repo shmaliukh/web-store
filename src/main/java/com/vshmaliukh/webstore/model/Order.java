@@ -45,6 +45,6 @@ public class Order extends AuditModel {
     private String comment;
 
     @OneToMany
-    private List<OrderItem> itemList;
+    private List<OrderItem> orderItemList;
 
 }

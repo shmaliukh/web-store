@@ -21,19 +21,29 @@ public class OrderItemService {
     final ItemService itemService;
     final OrderItemRepository orderItemRepository;
 
-    static OrderItem formOrderItem(Integer quantity, Item item, Order order) {
+    public OrderItem formOrderItem(Integer quantity, Item item, Order order) {
+        Optional<OrderItem> orderItemByItem = orderItemRepository.findOrderItemByItem(item);
+        return orderItemByItem
+                .map(orderItem -> generateOrderItemIfExist(quantity, orderItem))
+                .orElseGet(() -> generateOrderItemIfNotExist(quantity, item, order));
+    }
+
+    private OrderItem generateOrderItemIfNotExist(Integer quantity, Item item, Order order) {
         OrderItem orderItem = new OrderItem();
         orderItem.setOrderItemPrice(item.getSalePrice());
         orderItem.setQuantity(quantity);
-
-        orderItem.setActive(orderItem.getQuantity() >= 1);
-
+        orderItem.setActive(true);
         orderItem.setOrder(order);
         orderItem.setItem(item);
-
         return orderItem;
     }
 
+    private OrderItem generateOrderItemIfExist(Integer quantity, OrderItem orderItem) {
+        int orderItemQuantity = orderItem.getQuantity();
+        orderItem.setQuantity(orderItemQuantity + quantity);
+        orderItem.setActive(true);
+        return orderItem;
+    }
 
     public void save(OrderItem orderItem) {
         if (orderItem != null) {
@@ -53,4 +63,5 @@ public class OrderItemService {
     public Optional<OrderItem> readOrderItemByOrderItemId(Long id) {
         return orderItemRepository.readOrderItemByOrderItemId(id);
     }
+
 }

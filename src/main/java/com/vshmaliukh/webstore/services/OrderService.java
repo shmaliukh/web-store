@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_STATUS_COMPLETED;
+
 
 @Slf4j
 @Service
@@ -48,11 +50,11 @@ public class OrderService {
             Optional<Item> optionalItem = itemService.readItemById(itemId);
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                OrderItem orderItem = OrderItemService.formOrderItem(quantity, item, order);
+                OrderItem orderItem = orderItemService.formOrderItem(quantity, item, order);
 
                 orderItemService.save(orderItem);
 
-                setUpItemAvailableToBuyQuantity(item, orderItem);
+                setUpItemAvailableToBuyQuantity(quantity, item, orderItem);
             } else {
                 log.warn("problem to insert item to order // not found item by '{}' id", itemId);
             }
@@ -61,11 +63,10 @@ public class OrderService {
         }
     }
 
-    private void setUpItemAvailableToBuyQuantity(Item item, OrderItem orderItem) {
+    private void setUpItemAvailableToBuyQuantity(Integer quantity, Item item, OrderItem orderItem) {
         if (item != null && orderItem != null) {
             int itemAvailableToBuyQuantity = item.getAvailableToBuyQuantity();
-            int orderItemQuantity = orderItem.getQuantity();
-            int availableToBuyQuantity = itemAvailableToBuyQuantity - orderItemQuantity;
+            int availableToBuyQuantity = itemAvailableToBuyQuantity - quantity;
             item.setAvailableToBuyQuantity(availableToBuyQuantity);
             itemService.saveItem(item);
             log.info("set up item '{}' available quantity to buy: {} ", item.getName(), availableToBuyQuantity);
@@ -116,6 +117,13 @@ public class OrderService {
     }
 
     public void saveOrder(Order order) {
+        if (order.getStatus().equals(ORDER_STATUS_COMPLETED)) {
+            for (OrderItem orderItem : order.getOrderItemList()) {
+                Item item = orderItem.getItem();
+                item.setSoldOutQuantity(orderItem.getQuantity());
+                itemService.saveItem(item);
+            }
+        }
         orderRepository.save(order);
     }
 
@@ -167,7 +175,7 @@ public class OrderService {
             order.setUser(optionalUser.get());
             order.setStatus(status);
             order.setComment(comment);
-            order.setItemList(Collections.emptyList());
+            order.setOrderItemList(Collections.emptyList());
             return Optional.of(order);
         }
         return Optional.empty();

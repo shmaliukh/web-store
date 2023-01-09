@@ -100,7 +100,7 @@ public class AdminOrderController {
     public ModelAndView doPostEditItem(@PathVariable(name = "oderId") Long orderId,
                                        @PathVariable(value = "orderItemId") Long orderItemId,
                                        @RequestParam(value = "price") Integer price,
-                                       @RequestParam(value = "newOrderItemQuantity") Integer newOrderItemQuantity,
+                                       @RequestParam(value = "quantity") Integer newOrderItemQuantity,
                                        @RequestParam(value = "active", defaultValue = "false") boolean active,
                                        ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
