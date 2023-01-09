@@ -67,6 +67,11 @@ public class MainPageController {
                             @RequestHeader String referer,
                             @CookieValue(required = false, defaultValue = "0") Long userId,
                             HttpServletResponse response) {
+
+        // todo add checking user authorization
+
+        boolean authorization = false;
+
         if (userId == 0) {
             userId = unauthorizedUserService.createUnauthorizedUser().getId();
             response.addCookie(new CookieHandler().createUserIdCookie(userId));
@@ -74,7 +79,7 @@ public class MainPageController {
         final Long finalUserId = userId;
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = itemRepository.findById(id);
-        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
+        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId,authorization));
         return "redirect:" + referer;
     }
 

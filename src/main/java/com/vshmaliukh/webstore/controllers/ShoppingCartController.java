@@ -39,6 +39,8 @@ public class ShoppingCartController {
 
         // todo add checking for user authorizing
 
+        boolean authorization = false;
+
         unauthorizedUserService.removeOldUsers(); // todo refactor usage of old unauthorized users removing
 
         if (userId == 0) {
@@ -49,7 +51,7 @@ public class ShoppingCartController {
                     cookieHandler.createUserIdCookie(userId)
             );
         }
-        List<Cart> carts = cartService.getCartsByUserId(unauthorizedUserService.getUserById(userId).getId());
+        List<Cart> carts = cartService.getCartsByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
         List<Item> items = new ArrayList<>();
         for (Cart cart : carts) {
             Item item = itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getCategory())
@@ -75,9 +77,12 @@ public class ShoppingCartController {
     public String incItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
                                   @CookieValue Long userId) {
+
+        // todo add checking authorization
+        boolean authorization = false;
         final Long finalUserId = userId;
         Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId));
+        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId,authorization));
         return "redirect:/shopping-cart";
     }
 
@@ -85,8 +90,12 @@ public class ShoppingCartController {
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
                                   @CookieValue Long userId) {
+
+        // todo implement authorization checking
+
+        boolean authorization = false;
         Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId));
+        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId, authorization));
         return "redirect:/shopping-cart";
     }
 

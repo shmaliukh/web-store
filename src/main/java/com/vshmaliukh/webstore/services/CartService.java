@@ -19,8 +19,8 @@ public class CartService {
     final CartRepository cartRepository;
     final UserRepository userRepository;
 
-    public void addItemToCart(Item item, Long userId){
-        List<Cart> carts = getCartsByUserId(userId);
+    public void addItemToCart(Item item, Long userId, boolean authorization){
+        List<Cart> carts = getCartsByUserId(userId,authorization);
         boolean found = false;
         for (Cart cart : carts) {
             if (Objects.equals(cart.getItemId(), item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
@@ -32,6 +32,7 @@ public class CartService {
         if(!found){
             Cart newCart = new Cart();
             newCart.setUserId(userId);
+            newCart.setAuthorization(authorization);
             newCart.setItemId(item.getId());
             newCart.setItemQuantity(item.getQuantity());
             newCart.setCategory(item.getCategory());
@@ -42,8 +43,8 @@ public class CartService {
         }
     }
 
-    public void removeItemFromCart(Item item, Long userId){
-        List<Cart> carts = getCartsByUserId(userId);
+    public void removeItemFromCart(Item item, Long userId, boolean authorization){
+        List<Cart> carts = getCartsByUserId(userId,authorization);
         for (Cart cart : carts) {
             if (Objects.equals(cart.getItemId(),item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
                 cartRepository.delete(cart);
@@ -52,8 +53,8 @@ public class CartService {
         }
     }
 
-    public void decItemQuantityInCart(Item item, Long userId){
-        List<Cart> carts = getCartsByUserId(userId);
+    public void decItemQuantityInCart(Item item, Long userId, boolean authorization){
+        List<Cart> carts = getCartsByUserId(userId,authorization);
         for (Cart cart : carts) {
             if (Objects.equals(cart.getItemId(),item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
                 cart.setItemQuantity(cart.getItemQuantity()-1);
@@ -65,8 +66,8 @@ public class CartService {
         }
     }
 
-    public List<Cart> getCartsByUserId(Long id){
-        return cartRepository.findCartsByUserId(id);
+    public List<Cart> getCartsByUserId(Long id, Boolean authorization){
+        return cartRepository.findCartsByUserIdAndAuthorization(id,authorization);
     }
 
 }
