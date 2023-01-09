@@ -26,6 +26,7 @@ public final class ConstantsForEntities {
 
     public static final String ID_COLUMN = "id";
     public static final String ITEM_ID_COLUMN = "item_id";
+    public static final String AUTHORIZATION_COLUMN = "authorization";
     public static final String USER_ID_COLUMN = "user_id";
     public static final String ROLE_ID_COLUMN = "role_id";
     public static final String ORDER_ID_COLUMN = "order_id";

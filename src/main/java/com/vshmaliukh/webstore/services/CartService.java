@@ -1,6 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
-import com.vshmaliukh.webstore.model.Cart;
+import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CartRepository;
 import com.vshmaliukh.webstore.repositories.UserRepository;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -67,7 +68,10 @@ public class CartService {
     }
 
     public List<Cart> getCartsByUserId(Long id, Boolean authorization){
-        return cartRepository.findCartsByUserIdAndAuthorization(id,authorization);
+
+        List<Cart> carts = cartRepository.findCartsByUserId(id);
+
+        return carts.stream().filter(cart->cart.isAuthorization()==authorization).collect(Collectors.toList());
     }
 
 }

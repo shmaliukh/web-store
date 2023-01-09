@@ -1,7 +1,7 @@
 package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
-import com.vshmaliukh.webstore.model.Cart;
+import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.CartService;
