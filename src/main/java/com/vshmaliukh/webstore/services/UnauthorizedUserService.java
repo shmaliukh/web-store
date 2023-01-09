@@ -18,6 +18,10 @@ public class UnauthorizedUserService {
         return unauthorizedUserRepository.existsById(id);
     }
 
+    public UnauthorizedUser getUserById(Long id){
+        return unauthorizedUserRepository.getReferenceById(id);
+    }
+
     public UnauthorizedUser createUnauthorizedUser(){
         UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
         unauthorizedUserRepository.save(unauthorizedUser);
