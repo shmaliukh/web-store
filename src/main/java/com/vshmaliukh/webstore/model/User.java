@@ -25,7 +25,7 @@ public class User extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = ID_COLUMN, nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long id;
 
     @Column(name = USER_NAME_COLUMN, nullable = false)
