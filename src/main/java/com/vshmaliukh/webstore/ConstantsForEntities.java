@@ -23,7 +23,6 @@ public final class ConstantsForEntities {
     public static final String USER_EMAIL_COLUMN = "user_email";
     public static final String USER_LOG_IN_PROVIDER = "log_in_provider";
 
-    public static final String ID_COLUMN = "id";
     public static final String ITEM_ID_COLUMN = "item_id";
     public static final String USER_ID_COLUMN = "user_id";
     public static final String ROLE_ID_COLUMN = "role_id";
@@ -47,6 +46,5 @@ public final class ConstantsForEntities {
     public static final String DATE_COLUMN = "date";
     public static final String PUBLISHER_COLUMN = "publisher";
     public static final String PRICE_COLUMN = "price";
-
 
 }

@@ -1,6 +1,5 @@
 package com.vshmaliukh.webstore.services;
 
-import com.vshmaliukh.webstore.ImageUtil;
 import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
@@ -33,7 +32,7 @@ public class ImageService {
             if (file != null) {
                 String filename = file.getOriginalFilename();
                 String fileContentType = file.getContentType();
-                byte[] compressedImage = ImageUtil.compressImage(file.getBytes());
+                byte[] compressedImage = file.getBytes();
 
                 ItemImage itemImage = new ItemImage();
                 itemImage.setItem(item);
