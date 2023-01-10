@@ -117,14 +117,19 @@ public class OrderService {
     }
 
     public void saveOrder(Order order) {
+        setUpSoldQuantityIfOrderIsCompleted(order);
+        orderRepository.save(order);
+    }
+
+    private void setUpSoldQuantityIfOrderIsCompleted(Order order) {
         if (order.getStatus().equals(ORDER_STATUS_COMPLETED)) {
-            for (OrderItem orderItem : order.getOrderItemList()) {
+            List<OrderItem> orderItems = orderItemService.readOrderItemsByOrder(order);
+            for (OrderItem orderItem : orderItems) {
                 Item item = orderItem.getItem();
                 item.setSoldOutQuantity(orderItem.getQuantity());
                 itemService.saveItem(item);
             }
         }
-        orderRepository.save(order);
     }
 
     public void changeOrderStatus(long userId, String newStatusStr) {
