@@ -132,7 +132,7 @@
                                        name="active" type="checkbox" role="switch"
                                        th:value="${orderItem.isActive()}"
                                        th:checked="${orderItem.isActive()}">
-                                <script th:replace="/blocks/generated-scripts :: checkBox"></script>
+                                <script th:replace="/blocks/generated-scripts :: checkBox('checkbox', ${iterator})"></script>
                             </td>
                             <script th:inline="javascript" th:utext="
                                |var checker${iterator.count} = document.getElementById('checkbox${iterator.count}');

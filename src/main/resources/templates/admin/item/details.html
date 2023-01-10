@@ -190,7 +190,7 @@
                                        th:value="${item.isAvailableInStore()}"
                                        th:checked="${item.isAvailableInStore()}">
                                 <label class="form-check-label" for="flexSwitchCheckChecked">Is available in store</label>
-                                <th:block th:insert="blocks/generated-scripts :: checkBoxWithName(flexSwitchCheckChecked)"></th:block>
+                                <th:block th:insert="blocks/generated-scripts :: checkBoxWithName('flexSwitchCheckChecked')"></th:block>
                             </div>
                         </div>
 
