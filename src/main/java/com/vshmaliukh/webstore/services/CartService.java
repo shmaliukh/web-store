@@ -20,6 +20,17 @@ public class CartService {
 
     final CartRepositoryProvider cartRepositoryProvider;
 
+    public void addOneItemToCart(Item item, Long userId, boolean authorization){
+        List<Cart> carts = getCartsByUserId(userId,authorization);
+    }
+
+    public List<Cart> getCartsByUserId(Long id, Boolean authorization){
+
+        List<Cart> carts = cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUserId(id);
+
+        return carts.stream().filter(cart->cart.isAuthorization()==authorization).collect(Collectors.toList());
+    }
+
 //    final CartRepository cartRepository;
 //    final UserRepository userRepository;
 //
