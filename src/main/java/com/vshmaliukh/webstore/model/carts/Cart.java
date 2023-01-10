@@ -25,14 +25,12 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "item")
+@Entity(name = "cart")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Book.class, name = "book"),
-        @JsonSubTypes.Type(value = Magazine.class, name = "magazine"),
-        @JsonSubTypes.Type(value = Comics.class, name = "comics"),
-        @JsonSubTypes.Type(value = Newspaper.class, name = "newspaper"),
+        @JsonSubTypes.Type(value = UserCart.class, name = "userCart"),
+        @JsonSubTypes.Type(value = UnauthorizedUserCart.class, name = "unauthorizedUserCart"),
 })
 public abstract class Cart {
 
@@ -41,22 +39,14 @@ public abstract class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
-    @JoinTable(name = USER_TABLE)
-    @Column(name = USER_ID_COLUMN, nullable = false)
-    private Long userId;
-
+    @ManyToOne // todo check type
     @Column(name = ITEM_ID_COLUMN, nullable = false)
     private Item item;
-
-    @Column(name = AUTHORIZATION_COLUMN, nullable = false)
-    private boolean authorization;
 
     @Column(name = QUANTITY_COLUMN, nullable = false)
     private Integer itemQuantity;
 
-    @Column(name = PRICE_COLUMN,nullable = false)
-    private Integer price;
-
-    // todo implement relationships
+    @Column(name = PRICE_COLUMN,nullable = false) // todo check its need
+    private int price;
 
 }
