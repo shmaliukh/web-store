@@ -1,13 +1,15 @@
 package com.vshmaliukh.webstore.controllers.rest;
 
-import com.vshmaliukh.webstore.ImageUtil;
 import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.services.ImageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
@@ -23,8 +25,7 @@ public class ImageController {
         Optional<Image> optionalImage = imageService.getImageById(id);
         if (optionalImage.isPresent()) {
             Image itemImage = optionalImage.get();
-            byte[] compressedImageData = itemImage.getImageData();
-            byte[] decompressedImage = ImageUtil.decompressImage(compressedImageData);
+            byte[] decompressedImage = itemImage.getImageData();
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_PNG)
                     .body(decompressedImage);

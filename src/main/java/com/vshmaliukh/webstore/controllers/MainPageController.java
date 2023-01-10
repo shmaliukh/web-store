@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 
-import static com.vshmaliukh.webstore.controllers.ViewsNames.*;
-
 @Controller
 @RequestMapping("/main")
 @AllArgsConstructor
@@ -72,7 +70,7 @@ public class MainPageController {
 //        FIXME
 //        Item book = new Book(1, "1 book name", "Book category", 2, 3, true, 4, "Vlad1", new Date()); // for test
 //        modelMap.addAttribute("item",book);
-        return new ModelAndView(ITEM_PAGE_VIEW,modelMap);
+        return new ModelAndView("item-page",modelMap);
     }
 
     @PostMapping("/catalog/{type}/{id}")

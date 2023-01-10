@@ -129,13 +129,4 @@ public class ShoppingCartController {
         return carts;
     }
 
-    private static List<Item> getTestItemOrderList() {
-        List<Item> itemList = new ArrayList<>();
-        itemList.add(new Book(1, "1 book name", "book", 2, 3, true, 4, "Vlad1", new Date()));
-        itemList.add(new Book(2, "2 book name", "book", 3, 4, true, 5, "Vlad2", new Date()));
-        itemList.add(new Magazine(3, "Magazine name", "magazine", 4, 5, true, 6));
-        itemList.add(new Comics(4, "Comics name", "comics", 5, 6, true, 7, "Some publisher"));
-        return itemList;
-    }
-
 }
