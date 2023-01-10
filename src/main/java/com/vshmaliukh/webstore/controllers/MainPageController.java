@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
+
 import static com.vshmaliukh.webstore.controllers.ViewsNames.*;
 
 @Controller
@@ -31,25 +32,23 @@ public class MainPageController {
     final UnauthorizedUserService unauthorizedUserService;
 
     @GetMapping
-    public ModelAndView showMainPage(ModelMap modelMap){
+    public ModelAndView showMainPage(ModelMap modelMap) {
         // todo refactor template for links
 
         // get categories and types from db
 
-        List<String> categories = new ArrayList<>(Arrays.asList("Literature","Another category"));
+        List<String> categories = new ArrayList<>(Arrays.asList("Literature", "Another category"));
         List<List<String>> types = new ArrayList<>(Arrays.asList(
-                Arrays.asList("Books","Newspapers","Comics","Magazines"),
-                Arrays.asList("Another type","And another one")));
-        modelMap.addAttribute("categories",categories);
-        modelMap.addAttribute("types",types);
-        return new ModelAndView(MAIN_PAGE_VIEW,modelMap);
-
+                Arrays.asList("Books", "Newspapers", "Comics", "Magazines"),
+                Arrays.asList("Another type", "And another one")));
+        modelMap.addAttribute("categories", categories);
+        modelMap.addAttribute("types", types);
+        return new ModelAndView("main-page",modelMap);
     }
 
     @GetMapping("/catalog/{type}")
     public ModelAndView showCatalogPage(ModelMap modelMap,
-                                        @PathVariable String type){
-
+                                  @PathVariable String type) {
         List<? extends Item> items = itemService.readAllItemsByTypeName(type);
 
         List<Item> itemList = Collections.emptyList();
@@ -58,14 +57,13 @@ public class MainPageController {
         modelMap.addAttribute("itemList", itemList);
 
 //        modelMap.addAttribute("itemList", items);
-        return new ModelAndView(CATALOG_VIEW);
+        return new ModelAndView("catalog");
     }
 
     @GetMapping("/catalog/{type}/{id}")
     public ModelAndView showItemPage(ModelMap modelMap,
-                                     @PathVariable String type,
-                                     @PathVariable Long id){
-
+                               @PathVariable String type,
+                               @PathVariable Long id) {
 //        Item item = itemRepositoryProvider.getActionsWithItemRepositoryByItemClassName(type).getItemById(id);
 
         modelMap.addAttribute("type", type.toLowerCase());
@@ -80,9 +78,10 @@ public class MainPageController {
     @PostMapping("/catalog/{type}/{id}")
     public String addToCart(@PathVariable String type,
                             @PathVariable Integer id,
-                            @RequestHeader String referer, HttpServletResponse response,
-                            @CookieValue(required = false,defaultValue = "0") Long userId){
-        if(userId==0){
+                            @RequestHeader String referer,
+                            @CookieValue(required = false, defaultValue = "0") Long userId,
+                            HttpServletResponse response) {
+        if (userId == 0) {
             userId = unauthorizedUserService.createUnauthorizedUser().getId();
             response.addCookie(new CookieHandler().createUserIdCookie(userId));
         }
