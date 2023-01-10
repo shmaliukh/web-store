@@ -30,16 +30,21 @@ public class Book extends LiteratureItem {
     private Date dateOfIssue;
 
     @JsonCreator
-    public Book(@JsonProperty(ITEM_ID_COLUMN) Integer id,
-                @JsonProperty(NAME_COLUMN) String name,
-                @JsonProperty(CATEGORY_COLUMN) String category,
-                @JsonProperty(PRICE_COLUMN) int price,
-                @JsonProperty(QUANTITY_COLUMN) int quantity,
-                @JsonProperty(IS_AVAILABLE_IN_STORE_COLUMN) boolean isAvailableInStore,
-                @JsonProperty(PAGES_COLUMN) int pages,
-                @JsonProperty(AUTHOR_COLUMN) String author,
-                @JsonProperty(DATE_COLUMN) Date dateOfIssue) {
-        super(id, name, category, price, quantity, isAvailableInStore, pages);
+    public Book(@JsonProperty("itemId") Integer id,
+                @JsonProperty("category") String category,
+                @JsonProperty("name") String name,
+                @JsonProperty("currentQuantity") int currentQuantity,
+                @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,
+                @JsonProperty("costPrice") int costPrice,
+                @JsonProperty("salePrice") int salePrice,
+                @JsonProperty("description") String description,
+                @JsonProperty("status") String status,
+                @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
+                @JsonProperty("soldOutQuantity") int soldOutQuantity,
+                @JsonProperty("pages") int pages,
+                @JsonProperty("author") String author,
+                @JsonProperty("date") Date dateOfIssue) {
+        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
         this.author = author;
         this.dateOfIssue = dateOfIssue;
     }
@@ -48,11 +53,17 @@ public class Book extends LiteratureItem {
     public String toString() {
         return "Book{" +
                 "id=" + getId() +
-                ", name=" + getName() +
-                ", category=" + getCategory() +
-                ", price=" + getPrice() +
-                ", quantity=" + getQuantity() +
+                ", category='" + getCategory() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", currentQuantity=" + getCurrentQuantity() +
+                ", availableToBuyQuantity=" + getAvailableToBuyQuantity() +
+                ", soldOutQuantity=" + getSoldOutQuantity() +
+                ", costPrice=" + getCostPrice() +
+                ", salePrice=" + getSalePrice() +
+                ", description='" + getDescription() + '\'' +
+                ", status='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
+                ", imageList=" + getImageList() +
                 ", pages=" + getPages() +
                 ", author=" + getAuthor() +
                 ", dateOfIssue=" + new SimpleDateFormat(DATE_FORMAT_STR).format(getDateOfIssue()) +

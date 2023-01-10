@@ -100,7 +100,7 @@ public class AdminOrderController {
     public ModelAndView doPostEditItem(@PathVariable(name = "oderId") Long orderId,
                                        @PathVariable(value = "orderItemId") Long orderItemId,
                                        @RequestParam(value = "price") Integer price,
-                                       @RequestParam(value = "quantity") Integer newQuantity,
+                                       @RequestParam(value = "quantity") Integer newOrderItemQuantity,
                                        @RequestParam(value = "active", defaultValue = "false") boolean active,
                                        ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
@@ -108,13 +108,12 @@ public class AdminOrderController {
             OrderItem orderItem = orderService.readOrderItemById(orderItemId);
             if (orderItem != null) {
                 int oldOrderItemQuantity = orderItem.getQuantity();
-                boolean orderItemPreviousState = orderItem.isActive();
 
                 orderItem.setOrderItemPrice(price);
                 orderItem.setActive(active);
-                orderItem.setQuantity(newQuantity);
+                orderItem.setQuantity(newOrderItemQuantity);
 
-                orderService.setUpAvailableItemQuantity(orderItem, oldOrderItemQuantity, newQuantity, orderItemPreviousState);
+                orderService.setUpItemAvailableQuantity(orderItem, oldOrderItemQuantity);
 
                 orderService.saveOrderItem(orderItem);
             }

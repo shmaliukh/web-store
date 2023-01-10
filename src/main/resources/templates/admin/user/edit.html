@@ -4,7 +4,7 @@
     <script src="/utils.js"></script>
     <title>User edit</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link th:insert="blocks/bootstrap-css-style.html :: additional-files">
+    <link th:insert="blocks/attachments.html :: links">
 </head>
 <body>
 <header th:insert="blocks/admin/header"></header>
@@ -33,13 +33,12 @@
                 <thead>
                 <tr class="table-dark">
                     <th:block th:insert="blocks/admin/user/fragments :: base-user-titles"></th:block>
-                    <th scope="col"></th>
+                    <th class="align-middle" scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <form th:id="'formEditUserInfo'"
-                          th:action="'/admin/user/edit/'+${user.getId()}"
+                    <form th:id="'formEditUserInfo'" th:action="'/admin/user/edit/'+${user.getId()}"
                           method="post" class="needs-validation">
                         <td class="align-middle" th:text="${user.getId()}">Id</td>
                         <td class="align-middle">

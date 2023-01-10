@@ -5,14 +5,18 @@ import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
-
-import java.util.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_STATUS_COMPLETED;
 
 
 @Slf4j
@@ -26,19 +30,15 @@ public class OrderService {
     final OrderRepository orderRepository;
     final OrderItemService orderItemService;
 
-    public void setUpAvailableItemQuantity(OrderItem orderItem, int oldOrderItemQuantity, Integer newQuantity, boolean orderItemPreviousState) {
+    public void setUpItemAvailableQuantity(OrderItem orderItem, int oldOrderItemQuantity) {
         Item item = orderItem.getItem();
         if (item != null) {
-            int quantityToSet;
-            // FIXME fix wrong adding quantity to item entity when change order item 'quantity' and set up 'active' = false
-            if (!orderItemPreviousState) {
-                quantityToSet = item.getQuantity() - oldOrderItemQuantity;
-            } else if (!orderItem.isActive()) {
-                quantityToSet = item.getQuantity() + newQuantity;
-            } else {
-                quantityToSet = item.getQuantity() - (newQuantity - oldOrderItemQuantity);
+            int newQuantity = orderItem.getQuantity();
+            int availableToBuyQuantity = item.getAvailableToBuyQuantity() + oldOrderItemQuantity - newQuantity;
+            item.setAvailableToBuyQuantity(availableToBuyQuantity);
+            if (newQuantity < 1) {
+                orderItem.setActive(false);
             }
-            item.setQuantity(quantityToSet);
             itemService.saveItem(item);
         }
     }
@@ -50,7 +50,7 @@ public class OrderService {
             Optional<Item> optionalItem = itemService.readItemById(itemId);
             if (optionalItem.isPresent()) {
                 Item item = optionalItem.get();
-                OrderItem orderItem = OrderItemService.formOrderItem(quantity, item, order);
+                OrderItem orderItem = orderItemService.formOrderItem(quantity, item, order);
 
                 orderItemService.save(orderItem);
 
@@ -64,10 +64,15 @@ public class OrderService {
     }
 
     private void setUpItemAvailableToBuyQuantity(Integer quantity, Item item, OrderItem orderItem) {
-        int availableToBuyQuantity = item.getQuantity() - orderItem.getQuantity();
-        item.setQuantity(availableToBuyQuantity);
-        itemService.saveItem(item);
-        log.info("sold '{}' // available to buy '{}' item: '{}'", quantity, item, availableToBuyQuantity);
+        if (item != null && orderItem != null) {
+            int itemAvailableToBuyQuantity = item.getAvailableToBuyQuantity();
+            int availableToBuyQuantity = itemAvailableToBuyQuantity - quantity;
+            item.setAvailableToBuyQuantity(availableToBuyQuantity);
+            itemService.saveItem(item);
+            log.info("set up item '{}' available quantity to buy: {} ", item.getName(), availableToBuyQuantity);
+        } else {
+            log.warn("problem to set up item available to buy quantity // item: '{}', orderITem: '{}'", item, orderItem);
+        }
     }
 
     public Integer calcTotalOrderItems(Order order) {
@@ -112,7 +117,19 @@ public class OrderService {
     }
 
     public void saveOrder(Order order) {
+        setUpSoldQuantityIfOrderIsCompleted(order);
         orderRepository.save(order);
+    }
+
+    private void setUpSoldQuantityIfOrderIsCompleted(Order order) {
+        if (order.getStatus().equals(ORDER_STATUS_COMPLETED)) {
+            List<OrderItem> orderItems = orderItemService.readOrderItemsByOrder(order);
+            for (OrderItem orderItem : orderItems) {
+                Item item = orderItem.getItem();
+                item.setSoldOutQuantity(orderItem.getQuantity());
+                itemService.saveItem(item);
+            }
+        }
     }
 
     public void changeOrderStatus(long userId, String newStatusStr) {
@@ -131,7 +148,7 @@ public class OrderService {
         if (itemListByUserId != null) {
             return itemListByUserId.stream()
                     .filter(Item::isAvailableInStore)
-                    .mapToInt(Item::getPrice)
+                    .mapToInt(Item::getSalePrice)
                     .sum();
         }
         return 0;
@@ -163,7 +180,7 @@ public class OrderService {
             order.setUser(optionalUser.get());
             order.setStatus(status);
             order.setComment(comment);
-            order.setItemList(Collections.emptyList());
+            order.setOrderItemList(Collections.emptyList());
             return Optional.of(order);
         }
         return Optional.empty();

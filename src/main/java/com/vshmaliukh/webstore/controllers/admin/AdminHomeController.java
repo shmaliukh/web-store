@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
-import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
@@ -12,15 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.*;
-
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.*;
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.HOME_PAGE;
+import java.util.Collections;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
 @AllArgsConstructor
 public class AdminHomeController {
+//  TODO refactor 'home' page
 
     final UserService userService;
     final ItemRepositoryProvider itemRepositoryProvider;

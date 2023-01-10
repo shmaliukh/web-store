@@ -3,9 +3,6 @@ package com.vshmaliukh.webstore.controllers;
 import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
 import com.vshmaliukh.webstore.model.Cart;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.ItemService;
@@ -14,12 +11,15 @@ import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,11 +37,18 @@ public class ShoppingCartController {
     final UnauthorizedUserService unauthorizedUserService;
 
     @GetMapping
-    public ModelAndView showCartPage(ModelMap modelMap,
-                                     HttpServletResponse response,
-                                     @CookieValue(required = false, defaultValue = "0") Long userId) {
-        List<Item> testItems = getTestItemOrderList(); // for tests
-        if (userId == 0) {
+    public ModelAndView showCartPage(ModelMap modelMap, HttpServletResponse response,
+                                     @CookieValue(required = false,defaultValue = "0") Long userId){
+        List<Item> testItems = Collections.emptyList();
+//                getTestItemOrderList(); // for tests
+        if(userId==0){
+// FIXME
+//    public ModelAndView showCartPage(ModelMap modelMap,
+//                                     HttpServletResponse response,
+//                                     @CookieValue(required = false, defaultValue = "0") Long userId) {
+//        List<Item> testItems = getTestItemOrderList(); // for tests
+//        if (userId == 0) {
+//>>>>>>> dev
             userId = unauthorizedUserService.createUnauthorizedUser().getId();
             response.addCookie(cookieHandler.createUserIdCookie(userId));
         }
@@ -56,7 +63,7 @@ public class ShoppingCartController {
 //        }
 
         for (Item item : testItems) { // for tests
-            item.setPrice(item.getPrice() * item.getQuantity());
+            item.setCostPrice(item.getSalePrice()* item.getCurrentQuantity());
         }
 
         int totalCount = 0;
@@ -70,10 +77,10 @@ public class ShoppingCartController {
 //        }
 
         for (Item item : testItems) {  // for tests
-            totalPrice = totalPrice + item.getPrice();
+            totalPrice = totalPrice + item.getSalePrice();
         }
         for (Item item : testItems) { // for tests
-            totalCount = totalCount + item.getQuantity();
+            totalCount = totalCount + item.getCurrentQuantity();
         }
 
         modelMap.addAttribute("items", testItems);

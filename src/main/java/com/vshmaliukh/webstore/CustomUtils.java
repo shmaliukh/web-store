@@ -9,7 +9,7 @@ public final class CustomUtils {
     private CustomUtils(){}
 
     public static int calcItemListTotalPrice(List<Item> itemList) {
-        return itemList.stream().mapToInt(Item::getPrice).sum();
+        return itemList.stream().mapToInt(Item::getSalePrice).sum();
     }
 
 }

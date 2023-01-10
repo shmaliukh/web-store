@@ -3,7 +3,7 @@
 <head>
     <title>Create user</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link th:insert="blocks/bootstrap-css-style.html :: additional-files">
+    <link th:insert="blocks/attachments.html :: links">
 </head>
 <body>
 <header th:insert="blocks/admin/header"></header>
@@ -29,7 +29,7 @@
                             <label for="userName" class="form-label">Username</label>
                             <div class="input-group has-validation">
                                 <span class="input-group-text">@</span>
-                                <input id="userName" class="form-select" name="userName" th:placeholder="|Username|"
+                                <input id="userName" class="form-control" name="userName" th:placeholder="|Username|"
                                        required="">
                                 <div class="invalid-feedback">
                                     Username is required.
@@ -40,7 +40,7 @@
                         <div class="col-12">
                             <label for="email" class="form-label">User email</label>
                             <div class="input-group has-validation">
-                                <input id="email" type="email" class="form-select" name="email" th:placeholder="'some@mail.com'"
+                                <input id="email" type="email" class="form-control" name="email" th:placeholder="'some@mail.com'"
                                        required="">
                                 <div class="invalid-feedback">
                                     Email is required.

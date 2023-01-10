@@ -24,15 +24,20 @@ public class Comics extends LiteratureItem {
     private String publisher;
 
     @JsonCreator
-    public Comics(@JsonProperty(ITEM_ID_COLUMN) Integer id,
-                  @JsonProperty(NAME_COLUMN) String name,
-                  @JsonProperty(CATEGORY_COLUMN) String category,
-                  @JsonProperty(PRICE_COLUMN) int price,
-                  @JsonProperty(QUANTITY_COLUMN) int quantity,
-                  @JsonProperty(IS_AVAILABLE_IN_STORE_COLUMN) boolean isAvailableInStore,
-                  @JsonProperty(PAGES_COLUMN) int pages,
-                  @JsonProperty(PUBLISHER_COLUMN) String publisher) {
-        super(id, name, category, price, quantity, isAvailableInStore, pages);
+    public Comics(@JsonProperty("itemId") Integer id,
+                  @JsonProperty("category") String category,
+                  @JsonProperty("name") String name,
+                  @JsonProperty("currentQuantity") int currentQuantity,
+                  @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,
+                  @JsonProperty("costPrice") int costPrice,
+                  @JsonProperty("salePrice") int salePrice,
+                  @JsonProperty("description") String description,
+                  @JsonProperty("status") String status,
+                  @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
+                  @JsonProperty("soldOutQuantity") int soldOutQuantity,
+                  @JsonProperty("pages") int pages,
+                  @JsonProperty("publisher") String publisher) {
+        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
         this.publisher = publisher;
     }
 
@@ -58,11 +63,17 @@ public class Comics extends LiteratureItem {
     public String toString() {
         return "Comics{" +
                 "id=" + getId() +
-                ", name=" + getName() +
-                ", category=" + getCategory() +
-                ", price=" + getPrice() +
-                ", quantity=" + getQuantity() +
+                ", category='" + getCategory() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", currentQuantity=" + getCurrentQuantity() +
+                ", availableToBuyQuantity=" + getAvailableToBuyQuantity() +
+                ", soldOutQuantity=" + getSoldOutQuantity() +
+                ", costPrice=" + getCostPrice() +
+                ", salePrice=" + getSalePrice() +
+                ", description='" + getDescription() + '\'' +
+                ", status='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
+                ", imageList=" + getImageList() +
                 ", pages=" + getPages() +
                 ", publisher=" + getPublisher() +
                 '}';

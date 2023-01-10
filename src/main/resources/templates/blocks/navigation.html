@@ -38,17 +38,17 @@
                     <button type="submit" class="btn btn-secondary">Search</button>
                 </div>
             </div>
-            <div class="p-2">
+            <div class="p-2 w-30">
                 <div class="input-group mb-3">
                     <select form="searchForm" name="size" th:value="${pageSize}"
-                            class="size-select flex-fill" id="pageSize">
+                            class="form-select" id="pageSize">
                         <option th:each="s : ${ {5, 10, 20, 50, 100} }"
                                 th:value="${s}"
                                 th:text="${s}"
                                 th:selected="${s == pageSize}">
                         </option>
                     </select>
-                    <button class="btn btn-secondary flex-fill" type="submit">Submit</button>
+                    <button class="btn btn-secondary" type="submit">Submit</button>
                 </div>
             </div>
             <div class="p-2">
