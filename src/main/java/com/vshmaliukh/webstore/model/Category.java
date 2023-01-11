@@ -1,20 +1,17 @@
 package com.vshmaliukh.webstore.model;
 
 import com.vshmaliukh.webstore.model.items.Item;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
@@ -28,9 +25,11 @@ public class Category {
     private String description;
 
     @OneToOne
+//    @JoinColumn(name = "img_id", referencedColumnName = "category_id")
     private Image image;
 
-    @OneToMany
-    private List<Item> itemList = new ArrayList<>();
+    @OneToMany()
+    @ToString.Exclude
+    private Set<Item> itemSet;
 
 }
