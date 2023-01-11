@@ -59,10 +59,10 @@ public class ImageService {
                 : Collections.emptyList();
     }
 
-    public void deleteImage(Image Image) {
-        if (Image != null) {
-            imageRepository.delete(Image);
-            log.info("deleted '{}' image", Image);
+    public void deleteImage(Image image) {
+        if (image != null) {
+            imageRepository.delete(image);
+            log.info("deleted '{}' image", image);
         }
         log.warn("image not deleted // image == NULL");
     }
