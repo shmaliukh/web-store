@@ -11,7 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.*;
+import static com.vshmaliukh.webstore.ConstantsForEntities.COMICS_TABLE;
+import static com.vshmaliukh.webstore.ConstantsForEntities.PUBLISHER_COLUMN;
 
 @Getter
 @Setter
@@ -37,7 +38,7 @@ public class Comics extends LiteratureItem {
                   @JsonProperty("soldOutQuantity") int soldOutQuantity,
                   @JsonProperty("pages") int pages,
                   @JsonProperty("publisher") String publisher) {
-        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
+        super(id, category, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
         this.publisher = publisher;
     }
 

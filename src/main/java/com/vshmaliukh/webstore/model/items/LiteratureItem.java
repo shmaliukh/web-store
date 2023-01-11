@@ -30,7 +30,7 @@ public abstract class LiteratureItem extends Item {
                              boolean isAvailableInStore,
                              int soldOutQuantity,
                              int pages) {
-        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity);
+        super(id, category, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity);
         setPages(pages);
     }
 

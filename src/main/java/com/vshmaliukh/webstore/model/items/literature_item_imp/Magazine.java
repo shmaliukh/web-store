@@ -10,7 +10,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.*;
+import static com.vshmaliukh.webstore.ConstantsForEntities.MAGAZINE_TABLE;
 
 @Getter
 @Setter
@@ -32,7 +32,7 @@ public class Magazine extends LiteratureItem {
                     @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
                     @JsonProperty("soldOutQuantity") int soldOutQuantity,
                     @JsonProperty("pages") int pages) {
-        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
+        super(id, category, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
     }
 
     @Override
