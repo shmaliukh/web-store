@@ -7,17 +7,13 @@ import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.USER_HOME;
 
 @Controller
-@RequestMapping("/" + USER_HOME)
-@AllArgsConstructor
+@RequestMapping("/user-home")
 public class UserHomeController {
 
     UserService userService;
@@ -55,6 +51,25 @@ public class UserHomeController {
 
         modelMap.addAttribute("form", data);
         return new ModelAndView("edit-data-users-page", modelMap);
+    }
+
+    @PostMapping("/edit-email-user-page")
+    public String editEmailUsersPage(@CookieValue Long userId, @RequestParam String email) {
+
+        User user = userService.getUserById(userId);
+        user.setEmail(email);
+        userService.save(user);
+        return "redirect:/user-home";
+    }
+
+    @PostMapping("/edit-username-user-page")
+    public String editUsernameUsersPage(@CookieValue Long userId, @RequestParam String username) {
+
+        User user = userService.getUserById(userId);
+        user.setUsername(username);
+        userService.save(user);
+
+        return "redirect:/user-home";
     }
 
 }
