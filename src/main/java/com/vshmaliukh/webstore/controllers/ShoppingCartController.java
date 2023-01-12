@@ -53,11 +53,11 @@ public class ShoppingCartController {
                 );
             }
         }
-        List<Cart> carts = cartService.getCartsByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
+        List<? extends Cart> carts = cartService.getCartsByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
         List<Item> items = new ArrayList<>();
         for (Cart cart : carts) {
-            Item item = itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getCategory())
-                    .getById(cart.getItemId());
+            Item item = itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getItem().getCategory())
+                    .getById(cart.getItem().getId());
             item.setPrice(item.getPrice()*item.getQuantity());
             items.add(item);
         }
