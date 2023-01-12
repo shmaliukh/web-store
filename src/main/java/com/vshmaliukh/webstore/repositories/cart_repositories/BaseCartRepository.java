@@ -9,4 +9,6 @@ public interface BaseCartRepository<T extends Cart> extends JpaRepository<T,Long
 
     List<T> findCartsByUserId(Long id);
 
+    T findCartByUserIdAndItemId(Long userId, Integer itemId);
+
 }

@@ -1,17 +1,16 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.carts.Cart;
+import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
+import com.vshmaliukh.webstore.model.carts.UserCart;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.repositories.cart_repositories.CartRepository;
-import com.vshmaliukh.webstore.repositories.UserRepository;
+import com.vshmaliukh.webstore.repositories.cart_repositories.BaseCartRepository;
 import com.vshmaliukh.webstore.repositories.cart_repositories.CartRepositoryProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,72 +19,55 @@ public class CartService {
 
     final CartRepositoryProvider cartRepositoryProvider;
 
-    public void addOneItemToCart(Item item, Long userId, boolean authorization){
-        List<Cart> carts = getCartsByUserId(userId,authorization);
-    }
+    public void addItemToCart(Item item, Long userId, boolean authorized){
+        Cart cart = getCartByUserIdAndItemId(userId, item.getId(), authorized);
 
-    public List<Cart> getCartsByUserId(Long id, Boolean authorization){
+        if (cart!=null) {
+            cart.setItemQuantity(cart.getItemQuantity() + 1);
+        } else {
 
-        List<Cart> carts = cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUserId(id);
+            // todo implement method (?) for creating new cart
 
-        return carts.stream().filter(cart->cart.isAuthorization()==authorization).collect(Collectors.toList());
-    }
 
-//    final CartRepository cartRepository;
-//    final UserRepository userRepository;
-//
-//    public void addItemToCart(Item item, Long userId, boolean authorization){
-//        List<Cart> carts = getCartsByUserId(userId,authorization);
-//        boolean found = false;
-//        for (Cart cart : carts) {
-//            if (Objects.equals(cart.getItemId(), item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
-//                cart.setItemQuantity(cart.getItemQuantity() + 1);
-//                found = true;
-//                break;
-//            }
-//        }
-//        if(!found){
-//            Cart newCart = new Cart();
-//            newCart.setUserId(userId);
+            Cart newCart = getNewCartByAuthorization(authorized);
 //            newCart.setAuthorization(authorization);
 //            newCart.setItemId(item.getId());
 //            newCart.setItemQuantity(item.getQuantity());
-//            newCart.setCategory(item.getCategory());
 //            newCart.setPrice(item.getPrice());
-//            cartRepository.save(newCart);
-//        } else {
-//            cartRepository.saveAll(carts);
-//        }
-//    }
-//
-//    public void removeItemFromCart(Item item, Long userId, boolean authorization){
-//        List<Cart> carts = getCartsByUserId(userId,authorization);
-//        for (Cart cart : carts) {
-//            if (Objects.equals(cart.getItemId(),item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
-//                cartRepository.delete(cart);
-//                break;
-//            }
-//        }
-//    }
-//
-//    public void decItemQuantityInCart(Item item, Long userId, boolean authorization){
-//        List<Cart> carts = getCartsByUserId(userId,authorization);
-//        for (Cart cart : carts) {
-//            if (Objects.equals(cart.getItemId(),item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
-//                cart.setItemQuantity(cart.getItemQuantity()-1);
-//                if(cart.getItemQuantity()==0){
-//                    cartRepository.delete(cart);
-//                }
-//                break;
-//            }
-//        }
-//    }
-//
-//    public List<Cart> getCartsByUserId(Long id, Boolean authorization){
-//
-//        List<Cart> carts = cartRepository.findCartsByUserId(id);
-//
-//        return carts.stream().filter(cart->cart.isAuthorization()==authorization).collect(Collectors.toList());
-//    }
+            addNewCart(newCart);
+        }
+    }
+
+    public void addNewCart(Cart cart){
+        BaseCartRepository repository = cartRepositoryProvider.getCartRepositoryByCart(cart);
+        repository.save(cart);
+    }
+
+    public List<? extends Cart> getCartsByUserId(Long id, Boolean authorization){
+        return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUserId(id);
+    }
+
+    public Cart getCartByUserIdAndItemId(Long userId, Integer itemId, Boolean authorization){
+        return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUserIdAndItemId(userId,itemId);
+    }
+
+    public void decItemQuantityInCart(Item item, Long userId, boolean authorized){
+        Cart cart = getCartByUserIdAndItemId(userId, item.getId(), authorized);
+        if (cart!=null) {
+            cart.setItemQuantity(cart.getItemQuantity() - 1);
+        }
+    }
+
+    public void removeItemFromCart(Item item, Long userId, boolean authorized){
+        BaseCartRepository repository = cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorized);
+        repository.delete(getCartByUserIdAndItemId(userId, item.getId(),authorized));
+    }
+
+    public Cart getNewCartByAuthorization(boolean authorized){
+        if(authorized) {
+            return new UserCart();
+        }
+        return new UnauthorizedUserCart();
+    }
 
 }
