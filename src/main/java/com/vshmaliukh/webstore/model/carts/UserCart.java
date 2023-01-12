@@ -20,7 +20,6 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.USER_COLUMN;
 public class UserCart extends Cart {
 
     @ManyToOne
-    @Column(name = USER_COLUMN, nullable = false)
     private User user;
 
 }

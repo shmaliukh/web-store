@@ -40,7 +40,6 @@ public abstract class Cart {
     private Long cartId;
 
     @ManyToOne // todo check type
-    @Column(name = ITEM_ID_COLUMN, nullable = false)
     private Item item;
 
     @Column(name = QUANTITY_COLUMN, nullable = false)

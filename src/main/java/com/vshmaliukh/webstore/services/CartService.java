@@ -1,9 +1,13 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.model.UnauthorizedUser;
+import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.carts.UserCart;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
+import com.vshmaliukh.webstore.repositories.UserRepository;
 import com.vshmaliukh.webstore.repositories.cart_repositories.BaseCartRepository;
 import com.vshmaliukh.webstore.repositories.cart_repositories.CartRepositoryProvider;
 import lombok.AllArgsConstructor;
@@ -18,6 +22,10 @@ import java.util.List;
 public class CartService {
 
     final CartRepositoryProvider cartRepositoryProvider;
+
+    UserRepository userRepository;
+    UnauthorizedUserRepository unauthorizedUserRepository;
+
 
     public void addItemToCart(Item item, Long userId, boolean authorized){
         Cart cart = getCartByUserIdAndItemId(userId, item.getId(), authorized);
@@ -44,12 +52,33 @@ public class CartService {
     }
 
     public List<? extends Cart> getCartsByUserId(Long id, Boolean authorization){
-        return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUserId(id);
+        if(authorization){ // todo maybe create provider?
+            User user = userRepository.getUserById(id);
+            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUser(user);
+        } else {
+            UnauthorizedUser user = unauthorizedUserRepository.getReferenceById(id);
+            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUnauthorizedUser(user);
+        }
     }
 
-    public Cart getCartByUserIdAndItemId(Long userId, Integer itemId, Boolean authorization){
-        return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUserIdAndItemId(userId,itemId);
+    public Cart getCartByUserIdAndItemId(Long userId, Integer itemId, boolean authorization){
+        List<? extends Cart> carts;
+        if(authorization){ // todo maybe create provider?
+            User user = userRepository.getUserById(userId);
+            carts = cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUser(user);
+        } else {
+            UnauthorizedUser user = unauthorizedUserRepository.getReferenceById(userId);
+            carts = cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUnauthorizedUser(user);
+        }
+        for (Cart cart : carts) {
+            if(cart.getItem().getId()==itemId){
+                return cart;
+            }
+        }
+        return null; // todo fix null
     }
+
+
 
     public void decItemQuantityInCart(Item item, Long userId, boolean authorized){
         Cart cart = getCartByUserIdAndItemId(userId, item.getId(), authorized);

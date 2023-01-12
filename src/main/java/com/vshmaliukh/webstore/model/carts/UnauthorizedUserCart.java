@@ -20,7 +20,6 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.UNAUTHORIZED_USER_COL
 public class UnauthorizedUserCart extends Cart{
 
     @ManyToOne
-    @Column(name = UNAUTHORIZED_USER_COLUMN, nullable = false)
     private UnauthorizedUser unauthorizedUser;
 
 }

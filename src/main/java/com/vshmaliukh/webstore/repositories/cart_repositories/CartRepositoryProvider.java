@@ -3,12 +3,15 @@ package com.vshmaliukh.webstore.repositories.cart_repositories;
 import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.carts.UserCart;
+import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
+import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Getter
 @Component
