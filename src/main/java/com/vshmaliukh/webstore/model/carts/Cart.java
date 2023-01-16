@@ -1,21 +1,16 @@
 package com.vshmaliukh.webstore.model.carts;
 
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
+import com.vshmaliukh.webstore.model.items.CartItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
@@ -39,13 +34,17 @@ public abstract class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
-    @ManyToOne // todo check type
-    private Item item;
-
-    @Column(name = QUANTITY_COLUMN, nullable = false)
-    private Integer itemQuantity;
+    @OneToMany
+    private List<CartItem> items;
 
     @Column(name = PRICE_COLUMN,nullable = false) // todo check its need
     private int price;
+
+    public void setPrice(int price) {
+
+        this.price = price;
+    }
+
+
 
 }

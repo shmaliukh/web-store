@@ -2,6 +2,8 @@ package com.vshmaliukh.webstore.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.vshmaliukh.webstore.model.carts.Cart;
+import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,5 +21,8 @@ public class UnauthorizedUser extends AuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne
+    UnauthorizedUserCart unauthorizedUserCart;
 
 }

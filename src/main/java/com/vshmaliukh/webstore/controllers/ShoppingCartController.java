@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
 import com.vshmaliukh.webstore.model.carts.Cart;
+import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.CartService;
@@ -54,23 +55,17 @@ public class ShoppingCartController {
                 );
             }
         }
-        List<? extends Cart> carts = cartService.getCartsByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
-        List<Item> items = new ArrayList<>();
-        for (Cart cart : carts) {
-            Item item = itemRepositoryProvider.getItemRepositoryByItemClassName(cart.getItem().getCategory())
-                    .getById(cart.getItem().getId());
-            item.setPrice(item.getPrice()*item.getQuantity());
-            items.add(item);
-        }
+        Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
+        List<CartItem> cartItems =cart.getItems();
         int totalCount = 0;
         int totalPrice = 0;
-        for (Item item : items) {
-            totalPrice = totalPrice + item.getPrice();
+        for (CartItem cartItem : cartItems) {
+            totalPrice = totalPrice + cartItem.getItem().getSalePrice()*cartItem.getQuantity();
         }
-        for (Item item : items) {
-            totalCount = totalCount + item.getQuantity();
+        for (CartItem cartItem : cartItems) {
+            totalCount = totalCount + cartItem.getItem().getSalePrice()* cartItem.getQuantity();
         }
-        modelMap.addAttribute("items", items);
+        modelMap.addAttribute("items", cartItems);
         modelMap.addAttribute("totalItems", totalCount);
         modelMap.addAttribute("totalPrice", totalPrice);
         return new ModelAndView("shopping-cart");
@@ -93,7 +88,6 @@ public class ShoppingCartController {
     public String decItemQuantity(@PathVariable String type,
                                   @PathVariable Integer id,
                                   @CookieValue Long userId) {
-
         // todo implement authorization checking
         boolean authorization = false;
         Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
