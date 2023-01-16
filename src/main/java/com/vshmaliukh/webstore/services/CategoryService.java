@@ -7,6 +7,7 @@ import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,15 +57,13 @@ public class CategoryService {
                                       String name,
                                       String description,
                                       boolean isDeleted,
-                                      boolean isActivated,
-                                      Optional<Image> optionalImage) {
+                                      boolean isActivated) {
         return Category.builder()
                 .id(id)
                 .name(name)
                 .description(description)
                 .isDeleted(isDeleted)
                 .isActivated(isActivated)
-                .image(optionalImage.orElseGet(imageService.getDefaultImage()))
                 .build();
     }
 
@@ -75,5 +74,16 @@ public class CategoryService {
     public List<Item> readCategoryItemList(Category category) {
         // FIXME read item list via repository
         return Collections.EMPTY_LIST;
+    }
+
+    public void addImageToCategory(MultipartFile imageFile, Category category) {
+        Optional<Image> optionalImage = imageService.buildImageFromFile(imageFile);
+        if (optionalImage.isPresent()) {
+            Image image = optionalImage.get();
+            category.setImage(image);
+            save(category);
+        } else{
+            log.warn("problem to add image to '{}' category", category);
+        }
     }
 }

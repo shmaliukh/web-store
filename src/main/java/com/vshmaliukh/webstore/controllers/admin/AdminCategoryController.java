@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.model.Category;
-import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.services.CategoryService;
 import com.vshmaliukh.webstore.services.ImageService;
@@ -46,15 +45,28 @@ public class AdminCategoryController {
                                    @RequestParam(name = "description") String description,
                                    @RequestParam(name = "isDeleted", defaultValue = "false") boolean isDeleted,
                                    @RequestParam(name = "isActivated", defaultValue = "true") boolean isActivated,
-                                   @RequestParam(name = "imageFile") MultipartFile imageFile,
                                    ModelMap modelMap) {
-        Optional<Image> optionalImage = imageService.buildImageFromFile(imageFile);
-        Category category = categoryService.buildBaseCategory(id, name, description, isDeleted, isActivated, optionalImage);
+        Category category = categoryService.buildBaseCategory(id, name, description, isDeleted, isActivated);
         categoryService.save(category);
-        return new ModelAndView("redirect:/admin/category/details/" + category.getId(), modelMap);
+        return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
     }
 
-    @GetMapping("/details/{categoryId}")
+    @PostMapping("/{categoryId}/image")
+    public ModelAndView doPostSaveImage(@PathVariable(name = "categoryId") Integer categoryId,
+                                        @RequestParam(name = "imageFile") MultipartFile imageFile,
+                                        ModelMap modelMap) {
+        Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            categoryService.addImageToCategory(imageFile, category);
+            return new ModelAndView("redirect:/admin/category/" + categoryId + "/details", modelMap);
+        } else {
+            log.warn("not found category entity by '{}' id to save imageFile: '{}'", categoryId, imageFile);
+        }
+        return new ModelAndView("redirect:/admin/category/catalog", modelMap);
+    }
+
+    @GetMapping("/{categoryId}/details")
     public ModelAndView doGetDetails(@PathVariable(name = "categoryId") Integer categoryId,
                                      ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);

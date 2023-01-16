@@ -14,140 +14,157 @@
     <p class="lead" th:text="|All info about ${category.getName()} category|">All info about category</p>
 </div>
 
-<div class="album py-5 bg-light text-center">
-
-    <div class="container">
-        <div class="table-responsive-md">
-            <table class="w-100 table table-striped">
-                <caption th:text="|additional info|"></caption>
-                <thead>
-                <tr class="table-dark">
-                    <th class="align-middle" scope="col">ID</th>
-                    <th class="align-middle" scope="col">CREATED</th>
-                    <th class="align-middle" scope="col">UPDATED</th>
-                    <th class="align-middle" scope="col">ITEMS COUNT</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="align-middle" th:text="${category.getId()}">CreatedAt</td>
-                    <td class="align-middle" th:text="${category.getCreatedAt()}">CreatedAt</td>
-                    <td class="align-middle" th:text="${category.getUpdatedAt()}">UpdateAt</td>
-                    <td class="align-middle" th:text="${itemList.size()}">Items</td>
-                </tr>
-                </tbody>
-            </table>
+<div class="container text-center ">
+    <nav class="pb-3">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-main-tab" data-bs-toggle="tab" data-bs-target="#nav-main" type="button" role="tab"
+                    aria-controls="nav-main" aria-selected="true">Base info
+            </button>
+            <button class="nav-link" id="nav-items-tab" data-bs-toggle="tab" data-bs-target="#nav-items" type="button" role="tab"
+                    aria-controls="nav-items" aria-selected="false">Items
+            </button>
+            <button class="nav-link" id="nav-image-tab" data-bs-toggle="tab" data-bs-target="#nav-image" type="button" role="tab"
+                    aria-controls="nav-image" aria-selected="false">Image
+            </button>
+            <button class="nav-link" id="nav-additional-tab" data-bs-toggle="tab" data-bs-target="#nav-additional" type="button" role="tab"
+                    aria-controls="nav-image" aria-selected="false">Additional
+                <!-- TODO rename tab -->
+            </button>
         </div>
-    </div>
-
-    <hr>
-
-    <div class="container">
-        <div class="card mb-4 box-shadow">
-            <div class="card-header">
-                <h3 class="my-0 font-weight-normal">New category card</h3>
-            </div>
-            <div class="card-body">
-                <form method="post" th:action="@{/admin/category/save}"
-                      class="needs-validation" enctype="multipart/form-data">
-                    <div>
-                        <input th:value="${category.getId()}" hidden >
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-main" role="tabpanel" aria-labelledby="nav-main-tab" tabindex="0">
+            <div class="container">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h3 class="my-0 font-weight-normal">Category card</h3>
                     </div>
+                    <div class="card-body">
+                        <form method="post" th:action="@{/admin/category/save}"
+                              class="needs-validation" enctype="multipart/form-data">
+                            <div>
+                                <label>
+                                    <input th:value="${category.getId()}" hidden>
+                                </label>
+                            </div>
 
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label for="categoryName" class="form-label">Category name</label>
-                            <div class="input-group has-validation">
-                                <span class="input-group-text">@</span>
-                                <input type="text" name="name" class="form-control" id="categoryName" placeholder="Category name"
-                                       th:value="${category.getName()}" required="">
-                                <div class="invalid-feedback">
-                                    Name is required.
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label for="categoryName" class="form-label">Category name</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text">@</span>
+                                        <input type="text" name="name" class="form-control" id="categoryName" placeholder="Category name"
+                                               th:value="${category.getName()}" required="">
+                                        <div class="invalid-feedback">
+                                            Name is required.
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea id="description" name="description" class="form-control" placeholder="Category description"
-                                      th:value="${category.getDescription()}">
-                            </textarea>
-                        </div>
+                                <div class="col-12">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea id="description" name="description" class="form-control" placeholder="Category description"
+                                              th:text="${category.getDescription()}" th:value="${category.getDescription()}"></textarea>
+                                </div>
 
-                        <div class="col-12">
-                            <label for="imageFile" class="form-label">Image</label>
-                            <div class="input-group">
-                                <input id="imageFile" type="file" class="form-control" aria-describedby="inputGroupFileAddon04"
-                                       aria-label="Upload" name="imageFile" accept="image/*">
                             </div>
-                        </div>
-
+                            <hr>
+                            <button class="w-100 btn btn-primary btn-lg" type="submit">Save</button>
+                        </form>
                     </div>
-                    <hr>
-                    <button class="w-100 btn btn-primary btn-lg" type="submit">Save</button>
-                </form>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-items" role="tabpanel" aria-labelledby="nav-items-tab" tabindex="0">
+
+        </div>
+        <div class="tab-pane fade" id="nav-image" role="tabpanel" aria-labelledby="nav-image-tab" tabindex="0">
+            <div class="container">
+                <div class="table-responsive-md">
+                    <table class="w-100 table table-striped">
+                        <caption th:text="|category image table|"></caption>
+                        <thead>
+                        <tr class="table-dark">
+                            <th class="align-middle" scope="col">ID</th>
+                            <th class="align-middle" scope="col">CREATED</th>
+                            <th class="align-middle" scope="col">UPDATED</th>
+                            <th class="align-middle" scope="col">NAME</th>
+                            <th class="align-middle" scope="col">SIZE</th>
+                            <th class="align-middle" scope="col">IMAGE</th>
+                            <th class="align-middle" scope="col"></th>
+                            <th class="align-middle" scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="align-middle" th:text="${category.getImage().getId()}">ID</td>
+                            <td class="align-middle" th:text="${category.getImage().getCreatedAt()}">CREATED</td>
+                            <td class="align-middle" th:text="${category.getImage().getUpdatedAt()}">UPDATED</td>
+                            <td class="align-middle" th:text="${category.getImage().getName()}">NAME</td>
+                            <td class="align-middle" th:text="${category.getImage().getImageData().length}">SIZE</td>
+                            <td class="align-middle">
+                                <img th:src="|@{/image/}${category.getImage().getId()}|"
+                                     th:alt="${category.getImage().getName()}"
+                                     height="220">
+                            </td>
+
+                            <td class="align-middle">
+                                <form method="post" th:action="|@{/admin/item/}${category.getId()}@{/image/}${category.getImage().getId()}|"
+                                      enctype="multipart/form-data">
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" aria-describedby="inputGroupFileAddon04" aria-label="Upload"
+                                               name="imageFile" accept="image/*">
+                                        <button class="btn btn-outline-success" type="submit">Upload</button>
+                                    </div>
+                                </form>
+                            </td>
+
+                            <td class="align-middle">
+                                <button th:id="${'deleteImageButton'+category.getImage().getId()}" type="button" class="w-100 btn btn-outline-danger">
+                                    Delete
+                                </button>
+                                <script th:inline="javascript">
+                                    document.getElementById([[${'deleteImageButton'+category.getImage().getId()}]]).onclick = async (e) => {
+                                        e.preventDefault();
+                                        askToDelete(
+                                            [[${'/image/'+category.getImage().getId()}]],
+                                            [[${'/admin/item/'+category.getId()+'/details'}]]
+                                        );
+                                    };
+                                </script>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-additional" role="tabpanel" aria-labelledby="nav-additional-tab" tabindex="0">
+            <div class="container">
+                <div class="table-responsive-md">
+                    <table class="w-100 table table-striped">
+                        <caption th:text="|additional info|"></caption>
+                        <thead>
+                        <tr class="table-dark">
+                            <th class="align-middle" scope="col">ID</th>
+                            <th class="align-middle" scope="col">CREATED</th>
+                            <th class="align-middle" scope="col">UPDATED</th>
+                            <th class="align-middle" scope="col">ITEMS COUNT</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="align-middle" th:text="${category.getId()}">CreatedAt</td>
+                            <td class="align-middle" th:text="${category.getCreatedAt()}">CreatedAt</td>
+                            <td class="align-middle" th:text="${category.getUpdatedAt()}">UpdateAt</td>
+                            <td class="align-middle" th:text="${itemList.size()}">Items</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="table-responsive-md">
-        <table class="w-100 table table-striped">
-            <caption th:text="|category image table|"></caption>
-            <thead>
-            <tr class="table-dark">
-                <th class="align-middle" scope="col">ID</th>
-                <th class="align-middle" scope="col">CREATED</th>
-                <th class="align-middle" scope="col">UPDATED</th>
-                <th class="align-middle" scope="col">NAME</th>
-                <th class="align-middle" scope="col">SIZE</th>
-                <th class="align-middle" scope="col">IMAGE</th>
-                <th class="align-middle" scope="col"></th>
-                <th class="align-middle" scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td class="align-middle" th:text="${category.getImage().getId()}">ID</td>
-                <td class="align-middle" th:text="${category.getImage().getCreatedAt()}">CREATED</td>
-                <td class="align-middle" th:text="${category.getImage().getUpdatedAt()}">UPDATED</td>
-                <td class="align-middle" th:text="${category.getImage().getName()}">NAME</td>
-                <td class="align-middle" th:text="${category.getImage().getImageData().length}">SIZE</td>
-                <td class="align-middle">
-                    <img th:src="|@{/image/}${category.getImage().getId()}|"
-                         th:alt="${category.getImage().getName()}"
-                         height="220">
-                </td>
-
-                <td class="align-middle">
-                    <form method="post" th:action="|@{/admin/item/}${category.getId()}@{/image/}${category.getImage().getId()}|"
-                          enctype="multipart/form-data">
-                        <div class="input-group">
-                            <input type="file" class="form-control" aria-describedby="inputGroupFileAddon04" aria-label="Upload"
-                                   name="imageFile" accept="image/*">
-                            <button class="btn btn-outline-success" type="submit">Upload</button>
-                        </div>
-                    </form>
-                </td>
-
-                <td class="align-middle">
-                    <button th:id="${'deleteImageButton'+category.getImage().getId()}" type="button" class="w-100 btn btn-outline-danger">
-                        Delete
-                    </button>
-                    <script th:inline="javascript">
-                        document.getElementById([[${'deleteImageButton'+category.getImage().getId()}]]).onclick = async (e) => {
-                            e.preventDefault();
-                            askToDelete(
-                                [[${'/image/'+category.getImage().getId()}]],
-                                [[${'/admin/item/'+item.getId()+'/details'}]]
-                            );
-                        };
-                    </script>
-                </td>
-
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
 </div>
 
 <footer th:insert="blocks/page-blocks.html :: footer"></footer>
