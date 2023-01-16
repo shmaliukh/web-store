@@ -13,6 +13,8 @@ public interface UnauthorizedUserRepository extends JpaRepository<UnauthorizedUs
 
     boolean existsById(Long id);
 
+    UnauthorizedUser getUnauthorizedUserById(Long id);
+
     List<UnauthorizedUser> readUnauthorizedUsersByCreatedAtBefore(Date date);
 
 }
