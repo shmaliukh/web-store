@@ -106,12 +106,6 @@ public class CartService {
             }
             addNewCart(cart);
         }
-
-    }
-
-    public void removeItemFromCart(Item item, Long userId, boolean authorized){
-        BaseCartRepository repository = cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorized);
-        repository.delete(getCartByUserId(userId, item.getId(),authorized));
     }
 
     public Cart getNewCartByAuthorization(boolean authorized){
