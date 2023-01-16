@@ -36,7 +36,7 @@ public class CartService {
         if (cart!=null) {
             for (CartItem cartItemToFound : cart.getItems()) {
                 if(Objects.equals(cartItemToFound.getItem().getId(), item.getId())){
-                    int resultQuantity = cartItemToFound.getQuantity()+quantity; // todo mb implement item availability checking
+                    int resultQuantity = cartItemToFound.getQuantity()+quantity; // todo mb implement method for item availability checking
                     if(resultQuantity<=cartItemToFound.getItem().getAvailableToBuyQuantity()){
                         cartItemToFound.setQuantity(resultQuantity);
                     }
@@ -67,33 +67,26 @@ public class CartService {
         repository.save(cart);
     }
 
-    // todo implement migration
+    // todo implement data migration
 
-    public List<? extends Cart> getCartsByUserId(Long id, Boolean authorization){ // todo change list to one cart
-        if(authorization){ // todo maybe create provider?
+    public Cart getCartByUserId(Long id, Boolean authorization){ // todo change list to one cart
+        if(authorization){
             User user = userRepository.getUserById(id);
-            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUser(user);
+            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUser(user);
         } else {
             UnauthorizedUser user = unauthorizedUserRepository.getReferenceById(id);
-            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUnauthorizedUser(user);
+            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUnauthorizedUser(user);
         }
     }
 
     public Cart getCartByUserId(Long userId, boolean authorization){
-        List<? extends Cart> carts;
-        if(authorization){ // todo maybe create provider?
+        if(authorization){
             User user = userRepository.getUserById(userId);
-            carts = cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUser(user);
+            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUser(user);
         } else {
             UnauthorizedUser user = unauthorizedUserRepository.getReferenceById(userId);
-            carts = cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartsByUnauthorizedUser(user);
+            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUnauthorizedUser(user);
         }
-//        for (Cart cart : carts) {
-//            if(cart.getItem().getId()==itemId){ // todo refactor
-//                return cart;
-//            }
-//        }
-        return null; // todo fix null
     }
 
 
