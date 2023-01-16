@@ -92,10 +92,21 @@ public class CartService {
 
 
     public void decItemQuantityInCart(Item item, Long userId, boolean authorized){
-        Cart cart = getCartByUserId(userId, item.getId(), authorized);
+        Cart cart = getCartByUserId(userId,authorized);
         if (cart!=null) {
-            cart.setItemQuantity(cart.getItemQuantity() - 1);
+            for (CartItem cartItem : cart.getItems()) {
+                Item resultItem = cartItem.getItem();
+                if(Objects.equals(resultItem.getId(), item.getId())){
+                    cartItem.setQuantity(cartItem.getQuantity()-1);
+                    long resultQuantity = cartItem.getQuantity();
+                    if(resultQuantity<=0){
+                        cart.getItems().remove(cartItem); // todo check this method
+                    }
+                }
+            }
+            addNewCart(cart);
         }
+
     }
 
     public void removeItemFromCart(Item item, Long userId, boolean authorized){
