@@ -45,17 +45,17 @@ public class CartService {
         } else {
             CartItem cartItem = new CartItem();
             cartItem.setItem(item);
-            cartItem.setQuantity(quantity);
+            cartItem.setQuantity(1);
             if(authorized){
                 UserCart newCart = new UserCart();
                 newCart.setItems(Collections.singletonList(cartItem));
-                newCart.setPrice(item.getSalePrice()*quantity);
+                newCart.setPrice(item.getSalePrice());
                 newCart.setUser(userRepository.getUserById(userId));
                 addNewCart(newCart);
             } else {
                 UnauthorizedUserCart newCart = new UnauthorizedUserCart();
                 newCart.setItems(Collections.singletonList(cartItem));
-                newCart.setPrice(item.getSalePrice()*quantity);
+                newCart.setPrice(item.getSalePrice());
                 newCart.setUnauthorizedUser(unauthorizedUserRepository.getUnauthorizedUserById(userId));
                 addNewCart(newCart);
             }
