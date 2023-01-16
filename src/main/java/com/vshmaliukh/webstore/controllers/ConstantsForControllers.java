@@ -22,6 +22,7 @@ public final class ConstantsForControllers {
     public static final String USER_HOME = "user-home";
 
     // TODO refactor
+    public static String ORDER_STATUS_COMPLETED = "Completed";
     public static Map<String, String> orderStatusDescriptionMap;
 
     static {

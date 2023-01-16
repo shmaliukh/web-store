@@ -18,9 +18,20 @@ public abstract class LiteratureItem extends Item {
     @Column(name = PAGES_COLUMN, nullable = false)
     private int pages;
 
-    protected LiteratureItem(Integer id, String category, String name, int price, int quantity, boolean isAvailableInStore, int pages) {
-        super(id, category, name, price, quantity, isAvailableInStore);
-        this.pages = pages;
+    protected LiteratureItem(Integer id,
+                             String category,
+                             String name,
+                             int currentQuantity,
+                             int availableToBuyQuantity,
+                             int costPrice,
+                             int salePrice,
+                             String description,
+                             String status,
+                             boolean isAvailableInStore,
+                             int soldOutQuantity,
+                             int pages) {
+        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity);
+        setPages(pages);
     }
 
     @Override
@@ -39,6 +50,10 @@ public abstract class LiteratureItem extends Item {
         int result = super.hashCode();
         result = 31 * result + getPages();
         return result;
+    }
+
+    public void setPages(int pages) {
+        this.pages = Math.max(pages, 1);
     }
 
 }

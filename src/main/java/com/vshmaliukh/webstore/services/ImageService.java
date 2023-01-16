@@ -1,6 +1,5 @@
 package com.vshmaliukh.webstore.services;
 
-import com.vshmaliukh.webstore.ImageUtil;
 import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
@@ -30,21 +29,23 @@ public class ImageService {
 
     public Optional<ItemImage> formItemImageFromFile(Item item, MultipartFile file) {
         try {
-            String filename = file.getOriginalFilename();
-            String fileContentType = file.getContentType();
-            byte[] compressedImage = ImageUtil.compressImage(file.getBytes());
+            if (file != null) {
+                String filename = file.getOriginalFilename();
+                String fileContentType = file.getContentType();
+                byte[] compressedImage = file.getBytes();
 
-            ItemImage itemImage = new ItemImage();
-            itemImage.setItem(item);
-            itemImage.setName(filename);
-            itemImage.setType(fileContentType);
-            itemImage.setImageData(compressedImage);
-
-            return Optional.of(itemImage);
+                ItemImage itemImage = new ItemImage();
+                itemImage.setItem(item);
+                itemImage.setName(filename);
+                itemImage.setType(fileContentType);
+                itemImage.setImageData(compressedImage);
+                return Optional.of(itemImage);
+            }
         } catch (IOException e) {
-            log.error("problem to save '{}' image to database", file);
-            return Optional.empty();
+            log.error(e.getMessage(), e);
         }
+        log.warn("problem to save '{}' image to database", file);
+        return Optional.empty();
     }
 
     public Optional<Image> getImageById(Long id) {

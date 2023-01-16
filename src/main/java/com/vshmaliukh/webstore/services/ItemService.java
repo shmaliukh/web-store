@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,21 @@ public class ItemService {
         }
     }
 
+    public void changeItemImage(Integer itemId, Long imageId, MultipartFile file) {
+        Optional<Item> optionalItem = readItemById(itemId);
+        if (optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            Optional<ItemImage> optionalImage = imageService.formItemImageFromFile(item, file);
+            if (optionalImage.isPresent()) {
+                ItemImage itemImageToSave = optionalImage.get();
+                itemImageToSave.setId(imageId);
+                imageService.saveImage(itemImageToSave);
+            }
+        } else {
+            log.warn("image not changed // item id: '{}' // image id: '{}'", itemId, imageId);
+        }
+    }
+
     public Optional<Item> readItemById(Integer itemId) {
         ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
         return allItemRepository.findById(itemId);
@@ -47,16 +63,19 @@ public class ItemService {
         ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
 //        return allItemRepository.findAllByQuantityGreaterThanEqualAndAvailableInStoreEquals(1, true);
         return allItemRepository.findAll().stream()
-                .filter(Item::isAvailableInStore)
-                .filter(item -> item.getQuantity() > 0)
+                .filter(item -> item.getAvailableToBuyQuantity() > 0)
                 .collect(Collectors.toList());
     }
 
     public <T extends Item> void saveItem(T item) {
         BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
         if (baseItemRepository != null) {
-            if (item.getQuantity() < 1) {
+            if (item.getCurrentQuantity() < 1) {
                 item.setAvailableInStore(false);
+            }
+            if (item.getId() != null) {
+                List<ItemImage> imageListByItem = imageService.findImageListByItem(item);
+                item.setImageList(imageListByItem);
             }
             baseItemRepository.save(item);
         } else {
@@ -96,6 +115,20 @@ public class ItemService {
         } else {
             log.warn("problem to save '{}' item , repository not found", item);
         }
+    }
+
+    public List<String> readStatusNameList() {
+        // TODO implement enum
+        return Arrays.asList(
+                "In stock",
+                //You’re currently accepting orders for this product and can fulfill the purchase request. You’re certain that the product will ship (or be in-transit to the customer) in a timely manner because it's available for sale. You can deliver the product to all of the locations that you support in your product data and account shipping settings.
+                "Out of stock",
+                //You’re not currently accepting orders for this product, or the product is not available for purchase or needs to be backordered.
+                "Preorder",
+                //You’re currently taking orders for this product, but it’s not yet been released for sale. You're required to provide the availability date [availability_date] attribute to indicate the day that the product becomes available for delivery.
+                "Backorder"
+                //The product is not available at the moment, but you’re accepting orders and it'll be shipped as soon as it becomes available again. You're required to provide the availability date [availability_date] attribute to indicate the day that the product becomes available for delivery.
+        );
     }
 
 }

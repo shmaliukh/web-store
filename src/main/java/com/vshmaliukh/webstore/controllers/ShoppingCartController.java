@@ -11,7 +11,10 @@ import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,14 +39,12 @@ public class ShoppingCartController {
     public ModelAndView showCartPage(ModelMap modelMap,
                                      HttpServletResponse response,
                                      @CookieValue(required = false, defaultValue = "0") Long userId) {
-
-
+                                     
         // todo add checking for user authorizing
 
         boolean authorization = false;
         if(!authorization) {
             unauthorizedUserService.removeOldUsers(); // todo refactor usage of old unauthorized users removing
-
             if (userId == 0) {
                 userId = unauthorizedUserService
                         .createUnauthorizedUser()
@@ -94,11 +95,9 @@ public class ShoppingCartController {
                                   @CookieValue Long userId) {
 
         // todo implement authorization checking
-
         boolean authorization = false;
         Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
         optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId, authorization));
         return "redirect:/shopping-cart";
     }
-
 }

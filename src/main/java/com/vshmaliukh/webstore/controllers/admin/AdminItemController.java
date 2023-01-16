@@ -6,6 +6,7 @@ import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
+import com.vshmaliukh.webstore.services.CategoryService;
 import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
@@ -29,8 +30,9 @@ import java.util.Optional;
 public class AdminItemController {
 
     final ItemService itemService;
-    final ItemRepositoryProvider itemRepositoryProvider;
     final ImageService imageService;
+    final CategoryService categoryService;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping("/**")
     public ModelAndView doRedirectToCatalog(ModelMap modelMap) {
@@ -122,8 +124,13 @@ public class AdminItemController {
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
-            modelMap.addAttribute(itemType, itemType.toLowerCase());
-            return new ModelAndView("/admin/item/add", modelMap);
+            List<String> statusList = itemService.readStatusNameList();
+            List<String> categoryNameList = categoryService.readCategoryNameList();
+
+            modelMap.addAttribute("itemType", itemType.toLowerCase());
+            modelMap.addAttribute("statusList", statusList);
+            modelMap.addAttribute("categoryNameList", categoryNameList);
+            return new ModelAndView("admin/item/create", modelMap);
         }
         return new ModelAndView("redirect:/admin", modelMap);
     }
@@ -138,7 +145,7 @@ public class AdminItemController {
 
     @PutMapping("/add")
     public <T extends Item> ResponseEntity<Void> doPutAddItem(@CookieValue(defaultValue = "0") Long userId,
-                                                       @RequestBody T item) {
+                                                              @RequestBody T item) {
         itemService.saveItem(item);
         if (itemService.isItemSaved(item)) {
             log.info("saved item to database: '{}'", item);
@@ -150,14 +157,27 @@ public class AdminItemController {
 
     @PostMapping("/{itemId}/image")
     public ModelAndView uploadImage(@PathVariable Integer itemId,
-                             @RequestParam("imageFile") MultipartFile imageFile,
-                             ModelMap modelMap) {
-        itemService.addImageToItem(itemId, imageFile);
+                                    @RequestParam("imageFile") MultipartFile imageFile,
+                                    ModelMap modelMap) {
+        if (!imageFile.isEmpty()) {
+            itemService.addImageToItem(itemId, imageFile);
+        } else {
+            log.warn("problem to upload image // imageFile == NULL");
+        }
+        return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
+    }
+
+    @PostMapping("/{itemId}/image/{imageId}")
+    public ModelAndView uploadImage(@PathVariable Integer itemId,
+                                    @PathVariable Long imageId,
+                                    @RequestParam("imageFile") MultipartFile imageFile,
+                                    ModelMap modelMap) {
+        itemService.changeItemImage(itemId, imageId, imageFile);
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 
     @GetMapping("/{itemType}")
-    public ResponseEntity<List<? extends Item>> readItemListByType(@PathVariable(name = "itemType") String itemType){
+    public ResponseEntity<List<? extends Item>> readItemListByType(@PathVariable(name = "itemType") String itemType) {
         List<? extends Item> itemList = itemService.readAllItemsByTypeName(itemType);
         return ResponseEntity.ok().body(itemList);
     }

@@ -3,9 +3,9 @@ spring:
     console:
       enabled: true
   datasource:
-    url: jdbc:h2:file:/db/demo
-    username: "sa"
-    password: ""
+    url: ${h2.url}
+    username: ${h2.username}
+    password: ${h2.password}
     driverClassName: org.h2.Driver
   jpa:
     open-in-view: false
@@ -17,5 +17,5 @@ spring:
     multipart:
       enabled: true
       file-size-threshold: 2KB
-      max-file-size: 50MB
-      max-request-size: 75MB
+      max-file-size: 10MB
+      max-request-size: 15MB

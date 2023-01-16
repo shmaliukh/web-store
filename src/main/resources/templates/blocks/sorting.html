@@ -1,4 +1,4 @@
-<th scope="col" th:fragment="sorting(field, label, pageToRedirect)">
+<th class="align-middle" scope="col" th:fragment="sorting(field, label, pageToRedirect)">
   <a class="link-light" th:href="@{${pageToRedirect} + '?'
                 + ${keyword!=null && keyword!=''? 'keyword=' + keyword + '&' : ''}
                 + 'page=' + ${currentPage} + '&size=' + ${pageSize}
@@ -8,5 +8,4 @@
   <span th:if="${sortField == field}" style="color:white"
     th:text="${sortDirection == 'asc' ? '▲' : '▼'}">
   </span>
-  <span ▼</span>
 </th>

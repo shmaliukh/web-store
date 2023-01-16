@@ -1,6 +1,5 @@
-package com.vshmaliukh.webstore.controllers;
+package com.vshmaliukh.webstore.controllers.rest;
 
-import com.vshmaliukh.webstore.ImageUtil;
 import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.services.ImageService;
 import lombok.AllArgsConstructor;
@@ -26,8 +25,7 @@ public class ImageController {
         Optional<Image> optionalImage = imageService.getImageById(id);
         if (optionalImage.isPresent()) {
             Image itemImage = optionalImage.get();
-            byte[] compressedImageData = itemImage.getImageData();
-            byte[] decompressedImage = ImageUtil.decompressImage(compressedImageData);
+            byte[] decompressedImage = itemImage.getImageData();
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_PNG)
                     .body(decompressedImage);

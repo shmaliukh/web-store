@@ -21,7 +21,8 @@
     <div class="col-12">
         <label for="literaturePages" class="form-label">Pages</label>
         <div class="input-group mb-3 has-validation">
-            <input type="number" name="pages" class="form-control" id="literaturePages" placeholder="1" required="">
+            <input type="number" name="pages" class="form-control" id="literaturePages" placeholder="1"
+                   th:value="${item != null ? item.getPages() : ''}" required="">
             <div class="invalid-feedback">
                 'Pages' field is required.
             </div>
@@ -33,7 +34,8 @@
     <div class="col-12">
         <label for="literatureAuthor" class="form-label">Author</label>
         <div class="input-group mb-3 has-validation">
-            <input type="text" name="author" class="form-control" id="literatureAuthor" placeholder="1" required="">
+            <input type="text" name="author" class="form-control" id="literatureAuthor" placeholder="Author"
+                   th:value="${item != null ? item.getAuthor() : ''}" required="">
             <div class="invalid-feedback">
                 'Author' field is required.
             </div>
@@ -45,7 +47,8 @@
     <div class="col-12">
         <label for="literaturePublisher" class="form-label">Author</label>
         <div class="input-group mb-3 has-validation">
-            <input type="text" name="publisher" class="form-control" id="literaturePublisher" placeholder="publisher" required="">
+            <input type="text" name="publisher" class="form-control" id="literaturePublisher" placeholder="publisher"
+                   th:value="${item != null ? item.getPublisher() : ''}" required="">
             <div class="invalid-feedback">
                 'Publisher' field is required.
             </div>
@@ -57,7 +60,7 @@
     <div class="col-12">
         <label for="literatureDate" class="form-label">Date of issue</label>
         <input type="date" name="date" class="form-control" id="literatureDate" required=""
-               data-date-format="yyyy-mm-dd">
+               th:value="${item != null ? #dates.format(item.getDateOfIssue(), 'yyyy-MM-dd') : ''}" data-date-format="yyyy-mm-dd">
         <div class="invalid-feedback">
             'Date' field is required.
         </div>
