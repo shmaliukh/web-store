@@ -60,8 +60,9 @@ public class AdminCategoryController {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
-            modelMap.addAttribute("category", category);
             List<Item> itemList = categoryService.readCategoryItemList(category);
+
+            modelMap.addAttribute("category", category);
             modelMap.addAttribute("itemList", itemList);
             return new ModelAndView("admin/category/details", modelMap);
         }
