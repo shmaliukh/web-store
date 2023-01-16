@@ -9,10 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -54,6 +51,18 @@ public class AdminCategoryController {
         Category category = categoryService.buildBaseCategory(id, name, description, isDeleted, isActivated, optionalImage);
         categoryService.save(category);
         return new ModelAndView("redirect:/admin/category/details/" + category.getId(), modelMap);
+    }
+
+    @GetMapping("/details/{categoryId}")
+    public ModelAndView doGetDetails(@PathVariable(name = "categoryId") Integer categoryId,
+                                     ModelMap modelMap) {
+        Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            modelMap.addAttribute("category", category);
+            return new ModelAndView("admin/category/details", modelMap);
+        }
+        return new ModelAndView("admin/category/catalog", modelMap);
     }
 
 }

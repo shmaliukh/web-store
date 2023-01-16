@@ -66,4 +66,8 @@ public class CategoryService {
                 .build();
     }
 
+    public Optional<Category> readCategoryById(Integer categoryId) {
+        return categoryRepository.findById(categoryId);
+    }
+
 }
