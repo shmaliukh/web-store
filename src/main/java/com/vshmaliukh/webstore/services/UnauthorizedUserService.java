@@ -33,10 +33,8 @@ public class UnauthorizedUserService {
 
     public void removeOldUsers(){
         Date date = new Date();
-        Timestamp timestamp = new Timestamp(date.getTime());
-        List<UnauthorizedUser> users = unauthorizedUserRepository.findAll();
-        List<UnauthorizedUser> usersToRemove = users.stream().filter(o->new Timestamp(o.getCreatedAt().getTime()).getTime()<(timestamp.getTime()-24*60*60)).collect(Collectors.toList());
-        unauthorizedUserRepository.deleteAll(usersToRemove);
+        date.setTime(date.getTime()-24*60*60);
+        unauthorizedUserRepository.deleteAll(unauthorizedUserRepository.readUnauthorizedUsersByCreatedAtBefore(date));
     }
 
     public UnauthorizedUser createUnauthorizedUser(){
