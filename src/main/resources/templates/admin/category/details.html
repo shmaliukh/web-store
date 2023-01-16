@@ -14,8 +14,31 @@
     <p class="lead" th:text="|All info about ${category.getName()} category|">All info about category</p>
 </div>
 
+<div class="album py-5 bg-light text-center">
 
-<div class="container">
+    <div class="container">
+        <div class="table-responsive-md">
+            <table class="w-100 table table-striped">
+                <caption th:text="|Additional info|"></caption>
+                <thead>
+                <tr class="table-dark">
+                    <th class="align-middle" scope="col">ID</th>
+                    <th class="align-middle" scope="col">CREATED</th>
+                    <th class="align-middle" scope="col">UPDATED</th>
+                    <th class="align-middle" scope="col">ITEMS COUNT</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="align-middle" th:text="${category.getId()}">CreatedAt</td>
+                    <td class="align-middle" th:text="${category.getCreatedAt()}">CreatedAt</td>
+                    <td class="align-middle" th:text="${category.getUpdatedAt()}">UpdateAt</td>
+                    <td class="align-middle" th:text="${itemList}">Items</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </div>
 

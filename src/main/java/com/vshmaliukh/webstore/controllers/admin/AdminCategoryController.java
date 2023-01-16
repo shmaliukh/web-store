@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Image;
+import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.services.CategoryService;
 import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
@@ -60,6 +61,8 @@ public class AdminCategoryController {
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
             modelMap.addAttribute("category", category);
+            List<Item> itemList = categoryService.readCategoryItemList(category);
+            modelMap.addAttribute("itemList", itemList);
             return new ModelAndView("admin/category/details", modelMap);
         }
         return new ModelAndView("admin/category/catalog", modelMap);

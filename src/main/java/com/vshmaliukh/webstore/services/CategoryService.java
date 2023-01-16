@@ -2,11 +2,13 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Image;
+import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,11 +21,11 @@ public class CategoryService {
     final ImageService imageService;
     final CategoryRepository categoryRepository;
 
-    public List<Category> readAll(){
+    public List<Category> readAll() {
         return categoryRepository.findAll();
     }
 
-    public void save(Category category){
+    public void save(Category category) {
         categoryRepository.save(category);
     }
 
@@ -70,4 +72,8 @@ public class CategoryService {
         return categoryRepository.findById(categoryId);
     }
 
+    public List<Item> readCategoryItemList(Category category) {
+        // FIXME read item list via repository
+        return Collections.EMPTY_LIST;
+    }
 }
