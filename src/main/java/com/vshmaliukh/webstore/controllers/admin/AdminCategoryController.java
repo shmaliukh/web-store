@@ -1,7 +1,9 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.model.Category;
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.services.CategoryService;
+import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -22,26 +26,31 @@ import java.util.List;
 public class AdminCategoryController {
 
     final ItemService itemService;
+    final ImageService imageService;
     final CategoryService categoryService;
 
     @GetMapping("/catalog")
     public ModelAndView doGetCatalog(ModelMap modelMap) {
         List<Category> categoryList = categoryService.readAll();
-        
+
         modelMap.addAttribute("categoryList", categoryList);
         return new ModelAndView("admin/category/catalog", modelMap);
     }
 
-    @GetMapping("create")
+    @GetMapping("/create")
     public ModelAndView doGetCreate(ModelMap modelMap) {
         return new ModelAndView("admin/category/create", modelMap);
     }
 
-    @PostMapping
-    public ModelAndView doPostCreate(@RequestParam(name = "name") 
-
-            ModelMap modelMap) {
-        Category category;
+    @PostMapping("/save")
+    public ModelAndView doPostSave(@RequestParam(name = "id") Integer id,
+                                   @RequestParam(name = "name") String name,
+                                   @RequestParam(name = "description") String description,
+                                   @RequestParam("imageFile") MultipartFile imageFile,
+                                   ModelMap modelMap) {
+        Optional<Image> optionalImage = imageService.buildImageFromFile(imageFile);
+        Category category = categoryService.buildBaseCategory(id, name, description, optionalImage);
+        categoryService.save(category);
         return new ModelAndView("redirect:admin/category/details/" + category.getId(), modelMap);
     }
 

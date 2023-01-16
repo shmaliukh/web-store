@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Slf4j
 @Service
@@ -27,24 +28,33 @@ public class ImageService {
         imageRepository.save(image);
     }
 
-    public Optional<ItemImage> formItemImageFromFile(Item item, MultipartFile file) {
+    public Optional<Image> buildImageFromFile(MultipartFile file) {
         try {
-            if (file != null) {
-                String filename = file.getOriginalFilename();
-                String fileContentType = file.getContentType();
-                byte[] compressedImage = file.getBytes();
+            String filename = file.getOriginalFilename();
+            String fileContentType = file.getContentType();
+            byte[] compressedImage = file.getBytes();
 
-                ItemImage itemImage = new ItemImage();
-                itemImage.setItem(item);
-                itemImage.setName(filename);
-                itemImage.setType(fileContentType);
-                itemImage.setImageData(compressedImage);
-                return Optional.of(itemImage);
-            }
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            Image image = new Image();
+            image.setName(filename);
+            image.setType(fileContentType);
+            image.setImageData(compressedImage);
+
+            return Optional.of(image);
+        } catch (IOException ioe) {
+            log.error(ioe.getMessage(), ioe);
         }
-        log.warn("problem to save '{}' image to database", file);
+        return Optional.empty();
+    }
+
+    public Optional<ItemImage> formItemImageFromFile(Item item, MultipartFile file) {
+        Optional<Image> optionalImage = buildImageFromFile(file);
+        if (optionalImage.isPresent()) {
+            // TODO refactor (not use cast)
+            ItemImage itemImage = (ItemImage) optionalImage.get();
+            itemImage.setItem(item);
+            return Optional.of(itemImage);
+        }
+        log.warn("problem to generate '{}' file to image entity", file);
         return Optional.empty();
     }
 
@@ -67,4 +77,7 @@ public class ImageService {
         log.warn("image not deleted // image == NULL");
     }
 
+    public Supplier<Image> getDefaultImage() {
+        return null;
+    }
 }

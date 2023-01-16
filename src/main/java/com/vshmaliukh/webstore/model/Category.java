@@ -39,6 +39,7 @@ public class Category extends AuditModel{
                     name = "img_id",
                     referencedColumnName = "img_id")
     )
+    @ToString.Exclude
     private Image image;
 
     @OneToMany(cascade = CascadeType.PERSIST)
