@@ -7,6 +7,7 @@ import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,11 @@ public class AdminCategoryController {
         return new ModelAndView("redirect:/admin/category/catalog", modelMap);
     }
 
+    @DeleteMapping("/{categoryId}/image")
+    public ResponseEntity<Void> doDeleteImage(@PathVariable(name = "categoryId") Integer categoryId) {
+        return categoryService.deleteImageByCategoryId(categoryId);
+    }
+
     @GetMapping("/{categoryId}/details")
     public ModelAndView doGetDetails(@PathVariable(name = "categoryId") Integer categoryId,
                                      ModelMap modelMap) {
@@ -79,6 +85,15 @@ public class AdminCategoryController {
             return new ModelAndView("admin/category/details", modelMap);
         }
         return new ModelAndView("admin/category/catalog", modelMap);
+    }
+
+    @PostMapping("category/add-item")
+    public ModelAndView doPostCreateItemByCategory(@RequestParam(name = "itemType") String itemType,
+                                                   ModelMap modelMap) {
+        if (itemService.isTypeExists(itemType)) {
+            return new ModelAndView("redirect:/admin/item/add/" + itemType, modelMap);
+        }
+        return new ModelAndView("redirect:/admin/category/catalog", modelMap);
     }
 
 }

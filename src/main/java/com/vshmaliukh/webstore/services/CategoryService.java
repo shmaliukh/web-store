@@ -6,6 +6,7 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -82,8 +83,22 @@ public class CategoryService {
             Image image = optionalImage.get();
             category.setImage(image);
             save(category);
-        } else{
+        } else {
             log.warn("problem to add image to '{}' category", category);
         }
     }
+
+    public ResponseEntity<Void> deleteImageByCategoryId(Integer categoryId) {
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            category.setImage(null);
+            categoryRepository.save(category);
+            log.info("deleted '{}' category image", category);
+            return ResponseEntity.ok().build();
+        }
+        log.warn("problem to delete category (with '{}' id) image", categoryId);
+        return ResponseEntity.badRequest().build();
+    }
+
 }

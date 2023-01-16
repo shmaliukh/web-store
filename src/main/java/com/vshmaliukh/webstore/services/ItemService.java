@@ -131,4 +131,8 @@ public class ItemService {
         );
     }
 
+    public boolean isTypeExists(String itemType) {
+        return itemRepositoryProvider.itemClassNameRepositoryMap.containsKey(itemType);
+    }
+
 }
