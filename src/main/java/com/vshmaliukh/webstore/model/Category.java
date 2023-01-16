@@ -31,7 +31,7 @@ public class Category extends AuditModel{
     private boolean isActivated = true;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "Image_Category",
+    @JoinTable(name = "Category_Image",
             joinColumns = @JoinColumn(
                     name = "category_id",
                     referencedColumnName = "category_id"),
@@ -43,6 +43,14 @@ public class Category extends AuditModel{
     private Image image;
 
     @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "Category_Item",
+            joinColumns = @JoinColumn(
+                    name = "category_id",
+                    referencedColumnName = "category_id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "item_id",
+                    referencedColumnName = "item_id")
+    )
     @ToString.Exclude
     private Set<Item> itemSet;
 
