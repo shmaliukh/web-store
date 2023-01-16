@@ -61,7 +61,7 @@ public class AdminItemController {
             modelMap.addAttribute("itemImageList", itemImageList);
             return new ModelAndView("/admin/item/details", modelMap);
         }
-        log.warn("problem to generate '/item/details/{}' template // not found item with '{}' id", itemId, itemId);
+        log.warn("problem to generate '/item/{}/details' template // not found item with '{}' id", itemId, itemId);
         return new ModelAndView("redirect:/admin/item/catalog", modelMap);
     }
 

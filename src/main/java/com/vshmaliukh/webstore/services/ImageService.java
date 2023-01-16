@@ -77,7 +77,4 @@ public class ImageService {
         log.warn("image not deleted // image == NULL");
     }
 
-    public Supplier<Image> getDefaultImage() {
-        return null;
-    }
 }
