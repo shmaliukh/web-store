@@ -25,7 +25,7 @@
     <div class="container">
         <div class="table-responsive-md ">
             <table class="w-100 table table-striped">
-                <caption>Order</caption>
+                <caption>order</caption>
                 <thead>
                 <tr class="table-dark">
                     <th class="align-middle" scope="col">ID</th>
@@ -62,7 +62,7 @@
 
             <div class="table-responsive-md ">
                 <table class="w-100 table table-striped">
-                    <caption th:text="|Add item to order table|"></caption>
+                    <caption th:text="|add item to order table|"></caption>
                     <thead>
                     <tr class="table-dark">
                         <th:block th:insert="blocks/table-titles :: order-item-titles-with-sorting('/admin/order/' + ${order.getId()} + '/add-item/')"></th:block>
