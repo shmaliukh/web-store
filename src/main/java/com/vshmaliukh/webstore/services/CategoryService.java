@@ -50,11 +50,18 @@ public class CategoryService {
 //        );
     }
 
-    public Category buildBaseCategory(Integer id, String name, String description, Optional<Image> optionalImage) {
+    public Category buildBaseCategory(Integer id,
+                                      String name,
+                                      String description,
+                                      boolean isDeleted,
+                                      boolean isActivated,
+                                      Optional<Image> optionalImage) {
         return Category.builder()
                 .id(id)
                 .name(name)
                 .description(description)
+                .isDeleted(isDeleted)
+                .isActivated(isActivated)
                 .image(optionalImage.orElseGet(imageService.getDefaultImage()))
                 .build();
     }

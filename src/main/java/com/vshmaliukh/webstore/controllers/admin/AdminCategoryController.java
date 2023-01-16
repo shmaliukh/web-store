@@ -43,15 +43,17 @@ public class AdminCategoryController {
     }
 
     @PostMapping("/save")
-    public ModelAndView doPostSave(@RequestParam(name = "id") Integer id,
+    public ModelAndView doPostSave(@RequestParam(name = "id", defaultValue = "") Integer id,
                                    @RequestParam(name = "name") String name,
                                    @RequestParam(name = "description") String description,
-                                   @RequestParam("imageFile") MultipartFile imageFile,
+                                   @RequestParam(name = "isDeleted", defaultValue = "false") boolean isDeleted,
+                                   @RequestParam(name = "isActivated", defaultValue = "true") boolean isActivated,
+                                   @RequestParam(name = "imageFile") MultipartFile imageFile,
                                    ModelMap modelMap) {
         Optional<Image> optionalImage = imageService.buildImageFromFile(imageFile);
-        Category category = categoryService.buildBaseCategory(id, name, description, optionalImage);
+        Category category = categoryService.buildBaseCategory(id, name, description, isDeleted, isActivated, optionalImage);
         categoryService.save(category);
-        return new ModelAndView("redirect:admin/category/details/" + category.getId(), modelMap);
+        return new ModelAndView("redirect:/admin/category/details/" + category.getId(), modelMap);
     }
 
 }
