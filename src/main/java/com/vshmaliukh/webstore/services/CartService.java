@@ -28,7 +28,7 @@ public class CartService {
     UnauthorizedUserRepository unauthorizedUserRepository;
 
 
-    public void addItemsToCart(Item item, Long userId, boolean authorized, int quantity){
+    public void addItemToCart(Item item, Long userId, boolean authorized){
 
         // todo refactor its usage in other classes
         Cart cart = getCartByUserId(userId, authorized);
@@ -36,7 +36,7 @@ public class CartService {
         if (cart!=null) {
             for (CartItem cartItemToFound : cart.getItems()) {
                 if(Objects.equals(cartItemToFound.getItem().getId(), item.getId())){
-                    int resultQuantity = cartItemToFound.getQuantity()+quantity; // todo mb implement method for item availability checking
+                    int resultQuantity = cartItemToFound.getQuantity()+1; // todo mb implement method for item availability checking
                     if(resultQuantity<=cartItemToFound.getItem().getAvailableToBuyQuantity()){
                         cartItemToFound.setQuantity(resultQuantity);
                     }
