@@ -23,7 +23,9 @@ public class Category extends AuditModel{
     @Column(name = "category_id", nullable = false)
     private Integer id;
 
+    @Column(unique = true)
     private String name;
+
     @Column(columnDefinition="LONGTEXT")
     private String description;
 

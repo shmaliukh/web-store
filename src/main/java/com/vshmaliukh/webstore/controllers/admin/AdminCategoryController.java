@@ -53,7 +53,8 @@ public class AdminCategoryController {
                                    @RequestParam(name = "isDeleted", defaultValue = "false") boolean isDeleted,
                                    @RequestParam(name = "isActivated", defaultValue = "true") boolean isActivated,
                                    ModelMap modelMap) {
-        Category category = categoryService.buildBaseCategory(id, name, description, isDeleted, isActivated);
+        Category category = categoryService.getUpdatedOrCreateBaseCategory(id, name, description, isDeleted, isActivated);
+
         categoryService.save(category);
         return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
     }

@@ -54,6 +54,32 @@ public class CategoryService {
                 .build();
     }
 
+    public Category getUpdatedOrCreateBaseCategory(Integer id,
+                                                   String name,
+                                                   String description,
+                                                   boolean isDeleted,
+                                                   boolean isActivated) {
+        if (id != null) {
+            Optional<Category> optionalCategory = readCategoryById(id);
+            if (optionalCategory.isPresent()) {
+                return getUpdatedCategory(name, description, isDeleted, isActivated, optionalCategory.get());
+            }
+        }
+        return buildBaseCategory(id, name, description, isDeleted, isActivated);
+    }
+
+    public Category getUpdatedCategory(String name,
+                                       String description,
+                                       boolean isDeleted,
+                                       boolean isActivated,
+                                       Category category) {
+        category.setName(name);
+        category.setDescription(description);
+        category.setActivated(isActivated);
+        category.setDeleted(isDeleted);
+        return category;
+    }
+
     public Optional<Category> readCategoryById(Integer categoryId) {
         return categoryRepository.findById(categoryId);
     }
