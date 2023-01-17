@@ -24,8 +24,55 @@
     </div>
 </div>
 
-<div class="album py-5 bg-light text-center">
+<div class="container">
+    <div class="container">
+        <th:block th:insert="blocks/navigation :: tools('/admin/category/catalog')"></th:block>
+    </div>
+    <th:block th:if="${categoryList.size() > 0}">
+        <div class="table-responsive-md m-3">
+            <table class="w-100 table table-striped">
+                <caption>order table</caption>
+                <thead>
+                <tr class="table-dark">
+                    <th:block
+                            th:insert="blocks/table-titles :: category-titles-with-sorting('/admin/category/catalog')"></th:block>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="category, iterator: ${categoryList}">
+                    <th class="align-middle" scope="row" th:text="${iterator.count+(currentPage - 1)*pageSize}">#</th>
+                    <td class="align-middle" th:text="${category.getId()}">ID</td>
+                    <td class="align-middle" th:text="${category.getCreatedAt()}">CREATED</td>
+                    <td class="align-middle" th:text="${category.getUpdatedAt()}">UPDATED</td>
+                    <td class="align-middle" th:text="${category.getName()}">NAME</td>
+                    <td class="align-middle">
+                        <input class="form-check-input align-middle" type="checkbox" name="isActivated"
+                               th:value="${category.isActivated()}" th:checked="${category.isActivated()}"
+                               disabled>
+                    </td>
+                    <td class="align-middle">
+                        <input class="form-check-input align-middle" type="checkbox" name="isDeleted"
+                               th:value="${category.isDeleted()}" th:checked="${category.isDeleted()}"
+                               disabled>
+                    </td>
+                    <td class="align-middle">
+                        <a th:href="|@{/admin/category/}${category.getId()}@{/details}|">
+                            <button type="button" class="w-100 btn btn-outline-secondary">
+                                Details
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
+            <th:block th:insert="blocks/navigation :: pagination('/admin/category/catalog')"></th:block>
+        </div>
+    </th:block>
+    <th:block th:if="${categoryList.isEmpty()}">
+        <p class="lead" th:text="|No available catalog|"></p>
+    </th:block>
 </div>
 
 

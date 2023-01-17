@@ -5,6 +5,7 @@ import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     final ImageService imageService;
+
+    @Getter
     final CategoryRepository categoryRepository;
 
     public List<Category> readAll() {
@@ -31,27 +34,10 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    // TODO implement 'category' entity
     public List<String> readCategoryNameList() {
         return readAll().stream()
                 .map(Category::getName)
                 .collect(Collectors.toList());
-//        return Arrays.asList(
-//                "Fiction",
-//                "Mystery",
-//                "Thriller",
-//                "Horror",
-//                "Historical",
-//                "Romance",
-//                "Western",
-//                "Bildungsroman",
-//                "Speculative Fiction",
-//                "Science Fiction",
-//                "Fantasy",
-//                "Dystopian",
-//                "Magical Realism",
-//                "Realist Literature"
-//        );
     }
 
     public Category buildBaseCategory(Integer id,

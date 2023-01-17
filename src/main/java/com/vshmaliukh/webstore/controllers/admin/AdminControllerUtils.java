@@ -1,7 +1,9 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
+import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -64,7 +66,7 @@ public final class AdminControllerUtils {
         if (StringUtils.isBlank(keyword)) {
             pageWithOrders = orderRepository.findAll(pageable);
         } else {
-            pageWithOrders = orderRepository.findByStatusIgnoreCase(keyword, pageable);
+            pageWithOrders = orderRepository.findByStatusContainingIgnoreCase(keyword, pageable);
             modelMap.addAttribute("keyword", keyword);
         }
         List<Order> content = pageWithOrders.getContent();
@@ -73,5 +75,34 @@ public final class AdminControllerUtils {
 
         return content;
     }
+
+    public static List<Category> getSortedContent(String keyword,
+                                                  int page,
+                                                  int size,
+                                                  String[] sort,
+                                                  ModelMap modelMap,
+                                                  CategoryRepository repository) {
+        String sortField = sort[0];
+        String sortDirection = sort[1];
+        Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Order order = new Sort.Order(direction, sortField);
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+
+        Page<Category> pageWithContent;
+        if (StringUtils.isBlank(keyword)) {
+            pageWithContent = repository.findAll(pageable);
+        } else {
+//          FIXME refactor duplicate methods (solve problem with repository find by keyword pageable content)
+            pageWithContent = repository.findByNameContainingIgnoreCase(keyword, pageable);
+            modelMap.addAttribute("keyword", keyword);
+        }
+        List<Category> content = pageWithContent.getContent();
+
+        addAttributesForSortingAndPaging(size, modelMap, sortField, sortDirection, pageWithContent);
+
+        return content;
+    }
+
 
 }

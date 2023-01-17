@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
+import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.services.CategoryService;
@@ -28,9 +29,14 @@ public class AdminCategoryController {
     final CategoryService categoryService;
 
     @GetMapping("/catalog")
-    public ModelAndView doGetCatalog(ModelMap modelMap) {
-        List<Category> categoryList = categoryService.readAll();
-
+    public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
+                                     @RequestParam(defaultValue = "1") int page,
+                                     @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
+                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     ModelMap modelMap) {
+        List<Category> categoryList = AdminControllerUtils.getSortedContent(
+                keyword, page, size, sort, modelMap, categoryService.getCategoryRepository()
+        );
         modelMap.addAttribute("categoryList", categoryList);
         return new ModelAndView("admin/category/catalog", modelMap);
     }

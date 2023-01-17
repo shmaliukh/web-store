@@ -19,7 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findAll(Pageable pageable);
 
-    Page<Order> findByStatusIgnoreCase(String keyword, Pageable pageable);
+    Page<Order> findByStatusContainingIgnoreCase(String keyword, Pageable pageable);
 
     List<Order> findAllByUser(User user);
 

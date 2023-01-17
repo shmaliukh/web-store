@@ -86,6 +86,16 @@
     <th th:replace="blocks/sorting :: sorting('isAvailableInStore','AVAILABLE IN STORE', ${pageToRedirect})"></th>
 </th:block>
 
+<th:block th:fragment="category-titles-with-sorting(pageToRedirect)">
+    <th class="align-middle" scope="row">#</th>
+    <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('createdAt','CREATED', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('isActivated','ACTIVE', ${pageToRedirect})"></th>
+    <th th:replace="blocks/sorting :: sorting('isDeleted','DELETED', ${pageToRedirect})"></th>
+</th:block>
+
 <div th:fragment="magazine(pageToRedirect)">
     <th class="align-middle" th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
 </div>
