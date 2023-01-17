@@ -46,7 +46,6 @@ public class CartService {
             CartItem cartItem = new CartItem();
             cartItem.setItem(item);
             cartItem.setQuantity(1);
-            cartItem.setPrice(item.getSalePrice()+ cartItem.getQuantity());
             if(authorized){
                 UserCart newCart = new UserCart();
                 newCart.setItems(Collections.singletonList(cartItem));

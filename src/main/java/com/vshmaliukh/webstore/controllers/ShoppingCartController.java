@@ -56,18 +56,20 @@ public class ShoppingCartController {
         }
 
         Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
-        List<CartItem> cartItems =cart.getItems();
-        int totalCount = 0;
-        int totalPrice = 0;
-        for (CartItem cartItem : cartItems) {
-            totalPrice = totalPrice + cartItem.getPrice()*cartItem.getQuantity();
+        if(cart!=null) {
+            List<CartItem> cartItems = cart.getItems();
+            int totalCount = 0;
+            int totalPrice = 0;
+            for (CartItem cartItem : cartItems) {
+                totalPrice = totalPrice + cartItem.getItem().getSalePrice() * cartItem.getQuantity();
+            }
+            for (CartItem cartItem : cartItems) {
+                totalCount = totalCount + cartItem.getItem().getSalePrice() * cartItem.getQuantity();
+            }
+            modelMap.addAttribute("items", cartItems);
+            modelMap.addAttribute("totalItems", totalCount);
+            modelMap.addAttribute("totalPrice", totalPrice);
         }
-        for (CartItem cartItem : cartItems) {
-            totalCount = totalCount + cartItem.getPrice()* cartItem.getQuantity();
-        }
-        modelMap.addAttribute("items", cartItems);
-        modelMap.addAttribute("totalItems", totalCount);
-        modelMap.addAttribute("totalPrice", totalPrice);
         return new ModelAndView("shopping-cart");
     }
 
