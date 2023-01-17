@@ -5,12 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import static com.vshmaliukh.webstore.ConstantsForEntities.UNAUTHORIZED_USER_COLUMN;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -19,7 +14,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.UNAUTHORIZED_USER_COL
 @Table(name = "Unauthorized_user_carts")
 public class UnauthorizedUserCart extends Cart{
 
-    @ManyToOne
+    @OneToOne
     private UnauthorizedUser unauthorizedUser;
 
 }

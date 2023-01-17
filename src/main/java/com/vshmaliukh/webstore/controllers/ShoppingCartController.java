@@ -55,6 +55,7 @@ public class ShoppingCartController {
                 );
             }
         }
+
         Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
         List<CartItem> cartItems =cart.getItems();
         int totalCount = 0;
