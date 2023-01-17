@@ -30,16 +30,16 @@
                 <th:block th:each="item : ${items}">
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
-                            <h6 class="my-0" th:text="${item.getName()}"></h6>
-                            <small class="text-muted" th:text="${item.getCategory()}"></small>
+                            <h6 class="my-0" th:text="${item.getItem().getName()}"></h6>
+                            <small class="text-muted" th:text="${item.getItem().getCategory()}"></small>
                         </div>
                         <div class="navbar-cart-block" style="width: 11.5%">
                             <div class=" width: 40%">
-                                <a th:href="'/shopping-cart/remove-one/' + ${item.getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
+                                <a th:href="'/shopping-cart/remove-one/' + ${item.getItem().getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
                                         <img class="cart-plus-minus-icon" src="/icons/minus-icon.png" alt="">
                                 </a>
                                 <span class="text-muted" th:text=" ${item.getQuantity()}">0</span>
-                                <a th:href="'/shopping-cart/add-one/' + ${item.getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
+                                <a th:href="'/shopping-cart/add-one/' + ${item.getItem().getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
                                     <img class="cart-plus-minus-icon" src="/icons/plus-icon.png">
                                 </a>
                             </div>
