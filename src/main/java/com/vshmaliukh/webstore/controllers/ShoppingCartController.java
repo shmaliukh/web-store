@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,10 +60,10 @@ public class ShoppingCartController {
         int totalCount = 0;
         int totalPrice = 0;
         for (CartItem cartItem : cartItems) {
-            totalPrice = totalPrice + cartItem.getItem().getSalePrice()*cartItem.getQuantity();
+            totalPrice = totalPrice + cartItem.getPrice()*cartItem.getQuantity();
         }
         for (CartItem cartItem : cartItems) {
-            totalCount = totalCount + cartItem.getItem().getSalePrice()* cartItem.getQuantity();
+            totalCount = totalCount + cartItem.getPrice()* cartItem.getQuantity();
         }
         modelMap.addAttribute("items", cartItems);
         modelMap.addAttribute("totalItems", totalCount);
