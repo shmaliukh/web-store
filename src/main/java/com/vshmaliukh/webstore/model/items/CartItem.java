@@ -24,13 +24,9 @@ public class CartItem {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @Column(name = "price", nullable = false)
-    private int price; // todo change type
-
     public void setItem(Item item){
         this.item = item;
         this.id = item.getId();
-        this.price = item.getSalePrice();
     }
 
     public void setQuantity(int quantity) {
