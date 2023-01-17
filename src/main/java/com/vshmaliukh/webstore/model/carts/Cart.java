@@ -37,14 +37,4 @@ public abstract class Cart {
     @OneToMany
     private List<CartItem> items;
 
-    @Column(name = PRICE_COLUMN,nullable = false) // todo check its need
-    private int price;
-
-    public void setPrice(int price) {
-
-        this.price = price;
-    }
-
-
-
 }
