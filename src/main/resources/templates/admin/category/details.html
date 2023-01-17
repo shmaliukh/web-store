@@ -47,13 +47,21 @@
                     <div class="card-body">
                         <form method="post" th:action="@{/admin/category/save}"
                               class="needs-validation" enctype="multipart/form-data">
-                            <div>
-                                <label>
-                                    <input th:value="${category.getId()}" hidden>
-                                </label>
-                            </div>
 
                             <div class="row g-3">
+
+                                <div class="col-12">
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text">ID</span>
+                                        <input type="number" class="form-control"
+                                               th:value="${category.getId()}"
+                                               disabled>
+                                        <input name="id"
+                                               th:value="${category.getId()}"
+                                               hidden>
+                                    </div>
+                                </div>
+
                                 <div class="col-12">
                                     <label for="categoryName" class="form-label">Category name</label>
                                     <div class="input-group has-validation">

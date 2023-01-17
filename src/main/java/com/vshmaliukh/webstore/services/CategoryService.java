@@ -40,18 +40,12 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public Category buildBaseCategory(Integer id,
-                                      String name,
-                                      String description,
-                                      boolean isDeleted,
-                                      boolean isActivated) {
-        return Category.builder()
-                .id(id)
-                .name(name)
-                .description(description)
-                .isDeleted(isDeleted)
-                .isActivated(isActivated)
-                .build();
+    public Category buildBaseCategory(String name,
+                                      String description) {
+        Category category = new Category();
+        category.setName(name);
+        category.setDescription(description);
+        return category;
     }
 
     public Category getUpdatedOrCreateBaseCategory(Integer id,
@@ -65,7 +59,7 @@ public class CategoryService {
                 return getUpdatedCategory(name, description, isDeleted, isActivated, optionalCategory.get());
             }
         }
-        return buildBaseCategory(id, name, description, isDeleted, isActivated);
+        return buildBaseCategory(name, description);
     }
 
     public Category getUpdatedCategory(String name,

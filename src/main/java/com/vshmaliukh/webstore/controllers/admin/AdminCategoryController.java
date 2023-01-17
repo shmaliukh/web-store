@@ -51,10 +51,9 @@ public class AdminCategoryController {
                                    @RequestParam(name = "name") String name,
                                    @RequestParam(name = "description") String description,
                                    @RequestParam(name = "isDeleted", defaultValue = "false") boolean isDeleted,
-                                   @RequestParam(name = "isActivated", defaultValue = "true") boolean isActivated,
+                                   @RequestParam(name = "isActivated", defaultValue = "false") boolean isActivated,
                                    ModelMap modelMap) {
         Category category = categoryService.getUpdatedOrCreateBaseCategory(id, name, description, isDeleted, isActivated);
-
         categoryService.save(category);
         return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
     }
@@ -94,12 +93,13 @@ public class AdminCategoryController {
         return new ModelAndView("admin/category/catalog", modelMap);
     }
 
-    @PostMapping("category/add-item")
+    @PostMapping("/create-item")
     public ModelAndView doPostCreateItemByCategory(@RequestParam(name = "itemType") String itemType,
                                                    ModelMap modelMap) {
         if (itemService.isTypeExists(itemType)) {
             return new ModelAndView("redirect:/admin/item/add/" + itemType, modelMap);
         }
+        log.warn("problem to find '{}' item type", itemType);
         return new ModelAndView("redirect:/admin/category/catalog", modelMap);
     }
 
