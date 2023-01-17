@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
+import com.vshmaliukh.webstore.controllers.handlers.ShoppingCartHandler;
 import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
@@ -27,6 +28,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ShoppingCartController {
 
+    final ShoppingCartHandler shoppingCartHandler;
     final CookieHandler cookieHandler = new CookieHandler();
 
     final ItemService itemService;
@@ -54,18 +56,11 @@ public class ShoppingCartController {
                 );
             }
         }
-
         Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
         if(cart!=null) {
             List<CartItem> cartItems = cart.getItems();
-            int totalCount = 0;
-            int totalPrice = 0;
-            for (CartItem cartItem : cartItems) {
-                totalPrice = totalPrice + cartItem.getItem().getSalePrice() * cartItem.getQuantity();
-            }
-            for (CartItem cartItem : cartItems) {
-                totalCount = totalCount + cartItem.getItem().getSalePrice() * cartItem.getQuantity();
-            }
+            int totalCount = shoppingCartHandler.countAllItemsQuantity(cartItems);
+            int totalPrice = shoppingCartHandler.countAllItemsPrice(cartItems);
             modelMap.addAttribute("items", cartItems);
             modelMap.addAttribute("totalItems", totalCount);
             modelMap.addAttribute("totalPrice", totalPrice);
