@@ -30,7 +30,10 @@
                             <label for="selectCategory" class="form-label">Category</label>
                             <div class="input-group has-validation">
                                 <select id="selectCategory" name="category" class="form-select">
-                                    <option selected="">Choose...</option>
+                                    <option selected=""
+                                            th:text="${categoryName != null ? categoryName : 'Choose...'}"
+                                            th:value="${categoryName != null ? categoryName : ''}">
+                                    </option>
                                     <script th:inline="javascript">
                                         generateOptionUsingDataFromApi("selectCategory", "http://localhost:8082/category/names");
                                     </script>

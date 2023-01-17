@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -121,14 +118,16 @@ public class AdminItemController {
 
     @GetMapping("/add/{itemType}")
     public ModelAndView doGet(@PathVariable("itemType") String itemType,
+                              @RequestParam("categoryName") String categoryName,
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
-            List<String> statusList = itemService.readStatusNameList();
+            Set<String> statusSet = itemService.readStatusNameSet();
             List<String> categoryNameList = categoryService.readCategoryNameList();
 
+            modelMap.addAttribute("categoryName", categoryName);
             modelMap.addAttribute("itemType", itemType.toLowerCase());
-            modelMap.addAttribute("statusList", statusList);
+            modelMap.addAttribute("statusList", statusSet);
             modelMap.addAttribute("categoryNameList", categoryNameList);
             return new ModelAndView("admin/item/create", modelMap);
         }
