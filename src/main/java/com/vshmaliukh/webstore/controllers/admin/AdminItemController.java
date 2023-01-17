@@ -69,21 +69,12 @@ public class AdminItemController {
                                   @RequestParam(defaultValue = "id,asc") String[] sort,
                                   @PathVariable("itemType") String itemType,
                                   ModelMap modelMap) {
-        BaseItemRepository itemRepository = getItemRepositoryByItemType(itemType);
+        BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
         List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository);
 
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
         return new ModelAndView("/admin/item/view", modelMap);
-    }
-
-    private BaseItemRepository getItemRepositoryByItemType(String itemType) {
-        // TODO solve 'Raw use of parameterized class 'BaseItemRepository''
-        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
-        if (itemRepository != null) {
-            return itemRepository;
-        }
-        return itemRepositoryProvider.getAllItemRepository();
     }
 
     @DeleteMapping("/delete")

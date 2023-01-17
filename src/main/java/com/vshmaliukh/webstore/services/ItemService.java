@@ -131,11 +131,20 @@ public class ItemService {
     }
 
     public boolean isTypeExists(String itemType) {
-        return itemRepositoryProvider.itemClassNameRepositoryMap.containsKey(itemType);
+        return itemRepositoryProvider.itemClassNameRepositoryMap.containsKey(itemType.toLowerCase());
     }
 
     public Set<String> typeNameSet() {
         return itemRepositoryProvider.itemClassNameRepositoryMap.keySet();
+    }
+
+    public BaseItemRepository getItemRepositoryByItemTypeName(String itemType) {
+        // TODO solve 'Raw use of parameterized class 'BaseItemRepository''
+        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
+        if (itemRepository != null) {
+            return itemRepository;
+        }
+        return itemRepositoryProvider.getAllItemRepository();
     }
 
 }

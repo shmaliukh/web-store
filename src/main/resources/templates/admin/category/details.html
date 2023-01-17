@@ -119,17 +119,38 @@
                 <form method="post" th:action="@{/admin/category/create-item}">
                     <input name="categoryName" th:value="${category.getName()}" hidden>
                     <div class="input-group">
-                        <select class="form-select" id="selectCategory" aria-label="Add item" name="itemType">
+                        <select class="form-select" id="selectCategoryToCreate" aria-label="Add item" name="itemType">
                             <option selected>Choose...</option>
                             <script th:inline="javascript">
-                                generateOptionUsingDataFromApi("selectCategory", "http://localhost:8082/item/type-names");
+                                generateOptionUsingDataFromApi("selectCategoryToCreate", "http://localhost:8082/item/type-names");
                             </script>
                         </select>
                         <button class="btn btn-outline-secondary" type="submit">Create</button>
                     </div>
                 </form>
             </div>
+            <div class="container">
+                <div class="align-items-center">
+                    <p>OR</p>
+                </div>
+            </div>
+            <div class="container">
+                <form method="get" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
+                    <input name="categoryName" th:value="${category.getName()}" hidden>
+                    <div class="input-group">
+                        <select class="form-select" id="selectCategoryToAdd" aria-label="Add item" name="itemType">
+                            <option selected>All</option>
+                            <script th:inline="javascript">
+                                generateOptionUsingDataFromApi("selectCategoryToAdd", "http://localhost:8082/item/type-names");
+                            </script>
+                        </select>
+                        <button class="btn btn-outline-secondary" type="submit">Add from exists</button>
+                    </div>
+                </form>
+            </div>
         </div>
+
+
         <div class="tab-pane fade" id="nav-image" role="tabpanel" aria-labelledby="nav-image-tab" tabindex="0">
             <th:block th:if="${category.getImage() == null}">
                 <form method="post" th:action="|@{/admin/category/}${category.getId()}@{/image}|"

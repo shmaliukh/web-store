@@ -3,6 +3,7 @@ package com.vshmaliukh.webstore.controllers.admin;
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.services.CategoryService;
 import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
@@ -102,6 +103,29 @@ public class AdminCategoryController {
             return new ModelAndView("redirect:/admin/item/add/" + itemType, modelMap);
         }
         log.warn("problem to find '{}' item type", itemType);
+        return new ModelAndView("redirect:/admin/category/catalog", modelMap);
+    }
+
+    @GetMapping("/{categoryId}/add-item")
+    public ModelAndView doGetAddItem(@PathVariable(name = "categoryId") Integer categoryId,
+                                     @RequestParam(required = false) String keyword,
+                                     @RequestParam(defaultValue = "1") int page,
+                                     @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
+                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     @PathVariable("itemType") String itemType,
+                                     ModelMap modelMap) {
+        Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+
+            BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
+            List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository);
+
+            modelMap.addAttribute("itemType", itemType.toLowerCase());
+            modelMap.addAttribute("itemList", itemList);
+            modelMap.addAttribute("category", category);
+            return new ModelAndView("admin/category/add-item", modelMap);
+        }
         return new ModelAndView("redirect:/admin/category/catalog", modelMap);
     }
 
