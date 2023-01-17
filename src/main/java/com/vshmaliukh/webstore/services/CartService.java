@@ -46,16 +46,15 @@ public class CartService {
             CartItem cartItem = new CartItem();
             cartItem.setItem(item);
             cartItem.setQuantity(1);
+            cartItem.setPrice(item.getSalePrice()+ cartItem.getQuantity());
             if(authorized){
                 UserCart newCart = new UserCart();
                 newCart.setItems(Collections.singletonList(cartItem));
-                newCart.setPrice(item.getSalePrice());
                 newCart.setUser(userRepository.getUserById(userId));
                 addNewCart(newCart);
             } else {
                 UnauthorizedUserCart newCart = new UnauthorizedUserCart();
                 newCart.setItems(Collections.singletonList(cartItem));
-                newCart.setPrice(item.getSalePrice());
                 newCart.setUnauthorizedUser(unauthorizedUserRepository.getUnauthorizedUserById(userId));
                 addNewCart(newCart);
             }
@@ -69,16 +68,6 @@ public class CartService {
 
     // todo implement data migration
 
-    public Cart getCartByUserId(Long id, Boolean authorization){ // todo change list to one cart
-        if(authorization){
-            User user = userRepository.getUserById(id);
-            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUser(user);
-        } else {
-            UnauthorizedUser user = unauthorizedUserRepository.getReferenceById(id);
-            return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUnauthorizedUser(user);
-        }
-    }
-
     public Cart getCartByUserId(Long userId, boolean authorization){
         if(authorization){
             User user = userRepository.getUserById(userId);
@@ -88,8 +77,6 @@ public class CartService {
             return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUnauthorizedUser(user);
         }
     }
-
-
 
     public void decItemQuantityInCart(Item item, Long userId, boolean authorized){
         Cart cart = getCartByUserId(userId,authorized);
