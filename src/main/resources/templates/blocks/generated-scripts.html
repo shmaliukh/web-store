@@ -15,6 +15,20 @@
     </script>
 </th:block>
 
+<!-- TODO refactor -->
+<th:block th:fragment="checkBoxWithName_new(checkboxName)">
+    <script th:utext="
+        let checkbox = document.getElementById([[${checkboxName}]]);
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                checkbox.value = 'true';
+            } else {
+                checkbox.value = 'false';
+            }
+        });">
+    </script>
+</th:block>
+
 <th:block th:fragment="checkBoxWithNameAndIterator(checkboxName, iterator)">
     <script th:utext="
         'const checkboxId' + ${iterator.count}+' = &quot;#' + ${checkboxName} + ${iterator.count} + '&quot;;'
