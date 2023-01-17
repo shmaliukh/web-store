@@ -109,7 +109,7 @@ public class AdminItemController {
 
     @GetMapping("/add/{itemType}")
     public ModelAndView doGet(@PathVariable("itemType") String itemType,
-                              @RequestParam("categoryName") String categoryName,
+                              @RequestParam(value = "categoryName", required = false) String categoryName,
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {

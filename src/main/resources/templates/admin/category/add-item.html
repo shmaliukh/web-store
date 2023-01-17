@@ -15,7 +15,7 @@
 </div>
 
 <div class="container">
-    <form method="post" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
+    <form method="GET" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
         <input name="categoryName" th:value="${category.getName()}" hidden>
         <div class="input-group">
             <select class="form-select" id="selectCategoryToAdd" aria-label="Add item" name="itemType">
@@ -37,7 +37,7 @@
             <caption th:text="|${itemType} type table|"></caption>
             <thead>
             <tr class="table-dark">
-                <th:block th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/category/view/' + ${category.getId()} + '/add-item')"></th:block>
+                <th:block th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/category/' + ${category.getId()} + '/add-item')"></th:block>
                 <th class="align-middle" scope="col"></th>
             </tr>
             </thead>
@@ -58,15 +58,19 @@
                            disabled>
                 </td>
                 <td>
-                    <a th:href="|@{/admin/item/}${item.getId()}@{/details}|">
-                        <button type="button" class="btn  btn-outline-secondary">Details</button>
-                    </a>
+<!--                    TODO implement ability to add item to category-->
+                    <form method="POST" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
+                        <input name="itemId" th:value="${item.getId()}" hidden>
+                        <input name="itemType" th:value="${item.getTypeStr()}" hidden>
+
+                        <button type="submit" class="btn btn-outline-secondary">Add to category</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
         </table>
 
-        <th:block th:insert="blocks/navigation :: pagination('/admin/category/view/' + ${category.getId()} + '/add-item')"></th:block>
+        <th:block th:insert="blocks/navigation :: pagination('/admin/category/' + ${category.getId()} + '/add-item')"></th:block>
     </div>
 </th:block>
 

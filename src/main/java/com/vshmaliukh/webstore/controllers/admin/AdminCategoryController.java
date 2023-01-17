@@ -112,7 +112,7 @@ public class AdminCategoryController {
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
                                      @RequestParam(defaultValue = "id,asc") String[] sort,
-                                     @PathVariable("itemType") String itemType,
+                                     @RequestParam(name = "itemType", defaultValue = "all") String itemType,
                                      ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
@@ -127,6 +127,32 @@ public class AdminCategoryController {
             return new ModelAndView("admin/category/add-item", modelMap);
         }
         return new ModelAndView("redirect:/admin/category/catalog", modelMap);
+    }
+
+    @PostMapping("/{categoryId}/add-item")
+    public ModelAndView doPostAddItem(@PathVariable(name = "categoryId") Integer categoryId,
+                                      @RequestParam(required = false) String keyword,
+                                      @RequestParam(defaultValue = "1") int page,
+                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
+                                      @RequestParam(defaultValue = "id,asc") String[] sort,
+                                      @RequestParam("itemId") int itemId,
+                                      @RequestParam(name = "itemType") String itemType,
+                                      ModelMap modelMap) {
+
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
+        if(optionalItem.isPresent()){
+            Item item = optionalItem.get();
+            if(item.getTypeStr().equalsIgnoreCase(itemType)){
+                categoryService.addItemToCategory(item);
+            }
+        }
+
+        modelMap.addAttribute("keyword", keyword);
+        modelMap.addAttribute("page", page);
+        modelMap.addAttribute("size", size);
+        modelMap.addAttribute("sort", sort);
+        modelMap.addAttribute("itemType", itemType);
+        return new ModelAndView("redirect:/admin/category/" + categoryId + "add-item", modelMap);
     }
 
 }
