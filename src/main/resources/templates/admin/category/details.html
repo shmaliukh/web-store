@@ -130,8 +130,73 @@
                     </div>
                 </form>
             </div>
-        </div>
+            <div>
+                <!--            TODO implement new way for pagination-->
+                <!--            <div class="container">-->
+                <!--                <th:block th:insert="blocks/navigation :: tools('')"></th:block>-->
+                <!--            </div>-->
+                <th:block th:if="${category.getItemSet().size() > 0}">
+                    <div class="table-responsive-md m-3">
+                        <table class="w-100 table table-striped">
+                            <caption>order table</caption>
+                            <thead>
+                            <tr class="table-dark">
+                                <th class="align-middle" scope="col">#</th>
+                                <th class="align-middle" scope="col">TYPE</th>
+                                <th class="align-middle" scope="col">UPDATED</th>
+                                <th class="align-middle" scope="col">ID</th>
+                                <th class="align-middle" scope="col">CATEGORY</th>
+                                <th class="align-middle" scope="col">NAME</th>
+                                <th class="align-middle" scope="col">COST PRICE</th>
+                                <th class="align-middle" scope="col">SALE PRICE</th>
+                                <th class="align-middle" scope="col">QUANTITY</th>
+                                <th class="align-middle" scope="col">AVAILABLE</th>
+                                <th class="align-middle" scope="col"></th>
+                                <th class="align-middle" scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item, iterator: ${category.getItemSet()}">
+                                <!--                            <th class="align-middle" scope="row" th:text="${iterator.count+(currentPage - 1)*pageSize}">#</th>-->
+                                <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                                <td class="align-middle" th:text="${item.getTypeStr()}">TYPE</td>
+                                <td class="align-middle" th:text="${item.getUpdatedAt()}">UPDATED</td>
+                                <td class="align-middle" th:text="${item.getId()}">ID</td>
+                                <td class="align-middle" th:text="${item.getCategory()}">CATEGORY</td>
+                                <td class="align-middle" th:text="${item.getName()}">NAME</td>
+                                <td class="align-middle" th:text="${item.getCostPrice()}">COST PRICE</td>
+                                <td class="align-middle" th:text="${item.getSalePrice()}">SALE PRICE</td>
+                                <td class="align-middle" th:text="${item.getAvailableToBuyQuantity()}">Quantity</td>
+                                <td><input class="form-check-input align-middle" type="checkbox"
+                                           name="isAvailableInStore"
+                                           th:value="${item.isAvailableInStore()}"
+                                           th:checked="${item.isAvailableInStore()}"
+                                           disabled>
+                                </td>
+                                <td>
+                                    <a th:href="|@{/admin/item/}${item.getId()}@{/details}|">
+                                        <button type="button" class="btn  btn-outline-secondary">Details</button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <form method="POST"
+                                          th:action="|@{/admin/category/}${category.getId()}@{/remove-item}|">
+                                        <input name="itemId" th:value="${item.getId()}" hidden>
+                                        <button type="submit" class="btn  btn-outline-danger">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
 
+                        <th:block th:insert="blocks/navigation :: pagination('/admin/category/catalog')"></th:block>
+                    </div>
+                </th:block>
+                <th:block th:if="${category.getItemSet().isEmpty()}">
+                    <p class="lead" th:text="|No available catalog|"></p>
+                </th:block>
+            </div>
+        </div>
 
         <div class="tab-pane fade" id="nav-image" role="tabpanel" aria-labelledby="nav-image-tab" tabindex="0">
             <th:block th:if="${category.getImage() == null}">
@@ -235,7 +300,7 @@
                             <td class="align-middle" th:text="${category.getId()}">CreatedAt</td>
                             <td class="align-middle" th:text="${category.getCreatedAt()}">CreatedAt</td>
                             <td class="align-middle" th:text="${category.getUpdatedAt()}">UpdateAt</td>
-                            <td class="align-middle" th:text="${itemList.size()}">Items</td>
+                            <td class="align-middle" th:text="${category.getItemSet().size()}">Items</td>
                         </tr>
                         </tbody>
                     </table>

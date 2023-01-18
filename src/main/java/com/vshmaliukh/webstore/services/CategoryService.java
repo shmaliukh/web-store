@@ -116,4 +116,12 @@ public class CategoryService {
         log.info("added '{}' item to '{}' category", item, category);
     }
 
+    public void removeItemFromCategory(Item item, Category category) {
+        Set<Item> categoryItemSet = category.getItemSet();
+        categoryItemSet.remove(item);
+        category.setItemSet(categoryItemSet);
+        categoryRepository.save(category);
+        log.info("removed '{}' item from '{}' category", item, category);
+    }
+
 }

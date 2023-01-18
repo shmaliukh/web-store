@@ -85,10 +85,7 @@ public class AdminCategoryController {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
-            List<Item> itemList = categoryService.readCategoryItemList(category);
-
             modelMap.addAttribute("category", category);
-            modelMap.addAttribute("itemList", itemList);
             return new ModelAndView("admin/category/details", modelMap);
         }
         return new ModelAndView("admin/category/catalog", modelMap);
@@ -135,16 +132,16 @@ public class AdminCategoryController {
                     Category category = optionalCategory.get();
                     categoryService.addItemToCategory(item, category);
                 } else {
-                    log.warn("problem to add item with '{}' id to category with '{}' id " +
-                            "// not found category by '{}' id", itemId, categoryId, categoryId);
+                    log.warn("problem to add item to category // item id: '{}', category id: '{}'" +
+                            "// not found category", itemId, categoryId);
                 }
             } else {
-                log.warn("problem to add item with '{}' id to category with '{}' id " +
-                                "// request item type '{}' is not equals to found item '{}' ",
-                        itemId, categoryId, itemType, item);
+                log.warn("problem to add item to category // item id: '{}', category id: '{}'" +
+                                "// request item type '{}' is not equals to found item '{}' type",
+                        itemId, categoryId, itemType, item.getTypeStr());
             }
         } else {
-            log.warn("problem to add item with '{}' id to category with '{}' id " +
+            log.warn("problem to add item to category // item id: '{}', category id: '{}' " +
                     "// item not found", itemId, categoryId);
         }
         modelMap.addAttribute("keyword", keyword);
@@ -153,6 +150,22 @@ public class AdminCategoryController {
         modelMap.addAttribute("sort", sort);
         modelMap.addAttribute("itemType", itemType);
         return new ModelAndView("redirect:/admin/category/" + categoryId + "/add-item", modelMap);
+    }
+
+    @PostMapping("/{categoryId}/remove-item")
+    public ModelAndView doPostRemoveItem(@PathVariable(name = "categoryId") Integer categoryId,
+                                         @RequestParam(name = "itemId") Integer itemId,
+                                         ModelMap modelMap) {
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
+        Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
+        if (optionalCategory.isPresent() && optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            Category category = optionalCategory.get();
+            categoryService.removeItemFromCategory(item, category);
+        } else {
+            log.warn("problem to remove item from category // item id: '{}', category id: '{}'", itemId, categoryId);
+        }
+        return new ModelAndView("redirect:/admin/category/" + categoryId + "/details", modelMap);
     }
 
 }
