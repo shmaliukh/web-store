@@ -79,11 +79,6 @@ public class CategoryService {
         return categoryRepository.findById(categoryId);
     }
 
-    public List<Item> readCategoryItemList(Category category) {
-        // FIXME read item list via repository
-        return Collections.EMPTY_LIST;
-    }
-
     public void addImageToCategory(Long imageId, MultipartFile imageFile, Category category) {
         Optional<Image> optionalImage = imageService.buildImageFromFile(imageFile);
         if (optionalImage.isPresent()) {

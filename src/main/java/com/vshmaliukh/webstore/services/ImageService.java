@@ -49,9 +49,7 @@ public class ImageService {
     public Optional<ItemImage> formItemImageFromFile(Item item, MultipartFile file) {
         Optional<Image> optionalImage = buildImageFromFile(file);
         if (optionalImage.isPresent()) {
-            // TODO refactor (not use cast)
-            ItemImage itemImage = (ItemImage) optionalImage.get();
-            itemImage.setItem(item);
+            ItemImage itemImage = new ItemImage(optionalImage.get(), item);
             return Optional.of(itemImage);
         }
         log.warn("problem to generate '{}' file to image entity", file);
