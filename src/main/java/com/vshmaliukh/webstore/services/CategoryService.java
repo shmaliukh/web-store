@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -105,6 +106,14 @@ public class CategoryService {
         }
         log.warn("problem to delete category (with '{}' id) image", categoryId);
         return ResponseEntity.badRequest().build();
+    }
+
+    public void addItemToCategory(Item item, Category category) {
+        Set<Item> categoryItemSet = category.getItemSet();
+        categoryItemSet.add(item);
+        category.setItemSet(categoryItemSet);
+        categoryRepository.save(category);
+        log.info("added '{}' item to '{}' category", item, category);
     }
 
 }

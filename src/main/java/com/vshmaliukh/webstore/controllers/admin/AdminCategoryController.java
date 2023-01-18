@@ -138,21 +138,33 @@ public class AdminCategoryController {
                                       @RequestParam("itemId") int itemId,
                                       @RequestParam(name = "itemType") String itemType,
                                       ModelMap modelMap) {
-
         Optional<Item> optionalItem = itemService.readItemById(itemId);
-        if(optionalItem.isPresent()){
+        if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
-            if(item.getTypeStr().equalsIgnoreCase(itemType)){
-                categoryService.addItemToCategory(item);
+            if (item.getTypeStr().equalsIgnoreCase(itemType)) {
+                Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
+                if (optionalCategory.isPresent()) {
+                    Category category = optionalCategory.get();
+                    categoryService.addItemToCategory(item, category);
+                } else {
+                    log.warn("problem to add item with '{}' id to category with '{}' id " +
+                            "// not found category by '{}' id", itemId, categoryId, categoryId);
+                }
+            } else {
+                log.warn("problem to add item with '{}' id to category with '{}' id " +
+                                "// request item type '{}' is not equals to found item '{}' ",
+                        itemId, categoryId, itemType, item);
             }
+        } else {
+            log.warn("problem to add item with '{}' id to category with '{}' id " +
+                    "// item not found", itemId, categoryId);
         }
-
         modelMap.addAttribute("keyword", keyword);
         modelMap.addAttribute("page", page);
         modelMap.addAttribute("size", size);
         modelMap.addAttribute("sort", sort);
         modelMap.addAttribute("itemType", itemType);
-        return new ModelAndView("redirect:/admin/category/" + categoryId + "add-item", modelMap);
+        return new ModelAndView("redirect:/admin/category/" + categoryId + "/add-item", modelMap);
     }
 
 }

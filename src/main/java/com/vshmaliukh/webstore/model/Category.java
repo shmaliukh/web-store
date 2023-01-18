@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Categories")
-public class Category extends AuditModel{
+public class Category extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Category extends AuditModel{
     @Column(unique = true)
     private String name;
 
-    @Column(columnDefinition="LONGTEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     private boolean isDeleted = false;
@@ -44,7 +44,7 @@ public class Category extends AuditModel{
     @ToString.Exclude
     private Image image;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "Category_Item",
             joinColumns = @JoinColumn(
                     name = "category_id",
