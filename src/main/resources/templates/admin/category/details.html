@@ -14,7 +14,7 @@
     <p class="lead" th:text="|All info about ${category.getName()} category|">All info about category</p>
 </div>
 
-<div class="container text-center ">
+<div class="container text-center">
     <nav class="pb-3">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-main-tab" data-bs-toggle="tab" data-bs-target="#nav-main"
@@ -121,7 +121,7 @@
                     <input name="categoryName" th:value="${category.getName()}" hidden>
                     <div class="input-group">
                         <select class="form-select" id="selectCategoryToAdd" aria-label="Add item" name="itemType">
-                            <option selected>All</option>
+                            <option value="all" selected>all</option>
                             <script th:inline="javascript">
                                 generateOptionUsingDataFromApi("selectCategoryToAdd", "http://localhost:8082/item/type-names");
                             </script>

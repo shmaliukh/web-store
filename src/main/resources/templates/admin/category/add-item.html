@@ -30,8 +30,8 @@
             <input name="categoryName" th:value="${category.getName()}" hidden>
             <div class="input-group">
                 <select class="form-select" id="selectCategoryToAdd" aria-label="Add item" name="itemType">
-                    <option th:value="${itemType}" selected></option>
-                    <option th:value="all"></option>
+                    <option th:value="${itemType}" th:text="${itemType}" selected></option>
+                    <option th:value="all" th:text="all"></option>
                     <script th:inline="javascript">
                         generateOptionUsingDataFromApi("selectCategoryToAdd", "http://localhost:8082/item/type-names");
                     </script>
