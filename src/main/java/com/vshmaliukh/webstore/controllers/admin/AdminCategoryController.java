@@ -94,18 +94,6 @@ public class AdminCategoryController {
         return new ModelAndView("admin/category/catalog", modelMap);
     }
 
-    @PostMapping("/create-item")
-    public ModelAndView doPostCreateItemByCategory(@RequestParam(name = "itemType") String itemType,
-                                                   @RequestParam(name = "categoryName") String categoryName,
-                                                   ModelMap modelMap) {
-        if (itemService.isTypeExists(itemType)) {
-            modelMap.addAttribute("categoryName", categoryName);
-            return new ModelAndView("redirect:/admin/item/add/" + itemType, modelMap);
-        }
-        log.warn("problem to find '{}' item type", itemType);
-        return new ModelAndView("redirect:/admin/category/catalog", modelMap);
-    }
-
     @GetMapping("/{categoryId}/add-item")
     public ModelAndView doGetAddItem(@PathVariable(name = "categoryId") Integer categoryId,
                                      @RequestParam(required = false) String keyword,
