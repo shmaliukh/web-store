@@ -45,7 +45,7 @@ public abstract class Item extends AuditModel {
     @Column(name = "item_id", nullable = false)
     private Integer id;
 
-    //TODO implement category entity
+    //TODO remove 'category' field
     private String category;
 
     @Column(nullable = false, unique = true)

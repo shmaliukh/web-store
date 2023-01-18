@@ -26,7 +26,7 @@
     <hr>
 
     <div class="container">
-        <form method="GET" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
+        <form method="get" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
             <input name="categoryName" th:value="${category.getName()}" hidden>
             <div class="input-group">
                 <select class="form-select" id="selectCategoryToAdd" aria-label="Add item" name="itemType">
@@ -85,7 +85,7 @@
                                 </button>
                             </th:block>
                             <th:block th:unless="${category.getItemSet().contains(item)}">
-                                <form method="POST" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
+                                <form method="post" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
                                     <input name="itemId" th:value="${item.getId()}" hidden>
                                     <input name="itemType" th:value="${item.getTypeStr()}" hidden>
                                     <button type="submit" class="btn btn-outline-success w-100">Add to category</button>

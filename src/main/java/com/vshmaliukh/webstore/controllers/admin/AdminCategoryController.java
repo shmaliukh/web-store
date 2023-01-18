@@ -62,11 +62,12 @@ public class AdminCategoryController {
     @PostMapping("/{categoryId}/image")
     public ModelAndView doPostSaveImage(@PathVariable(name = "categoryId") Integer categoryId,
                                         @RequestParam(name = "imageFile") MultipartFile imageFile,
+                                        @RequestParam(name = "imageId", defaultValue = "null") Long imageId,
                                         ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
-            categoryService.addImageToCategory(imageFile, category);
+            categoryService.addImageToCategory(imageId, imageFile, category);
             return new ModelAndView("redirect:/admin/category/" + categoryId + "/details", modelMap);
         } else {
             log.warn("not found category entity by '{}' id to save imageFile: '{}'", categoryId, imageFile);

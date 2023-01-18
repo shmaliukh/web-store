@@ -84,10 +84,11 @@ public class CategoryService {
         return Collections.EMPTY_LIST;
     }
 
-    public void addImageToCategory(MultipartFile imageFile, Category category) {
+    public void addImageToCategory(Long imageId, MultipartFile imageFile, Category category) {
         Optional<Image> optionalImage = imageService.buildImageFromFile(imageFile);
         if (optionalImage.isPresent()) {
             Image image = optionalImage.get();
+            image.setId(imageId);
             category.setImage(image);
             save(category);
         } else {
