@@ -30,8 +30,8 @@
             <input name="categoryName" th:value="${category.getName()}" hidden>
             <div class="input-group">
                 <select class="form-select" id="selectCategoryToAdd" aria-label="Add item" name="itemType">
-                    <option th:text="${itemType}" th:value="${itemType}" selected></option>
-                    <option text="all" value="all"></option>
+                    <option th:value="${itemType}" selected></option>
+                    <option th:value="all"></option>
                     <script th:inline="javascript">
                         generateOptionUsingDataFromApi("selectCategoryToAdd", "http://localhost:8082/item/type-names");
                     </script>
@@ -47,53 +47,59 @@
     </div>
 
     <th:block th:if="${itemList.size() > 0}">
-        <div class="table-responsive-md ">
-            <table class="w-100 table table-striped">
-                <caption th:text="|${itemType} type table|"></caption>
-                <thead>
-                <tr class="table-dark">
-                    <th:block th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/category/' + ${category.getId()} + '/add-item')">
-                    </th:block>
-                    <th class="align-middle" scope="col"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="item, iterator: ${itemList}">
-                    <th class="align-middle" scope="row" th:text="${iterator.count+(currentPage - 1)*pageSize}">#</th>
-                    <td class="align-middle" th:text="${item.getTypeStr()}">Type</td>
-                    <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
-                    <td class="align-middle" th:text="${item.getId()}">Id</td>
-                    <td class="align-middle" th:text="${item.getCategory()}">Category</td>
-                    <td class="align-middle" th:text="${item.getName()}">Name</td>
-                    <td class="align-middle" th:text="${item.getCostPrice()}">Cost Price</td>
-                    <td class="align-middle" th:text="${item.getSalePrice()}">Sale Price</td>
-                    <td class="align-middle" th:text="${item.getAvailableToBuyQuantity()}">Quantity</td>
-                    <th:block th:insert="blocks/view-item-table-values :: ${itemType}"></th:block>
-                    <td class="align-middle">
-                        <input class="form-check-input align-middle" type="checkbox" name="isAvailableInStore"
-                               th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}"
-                               disabled>
-                    </td>
-                    <td class="align-middle">
-                        <th:block th:if="${category.getItemSet().contains(item)}">
-                            <!--  TODO rebase this button with another to remove item from category -->
-                            <button type="button" class="btn btn-outline-secondary w-100" disabled>Already in category
-                            </button>
+        <div class="container">
+            <div class="table-responsive-md ">
+                <table class="w-100 table table-striped">
+                    <caption th:text="|${itemType} type table|"></caption>
+                    <thead>
+                    <tr class="table-dark">
+                        <th:block
+                                th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/category/' + ${category.getId()} + '/add-item')">
                         </th:block>
-                        <th:block th:unless="${category.getItemSet().contains(item)}">
-                            <form method="POST" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
-                                <input name="itemId" th:value="${item.getId()}" hidden>
-                                <input name="itemType" th:value="${item.getTypeStr()}" hidden>
-                                <button type="submit" class="btn btn-outline-success w-100">Add to category</button>
-                            </form>
-                        </th:block>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                        <th class="align-middle" scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item, iterator: ${itemList}">
+                        <th class="align-middle" scope="row" th:text="${iterator.count+(currentPage - 1)*pageSize}">#
+                        </th>
+                        <td class="align-middle" th:text="${item.getTypeStr()}">Type</td>
+                        <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
+                        <td class="align-middle" th:text="${item.getId()}">Id</td>
+                        <td class="align-middle" th:text="${item.getCategory()}">Category</td>
+                        <td class="align-middle" th:text="${item.getName()}">Name</td>
+                        <td class="align-middle" th:text="${item.getCostPrice()}">Cost Price</td>
+                        <td class="align-middle" th:text="${item.getSalePrice()}">Sale Price</td>
+                        <td class="align-middle" th:text="${item.getAvailableToBuyQuantity()}">Quantity</td>
+                        <th:block th:insert="blocks/view-item-table-values :: ${itemType}"></th:block>
+                        <td class="align-middle">
+                            <input class="form-check-input align-middle" type="checkbox" name="isAvailableInStore"
+                                   th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}"
+                                   disabled>
+                        </td>
+                        <td class="align-middle">
+                            <th:block th:if="${category.getItemSet().contains(item)}">
+                                <!--  TODO rebase this button with another to remove item from category -->
+                                <button type="button" class="btn btn-outline-secondary w-100" disabled>Already in
+                                    category
+                                </button>
+                            </th:block>
+                            <th:block th:unless="${category.getItemSet().contains(item)}">
+                                <form method="POST" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
+                                    <input name="itemId" th:value="${item.getId()}" hidden>
+                                    <input name="itemType" th:value="${item.getTypeStr()}" hidden>
+                                    <button type="submit" class="btn btn-outline-success w-100">Add to category</button>
+                                </form>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
-            <th:block th:insert="blocks/navigation :: pagination('/admin/category/' + ${category.getId()} + '/add-item')">
-            </th:block>
+                <th:block
+                        th:insert="blocks/navigation :: pagination('/admin/category/' + ${category.getId()} + '/add-item')">
+                </th:block>
+            </div>
         </div>
     </th:block>
 
