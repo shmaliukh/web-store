@@ -45,7 +45,6 @@ public abstract class Item extends AuditModel {
     @Column(name = "item_id", nullable = false)
     private Integer id;
 
-    @Column(nullable = false)
     //TODO implement category entity
     private String category;
 
@@ -171,7 +170,6 @@ public abstract class Item extends AuditModel {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore +
-                ", imageList=" + imageList +
                 '}';
     }
 

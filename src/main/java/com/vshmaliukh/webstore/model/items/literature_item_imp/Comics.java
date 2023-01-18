@@ -74,7 +74,6 @@ public class Comics extends LiteratureItem {
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
-                ", imageList=" + getImageList() +
                 ", pages=" + getPages() +
                 ", publisher=" + getPublisher() +
                 '}';

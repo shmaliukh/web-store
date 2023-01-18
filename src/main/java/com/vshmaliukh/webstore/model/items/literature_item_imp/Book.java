@@ -64,7 +64,6 @@ public class Book extends LiteratureItem {
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
-                ", imageList=" + getImageList() +
                 ", pages=" + getPages() +
                 ", author=" + getAuthor() +
                 ", dateOfIssue=" + new SimpleDateFormat(DATE_FORMAT_STR).format(getDateOfIssue()) +
