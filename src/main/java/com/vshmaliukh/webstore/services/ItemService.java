@@ -140,7 +140,7 @@ public class ItemService {
 
     public BaseItemRepository getItemRepositoryByItemTypeName(String itemType) {
         // TODO solve 'Raw use of parameterized class 'BaseItemRepository''
-        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
+        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType.toLowerCase());
         if (itemRepository != null) {
             return itemRepository;
         }

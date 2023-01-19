@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.ModelMap;
 
+import java.util.Collection;
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.*;
@@ -17,16 +18,14 @@ import static org.springframework.data.domain.Sort.*;
 @Slf4j
 @Getter
 @AllArgsConstructor
-public abstract class TableContent<T extends AuditModel>
+public abstract class TableContentImp<T extends AuditModel>
         implements PageableContent, SortableContent, SearchableContent<T> {
 
     public static final String ASC_DIRECTION_STR = "asc";
     public static final String DESC_DIRECTION_SRT = "desc";
 
-    private int currentPage;
     private int pageSize;
-    private long totalItems;
-    private long totalPages;
+    private int currentPage;
     private String sortField;
     private String sortDirection;
     private String keyword;
@@ -36,16 +35,12 @@ public abstract class TableContent<T extends AuditModel>
     private Pageable pageable;
     private Page<T> pageWithContent;
 
-    public TableContent(int currentPage, int pageSize,
-                        long totalItems, long totalPages,
-                        String sortField, String sortDirection, String keyword) {
-        this.currentPage = currentPage;
+    public TableContentImp(String keyword, int currentPage, int pageSize, String sortField, String sortDirection) {
+        this.keyword = keyword;
+        this.currentPage = currentPage - 1;
         this.pageSize = pageSize;
-        this.totalItems = totalItems;
-        this.totalPages = totalPages;
         this.sortField = sortField;
         this.sortDirection = sortDirection;
-        this.keyword = keyword;
 
         formTableContent();
     }
@@ -56,12 +51,16 @@ public abstract class TableContent<T extends AuditModel>
         pageWithContent = formPageWithContent(keyword, pageable);
     }
 
-    public List<T> readContent() {
+    public List<T> readContentList() {
         return pageWithContent.getContent();
     }
 
-    public ModelMap readModelMap() {
+    public ModelMap readContentModelMap() {
         ModelMap modelMap = new ModelMap();
+        int currentPage = pageWithContent.getNumber() + 1;
+        long totalItems = pageWithContent.getTotalElements();
+        int totalPages = pageWithContent.getTotalPages();
+
         modelMap.addAllAttributes(formAttributesForPaging(currentPage, pageSize, totalItems, totalPages));
         modelMap.addAllAttributes(formAttributesForSorting(sortField, sortDirection));
         modelMap.addAllAttributes(formAttributesForSearching(keyword));
@@ -89,9 +88,9 @@ public abstract class TableContent<T extends AuditModel>
     public ModelMap formAttributesForPaging(int currentPage, int pageSize, long totalItems, long totalPages) {
         ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("currentPage", currentPage);
-        modelMap.addAttribute("pageSize", pageSize);
         modelMap.addAttribute("totalItems", totalItems);
         modelMap.addAttribute("totalPages", totalPages);
+        modelMap.addAttribute("pageSize", pageSize);
         return modelMap;
     }
 
