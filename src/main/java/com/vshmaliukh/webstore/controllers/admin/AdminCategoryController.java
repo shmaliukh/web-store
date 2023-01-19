@@ -42,7 +42,7 @@ public class AdminCategoryController {
         List<Category> categoryList = tableContentForCategoryView.readContentList();
         ModelMap contentModelMap = tableContentForCategoryView.readContentModelMap();
 
-        modelMap.addAttribute(contentModelMap);
+        modelMap.addAllAttributes(contentModelMap);
         modelMap.addAttribute("categoryList", categoryList);
         return new ModelAndView("admin/category/catalog", modelMap);
     }

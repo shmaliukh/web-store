@@ -46,7 +46,7 @@ public class AdminOrderController {
         List<Order> orderList = tableContentForOrderView.readContentList();
         ModelMap contentModelMap = tableContentForOrderView.readContentModelMap();
 
-        modelMap.addAttribute(contentModelMap);
+        modelMap.addAllAttributes(contentModelMap);
         modelMap.addAttribute("orderList", orderList);
         return new ModelAndView("/admin/order/catalog", modelMap);
     }

@@ -47,7 +47,7 @@ public class AdminUserController {
         List<User> userList = tableContentForUserView.readContentList();
         ModelMap contentModelMap = tableContentForUserView.readContentModelMap();
 
-        modelMap.addAttribute(contentModelMap);
+        modelMap.addAllAttributes(contentModelMap);
         modelMap.addAttribute("userList", userList);
         return new ModelAndView("/admin/user/catalog", modelMap);
     }
