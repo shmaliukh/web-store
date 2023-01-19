@@ -4,8 +4,8 @@ import org.springframework.ui.ModelMap;
 
 public interface SortableContent {
 
-    void addAttributesForSorting(String sortField,
-                                 String sortDirection,
-                                 ModelMap modelMap);
+    void setUpSortingConfig(String sortDirection, String sortField);
+
+    ModelMap formAttributesForSorting(String sortField, String sortDirection);
 
 }
