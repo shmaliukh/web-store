@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
+import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.items.Item;
@@ -98,5 +99,22 @@ public final class AdminControllerUtils {
         return content;
     }
 
+    // TODO is necessary to refactor method ?
+    // @author vshmaliukh
+    // @since  2022-01-19
+    public static TableContentImp<? extends Item> getTableContentForItemView(String keyword, int page, int size, String sortField, String sortDirection, BaseItemRepository itemRepository) {
+        TableContentImp<? extends Item> tableContent = new TableContentImp(keyword, page, size, sortField, sortDirection) {
+            @Override
+            public Page<? extends Item> formPageIfKeywordIsBlank(Pageable pageable) {
+                return itemRepository.findAll(pageable);
+            }
+
+            @Override
+            public Page<? extends Item> formPageWithContentByKeyword(String keyword, Pageable pageable) {
+                return itemRepository.findByNameContainingIgnoreCase(keyword, pageable);
+            }
+        };
+        return tableContent;
+    }
 
 }

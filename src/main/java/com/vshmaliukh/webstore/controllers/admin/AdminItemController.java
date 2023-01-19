@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
+import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -71,8 +72,12 @@ public class AdminItemController {
                                   @PathVariable("itemType") String itemType,
                                   ModelMap modelMap) {
         BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
-        List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sortField, sortDirection, modelMap, itemRepository);
 
+        TableContentImp<? extends Item> tableContent = AdminControllerUtils.getTableContentForItemView(keyword, page, size, sortField, sortDirection, itemRepository);
+        List<? extends Item> itemList = tableContent.readContentList();
+        ModelMap contentModelMap = tableContent.readContentModelMap();
+
+        modelMap.addAllAttributes(contentModelMap);
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
         return new ModelAndView("/admin/item/view", modelMap);
