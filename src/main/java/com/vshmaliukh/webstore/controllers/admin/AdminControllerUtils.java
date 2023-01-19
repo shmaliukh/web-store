@@ -31,10 +31,8 @@ public final class AdminControllerUtils {
         modelMap.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
     }
 
-    public static <T extends Item> List<T> getSortedItemsContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, BaseItemRepository<T> repositoryByItemClassName) {
+    public static <T extends Item> List<T> getSortedItemsContent(String keyword, int page, int size, String sortField, String sortDirection, ModelMap modelMap, BaseItemRepository<T> repositoryByItemClassName) {
 //      TODO refactor duplicate
-        String sortField = sort[0];
-        String sortDirection = sort[1];
 
         Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort.Order order = new Sort.Order(direction, sortField);
@@ -53,9 +51,7 @@ public final class AdminControllerUtils {
         return content;
     }
 
-    public static List<Order> getSortedOrderContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, OrderRepository orderRepository) {
-        String sortField = sort[0];
-        String sortDirection = sort[1];
+    public static List<Order> getSortedOrderContent(String keyword, int page, int size, String sortField, String sortDirection, ModelMap modelMap, OrderRepository orderRepository) {
 
         Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort.Order order = new Sort.Order(direction, sortField);
@@ -79,11 +75,9 @@ public final class AdminControllerUtils {
     public static List<Category> getSortedContent(String keyword,
                                                   int page,
                                                   int size,
-                                                  String[] sort,
+                                                  String sortField, String sortDirection,
                                                   ModelMap modelMap,
                                                   CategoryRepository repository) {
-        String sortField = sort[0];
-        String sortDirection = sort[1];
         Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort.Order order = new Sort.Order(direction, sortField);
 

@@ -33,10 +33,11 @@ public class AdminCategoryController {
     public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     @RequestParam(defaultValue = "id") String sortField,
+                                     @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
         List<Category> categoryList = AdminControllerUtils.getSortedContent(
-                keyword, page, size, sort, modelMap, categoryService.getCategoryRepository()
+                keyword, page, size, sortField, sortDirection, modelMap, categoryService.getCategoryRepository()
         );
         modelMap.addAttribute("categoryList", categoryList);
         return new ModelAndView("admin/category/catalog", modelMap);
@@ -102,7 +103,8 @@ public class AdminCategoryController {
                                      @RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     @RequestParam(defaultValue = "id") String sortField,
+                                     @RequestParam(defaultValue = "asc") String sortDirection,
                                      @RequestParam(name = "itemType", defaultValue = "all") String itemType,
                                      ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
@@ -110,7 +112,7 @@ public class AdminCategoryController {
             Category category = optionalCategory.get();
 
             BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
-            List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository);
+            List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sortField, sortDirection, modelMap, itemRepository);
 
             modelMap.addAttribute("itemType", itemType.toLowerCase());
             modelMap.addAttribute("itemList", itemList);
@@ -125,7 +127,8 @@ public class AdminCategoryController {
                                       @RequestParam(required = false) String keyword,
                                       @RequestParam(defaultValue = "1") int page,
                                       @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                      @RequestParam(defaultValue = "id,asc") String[] sort,
+                                      @RequestParam(defaultValue = "id") String sortField,
+                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                       @RequestParam("itemId") int itemId,
                                       @RequestParam(name = "itemType") String itemType,
                                       ModelMap modelMap) {
@@ -153,7 +156,8 @@ public class AdminCategoryController {
         modelMap.addAttribute("keyword", keyword);
         modelMap.addAttribute("page", page);
         modelMap.addAttribute("size", size);
-        modelMap.addAttribute("sort", sort);
+        modelMap.addAttribute("sortField", sortField);
+        modelMap.addAttribute("sortDirection", sortDirection);
         modelMap.addAttribute("itemType", itemType);
         return new ModelAndView("redirect:/admin/category/" + categoryId + "/add-item", modelMap);
     }

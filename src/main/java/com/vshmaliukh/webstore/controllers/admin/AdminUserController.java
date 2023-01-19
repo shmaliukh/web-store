@@ -43,10 +43,9 @@ public class AdminUserController {
     public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     @RequestParam(defaultValue = "id") String sortField,
+                                     @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
-        String sortField = sort[0];
-        String sortDirection = sort[1];
         Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort.Order order = new Sort.Order(direction, sortField);
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));

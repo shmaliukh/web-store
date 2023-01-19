@@ -39,9 +39,10 @@ public class AdminOrderController {
     public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     @RequestParam(defaultValue = "id") String sortField,
+@RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
-        List<Order> orderList = AdminControllerUtils.getSortedOrderContent(keyword, page, size, sort, modelMap, orderService.getOrderRepository());
+        List<Order> orderList = AdminControllerUtils.getSortedOrderContent(keyword, page, size, sortField, sortDirection, modelMap, orderService.getOrderRepository());
 
         modelMap.addAttribute("orderList", orderList);
         return new ModelAndView("/admin/order/catalog", modelMap);
@@ -127,12 +128,13 @@ public class AdminOrderController {
     public ModelAndView doGetAddItem(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     @RequestParam(defaultValue = "id") String sortField,
+@RequestParam(defaultValue = "asc") String sortDirection,
                                      @PathVariable(name = "oderId") Long orderId,
                                      ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
-            List<Item> itemsAvailableToBuy = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepositoryProvider.getAllItemRepository());
+            List<Item> itemsAvailableToBuy = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sortField, sortDirection, modelMap, itemRepositoryProvider.getAllItemRepository());
             Integer totalOrderItems = orderService.calcTotalOrderItems(order);
 
             modelMap.addAttribute("order", order);

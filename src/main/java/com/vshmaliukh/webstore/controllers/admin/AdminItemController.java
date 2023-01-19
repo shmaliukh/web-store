@@ -66,11 +66,12 @@ public class AdminItemController {
     public ModelAndView doGetView(@RequestParam(required = false) String keyword,
                                   @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                  @RequestParam(defaultValue = "id,asc") String[] sort,
+                                  @RequestParam(defaultValue = "id") String sortField,
+                                  @RequestParam(defaultValue = "asc") String sortDirection,
                                   @PathVariable("itemType") String itemType,
                                   ModelMap modelMap) {
         BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
-        List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository);
+        List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sortField, sortDirection, modelMap, itemRepository);
 
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
