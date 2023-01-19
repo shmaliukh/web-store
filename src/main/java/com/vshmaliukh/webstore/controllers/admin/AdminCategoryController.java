@@ -86,6 +86,11 @@ public class AdminCategoryController {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
+
+            // TODO implement paging, sorting and find by keyword ability for 'items' tab ('details' template)
+            // @author  vshmaliukh
+            // @since   2022-01-19
+
             modelMap.addAttribute("category", category);
             return new ModelAndView("admin/category/details", modelMap);
         }
