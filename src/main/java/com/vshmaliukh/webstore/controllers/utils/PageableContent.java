@@ -11,6 +11,8 @@ public interface PageableContent {
         return PageRequest.of(currentPage, pageSize, Sort.by(order));
     }
 
+    void setUpPageableConfig(int currentPage, int pageSize, Sort.Order order);
+
     ModelMap formAttributesForPaging(int currentPage,
                                      int pageSize,
                                      long totalItems,
