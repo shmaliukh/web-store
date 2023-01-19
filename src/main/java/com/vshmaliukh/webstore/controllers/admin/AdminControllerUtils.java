@@ -1,16 +1,16 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
+import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Order;
+import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
+import com.vshmaliukh.webstore.repositories.UserRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.ui.ModelMap;
 
 import java.util.List;
@@ -18,91 +18,88 @@ import java.util.List;
 
 public final class AdminControllerUtils {
 
-    private AdminControllerUtils() {
+    private AdminControllerUtils() {}
+
+    public static TableContentImp<User> generateTableContentForUserView(String keyword, int page, int size,
+                                                                        String sortField, String sortDirection,
+                                                                        UserRepository repository) {
+        TableContentImp<User> tableContent = new TableContentImp<User>(keyword, page, size, sortField, sortDirection) {
+            @Override
+            public Page<User> formPageIfKeywordIsBlank(Pageable pageable) {
+                return repository.findAll(pageable);
+            }
+
+            @Override
+            public Page<User> formPageWithContentByKeyword(String keyword, Pageable pageable) {
+                return repository.findByUsernameIgnoreCase(keyword, pageable);
+            }
+        };
+        return tableContent;
     }
 
-    public static void addAttributesForSortingAndPaging(int size, ModelMap modelMap, String sortField, String sortDirection, Page<?> pageWithItems) {
-        modelMap.addAttribute("currentPage", pageWithItems.getNumber() + 1);
-        modelMap.addAttribute("totalItems", pageWithItems.getTotalElements());
-        modelMap.addAttribute("totalPages", pageWithItems.getTotalPages());
-        modelMap.addAttribute("pageSize", size);
-        modelMap.addAttribute("sortField", sortField);
-        modelMap.addAttribute("sortDirection", sortDirection);
-        modelMap.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
+    public static TableContentImp<Category> generateTableContentForCategoryView(String keyword, int page, int size,
+                                                                                String sortField, String sortDirection,
+                                                                                CategoryRepository repository) {
+        TableContentImp<Category> tableContent = new TableContentImp<Category>(keyword, page, size, sortField, sortDirection) {
+            @Override
+            public Page<Category> formPageIfKeywordIsBlank(Pageable pageable) {
+                return repository.findAll(pageable);
+            }
+
+            @Override
+            public Page<Category> formPageWithContentByKeyword(String keyword, Pageable pageable) {
+                return repository.findByNameContainingIgnoreCase(keyword, pageable);
+            }
+        };
+        return tableContent;
     }
 
-    public static <T extends Item> List<T> getSortedItemsContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, BaseItemRepository<T> repositoryByItemClassName) {
-//      TODO refactor duplicate
-        String sortField = sort[0];
-        String sortDirection = sort[1];
+    public static TableContentImp<Order> generateTableContentForOrderView(String keyword, int page, int size,
+                                                                          String sortField, String sortDirection,
+                                                                          OrderRepository repository) {
+        TableContentImp<Order> tableContent = new TableContentImp<Order>(keyword, page, size, sortField, sortDirection) {
+            @Override
+            public Page<Order> formPageIfKeywordIsBlank(Pageable pageable) {
+                return repository.findAll(pageable);
+            }
 
-        Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Sort.Order order = new Sort.Order(direction, sortField);
-
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
-
-        Page<T> pageWithItems;
-        if (StringUtils.isBlank(keyword)) {
-            pageWithItems = repositoryByItemClassName.findAll(pageable);
-        } else {
-            pageWithItems = repositoryByItemClassName.findByNameContainingIgnoreCase(keyword, pageable);
-            modelMap.addAttribute("keyword", keyword);
-        }
-        List<T> content = pageWithItems.getContent();
-        addAttributesForSortingAndPaging(size, modelMap, sortField, sortDirection, pageWithItems);
-        return content;
+            @Override
+            public Page<Order> formPageWithContentByKeyword(String keyword, Pageable pageable) {
+                return repository.findByStatusContainingIgnoreCase(keyword, pageable);
+            }
+        };
+        return tableContent;
     }
 
-    public static List<Order> getSortedOrderContent(String keyword, int page, int size, String[] sort, ModelMap modelMap, OrderRepository orderRepository) {
-        String sortField = sort[0];
-        String sortDirection = sort[1];
+    public static <T extends Item> TableContentImp<T> generateTableContentForItemView(String keyword, int page, int size,
+                                                                                      String sortField, String sortDirection,
+                                                                                      BaseItemRepository<T> repository) {
+        TableContentImp<T> tableContent = new TableContentImp<T>(keyword, page, size, sortField, sortDirection) {
+            @Override
+            public Page<T> formPageIfKeywordIsBlank(Pageable pageable) {
+                return repository.findAll(pageable);
+            }
 
-        Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Sort.Order order = new Sort.Order(direction, sortField);
-
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
-
-        Page<Order> pageWithOrders;
-        if (StringUtils.isBlank(keyword)) {
-            pageWithOrders = orderRepository.findAll(pageable);
-        } else {
-            pageWithOrders = orderRepository.findByStatusContainingIgnoreCase(keyword, pageable);
-            modelMap.addAttribute("keyword", keyword);
-        }
-        List<Order> content = pageWithOrders.getContent();
-
-        addAttributesForSortingAndPaging(size, modelMap, sortField, sortDirection, pageWithOrders);
-
-        return content;
+            @Override
+            public Page<T> formPageWithContentByKeyword(String keyword, Pageable pageable) {
+                return repository.findByNameContainingIgnoreCase(keyword, pageable);
+            }
+        };
+        return tableContent;
     }
 
-    public static List<Category> getSortedContent(String keyword,
-                                                  int page,
-                                                  int size,
-                                                  String[] sort,
-                                                  ModelMap modelMap,
-                                                  CategoryRepository repository) {
-        String sortField = sort[0];
-        String sortDirection = sort[1];
-        Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Sort.Order order = new Sort.Order(direction, sortField);
+    public static void addTableContentWithItems(String keyword,
+                                                int page, int size,
+                                                String sortField, String sortDirection,
+                                                String itemType, ModelMap modelMap, BaseItemRepository itemRepository) {
+        TableContentImp<? extends Item> tableContent
+                = generateTableContentForItemView(keyword, page, size, sortField, sortDirection, itemRepository);
+        List<? extends Item> itemList = tableContent.readContentList();
+        ModelMap contentModelMap = tableContent.readContentModelMap();
 
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
-
-        Page<Category> pageWithContent;
-        if (StringUtils.isBlank(keyword)) {
-            pageWithContent = repository.findAll(pageable);
-        } else {
-//          FIXME refactor duplicate methods (solve problem with repository find by keyword pageable content)
-            pageWithContent = repository.findByNameContainingIgnoreCase(keyword, pageable);
-            modelMap.addAttribute("keyword", keyword);
-        }
-        List<Category> content = pageWithContent.getContent();
-
-        addAttributesForSortingAndPaging(size, modelMap, sortField, sortDirection, pageWithContent);
-
-        return content;
+        modelMap.addAllAttributes(contentModelMap);
+        modelMap.addAttribute("itemType", itemType.toLowerCase());
+        modelMap.addAttribute("itemList", itemList);
     }
-
 
 }

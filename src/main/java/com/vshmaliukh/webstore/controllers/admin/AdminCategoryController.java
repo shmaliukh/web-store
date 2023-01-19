@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
+import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -33,11 +34,15 @@ public class AdminCategoryController {
     public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     @RequestParam(defaultValue = "id") String sortField,
+                                     @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
-        List<Category> categoryList = AdminControllerUtils.getSortedContent(
-                keyword, page, size, sort, modelMap, categoryService.getCategoryRepository()
-        );
+        TableContentImp<Category> tableContentForCategoryView
+                = AdminControllerUtils.generateTableContentForCategoryView(keyword, page, size, sortField, sortDirection, categoryService.getCategoryRepository());
+        List<Category> categoryList = tableContentForCategoryView.readContentList();
+        ModelMap contentModelMap = tableContentForCategoryView.readContentModelMap();
+
+        modelMap.addAllAttributes(contentModelMap);
         modelMap.addAttribute("categoryList", categoryList);
         return new ModelAndView("admin/category/catalog", modelMap);
     }
@@ -86,6 +91,11 @@ public class AdminCategoryController {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
+
+            // TODO implement paging, sorting and find by keyword ability for 'items' tab ('details' template)
+            // @author  vshmaliukh
+            // @since   2022-01-19
+
             modelMap.addAttribute("category", category);
             return new ModelAndView("admin/category/details", modelMap);
         }
@@ -97,7 +107,8 @@ public class AdminCategoryController {
                                      @RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                     @RequestParam(defaultValue = "id") String sortField,
+                                     @RequestParam(defaultValue = "asc") String sortDirection,
                                      @RequestParam(name = "itemType", defaultValue = "all") String itemType,
                                      ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
@@ -105,10 +116,7 @@ public class AdminCategoryController {
             Category category = optionalCategory.get();
 
             BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
-            List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository);
-
-            modelMap.addAttribute("itemType", itemType.toLowerCase());
-            modelMap.addAttribute("itemList", itemList);
+            AdminControllerUtils.addTableContentWithItems(keyword, page, size, sortField, sortDirection, itemType, modelMap, itemRepository);
             modelMap.addAttribute("category", category);
             return new ModelAndView("admin/category/add-item", modelMap);
         }
@@ -120,7 +128,8 @@ public class AdminCategoryController {
                                       @RequestParam(required = false) String keyword,
                                       @RequestParam(defaultValue = "1") int page,
                                       @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                      @RequestParam(defaultValue = "id,asc") String[] sort,
+                                      @RequestParam(defaultValue = "id") String sortField,
+                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                       @RequestParam("itemId") int itemId,
                                       @RequestParam(name = "itemType") String itemType,
                                       ModelMap modelMap) {
@@ -148,7 +157,8 @@ public class AdminCategoryController {
         modelMap.addAttribute("keyword", keyword);
         modelMap.addAttribute("page", page);
         modelMap.addAttribute("size", size);
-        modelMap.addAttribute("sort", sort);
+        modelMap.addAttribute("sortField", sortField);
+        modelMap.addAttribute("sortDirection", sortDirection);
         modelMap.addAttribute("itemType", itemType);
         return new ModelAndView("redirect:/admin/category/" + categoryId + "/add-item", modelMap);
     }
