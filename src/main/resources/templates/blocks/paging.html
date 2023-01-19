@@ -2,7 +2,7 @@
    th:href="@{${pageToRedirect} + '?'
                            + ${keyword!=null && keyword!=''? 'keyword=' + keyword + '&' : ''}
                            + 'page=' + ${pageNum} + '&size=' + ${pageSize}
-                           + '&sortField=' + ${field}
+                           + ${field != null ? '&sortField=' + field : ''}
                            + '&sortDirection=' + ${sortField == field ? reverseSortDirection : sortDirection}
                            }"
    th:title="${tooltip}" rel="tooltip">

@@ -2,7 +2,7 @@
   <a class="link-light" th:href="@{${pageToRedirect} + '?'
                 + ${keyword!=null && keyword!='' ? 'keyword=' + keyword + '&' : ''}
                 + 'page=' + ${currentPage} + '&size=' + ${pageSize}
-                + '&sortField=' + ${field}
+                + ${field != null ? '&sortField=' + field : ''}
                 + '&sortDirection=' + ${sortField == field ? reverseSortDirection : sortDirection}
                 }">
     [[${label}]]
