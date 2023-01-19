@@ -73,7 +73,7 @@ public class AdminItemController {
                                   ModelMap modelMap) {
         BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
 
-        TableContentImp<? extends Item> tableContent = AdminControllerUtils.getTableContentForItemView(keyword, page, size, sortField, sortDirection, itemRepository);
+        TableContentImp<? extends Item> tableContent = AdminControllerUtils.generateTableContentForItemView(keyword, page, size, sortField, sortDirection, itemRepository);
         List<? extends Item> itemList = tableContent.readContentList();
         ModelMap contentModelMap = tableContent.readContentModelMap();
 

@@ -4,9 +4,8 @@ import com.vshmaliukh.webstore.login.LogInProvider;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +18,7 @@ import static com.vshmaliukh.webstore.login.LogInProvider.LOCAL;
 @AllArgsConstructor
 public class UserService {
 
+    @Getter
     final UserRepository userRepository;
 
     public Optional<User> readUserById(Long userId) {
@@ -92,23 +92,6 @@ public class UserService {
 
     public boolean isUserSaved(User user) {
         return userRepository.existsById(user.getId());
-    }
-    
-    public User getUserById(Long id){
-        User user = userRepository.getUserById(id);
-        if (user!=null){
-            return user;
-        }
-        log.warn("problem to find user entity with '{}'id // return NULL", id);
-        return null;
-    }
-
-    public Page<User> getPageWithUsers(Pageable pageable) {
-        return userRepository.findAll(pageable);
-    }
-
-    public Page<User> getPageWithUsersByUsername(String keyword, Pageable pageable) {
-        return userRepository.findByUsernameIgnoreCase(keyword, pageable);
     }
 
 }

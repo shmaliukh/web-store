@@ -1,9 +1,9 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
+import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
-import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.ItemService;
@@ -40,10 +40,13 @@ public class AdminOrderController {
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
                                      @RequestParam(defaultValue = "id") String sortField,
-@RequestParam(defaultValue = "asc") String sortDirection,
+                                     @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
-        List<Order> orderList = AdminControllerUtils.getSortedOrderContent(keyword, page, size, sortField, sortDirection, modelMap, orderService.getOrderRepository());
+        TableContentImp<Order> tableContentForOrderView = AdminControllerUtils.generateTableContentForOrderView(keyword, page, size, sortField, sortDirection, orderService.getOrderRepository());
+        List<Order> orderList = tableContentForOrderView.readContentList();
+        ModelMap contentModelMap = tableContentForOrderView.readContentModelMap();
 
+        modelMap.addAttribute(contentModelMap);
         modelMap.addAttribute("orderList", orderList);
         return new ModelAndView("/admin/order/catalog", modelMap);
     }
@@ -129,17 +132,16 @@ public class AdminOrderController {
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
                                      @RequestParam(defaultValue = "id") String sortField,
-@RequestParam(defaultValue = "asc") String sortDirection,
+                                     @RequestParam(defaultValue = "asc") String sortDirection,
                                      @PathVariable(name = "oderId") Long orderId,
                                      ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
-            List<Item> itemsAvailableToBuy = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sortField, sortDirection, modelMap, itemRepositoryProvider.getAllItemRepository());
+            AdminControllerUtils.addTableContentWithItems(keyword, page, size, sortField, sortDirection, "all", modelMap, itemRepositoryProvider.getAllItemRepository());
             Integer totalOrderItems = orderService.calcTotalOrderItems(order);
 
             modelMap.addAttribute("order", order);
             modelMap.addAttribute("totalOrderItems", totalOrderItems);
-            modelMap.addAttribute("itemList", itemsAvailableToBuy);
             return new ModelAndView("admin/order/add-item", modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);

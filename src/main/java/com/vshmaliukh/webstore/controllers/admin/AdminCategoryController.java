@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
+import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -36,9 +37,12 @@ public class AdminCategoryController {
                                      @RequestParam(defaultValue = "id") String sortField,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
-        List<Category> categoryList = AdminControllerUtils.getSortedContent(
-                keyword, page, size, sortField, sortDirection, modelMap, categoryService.getCategoryRepository()
-        );
+        TableContentImp<Category> tableContentForCategoryView
+                = AdminControllerUtils.generateTableContentForCategoryView(keyword, page, size, sortField, sortDirection, categoryService.getCategoryRepository());
+        List<Category> categoryList = tableContentForCategoryView.readContentList();
+        ModelMap contentModelMap = tableContentForCategoryView.readContentModelMap();
+
+        modelMap.addAttribute(contentModelMap);
         modelMap.addAttribute("categoryList", categoryList);
         return new ModelAndView("admin/category/catalog", modelMap);
     }
@@ -112,10 +116,7 @@ public class AdminCategoryController {
             Category category = optionalCategory.get();
 
             BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
-            List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sortField, sortDirection, modelMap, itemRepository);
-
-            modelMap.addAttribute("itemType", itemType.toLowerCase());
-            modelMap.addAttribute("itemList", itemList);
+            AdminControllerUtils.addTableContentWithItems(keyword, page, size, sortField, sortDirection, itemType, modelMap, itemRepository);
             modelMap.addAttribute("category", category);
             return new ModelAndView("admin/category/add-item", modelMap);
         }

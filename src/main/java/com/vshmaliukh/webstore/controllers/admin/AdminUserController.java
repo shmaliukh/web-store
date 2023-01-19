@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
+import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
@@ -8,11 +9,6 @@ import com.vshmaliukh.webstore.services.OrderService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.addAttributesForSortingAndPaging;
+import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.generateTableContentForUserView;
 
 @Slf4j
 @Controller
@@ -46,15 +42,13 @@ public class AdminUserController {
                                      @RequestParam(defaultValue = "id") String sortField,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
-        Sort.Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Sort.Order order = new Sort.Order(direction, sortField);
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+        UserRepository userRepository = userService.getUserRepository();
+        TableContentImp<User> tableContentForUserView = generateTableContentForUserView(keyword, page, size, sortField, sortDirection, userRepository);
+        List<User> userList = tableContentForUserView.readContentList();
+        ModelMap contentModelMap = tableContentForUserView.readContentModelMap();
 
-        Page<User> pageWithUsers = getPageWithUsers(keyword, modelMap, pageable);
-        List<User> content = pageWithUsers.getContent();
-        addAttributesForSortingAndPaging(size, modelMap, sortField, sortDirection, pageWithUsers);
-
-        modelMap.addAttribute("userList", content);
+        modelMap.addAttribute(contentModelMap);
+        modelMap.addAttribute("userList", userList);
         return new ModelAndView("/admin/user/catalog", modelMap);
     }
 
@@ -138,17 +132,6 @@ public class AdminUserController {
         }
         modelMap.addAttribute("user", user);
         modelMap.addAttribute("orderList", orderList);
-    }
-
-    private Page<User> getPageWithUsers(String keyword, ModelMap modelMap, Pageable pageable) {
-        Page<User> pageWithUsers;
-        if (StringUtils.isBlank(keyword)) {
-            pageWithUsers = userService.getPageWithUsers(pageable);
-        } else {
-            pageWithUsers = userService.getPageWithUsersByUsername(keyword, pageable);
-            modelMap.addAttribute("keyword", keyword);
-        }
-        return pageWithUsers;
     }
 
 }
