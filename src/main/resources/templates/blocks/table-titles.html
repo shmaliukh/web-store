@@ -73,7 +73,9 @@
     <th th:replace="blocks/sorting :: sorting('costPrice','COST PRICE', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('salePrice','SALE PRICE', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('availableToBuyQuantity','AVAILABLE QUANTITY', ${pageToRedirect})"></th>
-    <th:block th:insert="blocks/table-titles :: ${itemType}(${pageToRedirect})"></th:block>
+    <th:block th:if="${itemType != null}">
+        <th:block th:insert="blocks/table-titles :: ${itemType}(${pageToRedirect})"></th:block>
+    </th:block>
     <th th:replace="blocks/sorting :: sorting('isAvailableInStore','AVAILABLE IN STORE', ${pageToRedirect})"></th>
 </th:block>
 

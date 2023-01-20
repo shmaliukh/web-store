@@ -131,34 +131,23 @@
                 </form>
             </div>
             <div>
-                <!--            TODO implement new way for pagination-->
-                <!--            <div class="container">-->
-                <!--                <th:block th:insert="blocks/navigation :: tools('')"></th:block>-->
-                <!--            </div>-->
+                <div class="container">
+                    <th:block th:insert="blocks/navigation :: tools('/admin/category/' + ${category.getId()} + '/details')"></th:block>
+                </div>
                 <th:block th:if="${category.getItemSet().size() > 0}">
                     <div class="table-responsive-md m-3">
                         <table class="w-100 table table-striped">
-                            <caption>order table</caption>
+                            <caption>category item table</caption>
                             <thead>
                             <tr class="table-dark">
-                                <th class="align-middle" scope="col">#</th>
-                                <th class="align-middle" scope="col">TYPE</th>
-                                <th class="align-middle" scope="col">UPDATED</th>
-                                <th class="align-middle" scope="col">ID</th>
-                                <th class="align-middle" scope="col">CATEGORY</th>
-                                <th class="align-middle" scope="col">NAME</th>
-                                <th class="align-middle" scope="col">COST PRICE</th>
-                                <th class="align-middle" scope="col">SALE PRICE</th>
-                                <th class="align-middle" scope="col">QUANTITY</th>
-                                <th class="align-middle" scope="col">AVAILABLE</th>
+                                <th:block th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/category/' + ${category.getId()} + '/details')"></th:block>
                                 <th class="align-middle" scope="col"></th>
                                 <th class="align-middle" scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="item, iterator: ${category.getItemSet()}">
-                                <!--                            <th class="align-middle" scope="row" th:text="${iterator.count+(currentPage - 1)*pageSize}">#</th>-->
-                                <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                            <tr th:each="item, iterator: ${itemList}">
+                                <th class="align-middle" scope="row" th:text="${iterator.count+(currentPage - 1)*pageSize}">#</th>
                                 <td class="align-middle" th:text="${item.getTypeStr()}">TYPE</td>
                                 <td class="align-middle" th:text="${item.getUpdatedAt()}">UPDATED</td>
                                 <td class="align-middle" th:text="${item.getId()}">ID</td>
@@ -189,7 +178,7 @@
                             </tbody>
                         </table>
 
-                        <th:block th:insert="blocks/navigation :: pagination('/admin/category/catalog')"></th:block>
+                        <th:block th:insert="blocks/navigation :: pagination('/admin/category/' + ${category.getId()} + '/details')"></th:block>
                     </div>
                 </th:block>
                 <th:block th:if="${category.getItemSet().isEmpty()}">
