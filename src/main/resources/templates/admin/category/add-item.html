@@ -15,12 +15,49 @@
 </div>
 
 <div class="album py-3 bg-light text-center">
+
     <div class="container">
-        <a th:href="|@{/admin/category/}${category.getId()}@{/details}|">
-            <button type="button" class="w-100 btn btn-outline-secondary btn-lg">
-                Back to category
-            </button>
-        </a>
+        <p class="lead" th:text="|${category.getName()} category info|"></p>
+    </div>
+
+    <div class="container">
+        <div class="table-responsive-md">
+            <table class="w-100 table table-striped">
+                <caption>category table</caption>
+                <thead>
+                <tr class="table-dark">
+                    <th:block
+                            th:insert="blocks/table-titles :: base-category-titles"></th:block>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="align-middle" th:text="${category.getId()}">ID</td>
+                    <td class="align-middle" th:text="${category.getCreatedAt()}">CREATED</td>
+                    <td class="align-middle" th:text="${category.getUpdatedAt()}">UPDATED</td>
+                    <td class="align-middle" th:text="${category.getName()}">NAME</td>
+                    <td class="align-middle">
+                        <input class="form-check-input align-middle" type="checkbox" name="isActivated"
+                               th:value="${category.isActivated()}" th:checked="${category.isActivated()}"
+                               disabled>
+                    </td>
+                    <td class="align-middle">
+                        <input class="form-check-input align-middle" type="checkbox" name="isDeleted"
+                               th:value="${category.isDeleted()}" th:checked="${category.isDeleted()}"
+                               disabled>
+                    </td>
+                    <td class="align-middle">
+                        <a th:href="|@{/admin/category/}${category.getId()}@{/details}|">
+                            <button type="button" class="w-100 btn btn-outline-secondary">
+                                Details
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <hr>
@@ -86,7 +123,7 @@
                             <th:block th:unless="${category.getItemSet().contains(item)}">
                                 <form method="post" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
                                     <input name="itemId" th:value="${item.getId()}" hidden>
-                                    <input name="itemType" th:value="${item.getTypeStr()}" hidden>
+                                    <input name="itemType" th:value="${itemType}" hidden>
                                     <button type="submit" class="btn btn-outline-success w-100">Add to category</button>
                                 </form>
                             </th:block>

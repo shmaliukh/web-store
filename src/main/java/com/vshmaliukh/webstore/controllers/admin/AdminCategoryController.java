@@ -38,7 +38,7 @@ public class AdminCategoryController {
     @GetMapping("/catalog")
     public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
+                                     @RequestParam(defaultValue = "5") int size,
                                      @RequestParam(defaultValue = "id") String sortField,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
@@ -95,7 +95,7 @@ public class AdminCategoryController {
     public ModelAndView doGetDetails(@PathVariable(name = "categoryId") Integer categoryId,
                                      @RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
+                                     @RequestParam(defaultValue = "5") int size,
                                      @RequestParam(defaultValue = "id") String sortField,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
@@ -120,7 +120,7 @@ public class AdminCategoryController {
     public ModelAndView doGetAddItem(@PathVariable(name = "categoryId") Integer categoryId,
                                      @RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
+                                     @RequestParam(defaultValue = "5") int size,
                                      @RequestParam(defaultValue = "id") String sortField,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                      @RequestParam(name = "itemType", defaultValue = "all") String itemType,
@@ -131,6 +131,7 @@ public class AdminCategoryController {
 
             BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
             AdminControllerUtils.addTableContentWithItems(keyword, page, size, sortField, sortDirection, itemType, modelMap, itemRepository);
+            modelMap.addAttribute("itemType", itemType);
             modelMap.addAttribute("category", category);
             return new ModelAndView("admin/category/add-item", modelMap);
         }
@@ -141,40 +142,29 @@ public class AdminCategoryController {
     public ModelAndView doPostAddItem(@PathVariable(name = "categoryId") Integer categoryId,
                                       @RequestParam(required = false) String keyword,
                                       @RequestParam(defaultValue = "1") int page,
-                                      @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
+                                      @RequestParam(defaultValue = "5") int size,
                                       @RequestParam(defaultValue = "id") String sortField,
                                       @RequestParam(defaultValue = "asc") String sortDirection,
                                       @RequestParam("itemId") int itemId,
-                                      @RequestParam(name = "itemType") String itemType,
+                                      @RequestParam("itemType") String itemType,
                                       ModelMap modelMap) {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
-        if (optionalItem.isPresent()) {
+        Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
+        if (optionalItem.isPresent() && optionalCategory.isPresent()) {
             Item item = optionalItem.get();
-            if (item.getTypeStr().equalsIgnoreCase(itemType)) {
-                Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
-                if (optionalCategory.isPresent()) {
-                    Category category = optionalCategory.get();
-                    categoryService.addItemToCategory(item, category);
-                } else {
-                    log.warn("problem to add item to category // item id: '{}', category id: '{}'" +
-                            "// not found category", itemId, categoryId);
-                }
-            } else {
-                log.warn("problem to add item to category // item id: '{}', category id: '{}'" +
-                                "// request item type '{}' is not equals to found item '{}' type",
-                        itemId, categoryId, itemType, item.getTypeStr());
-            }
-        } else {
-            log.warn("problem to add item to category // item id: '{}', category id: '{}' " +
-                    "// item not found", itemId, categoryId);
+            Category category = optionalCategory.get();
+            categoryService.addItemToCategory(item, category);
+
+            modelMap.addAttribute("keyword", keyword);
+            modelMap.addAttribute("page", page);
+            modelMap.addAttribute("size", size);
+            modelMap.addAttribute("sortField", sortField);
+            modelMap.addAttribute("sortDirection", sortDirection);
+            modelMap.addAttribute("itemType", itemType);
+            return new ModelAndView("redirect:/admin/category/" + categoryId + "/add-item", modelMap);
         }
-        modelMap.addAttribute("keyword", keyword);
-        modelMap.addAttribute("page", page);
-        modelMap.addAttribute("size", size);
-        modelMap.addAttribute("sortField", sortField);
-        modelMap.addAttribute("sortDirection", sortDirection);
-        modelMap.addAttribute("itemType", itemType);
-        return new ModelAndView("redirect:/admin/category/" + categoryId + "/add-item", modelMap);
+        log.warn("problem to add item to category // item id: '{}', category id: '{}' ", itemId, categoryId);
+        return new ModelAndView("redirect:/admin/category/catalog", modelMap);
     }
 
     @PostMapping("/{categoryId}/remove-item")
