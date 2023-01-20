@@ -2,7 +2,6 @@ package com.vshmaliukh.webstore.model.items.literature_item_imp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.items.LiteratureItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +31,6 @@ public class Book extends LiteratureItem {
 
     @JsonCreator
     public Book(@JsonProperty("itemId") Integer id,
-                @JsonProperty("category") String category,
                 @JsonProperty("name") String name,
                 @JsonProperty("currentQuantity") int currentQuantity,
                 @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,
@@ -45,7 +43,7 @@ public class Book extends LiteratureItem {
                 @JsonProperty("pages") int pages,
                 @JsonProperty("author") String author,
                 @JsonProperty("date") Date dateOfIssue) {
-        super(id, category, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
+        super(id, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
         this.author = author;
         this.dateOfIssue = dateOfIssue;
     }
@@ -54,7 +52,6 @@ public class Book extends LiteratureItem {
     public String toString() {
         return "Book{" +
                 "id=" + getId() +
-                ", category='" + getCategory() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", currentQuantity=" + getCurrentQuantity() +
                 ", availableToBuyQuantity=" + getAvailableToBuyQuantity() +

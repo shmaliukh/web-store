@@ -14,7 +14,6 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
@@ -48,9 +47,6 @@ public abstract class Item extends AuditModel {
     @Column(name = "item_id", nullable = false)
     private Integer id;
 
-    //TODO remove 'category' field
-    private String category;
-
     @ManyToMany(mappedBy = "itemSet")
     private Set<Category> categorySet;
 
@@ -75,7 +71,6 @@ public abstract class Item extends AuditModel {
 
     @JsonCreator
     protected Item(@JsonProperty("itemId") Integer id,
-                   @JsonProperty("category") String category,
                    @JsonProperty("name") String name,
                    @JsonProperty("currentQuantity") int currentQuantity,
                    @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,
@@ -86,7 +81,6 @@ public abstract class Item extends AuditModel {
                    @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
                    @JsonProperty("soldOutQuantity") int soldOutQuantity) {
         this.id = id;
-        this.category = category;
         this.name = name;
         setCurrentQuantity(currentQuantity);
         setAvailableToBuyQuantity(availableToBuyQuantity);

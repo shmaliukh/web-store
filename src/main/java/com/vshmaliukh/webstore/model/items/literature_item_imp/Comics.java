@@ -26,7 +26,6 @@ public class Comics extends LiteratureItem {
 
     @JsonCreator
     public Comics(@JsonProperty("itemId") Integer id,
-                  @JsonProperty("category") String category,
                   @JsonProperty("name") String name,
                   @JsonProperty("currentQuantity") int currentQuantity,
                   @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,
@@ -38,7 +37,7 @@ public class Comics extends LiteratureItem {
                   @JsonProperty("soldOutQuantity") int soldOutQuantity,
                   @JsonProperty("pages") int pages,
                   @JsonProperty("publisher") String publisher) {
-        super(id, category, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
+        super(id, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
         this.publisher = publisher;
     }
 
@@ -64,7 +63,6 @@ public class Comics extends LiteratureItem {
     public String toString() {
         return "Comics{" +
                 "id=" + getId() +
-                ", category='" + getCategory() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", currentQuantity=" + getCurrentQuantity() +
                 ", availableToBuyQuantity=" + getAvailableToBuyQuantity() +

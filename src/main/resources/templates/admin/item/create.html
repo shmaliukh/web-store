@@ -27,23 +27,6 @@
                 <form id="formElem" class="needs-validation">
                     <div class="row g-3">
                         <div class="col-12">
-                            <label for="selectCategory" class="form-label">Category</label>
-                            <div class="input-group has-validation">
-                                <select id="selectCategory" name="category" class="form-select">
-                                    <option selected=""
-                                            th:text="${categoryName != null ? categoryName : 'Choose...'}"
-                                            th:value="${categoryName != null ? categoryName : ''}">
-                                    </option>
-                                    <script th:inline="javascript">
-                                        generateOptionUsingDataFromApi("selectCategory", "http://localhost:8082/category/names");
-                                    </script>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Item category is required.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
                             <label for="itemName" class="form-label">Item name</label>
                             <div class="input-group has-validation">
                                 <span class="input-group-text">@</span>

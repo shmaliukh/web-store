@@ -32,14 +32,13 @@ public class Newspaper extends LiteratureItem {
                      @JsonProperty("isAvailableInStore") boolean isAvailableInStore,
                      @JsonProperty("soldOutQuantity") int soldOutQuantity,
                      @JsonProperty("pages") int pages) {
-        super(id, category, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
+        super(id, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
     }
 
     @Override
     public String toString() {
         return "Newspaper{" +
                 "id=" + getId() +
-                ", category='" + getCategory() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", currentQuantity=" + getCurrentQuantity() +
                 ", availableToBuyQuantity=" + getAvailableToBuyQuantity() +

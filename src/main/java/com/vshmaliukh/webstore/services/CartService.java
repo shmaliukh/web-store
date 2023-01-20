@@ -23,7 +23,7 @@ public class CartService {
         List<Cart> carts = getCartsByUserId(userId);
         boolean found = false;
         for (Cart cart : carts) {
-            if (Objects.equals(cart.getItemId(), item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
+            if (Objects.equals(cart.getItemId(), item.getId())) {
                 cart.setItemQuantity(cart.getItemQuantity() + 1);
                 found = true;
                 break;
@@ -34,7 +34,6 @@ public class CartService {
             newCart.setUserId(userId);
             newCart.setItemId(item.getId());
             newCart.setItemQuantity(item.getCurrentQuantity());
-            newCart.setCategory(item.getCategory());
             cartRepository.save(newCart);
         } else {
             cartRepository.saveAll(carts);
@@ -44,7 +43,7 @@ public class CartService {
     public void removeItemFromCart(Item item, Long userId){
         List<Cart> carts = getCartsByUserId(userId);
         for (Cart cart : carts) {
-            if (Objects.equals(cart.getItemId(),item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
+            if (Objects.equals(cart.getItemId(),item.getId())) {
                 cartRepository.delete(cart);
                 break;
             }
@@ -54,7 +53,7 @@ public class CartService {
     public void decItemQuantityInCart(Item item, Long userId){
         List<Cart> carts = getCartsByUserId(userId);
         for (Cart cart : carts) {
-            if (Objects.equals(cart.getItemId(),item.getId())&&Objects.equals(cart.getCategory(),item.getCategory())) {
+            if (Objects.equals(cart.getItemId(),item.getId())) {
                 cart.setItemQuantity(cart.getItemQuantity()-1);
                 if(cart.getItemQuantity()==0){
                     cartRepository.delete(cart);

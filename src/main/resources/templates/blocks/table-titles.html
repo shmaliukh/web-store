@@ -21,7 +21,6 @@
 <th:block th:fragment="base-item-titles(itemType)">
     <th class="align-middle" scope="col">TYPE</th>
     <th class="align-middle" scope="col">ID</th>
-    <th class="align-middle" scope="col">CATEGORY</th>
     <th class="align-middle" scope="col">NAME</th>
     <th class="align-middle" scope="col">PRICE</th>
     <th class="align-middle" scope="col">QUANTITY</th>
@@ -55,7 +54,6 @@
     <th class="align-middle" scope="col">TYPE</th>
     <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('category','CATEGORY', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('costPrice','COST PRICE', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('salePrice','SALE PRICE', ${pageToRedirect})"></th>
@@ -68,7 +66,6 @@
     <th class="align-middle" scope="col">TYPE</th>
     <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('category','CATEGORY', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('costPrice','COST PRICE', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('salePrice','SALE PRICE', ${pageToRedirect})"></th>
@@ -83,7 +80,6 @@
     <th class="align-middle" scope="row">#</th>
     <th class="align-middle" scope="col">TYPE</th>
     <th th:replace="blocks/sorting :: sorting('id','ID', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('category','CATEGORY', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('costPrice','COST PRICE', ${pageToRedirect})"></th>
     <th th:replace="blocks/sorting :: sorting('salePrice','SALE PRICE', ${pageToRedirect})"></th>
