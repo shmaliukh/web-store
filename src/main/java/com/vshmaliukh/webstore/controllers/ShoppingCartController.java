@@ -32,16 +32,20 @@ public class ShoppingCartController {
     final CookieHandler cookieHandler = new CookieHandler();
 
     final ItemService itemService;
-    final UserService userService;
+
     final CartService cartService;
     final ItemRepositoryProvider itemRepositoryProvider;
+
+    final UserService userService;
     final UnauthorizedUserService unauthorizedUserService;
 
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
                                      HttpServletResponse response,
                                      @CookieValue(required = false, defaultValue = "0") Long userId) {
-                                     
+
+        // userId can be 0 if user authorized, or it can be a new user - then check authorization
+
         // todo add checking for user authorizing
 
         boolean authorization = false;
@@ -55,7 +59,14 @@ public class ShoppingCartController {
                         cookieHandler.createUserIdCookie(userId)
                 );
             }
+        } else {
+            if(userId!=0){
+                shoppingCartHandler.changeCartToAuthorized(
+                        cartService.getCartByUserId(userId,false),
+                        userService.getUserById(userId)); // todo check authorized user id
+            }
         }
+
         Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
         if(cart!=null) {
             List<CartItem> cartItems = cart.getItems();
@@ -65,6 +76,7 @@ public class ShoppingCartController {
             modelMap.addAttribute("totalItems", totalCount);
             modelMap.addAttribute("totalPrice", totalPrice);
         }
+
         return new ModelAndView("shopping-cart");
     }
 
