@@ -43,7 +43,7 @@
                                     <img class="cart-plus-minus-icon" src="/icons/plus-icon.png">
                                 </a>
                             </div>
-                            <span class="text-muted" th:text="'$' + ${item.getPrice()}">0</span>
+                            <span class="text-muted" th:text="'$' + ${item.getItem().getSalePrice()*item.getQuantity()}">0</span>
                         </div>
                     </li>
                 </th:block>
