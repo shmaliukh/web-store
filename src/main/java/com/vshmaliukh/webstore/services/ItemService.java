@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     @Getter
+    final ItemRepository itemRepository;
     final ItemRepositoryProvider itemRepositoryProvider;
     final ImageService imageService;
 

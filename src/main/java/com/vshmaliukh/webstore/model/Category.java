@@ -44,7 +44,7 @@ public class Category extends AuditModel {
     @ToString.Exclude
     private Image image;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "Category_Item",
             joinColumns = @JoinColumn(
                     name = "category_id",

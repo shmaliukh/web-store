@@ -4,6 +4,7 @@ import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import com.vshmaliukh.webstore.services.CategoryService;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.generateItemTableContentForCategoryDetails;
+import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.generateTableContentForCategoryView;
 
 @Slf4j
 @Controller
@@ -40,8 +42,9 @@ public class AdminCategoryController {
                                      @RequestParam(defaultValue = "id") String sortField,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
+        CategoryRepository categoryRepository = categoryService.getCategoryRepository();
         TableContentImp<Category> tableContentForCategoryView
-                = AdminControllerUtils.generateTableContentForCategoryView(keyword, page, size, sortField, sortDirection, categoryService.getCategoryRepository());
+                = generateTableContentForCategoryView(keyword, page, size, sortField, sortDirection, categoryRepository);
         List<Category> categoryList = tableContentForCategoryView.readContentList();
         ModelMap contentModelMap = tableContentForCategoryView.readContentModelMap();
 
@@ -99,15 +102,9 @@ public class AdminCategoryController {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
-
-            // TODO implement paging, sorting and find by keyword ability for 'items' tab ('details' template)
-            // @author  vshmaliukh
-            // @since   2022-01-19
-
-            ItemRepository allItemRepository = itemService.getItemRepositoryProvider().getAllItemRepository();
-
+            ItemRepository allItemRepository = itemService.getItemRepository();
             TableContentImp<Item> itemTableContent
-                    = generateItemTableContentForCategoryDetails(keyword, page, size, sortField, sortDirection, allItemRepository);
+                    = generateItemTableContentForCategoryDetails(keyword, page, size, sortField, sortDirection, allItemRepository, category);
             List<? extends Item> itemList = itemTableContent.readContentList();
             ModelMap contentModelMap = itemTableContent.readContentModelMap();
 

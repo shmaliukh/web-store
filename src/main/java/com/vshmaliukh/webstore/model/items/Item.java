@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.vshmaliukh.webstore.model.AuditModel;
+import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
@@ -13,11 +14,13 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
@@ -47,6 +50,9 @@ public abstract class Item extends AuditModel {
 
     //TODO remove 'category' field
     private String category;
+
+    @ManyToMany(mappedBy = "itemSet")
+    private Set<Category> categorySet;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -105,14 +111,12 @@ public abstract class Item extends AuditModel {
         if (getSalePrice() != item.getSalePrice()) return false;
         if (isAvailableInStore() != item.isAvailableInStore()) return false;
         if (getId() != null ? !getId().equals(item.getId()) : item.getId() != null) return false;
-        if (getCategory() != null ? !getCategory().equals(item.getCategory()) : item.getCategory() != null) return false;
         return getName() != null ? getName().equals(item.getName()) : item.getName() == null;
     }
 
     @Override
     public int hashCode() {
         int result = getId() != null ? getId().hashCode() : 0;
-        result = 31 * result + (getCategory() != null ? getCategory().hashCode() : 0);
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + getCurrentQuantity();
         result = 31 * result + getAvailableToBuyQuantity();
@@ -160,7 +164,6 @@ public abstract class Item extends AuditModel {
     public String toString() {
         return "Item{" +
                 "id=" + id +
-                ", category='" + category + '\'' +
                 ", name='" + name + '\'' +
                 ", currentQuantity=" + currentQuantity +
                 ", availableToBuyQuantity=" + availableToBuyQuantity +
