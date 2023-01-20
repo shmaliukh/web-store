@@ -6,6 +6,7 @@ import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ItemService {
 
+    @Getter
     final ItemRepositoryProvider itemRepositoryProvider;
     final ImageService imageService;
 
@@ -128,10 +130,6 @@ public class ItemService {
                         //The product is not available at the moment, but you’re accepting orders and it'll be shipped as soon as it becomes available again. You're required to provide the availability date [availability_date] attribute to indicate the day that the product becomes available for delivery.
                 )
         );
-    }
-
-    public boolean isTypeExists(String itemType) {
-        return itemRepositoryProvider.itemClassNameRepositoryMap.containsKey(itemType.toLowerCase());
     }
 
     public Set<String> typeNameSet() {

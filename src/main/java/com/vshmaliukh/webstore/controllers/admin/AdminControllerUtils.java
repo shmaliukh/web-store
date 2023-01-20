@@ -18,7 +18,8 @@ import java.util.List;
 
 public final class AdminControllerUtils {
 
-    private AdminControllerUtils() {}
+    private AdminControllerUtils() {
+    }
 
     public static TableContentImp<User> generateTableContentForUserView(String keyword, int page, int size,
                                                                         String sortField, String sortDirection,
@@ -82,6 +83,25 @@ public final class AdminControllerUtils {
 
             @Override
             public Page<T> formPageWithContentByKeyword(String keyword, Pageable pageable) {
+                return repository.findByNameContainingIgnoreCase(keyword, pageable);
+            }
+        };
+        return tableContent;
+    }
+
+    public static <T extends Item> TableContentImp<T> generateItemTableContentForCategoryDetails(String keyword, int page, int size,
+                                                                                                 String sortField, String sortDirection,
+                                                                                                 BaseItemRepository<T> repository) {
+        TableContentImp<T> tableContent = new TableContentImp<T>(keyword, page, size, sortField, sortDirection) {
+            @Override
+            public Page<T> formPageIfKeywordIsBlank(Pageable pageable) {
+                // TODO
+                return repository.findAll(pageable);
+            }
+
+            @Override
+            public Page<T> formPageWithContentByKeyword(String keyword, Pageable pageable) {
+                // TODO
                 return repository.findByNameContainingIgnoreCase(keyword, pageable);
             }
         };

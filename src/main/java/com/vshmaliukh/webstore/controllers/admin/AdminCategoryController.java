@@ -5,6 +5,7 @@ import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import com.vshmaliukh.webstore.services.CategoryService;
 import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
@@ -19,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.generateItemTableContentForCategoryDetails;
 
 @Slf4j
 @Controller
@@ -87,6 +90,11 @@ public class AdminCategoryController {
 
     @GetMapping("/{categoryId}/details")
     public ModelAndView doGetDetails(@PathVariable(name = "categoryId") Integer categoryId,
+                                     @RequestParam(required = false) String keyword,
+                                     @RequestParam(defaultValue = "1") int page,
+                                     @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
+                                     @RequestParam(defaultValue = "id") String sortField,
+                                     @RequestParam(defaultValue = "asc") String sortDirection,
                                      ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
@@ -96,6 +104,15 @@ public class AdminCategoryController {
             // @author  vshmaliukh
             // @since   2022-01-19
 
+            ItemRepository allItemRepository = itemService.getItemRepositoryProvider().getAllItemRepository();
+
+            TableContentImp<Item> itemTableContent
+                    = generateItemTableContentForCategoryDetails(keyword, page, size, sortField, sortDirection, allItemRepository);
+            List<? extends Item> itemList = itemTableContent.readContentList();
+            ModelMap contentModelMap = itemTableContent.readContentModelMap();
+
+            modelMap.addAllAttributes(contentModelMap);
+            modelMap.addAttribute("itemList", itemList);
             modelMap.addAttribute("category", category);
             return new ModelAndView("admin/category/details", modelMap);
         }
