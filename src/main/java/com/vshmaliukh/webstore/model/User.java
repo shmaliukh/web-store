@@ -19,13 +19,9 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
         uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
 public class User extends AuditModel {
 
-    @ToString.Exclude
-    private String password;
-    private boolean enabled;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = USER_NAME_COLUMN, nullable = false)
@@ -39,5 +35,10 @@ public class User extends AuditModel {
     private LogInProvider logInProvider;
 
     private String role;
+
+    @ToString.Exclude
+    private String password;
+
+    private boolean enabled;
 
 }

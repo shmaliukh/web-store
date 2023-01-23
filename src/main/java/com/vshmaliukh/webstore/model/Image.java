@@ -26,7 +26,7 @@ public class Image extends AuditModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "img_id", nullable = false)
+    @Column(name = "img_id")
     private Long id;
 
     private String name;

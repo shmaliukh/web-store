@@ -18,8 +18,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OrderItemService {
 
-    final ItemService itemService;
+    @Getter
     final OrderItemRepository orderItemRepository;
+    final ItemService itemService;
 
     public OrderItem formOrderItem(Integer quantity, Item item, Order order) {
         Optional<OrderItem> orderItemByItem = orderItemRepository.findOrderItemByItem(item);

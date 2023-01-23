@@ -1,9 +1,6 @@
 package com.vshmaliukh.webstore.model.items;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import com.vshmaliukh.webstore.model.AuditModel;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.ItemImage;
@@ -44,10 +41,11 @@ public abstract class Item extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id", nullable = false)
+    @Column(name = "item_id")
     private Integer id;
 
     @ManyToMany(mappedBy = "itemSet")
+    @JsonIgnore
     private Set<Category> categorySet;
 
     @Column(nullable = false, unique = true)
