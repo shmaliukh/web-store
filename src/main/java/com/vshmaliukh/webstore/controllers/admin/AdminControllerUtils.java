@@ -5,7 +5,9 @@ import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.model.items.OrderItem;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
+import com.vshmaliukh.webstore.repositories.OrderItemRepository;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -65,7 +67,7 @@ public final class AdminControllerUtils {
 
             @Override
             public Page<Order> formPageWithContentByKeyword(String keyword, Pageable pageable) {
-                return repository.findByStatusContainingIgnoreCase(keyword, pageable);
+                return repository.findAllByStatusContainingIgnoreCase(keyword, pageable);
             }
         };
     }
@@ -103,8 +105,25 @@ public final class AdminControllerUtils {
         };
     }
 
-    public static void addTableContentWithItems(String keyword,
-                                                int page, int size,
+    public static TableContentImp<OrderItem> generateOrderItemTableContentForOrderDetails(String keyword, int page, int size,
+                                                                                          String sortField, String sortDirection,
+                                                                                          OrderItemRepository repository,
+                                                                                          Order order) {
+        return new TableContentImp<OrderItem>(keyword, page, size, sortField, sortDirection) {
+            @Override
+            public Page<OrderItem> formPageIfKeywordIsBlank(Pageable pageable) {
+                return repository.findAllByOrder(order, pageable);
+            }
+
+            @Override
+            public Page<OrderItem> formPageWithContentByKeyword(String keyword, Pageable pageable) {
+                // TODO
+                return repository.findAllByOrder(order, pageable);
+            }
+        };
+    }
+
+    public static void addTableContentWithItems(String keyword, int page, int size,
                                                 String sortField, String sortDirection,
                                                 String itemType, ModelMap modelMap, BaseItemRepository itemRepository) {
         TableContentImp<? extends Item> tableContent

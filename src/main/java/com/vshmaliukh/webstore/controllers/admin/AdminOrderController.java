@@ -5,8 +5,10 @@ import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.OrderItem;
-import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;import com.vshmaliukh.webstore.repositories.OrderItemRepository;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import com.vshmaliukh.webstore.services.ItemService;
+import com.vshmaliukh.webstore.services.OrderItemService;
 import com.vshmaliukh.webstore.services.OrderService;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
@@ -19,16 +21,19 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 import java.util.Optional;
 
+import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.generateOrderItemTableContentForOrderDetails;
+
 @Slf4j
 @AllArgsConstructor
 @Controller
 @RequestMapping("/admin/order")
 public class AdminOrderController {
 
-    final ItemRepositoryProvider itemRepositoryProvider;
+    final UserService userService;
     final ItemService itemService;
     final OrderService orderService;
-    final UserService userService;
+    final OrderItemService orderItemService;
+    final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping("/**")
     public ModelAndView doGet(ModelMap modelMap) {
@@ -70,13 +75,23 @@ public class AdminOrderController {
 
     @GetMapping("/edit/{oderId}")
     public ModelAndView doGetEdit(@PathVariable(name = "oderId") Long orderId,
+                                  @RequestParam(required = false) String keyword,
+                                  @RequestParam(defaultValue = "1") int page,
+                                  @RequestParam(defaultValue = "5") int size,
+                                  @RequestParam(defaultValue = "id") String sortField,
+                                  @RequestParam(defaultValue = "asc") String sortDirection,
                                   ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
-            List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(orderId);
+            OrderItemRepository orderItemRepository = orderItemService.getOrderItemRepository();
+            TableContentImp<OrderItem> orderItemTableContent
+                    = generateOrderItemTableContentForOrderDetails(keyword, page, size, sortField, sortDirection, orderItemRepository, order);
+            List<OrderItem> orderItemList = orderItemTableContent.readContentList();
+            ModelMap contentModelMap = orderItemTableContent.readContentModelMap();
 
-            modelMap.addAttribute("orderItemList", orderItemList);
+            modelMap.addAllAttributes(contentModelMap);
             modelMap.addAttribute("order", order);
+            modelMap.addAttribute("orderItemList", orderItemList);
             modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);
             return new ModelAndView("/admin/order/edit", modelMap);
         }
@@ -87,16 +102,26 @@ public class AdminOrderController {
     public ModelAndView doPostEditOrder(@PathVariable(name = "oderId") Long orderId,
                                         @RequestParam(value = "status") String status,
                                         @RequestParam(value = "comment") String comment,
+                                        @RequestParam(required = false) String keyword,
+                                        @RequestParam(defaultValue = "1") int page,
+                                        @RequestParam(defaultValue = "5") int size,
+                                        @RequestParam(defaultValue = "id") String sortField,
+                                        @RequestParam(defaultValue = "asc") String sortDirection,
                                         ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
             order.setStatus(status);
             order.setComment(comment);
             orderService.saveOrder(order);
-        } else {
-            return new ModelAndView("redirect:/admin/catalog", modelMap);
+
+            modelMap.addAttribute("keyword", keyword);
+            modelMap.addAttribute("page", page);
+            modelMap.addAttribute("size", size);
+            modelMap.addAttribute("sortField", sortField);
+            modelMap.addAttribute("sortDirection", sortDirection);
+            return new ModelAndView("redirect:/admin/order/edit/" + orderId, modelMap);
         }
-        return new ModelAndView("redirect:/admin/order/edit/" + orderId, modelMap);
+        return new ModelAndView("redirect:/admin/catalog", modelMap);
     }
 
 
@@ -137,7 +162,8 @@ public class AdminOrderController {
                                      ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
-            AdminControllerUtils.addTableContentWithItems(keyword, page, size, sortField, sortDirection, "all", modelMap, itemRepositoryProvider.getAllItemRepository());
+            ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
+            AdminControllerUtils.addTableContentWithItems(keyword, page, size, sortField, sortDirection, "all", modelMap, allItemRepository);
             Integer totalOrderItems = orderService.calcTotalOrderItems(order);
 
             modelMap.addAttribute("order", order);

@@ -1,6 +1,5 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
-import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
