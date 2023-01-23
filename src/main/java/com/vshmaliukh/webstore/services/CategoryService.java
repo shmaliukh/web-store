@@ -120,4 +120,10 @@ public class CategoryService {
         log.info("removed '{}' item from '{}' category", item, category);
     }
 
+    public void deleteCategory(Category category) {
+        // TODO is it normal to set up category instance as deleted one
+        category.setDeleted(true);
+        save(category);
+        log.info("deleted category: '{}'", category);
+    }
 }

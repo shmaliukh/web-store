@@ -183,4 +183,15 @@ public class AdminCategoryController {
         return new ModelAndView("redirect:/admin/category/" + categoryId + "/details", modelMap);
     }
 
+    @DeleteMapping("/{categoryId}")
+    ResponseEntity<Void> doDelete(@PathVariable(name = "categoryId") Integer categoryId) {
+        Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            categoryService.deleteCategory(category);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
 }

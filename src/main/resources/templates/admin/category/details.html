@@ -118,6 +118,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="container">
+                    <button id="deleteButton" type="button" class="btn btn-outline-danger w-100">
+                        Delete
+                    </button>
+                    <script th:inline="javascript">
+                        let elementSd = 'deleteButton';
+                        document.getElementById(elementId).onclick = async (e) => {
+                            e.preventDefault();
+                            askToDelete(
+                                [[${'/admin/category/' + category.getId()}]],
+                                [[${'/admin/category/' + category.getId() + '/details'}]]
+                            );
+                        };
+                    </script>
+                </div>
             </div>
             <div class="tab-pane fade" id="nav-items" role="tabpanel" aria-labelledby="nav-items-tab" tabindex="0">
 
@@ -138,7 +153,8 @@
                 <div>
                     <div class="container">
                         <th:block
-                                th:insert="blocks/navigation :: tools('/admin/category/' + ${category.getId()} + '/details')"></th:block>
+                                th:insert="blocks/navigation :: tools('/admin/category/' + ${category.getId()} + '/details')">
+                        </th:block>
                     </div>
                     <th:block th:if="${category.getItemSet().size() > 0}">
                         <div class="table-responsive-md m-3">
@@ -147,7 +163,8 @@
                                 <thead>
                                 <tr class="table-dark">
                                     <th:block
-                                            th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/category/' + ${category.getId()} + '/details')"></th:block>
+                                            th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/category/' + ${category.getId()} + '/details')">
+                                    </th:block>
                                     <th class="align-middle" scope="col"></th>
                                     <th class="align-middle" scope="col"></th>
                                 </tr>
