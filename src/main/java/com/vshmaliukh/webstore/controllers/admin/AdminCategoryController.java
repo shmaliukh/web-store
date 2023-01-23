@@ -73,7 +73,7 @@ public class AdminCategoryController {
     @PostMapping("/{categoryId}/image")
     public ModelAndView doPostSaveImage(@PathVariable(name = "categoryId") Integer categoryId,
                                         @RequestParam(name = "imageFile") MultipartFile imageFile,
-                                        @RequestParam(name = "imageId", defaultValue = "null") Long imageId,
+                                        @RequestParam(name = "imageId", required = false) Long imageId,
                                         ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {

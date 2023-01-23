@@ -30,16 +30,18 @@ public class ImageService {
 
     public Optional<Image> buildImageFromFile(MultipartFile file) {
         try {
-            String filename = file.getOriginalFilename();
-            String fileContentType = file.getContentType();
-            byte[] compressedImage = file.getBytes();
+            if (!file.isEmpty()) {
+                String filename = file.getOriginalFilename();
+                String fileContentType = file.getContentType();
+                byte[] compressedImage = file.getBytes();
 
-            Image image = new Image();
-            image.setName(filename);
-            image.setType(fileContentType);
-            image.setImageData(compressedImage);
+                Image image = new Image();
+                image.setName(filename);
+                image.setType(fileContentType);
+                image.setImageData(compressedImage);
 
-            return Optional.of(image);
+                return Optional.of(image);
+            }
         } catch (IOException ioe) {
             log.error(ioe.getMessage(), ioe);
         }
