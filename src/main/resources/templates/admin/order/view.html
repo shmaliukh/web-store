@@ -17,7 +17,7 @@
     <div th:insert="blocks/order/menu :: view-addition-menu(${order.getId()})"></div>
 </div>
 
-<div class="album py-5 bg-light text-center">
+<div class="album py-3 bg-light text-center">
 
     <div class="container">
         <p class="lead" th:text="|${order.getUser().getUsername()} order info|"></p>
@@ -93,9 +93,6 @@
                         </td>
                         <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
                             th:text="${orderItem.getUpdatedAt()}">Date
-                        </td>
-                        <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
-                            th:text="${orderItem.getItem().getCategory()}">Category
                         </td>
                         <td th:class="${orderItem.isActive()} ? 'align-middle' : 'text-muted align-middle'"
                             th:text="${orderItem.getItem().getName()}">Name
