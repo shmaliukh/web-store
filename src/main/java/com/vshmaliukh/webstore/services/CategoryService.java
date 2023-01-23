@@ -6,12 +6,12 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,13 +19,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@NoArgsConstructor
 @AllArgsConstructor
 public class CategoryService {
 
-    final ImageService imageService;
+    ImageService imageService;
 
     @Getter
-    final CategoryRepository categoryRepository;
+    CategoryRepository categoryRepository;
 
     public List<Category> readAll() {
         return categoryRepository.findAll();
