@@ -26,8 +26,8 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 public class Order extends AuditModel {
 
     @Id
-    @Column(name = ORDER_ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -15,8 +15,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name = USER_TABLE,
-        uniqueConstraints = {@UniqueConstraint(columnNames = {USER_NAME_COLUMN})})
+@Table(name = "Users")
 public class User extends AuditModel {
 
     @Id
@@ -24,14 +23,14 @@ public class User extends AuditModel {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = USER_NAME_COLUMN, nullable = false)
+    @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = USER_EMAIL_COLUMN)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = USER_LOG_IN_PROVIDER)
+    @Column(name = "log_in_provider")
     private LogInProvider logInProvider;
 
     private String role;
