@@ -7,6 +7,7 @@ import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Setter
 @Service
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,10 +46,7 @@ public class CategoryService {
 
     public Category buildBaseCategory(String name,
                                       String description) {
-        Category category = new Category();
-        category.setName(name);
-        category.setDescription(description);
-        return category;
+        return new Category(name, description);
     }
 
     public Category getUpdatedOrCreateBaseCategory(Integer id,

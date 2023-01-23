@@ -55,4 +55,10 @@ public class Category extends AuditModel {
     @ToString.Exclude
     private Set<Item> itemSet;
 
+
+    public Category(String name, String description) {
+        setName(name);
+        setDescription(description);
+    }
+
 }
