@@ -72,11 +72,35 @@ class CategoryServiceTest {
         );
     }
 
-    @Test
+    @ParameterizedTest
     @MethodSource("providedArgs_buildBaseCategoryTest")
     void buildBaseCategoryTest(String name, String description, Category expectedCategory) {
         Category actualCategory = categoryService.buildBaseCategory(name, description);
         assertEquals(expectedCategory, actualCategory);
+    }
+
+    private static Stream<Arguments> providedArgs_readCategoryNameListTest() {
+        return Stream.of(
+                Arguments.of(Arrays.asList(category, category2, category3), Arrays.asList(category.getName(), category2.getName(), category3.getName())),
+                Arguments.of(Arrays.asList(category, category, category), Arrays.asList(category.getName(), category.getName(), category.getName())),
+                Arguments.of(Arrays.asList(null, category), Collections.singletonList(category.getName())),
+                Arguments.of(Arrays.asList(category, null), Collections.singletonList(category.getName())),
+                Arguments.of(Collections.singletonList(category), Collections.singletonList(category.getName())),
+                Arguments.of(Collections.singletonList(category2), Collections.singletonList(category2.getName())),
+                Arguments.of(Collections.singletonList(null), Collections.emptyList()),
+                Arguments.of(Collections.emptyList(), Collections.emptyList())
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readCategoryNameListTest")
+    void readCategoryNameListTest(List<Category> categoryList, List<String> expected) {
+        Mockito
+                .when(categoryRepository.findAll())
+                .thenReturn(categoryList);
+        List<String> actual = categoryService.readCategoryNameList();
+        assertNotNull(actual);
+        assertEquals(expected, actual);
     }
 
     @Test

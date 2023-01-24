@@ -13,9 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,9 +37,12 @@ public class CategoryService {
     }
 
     public List<String> readCategoryNameList() {
-        return readAll().stream()
-                .map(Category::getName)
-                .collect(Collectors.toList());
+        return Collections.unmodifiableList(
+                readAll().stream()
+                        .filter(Objects::nonNull)
+                        .map(Category::getName)
+                        .collect(Collectors.toList())
+        );
     }
 
     public Category buildBaseCategory(String name,
