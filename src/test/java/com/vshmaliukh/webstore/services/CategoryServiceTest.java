@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.Category;
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
@@ -289,6 +290,38 @@ class CategoryServiceTest {
         assertNotNull(category);
         assertNotNull(categoryItemSet);
         assertEquals(expectedItemSetSize, categoryItemSet.size());
+    }
+
+
+    public static Stream<Arguments> providedArgs_addImageToCategoryTest() {
+        byte[] imageData = new byte[]{};
+        Image image = new Image(null, "some image name", "some type", imageData);
+        Image image2 = new Image(9L, "some image name2", "some type2", imageData);
+        Image image3 = new Image(null, "some image name3", "some type3", imageData);
+        Image image4 = new Image(null, null, null, null);
+        return Stream.of(
+                Arguments.of(null, Optional.of(new Image()), category),
+                Arguments.of(null, Optional.of(new Image()), category2),
+                Arguments.of(new Long(1), Optional.of(new Image()), category3),
+                Arguments.of(2L, Optional.of(image), category),
+                Arguments.of(3L, Optional.of(new Image()), category2),
+                Arguments.of(4L, Optional.of(new Image()), category3),
+                Arguments.of(5L, Optional.of(image), category),
+                Arguments.of(6L, Optional.of(image2), category2),
+                Arguments.of(7L, Optional.of(image3), category3),
+                Arguments.of(8L, Optional.of(image4), category2),
+                Arguments.of(null, Optional.of(image4), category3)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_addImageToCategoryTest")
+    void addImageToCategoryTest(Long imageId, Optional<Image> optionalImage, Category category) {
+        categoryService.addImageToCategory(imageId, optionalImage, category);
+
+        assertTrue(optionalImage.isPresent());
+        assertNotNull(category.getImage());
+        assertEquals(category.getImage(), optionalImage.get());
     }
 
     @Test
