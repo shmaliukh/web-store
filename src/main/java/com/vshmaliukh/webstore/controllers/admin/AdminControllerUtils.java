@@ -13,9 +13,11 @@ import com.vshmaliukh.webstore.repositories.UserRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.ModelMap;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -112,13 +114,15 @@ public final class AdminControllerUtils {
         return new TableContentImp<OrderItem>(keyword, page, size, sortField, sortDirection) {
             @Override
             public Page<OrderItem> formPageIfKeywordIsBlank(Pageable pageable) {
-                return repository.findAllByOrder(order, pageable);
+                return new PageImpl<>(Collections.emptyList());
+//                return repository.findAllByOrder(order, pageable);
             }
 
             @Override
             public Page<OrderItem> formPageWithContentByKeyword(String keyword, Pageable pageable) {
                 // TODO
-                return repository.findAllByOrder(order, pageable);
+                return new PageImpl<>(Collections.emptyList());
+//                return repository.findAllByOrder(order, pageable);
             }
         };
     }

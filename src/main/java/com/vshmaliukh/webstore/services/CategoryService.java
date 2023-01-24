@@ -19,14 +19,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Setter
 @Service
-@NoArgsConstructor
 @AllArgsConstructor
 public class CategoryService {
 
-    protected ImageService imageService;
+    protected final ImageService imageService;
 
     @Getter
-    protected CategoryRepository categoryRepository;
+    protected final CategoryRepository categoryRepository;
 
     public List<Category> readAll() {
         return categoryRepository.findAll();
