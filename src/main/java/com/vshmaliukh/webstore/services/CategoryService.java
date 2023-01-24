@@ -105,8 +105,7 @@ public class CategoryService {
         }
     }
 
-    public ResponseEntity<Void> deleteImageByCategoryId(Integer categoryId) {
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+    public ResponseEntity<Void> deleteImageByCategory(Optional<Category> optionalCategory) {
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
             category.setImage(null);
@@ -114,7 +113,7 @@ public class CategoryService {
             log.info("deleted '{}' category image", category);
             return ResponseEntity.ok().build();
         }
-        log.warn("problem to delete category (with '{}' id) image", categoryId);
+        log.warn("problem to delete category image // category not found");
         return ResponseEntity.badRequest().build();
     }
 

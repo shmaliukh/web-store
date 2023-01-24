@@ -324,9 +324,31 @@ class CategoryServiceTest {
         assertEquals(category.getImage(), optionalImage.get());
     }
 
-    @Test
-    @Disabled("Not implemented yet")
-    void readAll() {
+    public static Stream<Arguments> providedArgs_deleteImageByCategory() {
+        byte[] imageData = new byte[]{};
+        Image image = new Image(null, "some image name", "some type", new byte[]{});
+        Image image2 = new Image(2L, "some image name2", "some type2", new byte[]{});
+        Image image3 = new Image(null, null, null, imageData);
+
+        Category categoryWithImage = new Category(1, "some category name", "some description", false, true, image, Collections.EMPTY_SET);
+        Category categoryWithImage2 = new Category(2, "some category name2", "some description2", false, true, image2, Collections.EMPTY_SET);
+        Category categoryWithImage3 = new Category(3, "some category name3", "some description3", true, true, image3, Collections.EMPTY_SET);
+        Category categoryWithOutImage = new Category(4, "some category name4", "some description4", false, true, null, Collections.EMPTY_SET);
+        return Stream.of(
+                Arguments.of(image, categoryWithImage),
+                Arguments.of(image2, categoryWithImage2),
+                Arguments.of(image3, categoryWithImage3),
+                Arguments.of(image, categoryWithOutImage)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_deleteImageByCategory")
+    void deleteImageByCategoryTest(Image image, Category category) {
+        categoryService.deleteImageByCategory(Optional.ofNullable(category));
+
+        assertNull(category.getImage());
+        assertNotSame(category.getImage(), image);
     }
 
 }

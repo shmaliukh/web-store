@@ -89,7 +89,8 @@ public class AdminCategoryController {
 
     @DeleteMapping("/{categoryId}/image")
     public ResponseEntity<Void> doDeleteImage(@PathVariable(name = "categoryId") Integer categoryId) {
-        return categoryService.deleteImageByCategoryId(categoryId);
+        Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
+        return categoryService.deleteImageByCategory(optionalCategory);
     }
 
     @GetMapping("/{categoryId}/details")
