@@ -23,9 +23,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class CategoryServiceTest {
 
-    static Category category = new Category(1, "some category name", "some description", false, true, null, Collections.EMPTY_SET);
-    static Category category2 = new Category(2, "some category name2", "some description2", false, true, null, Collections.EMPTY_SET);
-    static Category category3 = new Category(3, "some category name3", "some description3", true, true, null, Collections.EMPTY_SET);
+    static final Category category = new Category(1, "some category name", "some description", false, true, null, Collections.EMPTY_SET);
+    static final Category category2 = new Category(2, "some category name2", "some description2", false, true, null, Collections.EMPTY_SET);
+    static final Category category3 = new Category(3, "some category name3", "some description3", true, true, null, Collections.EMPTY_SET);
 
     @MockBean
     CategoryRepository categoryRepository;
@@ -104,7 +104,9 @@ class CategoryServiceTest {
     @ParameterizedTest
     @MethodSource("providedArgs_updateCategoryTest_failToUpdate")
     void updateCategoryTest_failToUpdate(String name, String description, Boolean isDeleted, Boolean isActivated, Category categoryToUpdate) {
-        Optional<Category> optionalCategory = categoryService.updateCategory(name, description, isDeleted, isActivated, categoryToUpdate);
+        Optional<Category> optionalCategory
+                = categoryService.updateCategory(name, description, isDeleted, isActivated, categoryToUpdate);
+
         assertNotNull(optionalCategory);
         assertFalse(optionalCategory.isPresent());
     }
@@ -123,10 +125,54 @@ class CategoryServiceTest {
     @ParameterizedTest
     @MethodSource("providedArgs_updateCategoryTest")
     void updateCategoryTest_failToUpdate(String name, String description, Boolean isDeleted, Boolean isActivated, Category categoryToUpdate, Category expected) {
-        Optional<Category> optionalCategory = categoryService.updateCategory(name, description, isDeleted, isActivated, categoryToUpdate);
+        Optional<Category> optionalCategory
+                = categoryService.updateCategory(name, description, isDeleted, isActivated, categoryToUpdate);
+
         assertNotNull(optionalCategory);
         assertTrue(optionalCategory.isPresent());
         assertEquals(expected, optionalCategory.get());
+    }
+
+    private static Stream<Arguments> providedArgs_readCategoryByIdTest_failToFind() {
+        return Stream.of(
+                Arguments.of((Object) null),
+                Arguments.of(0),
+                Arguments.of(-1)
+                );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readCategoryByIdTest_failToFind")
+    void readCategoryByIdTest_failToFind(Integer id){
+        Mockito
+                .when(categoryRepository.findById(id))
+                .thenReturn(Optional.empty());
+        Optional<Category> optionalCategory = categoryService.readCategoryById(id);
+
+        assertNotNull(optionalCategory);
+        assertFalse(optionalCategory.isPresent());
+    }
+
+    private static Stream<Arguments> providedArgs_readCategoryByIdTest() {
+        return Stream.of(
+                Arguments.of(1, Optional.of(category)),
+                Arguments.of(2, Optional.of(category2)),
+                Arguments.of(3, Optional.of(category3)),
+                Arguments.of(new Integer(4), Optional.of(category3)),
+                Arguments.of(5, Optional.empty())
+                );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readCategoryByIdTest")
+    void readCategoryByIdTest(Integer id, Optional<Category> optionalCategoryToFind){
+        Mockito
+                .when(categoryRepository.findById(id))
+                .thenReturn(optionalCategoryToFind);
+        Optional<Category> optionalCategory = categoryService.readCategoryById(id);
+
+        assertNotNull(optionalCategory);
+        assertEquals(optionalCategoryToFind, optionalCategory);
     }
 
     @Test

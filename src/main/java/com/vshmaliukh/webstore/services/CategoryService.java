@@ -74,20 +74,21 @@ public class CategoryService {
             category.setDeleted(isDeleted);
             return Optional.of(category);
         }
-        log.warn("problem to update category "
-                + (StringUtils.isNotBlank(name) ? "// name is blank " : "")
-                + (StringUtils.isNotBlank(description) ? "// description is blank " : "")
-                + (isDeleted == null ? "// isDeleted is NULL " : "")
-                + (isActivated == null ? "// isActivated is NULL " : "")
-                + (category == null ? "// category is NULL " : ""));
+        log.warn("problem to update category"
+                + (StringUtils.isNotBlank(name) ? " // name is blank" : "")
+                + (StringUtils.isNotBlank(description) ? " // description is blank" : "")
+                + (isDeleted == null ? " // isDeleted is NULL" : "")
+                + (isActivated == null ? " // isActivated is NULL" : "")
+                + (category == null ? " // category is NULL" : ""));
         return Optional.empty();
     }
 
     public Optional<Category> readCategoryById(Integer categoryId) {
-        if (categoryId != null) {
+        if (categoryId != null && categoryId > 0) {
             return categoryRepository.findById(categoryId);
         }
-        log.warn("problem to read category by id // id is NULL");
+        log.warn("problem to read category by id "
+                + (categoryId == null ? " // categoryId is NULL" : " // categoryId must be greater than 0"));
         return Optional.empty();
     }
 
