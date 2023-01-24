@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,10 +24,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CategoryService {
 
-    ImageService imageService;
+    protected ImageService imageService;
 
     @Getter
-    CategoryRepository categoryRepository;
+    protected CategoryRepository categoryRepository;
 
     public List<Category> readAll() {
         return categoryRepository.findAll();
@@ -45,39 +46,49 @@ public class CategoryService {
         );
     }
 
-    public Category buildBaseCategory(String name,
-                                      String description) {
+    public Category getUpdatedOrCreateBaseCategory(Integer id,
+                                                   String name, String description,
+                                                   boolean isDeleted, boolean isActivated) {
+        Optional<Category> optionalCategory = readCategoryById(id);
+        if (optionalCategory.isPresent()) {
+            Optional<Category> updatedCategory
+                    = updateCategory(name, description, isDeleted, isActivated, optionalCategory.get());
+            if (updatedCategory.isPresent()) {
+                return updatedCategory.get();
+            }
+        }
         return new Category(name, description);
     }
 
-    public Category getUpdatedOrCreateBaseCategory(Integer id,
-                                                   String name,
-                                                   String description,
-                                                   boolean isDeleted,
-                                                   boolean isActivated) {
-        if (id != null) {
-            Optional<Category> optionalCategory = readCategoryById(id);
-            if (optionalCategory.isPresent()) {
-                return getUpdatedCategory(name, description, isDeleted, isActivated, optionalCategory.get());
-            }
+    public Optional<Category> updateCategory(String name, String description,
+                                             Boolean isDeleted, Boolean isActivated,
+                                             Category category) {
+        if (StringUtils.isNotBlank(name)
+                && StringUtils.isNotBlank(description)
+                && isDeleted != null
+                && isActivated != null
+                && category != null) {
+            category.setName(name);
+            category.setDescription(description);
+            category.setActivated(isActivated);
+            category.setDeleted(isDeleted);
+            return Optional.of(category);
         }
-        return buildBaseCategory(name, description);
-    }
-
-    public Category getUpdatedCategory(String name,
-                                       String description,
-                                       boolean isDeleted,
-                                       boolean isActivated,
-                                       Category category) {
-        category.setName(name);
-        category.setDescription(description);
-        category.setActivated(isActivated);
-        category.setDeleted(isDeleted);
-        return category;
+        log.warn("problem to update category "
+                + (StringUtils.isNotBlank(name) ? "// name is blank " : "")
+                + (StringUtils.isNotBlank(description) ? "// description is blank " : "")
+                + (isDeleted == null ? "// isDeleted is NULL " : "")
+                + (isActivated == null ? "// isActivated is NULL " : "")
+                + (category == null ? "// category is NULL " : ""));
+        return Optional.empty();
     }
 
     public Optional<Category> readCategoryById(Integer categoryId) {
-        return categoryRepository.findById(categoryId);
+        if (categoryId != null) {
+            return categoryRepository.findById(categoryId);
+        }
+        log.warn("problem to read category by id // id is NULL");
+        return Optional.empty();
     }
 
     public void addImageToCategory(Long imageId, MultipartFile imageFile, Category category) {
@@ -127,4 +138,5 @@ public class CategoryService {
         save(category);
         log.info("deleted category: '{}'", category);
     }
+
 }

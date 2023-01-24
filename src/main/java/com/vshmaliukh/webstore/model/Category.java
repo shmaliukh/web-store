@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -59,6 +60,19 @@ public class Category extends AuditModel {
     public Category(String name, String description) {
         setName(name);
         setDescription(description);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return isDeleted == category.isDeleted && isActivated == category.isActivated && Objects.equals(id, category.id) && name.equals(category.name) && Objects.equals(description, category.description) && Objects.equals(image, category.image) && Objects.equals(itemSet, category.itemSet);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, isDeleted, isActivated, image, itemSet);
     }
 
 }
