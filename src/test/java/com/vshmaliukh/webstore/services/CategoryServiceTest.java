@@ -351,4 +351,24 @@ class CategoryServiceTest {
         assertNotSame(category.getImage(), image);
     }
 
+    public static Stream<Arguments> providedArgs_deleteCategoryTest() {
+        return Stream.of(
+                Arguments.of(category),
+                Arguments.of(category2),
+                Arguments.of(category3),
+                Arguments.of(categoryWithOneBook),
+                Arguments.of(categoryWithOneMagazine),
+                Arguments.of(categoryWithNewspaperAndComics)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_deleteCategoryTest")
+    // TODO is need to refactor original 'deleteCategory' method ?
+    void deleteCategoryTest(Category category) {
+        categoryService.deleteCategory(category);
+
+        assertTrue(category.isDeleted());
+    }
+
 }

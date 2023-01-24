@@ -101,7 +101,7 @@ public class CategoryService {
         } else {
             log.warn("problem to add image to '{}' category"
                     + (optionalImage.isPresent() ? " // image is not present" : "")
-                    + (category == null ? " // category is NULL" : "") , category);
+                    + (category == null ? " // category is NULL" : ""), category);
         }
     }
 
@@ -141,8 +141,8 @@ public class CategoryService {
                 categoryRepository.save(category);
                 log.info(" item '{}' removed from category '{}'", item, category);
             } else {
-                log.warn("problem to remove item from category" +
-                        " // '{}' category does not contain '{}' item", category, item);
+                log.warn("problem to remove item from category"
+                        + " // '{}' category does not contain '{}' item", category, item);
             }
         } else {
             log.warn("problem to remove item from category"
@@ -151,10 +151,15 @@ public class CategoryService {
     }
 
     public void deleteCategory(Category category) {
-        // TODO is it normal to set up category instance as deleted one
-        category.setDeleted(true);
-        save(category);
-        log.info("deleted category: '{}'", category);
+        // TODO is it normal to set up category instance state as deleted one
+        if (category != null && !category.isDeleted()) {
+            category.setDeleted(true);
+            save(category);
+            log.info("deleted category: '{}'", category);
+        } else {
+            log.warn("problem to delete category"
+                    + (category == null ? " // category is NULL" : "category already deleted"));
+        }
     }
 
 }
