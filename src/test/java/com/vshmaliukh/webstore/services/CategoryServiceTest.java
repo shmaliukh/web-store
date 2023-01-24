@@ -131,7 +131,7 @@ class CategoryServiceTest {
                         new Category(category.getId(), category3.getName(), category3.getDescription(), category3.isDeleted(), category3.isActivated(), null, Collections.EMPTY_SET)),
                 Arguments.of("some name", category3.getDescription(), category2.isDeleted(), category.isActivated(), category2,
                         new Category(category2.getId(), "some name", category3.getDescription(), category2.isDeleted(), category.isActivated(), null, Collections.EMPTY_SET))
-                );
+        );
     }
 
     @ParameterizedTest
@@ -142,6 +142,7 @@ class CategoryServiceTest {
 
         assertNotNull(optionalCategory);
         assertTrue(optionalCategory.isPresent());
+//        FIXME
         assertEquals(expected, optionalCategory.get());
     }
 
@@ -150,12 +151,12 @@ class CategoryServiceTest {
                 Arguments.of((Object) null),
                 Arguments.of(0),
                 Arguments.of(-1)
-                );
+        );
     }
 
     @ParameterizedTest
     @MethodSource("providedArgs_readCategoryByIdTest_failToFind")
-    void readCategoryByIdTest_failToFind(Integer id){
+    void readCategoryByIdTest_failToFind(Integer id) {
         Mockito
                 .when(categoryRepository.findById(id))
                 .thenReturn(Optional.empty());
@@ -172,12 +173,12 @@ class CategoryServiceTest {
                 Arguments.of(3, Optional.of(category3)),
                 Arguments.of(new Integer(4), Optional.of(category3)),
                 Arguments.of(5, Optional.empty())
-                );
+        );
     }
 
     @ParameterizedTest
     @MethodSource("providedArgs_readCategoryByIdTest")
-    void readCategoryByIdTest(Integer id, Optional<Category> optionalCategoryToFind){
+    void readCategoryByIdTest(Integer id, Optional<Category> optionalCategoryToFind) {
         Mockito
                 .when(categoryRepository.findById(id))
                 .thenReturn(optionalCategoryToFind);
@@ -209,7 +210,7 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_addItemToCategoryTest")
-    void addItemToCategoryTest(Item item, Category category){
+    void addItemToCategoryTest(Item item, Category category) {
         int oldItemSetSize = category.getItemSet().size();
         categoryService.addItemToCategory(item, category);
         Set<Item> categoryItemSet = category.getItemSet();
@@ -231,7 +232,7 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_addItemToCategoryTest_ifContainsItem")
-    void addItemToCategoryTest_ifContainsItem(Item item, Category category){
+    void addItemToCategoryTest_ifContainsItem(Item item, Category category) {
         int oldItemSetSize = category.getItemSet().size();
         categoryService.addItemToCategory(item, category);
         Set<Item> categoryItemSet = category.getItemSet();
@@ -252,7 +253,7 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_addItemToCategoryTest_withoutChangingItemSet")
-    void addItemToCategoryTest_withoutChangingItemSet(Item item, Category category){
+    void addItemToCategoryTest_withoutChangingItemSet(Item item, Category category) {
         int oldItemSetSize = category.getItemSet().size();
         categoryService.addItemToCategory(item, category);
         Set<Item> categoryItemSet = category.getItemSet();
@@ -281,7 +282,7 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_removeItemFromCategoryTest")
-    void removeItemFromCategoryTest(Item item, Category category, int expectedItemSetSize){
+    void removeItemFromCategoryTest(Item item, Category category, int expectedItemSetSize) {
         categoryService.removeItemFromCategory(item, category);
         Set<Item> categoryItemSet = category.getItemSet();
 
