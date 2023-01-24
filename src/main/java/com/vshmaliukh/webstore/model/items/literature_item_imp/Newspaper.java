@@ -21,7 +21,6 @@ public class Newspaper extends LiteratureItem {
 
     @JsonCreator
     public Newspaper(@JsonProperty("itemId") Integer id,
-                     @JsonProperty("category") String category,
                      @JsonProperty("name") String name,
                      @JsonProperty("currentQuantity") int currentQuantity,
                      @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,

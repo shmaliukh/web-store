@@ -2,6 +2,11 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Image;
+import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +28,15 @@ class CategoryServiceTest {
     static final Category category = new Category(1, "some category name", "some description", false, true, null, Collections.EMPTY_SET);
     static final Category category2 = new Category(2, "some category name2", "some description2", false, true, null, Collections.EMPTY_SET);
     static final Category category3 = new Category(3, "some category name3", "some description3", true, true, null, Collections.EMPTY_SET);
+
+    static final Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+    static final Magazine magazine = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
+    static final Newspaper newspaper = new Newspaper(3, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
+    static final Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
+
+    static final Category categoryWithOneBook = new Category(1, "some category name1", "some description1", true, true, null, Collections.singleton(book));
+    static final Category categoryWithOneMagazine = new Category(2, "some category name2", "some description2", true, true, null, Collections.singleton(magazine));
+    static final Category categoryWithNewspaperAndComics = new Category(3, "some category name3", "some description3", true, true, null, new HashSet<>(Arrays.asList(newspaper, comics)));
 
     @MockBean
     CategoryRepository categoryRepository;
@@ -173,6 +184,81 @@ class CategoryServiceTest {
 
         assertNotNull(optionalCategory);
         assertEquals(optionalCategoryToFind, optionalCategory);
+    }
+
+    private static Stream<Arguments> providedArgs_addItemToCategoryTest() {
+        return Stream.of(
+                Arguments.of(book, category),
+                Arguments.of(magazine, category),
+                Arguments.of(newspaper, category),
+                Arguments.of(comics, category),
+                Arguments.of(book, category2),
+                Arguments.of(magazine, category2),
+                Arguments.of(newspaper, category2),
+                Arguments.of(newspaper, categoryWithOneBook),
+                Arguments.of(magazine, categoryWithOneBook),
+                Arguments.of(comics, categoryWithOneBook),
+                Arguments.of(newspaper, categoryWithOneMagazine),
+                Arguments.of(book, categoryWithOneMagazine),
+                Arguments.of(comics, categoryWithOneMagazine),
+                Arguments.of(book, categoryWithNewspaperAndComics),
+                Arguments.of(magazine, categoryWithNewspaperAndComics)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_addItemToCategoryTest")
+    void addItemToCategoryTest(Item item, Category category){
+        int oldItemSetSize = category.getItemSet().size();
+        categoryService.addItemToCategory(item, category);
+        Set<Item> categoryItemSet = category.getItemSet();
+
+        assertNotNull(category);
+        assertNotNull(categoryItemSet);
+        assertTrue(categoryItemSet.contains(item));
+        assertEquals(oldItemSetSize + 1, categoryItemSet.size());
+    }
+
+    private static Stream<Arguments> providedArgs_addItemToCategoryTest_ifContainsItem() {
+        return Stream.of(
+                Arguments.of(book, categoryWithOneBook),
+                Arguments.of(magazine, categoryWithOneMagazine),
+                Arguments.of(newspaper, categoryWithNewspaperAndComics),
+                Arguments.of(comics, categoryWithNewspaperAndComics)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_addItemToCategoryTest_ifContainsItem")
+    void addItemToCategoryTest_ifContainsItem(Item item, Category category){
+        int oldItemSetSize = category.getItemSet().size();
+        categoryService.addItemToCategory(item, category);
+        Set<Item> categoryItemSet = category.getItemSet();
+
+        assertNotNull(category);
+        assertNotNull(categoryItemSet);
+        assertTrue(categoryItemSet.contains(item));
+        assertEquals(oldItemSetSize, categoryItemSet.size());
+    }
+
+    private static Stream<Arguments> providedArgs_addItemToCategoryTest_withoutChangingItemSet() {
+        return Stream.of(
+                Arguments.of(null, category),
+                Arguments.of(null, category2),
+                Arguments.of(null, categoryWithOneBook)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_addItemToCategoryTest_withoutChangingItemSet")
+    void addItemToCategoryTest_withoutChangingItemSet(Item item, Category category){
+        int oldItemSetSize = category.getItemSet().size();
+        categoryService.addItemToCategory(item, category);
+        Set<Item> categoryItemSet = category.getItemSet();
+
+        assertNotNull(category);
+        assertNotNull(categoryItemSet);
+        assertEquals(oldItemSetSize, categoryItemSet.size());
     }
 
     @Test

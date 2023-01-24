@@ -34,6 +34,7 @@ public class CategoryService {
     }
 
     public void save(Category category) {
+        // TODO is necessary to create test for this method ?
         categoryRepository.save(category);
     }
 
@@ -118,11 +119,17 @@ public class CategoryService {
     }
 
     public void addItemToCategory(Item item, Category category) {
-        Set<Item> categoryItemSet = category.getItemSet();
-        categoryItemSet.add(item);
-        category.setItemSet(categoryItemSet);
-        categoryRepository.save(category);
-        log.info("added '{}' item to '{}' category", item, category);
+        if (item != null && category != null) {
+            Set<Item> categoryItemSet = category.getItemSet();
+            HashSet<Item> itemHashSetToAdd = new HashSet<>(categoryItemSet);
+            itemHashSetToAdd.add(item);
+            category.setItemSet(itemHashSetToAdd);
+            categoryRepository.save(category);
+            log.info("item '{}' added to category '{}'", item, category);
+        } else {
+            log.warn("problem to add item to category"
+                    + (item == null ? " // item is NULL" : " // category is NULL"));
+        }
     }
 
     public void removeItemFromCategory(Item item, Category category) {
@@ -130,7 +137,7 @@ public class CategoryService {
         categoryItemSet.remove(item);
         category.setItemSet(categoryItemSet);
         categoryRepository.save(category);
-        log.info("removed '{}' item from '{}' category", item, category);
+        log.info(" item '{}' removed from category '{}'", item, category);
     }
 
     public void deleteCategory(Category category) {
