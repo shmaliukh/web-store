@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -93,15 +92,16 @@ public class CategoryService {
         return Optional.empty();
     }
 
-    public void addImageToCategory(Long imageId, MultipartFile imageFile, Category category) {
-        Optional<Image> optionalImage = imageService.buildImageFromFile(imageFile);
-        if (optionalImage.isPresent()) {
+    public void addImageToCategory(Long imageId, Optional<Image> optionalImage, Category category) {
+        if (optionalImage.isPresent() && category != null) {
             Image image = optionalImage.get();
             image.setId(imageId);
             category.setImage(image);
             save(category);
         } else {
-            log.warn("problem to add image to '{}' category", category);
+            log.warn("problem to add image to '{}' category"
+                    + (optionalImage.isPresent() ? " // image is not present" : "")
+                    + (category == null ? " // category is NULL" : "") , category);
         }
     }
 

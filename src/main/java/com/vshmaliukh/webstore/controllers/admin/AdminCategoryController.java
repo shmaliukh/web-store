@@ -1,8 +1,8 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
-import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Category;
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -78,7 +78,8 @@ public class AdminCategoryController {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
-            categoryService.addImageToCategory(imageId, imageFile, category);
+            Optional<Image> optionalImage = imageService.buildImageFromFile(imageFile);
+            categoryService.addImageToCategory(imageId, optionalImage, category);
             return new ModelAndView("redirect:/admin/category/" + categoryId + "/details", modelMap);
         } else {
             log.warn("not found category entity by '{}' id to save imageFile: '{}'", categoryId, imageFile);
