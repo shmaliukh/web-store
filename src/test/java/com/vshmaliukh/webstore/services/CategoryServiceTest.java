@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.Category;
-import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
@@ -24,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CategoryServiceTest {
+
+    //TODO refactor values
 
     static final Category category = new Category(1, "some category name", "some description", false, true, null, Collections.EMPTY_SET);
     static final Category category2 = new Category(2, "some category name2", "some description2", false, true, null, Collections.EMPTY_SET);
@@ -259,6 +260,34 @@ class CategoryServiceTest {
         assertNotNull(category);
         assertNotNull(categoryItemSet);
         assertEquals(oldItemSetSize, categoryItemSet.size());
+    }
+
+    public static Stream<Arguments> providedArgs_removeItemFromCategoryTest() {
+        return Stream.of(
+                Arguments.of(null, categoryWithOneBook, 1),
+                Arguments.of(null, categoryWithOneMagazine, 1),
+                Arguments.of(null, categoryWithNewspaperAndComics, 2),
+                Arguments.of(comics, categoryWithOneBook, 1),
+                Arguments.of(magazine, categoryWithOneBook, 1),
+                Arguments.of(book, categoryWithOneMagazine, 1),
+                Arguments.of(comics, categoryWithOneMagazine, 1),
+                Arguments.of(book, categoryWithNewspaperAndComics, 2),
+                Arguments.of(magazine, categoryWithNewspaperAndComics, 2),
+                Arguments.of(book, categoryWithOneBook, 0),
+                Arguments.of(magazine, categoryWithOneMagazine, 0),
+                Arguments.of(newspaper, categoryWithNewspaperAndComics, 1)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_removeItemFromCategoryTest")
+    void removeItemFromCategoryTest(Item item, Category category, int expectedItemSetSize){
+        categoryService.removeItemFromCategory(item, category);
+        Set<Item> categoryItemSet = category.getItemSet();
+
+        assertNotNull(category);
+        assertNotNull(categoryItemSet);
+        assertEquals(expectedItemSetSize, categoryItemSet.size());
     }
 
     @Test

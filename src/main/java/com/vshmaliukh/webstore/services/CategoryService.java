@@ -121,9 +121,9 @@ public class CategoryService {
     public void addItemToCategory(Item item, Category category) {
         if (item != null && category != null) {
             Set<Item> categoryItemSet = category.getItemSet();
-            HashSet<Item> itemHashSetToAdd = new HashSet<>(categoryItemSet);
-            itemHashSetToAdd.add(item);
-            category.setItemSet(itemHashSetToAdd);
+            HashSet<Item> buffItemHashSet = new HashSet<>(categoryItemSet);
+            buffItemHashSet.add(item);
+            category.setItemSet(buffItemHashSet);
             categoryRepository.save(category);
             log.info("item '{}' added to category '{}'", item, category);
         } else {
@@ -133,11 +133,22 @@ public class CategoryService {
     }
 
     public void removeItemFromCategory(Item item, Category category) {
-        Set<Item> categoryItemSet = category.getItemSet();
-        categoryItemSet.remove(item);
-        category.setItemSet(categoryItemSet);
-        categoryRepository.save(category);
-        log.info(" item '{}' removed from category '{}'", item, category);
+        if (item != null && category != null) {
+            Set<Item> categoryItemSet = category.getItemSet();
+            if (categoryItemSet.contains(item)) {
+                HashSet<Item> buffItemHashSet = new HashSet<>(categoryItemSet);
+                buffItemHashSet.remove(item);
+                category.setItemSet(buffItemHashSet);
+                categoryRepository.save(category);
+                log.info(" item '{}' removed from category '{}'", item, category);
+            } else {
+                log.warn("problem to remove item from category" +
+                        " // '{}' category does not contain '{}' item", category, item);
+            }
+        } else {
+            log.warn("problem to remove item from category"
+                    + (item == null ? " // item is NULL" : " // category is NULL"));
+        }
     }
 
     public void deleteCategory(Category category) {
