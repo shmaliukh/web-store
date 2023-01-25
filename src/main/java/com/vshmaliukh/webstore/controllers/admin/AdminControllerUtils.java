@@ -16,9 +16,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public final class AdminControllerUtils {
@@ -138,6 +141,13 @@ public final class AdminControllerUtils {
         modelMap.addAllAttributes(contentModelMap);
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
+    }
+
+    public static List<FieldError> getFieldErrorList(MethodArgumentNotValidException manve) {
+        return manve.getBindingResult().getAllErrors().stream()
+                .filter(error -> (error.getClass().isInstance(FieldError.class)))
+                .map(error -> (FieldError) error)
+                .collect(Collectors.toList());
     }
 
 }

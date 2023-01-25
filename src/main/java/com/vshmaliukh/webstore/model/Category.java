@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,7 +25,9 @@ public class Category extends AuditModel {
     @Column(name = "category_id")
     private Integer id;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Category name is mandatory")
+    @Size(min=3, max=50)
     private String name;
 
     @Column(columnDefinition = "LONGTEXT")

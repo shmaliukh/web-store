@@ -12,14 +12,19 @@ import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.generateItemTableContentForCategoryDetails;
@@ -186,7 +191,7 @@ public class AdminCategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
-    ResponseEntity<Void> doDelete(@PathVariable(name = "categoryId") Integer categoryId) {
+    public ResponseEntity<Void> doDelete(@PathVariable(name = "categoryId") Integer categoryId) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
@@ -194,6 +199,20 @@ public class AdminCategoryController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    // TODO use @ControllerAdvice exception handlers for all admin controllers
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException manve) {
+        Map<String, String> errors = new HashMap<>();
+        List<FieldError> fieldErrorList = AdminControllerUtils.getFieldErrorList(manve);
+        for (FieldError fieldError : fieldErrorList) {
+            String fieldName = fieldError.getField();
+            String errorMessage = fieldError.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        }
+        return errors;
     }
 
 }
