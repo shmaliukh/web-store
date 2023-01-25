@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.constraints.Min;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class AdminCategoryController {
     }
 
     @PostMapping("/{categoryId}/image")
-    public ModelAndView doPostSaveImage(@PathVariable(name = "categoryId") Integer categoryId,
+    public ModelAndView doPostSaveImage(@PathVariable(name = "categoryId") @Min(1) Integer categoryId,
                                         @RequestParam(name = "imageFile") MultipartFile imageFile,
                                         @RequestParam(name = "imageId", required = false) Long imageId,
                                         ModelMap modelMap) {
@@ -93,13 +94,13 @@ public class AdminCategoryController {
     }
 
     @DeleteMapping("/{categoryId}/image")
-    public ResponseEntity<Void> doDeleteImage(@PathVariable(name = "categoryId") Integer categoryId) {
+    public ResponseEntity<Void> doDeleteImage(@PathVariable(name = "categoryId") @Min(1) Integer categoryId) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         return categoryService.deleteImageByCategory(optionalCategory);
     }
 
     @GetMapping("/{categoryId}/details")
-    public ModelAndView doGetDetails(@PathVariable(name = "categoryId") Integer categoryId,
+    public ModelAndView doGetDetails(@PathVariable(name = "categoryId") @Min(1) Integer categoryId,
                                      @RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = "5") int size,
@@ -124,7 +125,7 @@ public class AdminCategoryController {
     }
 
     @GetMapping("/{categoryId}/add-item")
-    public ModelAndView doGetAddItem(@PathVariable(name = "categoryId") Integer categoryId,
+    public ModelAndView doGetAddItem(@PathVariable(name = "categoryId") @Min(1) Integer categoryId,
                                      @RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
                                      @RequestParam(defaultValue = "5") int size,
@@ -146,13 +147,13 @@ public class AdminCategoryController {
     }
 
     @PostMapping("/{categoryId}/add-item")
-    public ModelAndView doPostAddItem(@PathVariable(name = "categoryId") Integer categoryId,
+    public ModelAndView doPostAddItem(@PathVariable(name = "categoryId") @Min(1) Integer categoryId,
                                       @RequestParam(required = false) String keyword,
                                       @RequestParam(defaultValue = "1") int page,
                                       @RequestParam(defaultValue = "5") int size,
                                       @RequestParam(defaultValue = "id") String sortField,
                                       @RequestParam(defaultValue = "asc") String sortDirection,
-                                      @RequestParam("itemId") int itemId,
+                                      @RequestParam("itemId") @Min(1) int itemId,
                                       @RequestParam("itemType") String itemType,
                                       ModelMap modelMap) {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
@@ -175,8 +176,8 @@ public class AdminCategoryController {
     }
 
     @PostMapping("/{categoryId}/remove-item")
-    public ModelAndView doPostRemoveItem(@PathVariable(name = "categoryId") Integer categoryId,
-                                         @RequestParam(name = "itemId") Integer itemId,
+    public ModelAndView doPostRemoveItem(@PathVariable(name = "categoryId") @Min(1) Integer categoryId,
+                                         @RequestParam(name = "itemId") @Min(1) Integer itemId,
                                          ModelMap modelMap) {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
@@ -191,7 +192,7 @@ public class AdminCategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Void> doDelete(@PathVariable(name = "categoryId") Integer categoryId) {
+    public ResponseEntity<Void> doDelete(@PathVariable(name = "categoryId") @Min(1) Integer categoryId) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
