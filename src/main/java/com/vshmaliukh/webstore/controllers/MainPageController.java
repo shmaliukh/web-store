@@ -1,6 +1,8 @@
 package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
+import com.vshmaliukh.webstore.model.UnauthorizedUser;
+import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -40,16 +42,18 @@ public class MainPageController {
         return new ModelAndView("main-page", modelMap);
     }
 
-    @GetMapping("/catalog/{type}")
+    @GetMapping("/catalog/{category}/{type}")
     public ModelAndView showCatalogPage(ModelMap modelMap,
-                                        @PathVariable String type) {
+                                        @PathVariable String type,
+                                        @PathVariable String category) {
         List<? extends Item> items = itemService.readAllItemsByTypeName(type);
         modelMap.addAttribute("itemList", items);
         return new ModelAndView("catalog");
     }
 
-    @GetMapping("/catalog/{type}/{id}")
+    @GetMapping("/catalog/{category}/{type}/{id}")
     public ModelAndView showItemPage(ModelMap modelMap,
+                                     @PathVariable String category,
                                      @PathVariable String type,
                                      @PathVariable Integer id) {
         Item item = null;
@@ -62,8 +66,9 @@ public class MainPageController {
         return new ModelAndView("item-page");
     }
 
-    @PostMapping("/catalog/{type}/{id}")
-    public String addToCart(@PathVariable String type,
+    @PostMapping("/catalog/{category}/{type}/{id}")
+    public String addToCart(@PathVariable String category,
+                            @PathVariable String type,
                             @PathVariable Integer id,
                             @RequestHeader String referer,
                             @CookieValue(required = false, defaultValue = "0") Long userId,
@@ -75,13 +80,25 @@ public class MainPageController {
 
         if(!authorization){
             if (userId == 0) {
-                userId = unauthorizedUserService.createUnauthorizedUser().getId();
+                UnauthorizedUserCart unauthorizedUserCart = new UnauthorizedUserCart();
+                cartService.addNewCart(unauthorizedUserCart);
+                userId = unauthorizedUserService.createUnauthorizedUser(unauthorizedUserCart).getId();
                 response.addCookie(new CookieHandler().createUserIdCookie(userId));
             }
+            if (!unauthorizedUserService.existsById(userId)){
+                UnauthorizedUserCart unauthorizedUserCart = new UnauthorizedUserCart();
+                cartService.addNewCart(unauthorizedUserCart);
+                UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
+                unauthorizedUser.setUnauthorizedUserCart(unauthorizedUserCart);
+                unauthorizedUser.setId(userId);
+                unauthorizedUserService.saveUser(unauthorizedUser);
+            }
         }
+
         final Long finalUserId = userId;
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = itemRepository.findById(id);
+
         optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId,authorization));
         return "redirect:" + referer;
     }

@@ -3,6 +3,7 @@ package com.vshmaliukh.webstore.controllers;
 import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
 import com.vshmaliukh.webstore.controllers.handlers.ShoppingCartHandler;
 import com.vshmaliukh.webstore.model.carts.Cart;
+import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -50,14 +51,25 @@ public class ShoppingCartController {
 
         boolean authorization = false;
         if(!authorization) {
-            unauthorizedUserService.removeOldUsers(); // todo refactor usage of old unauthorized users removing
+//            unauthorizedUserService.removeOldUsers(); // todo refactor usage of old unauthorized users removing
             if (userId == 0) {
+                UnauthorizedUserCart unauthorizedUserCart  = new UnauthorizedUserCart();
+                cartService.addNewCart(unauthorizedUserCart);
                 userId = unauthorizedUserService
-                        .createUnauthorizedUser()
+                        .createUnauthorizedUser(unauthorizedUserCart)
                         .getId();
                 response.addCookie(
                         cookieHandler.createUserIdCookie(userId)
                 );
+            }
+            Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
+            if(cart!=null) {
+                List<CartItem> cartItems = cart.getItems();
+                int totalCount = shoppingCartHandler.countAllItemsQuantity(cartItems);
+                int totalPrice = shoppingCartHandler.countAllItemsPrice(cartItems);
+                modelMap.addAttribute("items", cartItems);
+                modelMap.addAttribute("totalItems", totalCount);
+                modelMap.addAttribute("totalPrice", totalPrice);
             }
         } else {
             if(userId!=0){
@@ -66,17 +78,6 @@ public class ShoppingCartController {
                         userService.getUserById(userId)); // todo check authorized user id
             }
         }
-
-        Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
-        if(cart!=null) {
-            List<CartItem> cartItems = cart.getItems();
-            int totalCount = shoppingCartHandler.countAllItemsQuantity(cartItems);
-            int totalPrice = shoppingCartHandler.countAllItemsPrice(cartItems);
-            modelMap.addAttribute("items", cartItems);
-            modelMap.addAttribute("totalItems", totalCount);
-            modelMap.addAttribute("totalPrice", totalPrice);
-        }
-
         return new ModelAndView("shopping-cart");
     }
 
@@ -86,6 +87,7 @@ public class ShoppingCartController {
                                   @CookieValue Long userId) {
 
         // todo add checking authorization
+
         boolean authorization = false;
         final Long finalUserId = userId;
         Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);

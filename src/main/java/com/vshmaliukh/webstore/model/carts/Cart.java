@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
 @Entity(name = "cart")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonTypeInfo(use = NAME, include = PROPERTY)
@@ -34,7 +36,7 @@ public abstract class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<CartItem> items;
 
 }

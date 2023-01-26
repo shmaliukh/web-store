@@ -1,15 +1,13 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.UnauthorizedUser;
+import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,10 +35,15 @@ public class UnauthorizedUserService {
         unauthorizedUserRepository.deleteAll(unauthorizedUserRepository.readUnauthorizedUsersByCreatedAtBefore(date));
     }
 
-    public UnauthorizedUser createUnauthorizedUser(){
+    public UnauthorizedUser createUnauthorizedUser(UnauthorizedUserCart unauthorizedUserCart){
         UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
+        unauthorizedUser.setUnauthorizedUserCart(unauthorizedUserCart);
         unauthorizedUserRepository.save(unauthorizedUser);
         return unauthorizedUser;
+    }
+
+    public void saveUser(UnauthorizedUser unauthorizedUser){
+        unauthorizedUserRepository.save(unauthorizedUser);
     }
 
 }

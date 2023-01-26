@@ -21,7 +21,7 @@ public class CartRepositoryProvider {
 
     BaseCartRepository<UserCart> userCartRepository;
 
-    Map<Cart, BaseCartRepository> cartRepositoryMap;
+    Map<String, BaseCartRepository> cartRepositoryMap;
 
     public CartRepositoryProvider(
             BaseCartRepository<UnauthorizedUserCart> unauthorizedUserCartRepository,
@@ -42,13 +42,13 @@ public class CartRepositoryProvider {
     }
 
     public <T extends Cart> BaseCartRepository<T> getCartRepositoryByCart(T cart) {
-        return cartRepositoryMap.get(cart);
+        return cartRepositoryMap.get(cart.getClass().getSimpleName());
     }
 
     private void generateCartRepositoryMap(){
         cartRepositoryMap = new HashMap<>();
-        cartRepositoryMap.put(new UnauthorizedUserCart(),unauthorizedUserCartRepository);
-        cartRepositoryMap.put(new UserCart(),userCartRepository);
+        cartRepositoryMap.put(UnauthorizedUserCart.class.getSimpleName(),unauthorizedUserCartRepository);
+        cartRepositoryMap.put(UserCart.class.getSimpleName(),userCartRepository);
     }
 
 }
