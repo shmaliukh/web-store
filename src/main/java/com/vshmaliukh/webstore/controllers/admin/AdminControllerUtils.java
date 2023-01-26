@@ -12,6 +12,7 @@ import com.vshmaliukh.webstore.repositories.OrderRepository;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -117,22 +117,27 @@ public final class AdminControllerUtils {
         return new TableContentImp<OrderItem>(keyword, page, size, sortField, sortDirection) {
             @Override
             public Page<OrderItem> formPageIfKeywordIsBlank(Pageable pageable) {
-                return new PageImpl<>(Collections.emptyList());
-//                return repository.findAllByOrder(order, pageable);
+                List<OrderItem> orderItems = repository.readOrderItemsByOrder(order);
+                return new PageImpl<>(subPageItemList(orderItems, page, size), pageable, orderItems.size());
             }
 
             @Override
             public Page<OrderItem> formPageWithContentByKeyword(String keyword, Pageable pageable) {
-                // TODO
-                return new PageImpl<>(Collections.emptyList());
-//                return repository.findAllByOrder(order, pageable);
+                List<OrderItem> orderItems = repository.readOrderItemsByOrder(order).stream()
+                        .filter(o -> StringUtils.containsIgnoreCase(o.getItem().getName(), keyword))
+                        .collect(Collectors.toList());
+                return new PageImpl<>(subPageItemList(orderItems, page, size), pageable, orderItems.size());
+            }
+
+            private List<OrderItem> subPageItemList(List<OrderItem> orderItems, int page, int size) {
+                return orderItems.subList((page - 1) * size, Math.min(page * size, orderItems.size()));
             }
         };
     }
 
-    public static void addTableContentWithItems(String keyword, int page, int size,
-                                                String sortField, String sortDirection,
-                                                String itemType, ModelMap modelMap, BaseItemRepository itemRepository) {
+    public static <T extends Item> void addTableContentWithItems(String keyword, int page, int size,
+                                                                 String sortField, String sortDirection,
+                                                                 String itemType, ModelMap modelMap, BaseItemRepository<T> itemRepository) {
         TableContentImp<? extends Item> tableContent
                 = generateTableContentForItemView(keyword, page, size, sortField, sortDirection, itemRepository);
         List<? extends Item> itemList = tableContent.readContentList();

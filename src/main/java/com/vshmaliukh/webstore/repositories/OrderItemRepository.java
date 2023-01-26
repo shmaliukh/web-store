@@ -20,6 +20,4 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     List<OrderItem> readOrderItemsByOrder(Order order);
 
-    Page<OrderItem> findAllByOrder(Order order, Pageable pageable);
-
 }
