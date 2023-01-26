@@ -106,16 +106,16 @@
     <th th:replace="blocks/sorting :: sorting('isDeleted','DELETED', ${pageToRedirect})"></th>
 </th:block>
 
-<th:block th:fragment="order-item-titles-with-sorting(pageToRedirect)">
-    <th class="align-middle" scope="row">#</th>
-    <th th:replace="blocks/sorting :: sorting('orderItemId','ID', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('createdAt','CREATED', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('price','PRICE', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('quantity','QUANTITY', ${pageToRedirect})"></th>
-    <th th:replace="blocks/sorting :: sorting('isActive','ACTIVE', ${pageToRedirect})"></th>
-</th:block>
+<!--<th:block th:fragment="order-item-titles-with-sorting(pageToRedirect)">-->
+<!--    <th class="align-middle" scope="row">#</th>-->
+<!--    <th th:replace="blocks/sorting :: sorting('orderItemId','ID', ${pageToRedirect})"></th>-->
+<!--    <th th:replace="blocks/sorting :: sorting('createdAt','CREATED', ${pageToRedirect})"></th>-->
+<!--    <th th:replace="blocks/sorting :: sorting('updatedAt','UPDATED', ${pageToRedirect})"></th>-->
+<!--    <th th:replace="blocks/sorting :: sorting('name','NAME', ${pageToRedirect})"></th>-->
+<!--    <th th:replace="blocks/sorting :: sorting('price','PRICE', ${pageToRedirect})"></th>-->
+<!--    <th th:replace="blocks/sorting :: sorting('quantity','QUANTITY', ${pageToRedirect})"></th>-->
+<!--    <th th:replace="blocks/sorting :: sorting('isActive','ACTIVE', ${pageToRedirect})"></th>-->
+<!--</th:block>-->
 
 <div th:fragment="magazine(pageToRedirect)">
     <th class="align-middle" th:replace="blocks/sorting :: sorting('pages','PAGES', ${pageToRedirect})"></th>
