@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CategoryService {
 
-    protected final ImageService imageService;
+    protected ImageService imageService;
 
     @Getter
-    protected final CategoryRepository categoryRepository;
+    protected CategoryRepository categoryRepository;
 
     public List<Category> readAll() {
         return categoryRepository.findAll();
