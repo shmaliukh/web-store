@@ -1,19 +1,15 @@
 package com.vshmaliukh.webstore.model;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
-
-import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Users")
 public class User extends AuditModel {
