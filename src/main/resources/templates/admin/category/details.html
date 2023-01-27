@@ -18,7 +18,7 @@
     <div class="container">
         <nav class="pb-3">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button th:class="'nav-link ' + ${tab != null ? (tab.equalsIgnoreCase('nav-additional') ? 'active': '') : 'active'}"
+                <button th:class="'nav-link ' + ${tab != null && #strings.isEmpty(tab) ? (tab.equalsIgnoreCase('nav-additional') ? 'active': '') : 'active'}"
                         id="nav-main-tab" data-bs-toggle="tab" data-bs-target="#nav-main"
                         type="button" role="tab"
                         aria-controls="nav-main"

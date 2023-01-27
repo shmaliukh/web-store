@@ -12,6 +12,7 @@ import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,10 @@ import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.gen
 @RequestMapping("/admin/category")
 @AllArgsConstructor
 public class AdminCategoryController {
+
+    public static final String NAV_MAIN_STR = "nav-main";
+    public static final String NAV_ITEMS_STR = "nav-items";
+    public static final String NAV_IMAGE_STR = "nav-image";
 
     final ItemService itemService;
     final ImageService imageService;
@@ -73,6 +78,7 @@ public class AdminCategoryController {
                                    ModelMap modelMap) {
         Category category = categoryService.getUpdatedOrCreateBaseCategory(id, name, description, isDeleted, isActivated);
         categoryService.save(category);
+        modelMap.addAttribute("tab", NAV_MAIN_STR);
         return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
     }
 
@@ -82,10 +88,12 @@ public class AdminCategoryController {
                                         @RequestParam(name = "imageId", required = false) Long imageId,
                                         ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
+        modelMap.addAttribute("tab", NAV_IMAGE_STR);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
             Optional<Image> optionalImage = imageService.buildImageFromFile(imageFile);
             categoryService.addImageToCategory(imageId, optionalImage, category);
+
             return new ModelAndView("redirect:/admin/category/" + categoryId + "/details", modelMap);
         } else {
             log.warn("not found category entity by '{}' id to save imageFile: '{}'", categoryId, imageFile);
@@ -106,6 +114,7 @@ public class AdminCategoryController {
                                      @RequestParam(defaultValue = "5") int size,
                                      @RequestParam(defaultValue = "id") String sortField,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
+                                     @RequestParam(defaultValue = "tab") String tabRequestParam,
                                      ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
@@ -119,9 +128,16 @@ public class AdminCategoryController {
             modelMap.addAllAttributes(contentModelMap);
             modelMap.addAttribute("itemList", itemList);
             modelMap.addAttribute("category", category);
+            modelMap.addAttribute("tab", reaTabAttributeValue(tabRequestParam, modelMap));
             return new ModelAndView("admin/category/details", modelMap);
         }
         return new ModelAndView("admin/category/catalog", modelMap);
+    }
+
+    private static String reaTabAttributeValue(String tabRequestParam, ModelMap modelMap) {
+        return modelMap.getAttribute("tab") != null
+                ? (String) modelMap.getAttribute("tab")
+                : StringUtils.isNotBlank(tabRequestParam) ? tabRequestParam : NAV_MAIN_STR;
     }
 
     @GetMapping("/{categoryId}/add-item")
@@ -188,6 +204,7 @@ public class AdminCategoryController {
         } else {
             log.warn("problem to remove item from category // item id: '{}', category id: '{}'", itemId, categoryId);
         }
+        modelMap.addAttribute("tab", NAV_ITEMS_STR);
         return new ModelAndView("redirect:/admin/category/" + categoryId + "/details", modelMap);
     }
 
