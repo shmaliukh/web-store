@@ -114,7 +114,7 @@ public class AdminCategoryController {
                                      @RequestParam(defaultValue = "5") int size,
                                      @RequestParam(defaultValue = "id") String sortField,
                                      @RequestParam(defaultValue = "asc") String sortDirection,
-                                     @RequestParam(defaultValue = "tab") String tabRequestParam,
+                                     @RequestParam(defaultValue = "", name = "tab") String tabRequestParam,
                                      ModelMap modelMap) {
         Optional<Category> optionalCategory = categoryService.readCategoryById(categoryId);
         if (optionalCategory.isPresent()) {
@@ -135,8 +135,9 @@ public class AdminCategoryController {
     }
 
     private static String reaTabAttributeValue(String tabRequestParam, ModelMap modelMap) {
-        return modelMap.getAttribute("tab") != null
-                ? (String) modelMap.getAttribute("tab")
+        Object mapAttribute = modelMap.getAttribute("tab");
+        return mapAttribute != null
+                ? (String) mapAttribute
                 : StringUtils.isNotBlank(tabRequestParam) ? tabRequestParam : NAV_MAIN_STR;
     }
 
@@ -153,7 +154,7 @@ public class AdminCategoryController {
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
 
-            BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
+            BaseItemRepository<? extends Item> itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
             AdminControllerUtils.addTableContentWithItems(keyword, page, size, sortField, sortDirection, itemType, modelMap, itemRepository);
             modelMap.addAttribute("itemType", itemType);
             modelMap.addAttribute("category", category);
