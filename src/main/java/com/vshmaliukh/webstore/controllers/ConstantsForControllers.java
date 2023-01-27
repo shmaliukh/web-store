@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class ConstantsForControllers {
 
-    public static final String DEFAULT_ITEM_QUANTITY_ON_PAGE = "5";
 
     private ConstantsForControllers() {
     }
@@ -16,9 +15,6 @@ public final class ConstantsForControllers {
     public static final String HOME_PAGE = "home";
     public static final String LOGIN_PAGE = "login";
     public static final String MAIN_PAGE = "main";
-    public static final String CATALOG_PAGE = "catalog";
-    public static final String CATEGORY_PAGE = "category";
-    public static final String SHOPPING_CART = "shopping-cart";
     public static final String USER_HOME = "user-home";
 
     // TODO refactor
