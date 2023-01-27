@@ -18,29 +18,42 @@
     <div class="container">
         <nav class="pb-3">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="nav-main-tab" data-bs-toggle="tab" data-bs-target="#nav-main"
+                <button th:class="'nav-link ' + ${tab != null ? (tab.equalsIgnoreCase('nav-additional') ? 'active': '') : 'active'}"
+                        id="nav-main-tab" data-bs-toggle="tab" data-bs-target="#nav-main"
                         type="button" role="tab"
-                        aria-controls="nav-main" aria-selected="true">Base info
+                        aria-controls="nav-main"
+                        th:aria-selected="${tab != null ? tab.equalsIgnoreCase('nav-main') : true}">
+                    Base info
                 </button>
-                <button class="nav-link" id="nav-items-tab" data-bs-toggle="tab" data-bs-target="#nav-items"
+                <button th:class="'nav-link ' + ${tab != null ? (tab.equalsIgnoreCase('nav-items') ? 'active': '') : ''}"
+                        id="nav-items-tab" data-bs-toggle="tab" data-bs-target="#nav-items"
                         type="button"
                         role="tab"
-                        aria-controls="nav-items" aria-selected="false">Items
+                        aria-controls="nav-items"
+                        th:aria-selected="${tab != null ? tab.equalsIgnoreCase('nav-items') : false}">
+                    Items
                 </button>
-                <button class="nav-link" id="nav-image-tab" data-bs-toggle="tab" data-bs-target="#nav-image"
+                <button th:class="'nav-link ' + ${tab != null ? (tab.equalsIgnoreCase('nav-image') ? 'active': '') : ''}"
+                        id="nav-image-tab" data-bs-toggle="tab" data-bs-target="#nav-image"
                         type="button"
                         role="tab"
-                        aria-controls="nav-image" aria-selected="false">Image
+                        aria-controls="nav-image"
+                        th:aria-selected="${tab != null ? tab.equalsIgnoreCase('nav-image') : false}">
+                    Image
                 </button>
-                <button class="nav-link" id="nav-additional-tab" data-bs-toggle="tab" data-bs-target="#nav-additional"
+                <button th:class="'nav-link ' + ${tab != null ? (tab.equalsIgnoreCase('nav-additional') ? 'active': '') : ''}"
+                        id="nav-additional-tab" data-bs-toggle="tab" data-bs-target="#nav-additional"
                         type="button" role="tab"
-                        aria-controls="nav-image" aria-selected="false">Additional
+                        aria-controls="nav-additional"
+                        th:aria-selected="${tab != null ? tab.equalsIgnoreCase('nav-additional') : false}">
+                    Additional
                     <!-- TODO rename tab -->
                 </button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-main" role="tabpanel" aria-labelledby="nav-main-tab"
+            <div th:class="'tab-pane fade ' + (${tab != null ? (tab.equalsIgnoreCase('nav-main') ? 'show active' : '') : 'show active'})"
+                 id="nav-main" role="tabpanel" aria-labelledby="nav-main-tab"
                  tabindex="0">
                 <div class="container">
                     <div class="card mb-4 box-shadow">
@@ -134,7 +147,10 @@
                     </script>
                 </div>
             </div>
-            <div class="tab-pane fade" id="nav-items" role="tabpanel" aria-labelledby="nav-items-tab" tabindex="0">
+
+
+            <div th:class="'tab-pane fade ' + ${tab != null ? (tab.equalsIgnoreCase('nav-items') ? 'show active' : '') : ''}"
+                 id="nav-items" role="tabpanel" aria-labelledby="nav-items-tab" tabindex="0">
 
                 <div class="container">
                     <form method="get" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
@@ -213,7 +229,8 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="nav-image" role="tabpanel" aria-labelledby="nav-image-tab" tabindex="0">
+            <div th:class="'tab-pane fade ' + ${tab != null ? (tab.equalsIgnoreCase('nav-image') ? 'show active' : '') : ''}"
+                 id="nav-image" role="tabpanel" aria-labelledby="nav-image-tab" tabindex="0">
                 <th:block th:if="${category.getImage() == null}">
                     <form method="post" th:action="|@{/admin/category/}${category.getId()}@{/image}|"
                           enctype="multipart/form-data">
@@ -299,7 +316,8 @@
                 </th:block>
             </div>
 
-            <div class="tab-pane fade" id="nav-additional" role="tabpanel" aria-labelledby="nav-additional-tab"
+            <div th:class="'tab-pane fade ' + ${tab != null ? (tab.equalsIgnoreCase('nav-additional') ? 'show active' : '') : ''}"
+                 id="nav-additional" role="tabpanel" aria-labelledby="nav-additional-tab"
                  tabindex="0">
                 <div class="container">
                     <div class="table-responsive-md">
