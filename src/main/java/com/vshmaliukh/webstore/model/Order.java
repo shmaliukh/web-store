@@ -44,7 +44,15 @@ public class Order extends AuditModel {
     @Column(name = ORDER_COMMENT_COLUMN)
     private String comment;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "Order_OrderItem",
+            joinColumns = @JoinColumn(
+                    name = "order_id",
+                    referencedColumnName = "order_id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "order_item_id",
+                    referencedColumnName = "order_item_id")
+    )
     private List<OrderItem> orderItemList;
 
 }

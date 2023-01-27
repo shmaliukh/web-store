@@ -38,7 +38,6 @@ public class OrderItem extends AuditModel {
     private Item item;
 
     @ManyToOne
-//    @JoinColumn(name="order_id", nullable = false)
     @JsonIgnore
     private Order order;
 
