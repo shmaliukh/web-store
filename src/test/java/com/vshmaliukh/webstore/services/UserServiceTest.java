@@ -83,17 +83,83 @@ class UserServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_isAdminUserTest")
-    void isAdminUserTest(User user, boolean isAdminExpectedResult){
+    void isAdminUserTest(User user, boolean isAdminExpectedResult) {
         boolean isAdminResult = userService.isAdminUser(user);
 
         assertEquals(isAdminResult, isAdminExpectedResult);
     }
 
     @Test
-    void saveTest(CapturedOutput output){
+    void saveTest(CapturedOutput output) {
         userService.save(null);
 
         assertTrue(output.getOut().contains("user not saved // invalid user"));
+    }
+
+
+    private static Stream<Arguments> providedArgs_isUserSavedTest() {
+        User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", true);
+        User user3 = new User(3L, "some username3", "some3@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        User user4 = new User(null, "some username4", "some4@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", false);
+        User user5 = new User(null, null, null, null, null, null, false);
+        User user6 = new User(-1L, null, null, null, null, null, false);
+        User user7 = new User(0L, "some username4", "some4@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", false);
+        return Stream.of(
+                Arguments.of(user1, true),
+                Arguments.of(user2, true),
+                Arguments.of(user3, true),
+                Arguments.of(user4, false),
+                Arguments.of(user5, false),
+                Arguments.of(user6, false),
+                Arguments.of(user7, false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_isUserSavedTest")
+    void isUserSavedTest(User user, boolean expectedIsSaved) {
+        Mockito
+                .when(userRepository.existsById(user.getId()))
+                .thenReturn(expectedIsSaved);
+
+        assertEquals(userService.isUserSaved(user), expectedIsSaved);
+    }
+
+    @Test
+    void isUserSavedTest_null() {
+        assertFalse(userService.isUserSaved(null));
+    }
+
+    private static Stream<Arguments> providedArgs_isValidEntityTest() {
+        User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", true);
+        User user3 = new User(3L, "some username3", "some3@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        User user4 = new User(null, "some username4", "some4@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", false);
+        User user5 = new User(null, null, null, null, null, null, false);
+        User user6 = new User(-1L, null, null, null, null, null, false);
+        User user7 = new User(0L, "some username4", "some4@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", false);
+        return Stream.of(
+                Arguments.of(user1, true),
+                Arguments.of(user2, true),
+                Arguments.of(user3, true),
+                Arguments.of(user4, true),
+                Arguments.of(user5, true), // ???
+                Arguments.of(user6, false),
+                Arguments.of(user7, false),
+                Arguments.of(null, false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_isValidEntityTest")
+    void isValidEntityTest(User user, boolean expectedIsValid) {
+        assertEquals(userService.isValidEntity(user), expectedIsValid);
+
+//        TODO solve problem to read and check output from ParameterizedTest
+//        if(!expectedIsValid){
+//            assertTrue(output.getOut().contains("invalid user"));
+//        }
     }
 
 }

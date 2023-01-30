@@ -2,7 +2,6 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
 import com.vshmaliukh.webstore.login.UserRole;
-import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -79,6 +78,25 @@ public class UserService implements EntityValidator<User> {
     }
 
     public boolean isUserSaved(User user) {
-        return userRepository.existsById(user.getId());
+        if (isValidEntity(user)) {
+            return user.getId() != null
+                    && userRepository.existsById(user.getId());
+        }
+        log.warn("problem to check if user saved // invalid user");
+        return false;
+
     }
+
+    @Override
+    public boolean isValidEntity(User user) {
+        boolean isValid = user != null && (user.getId() == null || user.getId() > 0);
+        if (!isValid) {
+            log.error("invalid user"
+                    + (user != null
+                    ? (user.getId() != null ? " // user id < 1" : "")
+                    : " // user is NULL"));
+        }
+        return isValid;
+    }
+
 }
