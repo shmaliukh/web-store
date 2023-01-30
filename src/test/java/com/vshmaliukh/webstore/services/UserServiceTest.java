@@ -4,6 +4,8 @@ import com.vshmaliukh.webstore.login.LogInProvider;
 import com.vshmaliukh.webstore.login.UserRole;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -11,13 +13,17 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@ExtendWith(OutputCaptureExtension.class)
 class UserServiceTest {
 
     @MockBean
@@ -83,6 +89,11 @@ class UserServiceTest {
         assertEquals(isAdminResult, isAdminExpectedResult);
     }
 
+    @Test
+    void saveTest(CapturedOutput output){
+        userService.save(null);
 
+        assertTrue(output.getOut().contains("user not saved // invalid user"));
+    }
 
 }

@@ -9,6 +9,7 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,6 +17,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -23,6 +26,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ExtendWith(OutputCaptureExtension.class)
 class CategoryServiceTest {
 
     //TODO refactor values
@@ -43,13 +47,11 @@ class CategoryServiceTest {
     @MockBean
     CategoryRepository categoryRepository;
 
+    @MockBean
+    ImageService imageService;
+
     @Autowired
     CategoryService categoryService;
-
-    @BeforeEach
-    void beforeEach() {
-        categoryService.setCategoryRepository(categoryRepository);
-    }
 
     private static Stream<Arguments> providedArgs_readAllTest() {
         return Stream.of(
@@ -370,4 +372,10 @@ class CategoryServiceTest {
         assertTrue(category.isDeleted());
     }
 
+    @Test
+    void saveTest(CapturedOutput output){
+        categoryService.save(null);
+
+        assertTrue(output.getOut().contains("category not saved // invalid category"));
+    }
 }
