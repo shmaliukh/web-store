@@ -136,8 +136,7 @@
                         Delete
                     </button>
                     <script th:inline="javascript">
-                        let elementSd = 'deleteButton';
-                        document.getElementById(elementId).onclick = async (e) => {
+                        document.getElementById('deleteButton').onclick = async (e) => {
                             e.preventDefault();
                             askToDelete(
                                 [[${'/admin/category/' + category.getId()}]],
