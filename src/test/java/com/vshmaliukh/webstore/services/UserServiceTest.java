@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
+import com.vshmaliukh.webstore.login.UserRole;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,7 +34,7 @@ class UserServiceTest {
     @MethodSource("providedArgs_readUserByIdTest")
     void readUserByIdTest(Long id) {
         Optional<User> optionalUserToReturn = Optional.of(
-                new User(id, "some username", "some@mail.com", LogInProvider.LOCAL, "admin", "1234", true));
+                new User(id, "some username", "some@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true));
         Mockito
                 .when(userRepository.findById(id))
                 .thenReturn(optionalUserToReturn);
@@ -60,6 +61,26 @@ class UserServiceTest {
         Optional<User> optionalUser = userService.readUserById(id);
 
         assertFalse(optionalUser.isPresent());
+    }
+
+    private static Stream<Arguments> providedArgs_isAdminUserTest() {
+        User user1 = new User(null, "some username1", "some1@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        User user2 = new User(null, "some username2", "some2@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", true);
+        User user3 = new User(null, "some username2", "some2@mail.com", LogInProvider.LOCAL, null, "1234", true);
+        return Stream.of(
+                Arguments.of(user1, true),
+                Arguments.of(user2, false),
+                Arguments.of(user3, false),
+                Arguments.of(null, false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_isAdminUserTest")
+    void isAdminUserTest(User user, boolean isAdminExpectedResult){
+        boolean isAdminResult = userService.isAdminUser(user);
+
+        assertEquals(isAdminResult, isAdminExpectedResult);
     }
 
 

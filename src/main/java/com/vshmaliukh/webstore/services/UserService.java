@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
+import com.vshmaliukh.webstore.login.UserRole;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -29,17 +30,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public boolean isAdminUser(Long userId) {
-        User user;
-        String userRole = null;
-        if (userId != null) {
-            user = userRepository.getUserById(userId);
-            if (user != null) {
-                userRole = user.getRole();
-                return userRole.equals("admin");
-            }
+    public boolean isAdminUser(User user) {
+        if (user != null) {
+            UserRole userRole = user.getRole();
+            return userRole != null && userRole.equals(UserRole.ADMIN);
         }
-        log.warn("problem to check user 'role' // userId: '{}' // user: '{}'", userId, userRole);
+        log.warn("problem to check user role // user is NULL");
         return false;
     }
 
@@ -71,7 +67,7 @@ public class UserService {
     }
 
 
-    public User createBaseUser(String userName, String email, String role, boolean enabled) {
+    public User createBaseUser(String userName, String email, UserRole role, boolean enabled) {
         User user = new User();
         user.setUsername(userName);
         user.setEmail(email);
@@ -93,5 +89,4 @@ public class UserService {
     public boolean isUserSaved(User user) {
         return userRepository.existsById(user.getId());
     }
-
 }
