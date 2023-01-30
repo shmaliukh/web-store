@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.model;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
+import com.vshmaliukh.webstore.login.UserRole;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,17 +20,18 @@ public class User extends AuditModel {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "username", unique = true)
+    @Column(unique = true)
     private String username;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "log_in_provider")
     private LogInProvider logInProvider;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @ToString.Exclude
     private String password;

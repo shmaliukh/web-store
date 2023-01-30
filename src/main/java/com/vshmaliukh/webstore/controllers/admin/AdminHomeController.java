@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
+import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.UserService;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -28,14 +30,15 @@ public class AdminHomeController {
                               ModelMap modelMap) {
         long allItemTypesQuantity = calcAllItem();
         Map<String, Long> categoryItemQuantityMap = Collections.singletonMap("Literature", allItemTypesQuantity);
-        modelMap.addAttribute("categoryItemQuantityMap", categoryItemQuantityMap);
-        boolean isAdminUser = userService.isAdminUser(userId);
+        Optional<User> optionalUser = userService.readUserById(userId);
+        boolean isAdminUser = userService.isAdminUser(optionalUser);
         if (
                 ! // TODO remove '!'
                         isAdminUser) {
             return new ModelAndView("admin/admin-home", modelMap);
         }
         // TODO create interceptor for admin verification
+        modelMap.addAttribute("categoryItemQuantityMap", categoryItemQuantityMap);
         return new ModelAndView("redirect:/home", modelMap);
     }
 
