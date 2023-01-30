@@ -76,24 +76,32 @@ public class MainPageController {
 
         boolean authorization = false;
 
+        boolean createdNewUser = false;
         if(!authorization) {
-            UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
-            if (userId != 0 && !unauthorizedUserService.existsById(userId)) {
-                unauthorizedUser.setId(userId);
+            if(userId==0||!unauthorizedUserService.existsById(userId)) {
+
+                UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
+                if (userId != 0 && !unauthorizedUserService.existsById(userId)) {
+                    unauthorizedUser.setId(userId);
+                }
+                unauthorizedUserService.saveUser(unauthorizedUser);
+                UnauthorizedUserCart unauthorizedUserCart = new UnauthorizedUserCart();
+                unauthorizedUserCart.setUnauthorizedUser(unauthorizedUser);
+                cartService.addNewCart(unauthorizedUserCart);
+
+                userId=unauthorizedUser.getId();
+                response.addCookie(new CookieHandler().createUserIdCookie(userId));
+                createdNewUser = true;
             }
-            unauthorizedUserService.saveUser(unauthorizedUser);
-            UnauthorizedUserCart unauthorizedUserCart = new UnauthorizedUserCart();
-            unauthorizedUserCart.setUnauthorizedUser(unauthorizedUser);
-            cartService.addNewCart(unauthorizedUserCart);
-            response.addCookie(new CookieHandler().createUserIdCookie(unauthorizedUser.getId()));
+
         }
-
-        final Long finalUserId = userId; // todo change item to cart item
-
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = itemRepository.findById(id);
-
-        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId,authorization));
+        if (createdNewUser) {
+            cartService.addItemToCart(optionalItem.get(), userId, authorization);
+        } else {
+            cartService.addItemToCart(optionalItem.get(),userId,authorization);
+        }
         return "redirect:" + referer;
     }
 
