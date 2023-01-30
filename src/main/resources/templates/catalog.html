@@ -60,30 +60,37 @@
 
                     <div class="col">
                         <div class="card shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
-                                 xmlns="http://www.w3.org/2000/svg" role="img"
-                                 aria-label="Placeholder: знову якийсь текст" preserveAspectRatio="xMidYMid slice"
-                                 focusable="false"><title>Placeholder</title>
-                                <rect width="100%" height="100%" fill="#55595c"/>
-                                <text x="50%" y="50%" fill="#eceeef" dy=".3em" th:text="${item.getName()}">Припустимо, картинка</text>
-                            </svg>
+                            <a th:href="'/main/catalog/'+${item.getCategory()} + '/' + ${item.getId()}">
+                                <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+                                     xmlns="http://www.w3.org/2000/svg" role="img"
+                                     aria-label="Placeholder: знову якийсь текст" preserveAspectRatio="xMidYMid slice"
+                                     focusable="false"><title>Placeholder</title>
+                                    <rect width="100%" height="100%" fill="#55595c"/>
+                                    <text x="50%" y="50%" fill="#eceeef" dy=".3em" th:text="${item.getName()}">
+                                        Припустимо, картинка
+                                    </text>
+                                </svg>
 
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <form method="post" th:action="'/main/catalog/' + ${item.getCategory()} + '/' + ${item.getId()}">
-                                            <button type="submit" class="btn btn-sm btn-outline-secondary">
-                                                <img class="shopping-icon" src="/icons/shopping-cart.png">
-                                            </button>
-                                        </form>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <form method="post"
+                                                  th:action="'/main/catalog/' + ${item.getCategory()} + '/' + ${item.getId()}">
+                                                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                                    <img class="shopping-icon" src="/icons/shopping-cart.png">
+                                                </button>
+                                            </form>
 
-                                        <a href="/shopping-cart" class="btn btn-sm btn-outline-secondary">
-                                            <img class="shopping-icon" src="/icons/buy.png">
-                                        </a>
+                                            <a href="/shopping-cart" class="btn btn-sm btn-outline-secondary">
+                                                <img class="shopping-icon" src="/icons/buy.png">
+                                            </a>
+                                        </div>
+                                        <b class="price">$
+                                            <text th:text="${item.getPrice()}"></text>
+                                        </b>
                                     </div>
-                                    <b  class="price">$<text th:text="${item.getPrice()}"></text></b>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </th:block>

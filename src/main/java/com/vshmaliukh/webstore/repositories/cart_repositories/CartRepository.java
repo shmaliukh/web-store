@@ -1,6 +1,6 @@
-package com.vshmaliukh.webstore.repositories;
+package com.vshmaliukh.webstore.repositories.cart_repositories;
 
-import com.vshmaliukh.webstore.model.Cart;
+import com.vshmaliukh.webstore.model.carts.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +11,5 @@ public interface CartRepository extends JpaRepository<Cart,Long> {
 
     Cart findByCartId(Long id);
 
-    List<Cart> findCartsByUserId(Long id);
 
 }
