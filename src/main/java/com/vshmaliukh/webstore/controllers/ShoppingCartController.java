@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
 import com.vshmaliukh.webstore.controllers.handlers.ShoppingCartHandler;
+import com.vshmaliukh.webstore.model.UnauthorizedUser;
 import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.items.CartItem;
@@ -50,19 +51,17 @@ public class ShoppingCartController {
         if(!authorization) {
 //            unauthorizedUserService.removeOldUsers(); // todo refactor usage of old unauthorized users removing
             if (userId == 0) {
+                UnauthorizedUser unauthorizedUser = unauthorizedUserService.createUnauthorizedUser();
                 UnauthorizedUserCart unauthorizedUserCart  = new UnauthorizedUserCart();
+                unauthorizedUserCart.setUnauthorizedUser(unauthorizedUser);
                 cartService.addNewCart(unauthorizedUserCart);
-                userId = unauthorizedUserService
-                        .createUnauthorizedUser(unauthorizedUserCart)
-                        .getId();
                 response.addCookie(
-                        cookieHandler.createUserIdCookie(userId)
+                        cookieHandler.createUserIdCookie(unauthorizedUser.getId())
                 );
             }
             Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
             if(cart!=null) {
                 List<CartItem> cartItems = cart.getItems();
-                cartItems.forEach(o->System.out.println(o.getId()));
                 int totalCount = shoppingCartHandler.countAllItemsQuantity(cartItems);
                 int totalPrice = shoppingCartHandler.countAllItemsPrice(cartItems);
                 modelMap.addAttribute("items", cartItems);
