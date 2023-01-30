@@ -5,12 +5,8 @@ import com.vshmaliukh.webstore.controllers.handlers.ShoppingCartHandler;
 import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.items.CartItem;
-import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
-import com.vshmaliukh.webstore.services.CartService;
-import com.vshmaliukh.webstore.services.ItemService;
-import com.vshmaliukh.webstore.services.UnauthorizedUserService;
-import com.vshmaliukh.webstore.services.UserService;
+import com.vshmaliukh.webstore.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/shopping-cart")
@@ -33,6 +28,8 @@ public class ShoppingCartController {
     final CookieHandler cookieHandler = new CookieHandler();
 
     final ItemService itemService;
+
+    final CartItemService cartItemService;
 
     final CartService cartService;
     final ItemRepositoryProvider itemRepositoryProvider;
@@ -65,6 +62,7 @@ public class ShoppingCartController {
             Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
             if(cart!=null) {
                 List<CartItem> cartItems = cart.getItems();
+                cartItems.forEach(o->System.out.println(o.getId()));
                 int totalCount = shoppingCartHandler.countAllItemsQuantity(cartItems);
                 int totalPrice = shoppingCartHandler.countAllItemsPrice(cartItems);
                 modelMap.addAttribute("items", cartItems);
@@ -81,28 +79,25 @@ public class ShoppingCartController {
         return new ModelAndView("shopping-cart");
     }
 
-    @GetMapping("/add-one/{type}/{id}")
-    public String incItemQuantity(@PathVariable String type,
-                                  @PathVariable Integer id,
+    @GetMapping("/add-one/{category}/{type}/{cartItemId}")
+    public String incItemQuantity(@PathVariable String category,
+                                  @PathVariable String type, // todo mb optimize it
+                                  @PathVariable Integer cartItemId,
                                   @CookieValue Long userId) {
-
         // todo add checking authorization
-
         boolean authorization = false;
-        final Long finalUserId = userId;
-        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-        optionalItem.ifPresent(item -> cartService.addItemToCart(item, finalUserId,authorization));
+        cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,true); // because of incrementing
         return "redirect:/shopping-cart";
     }
 
-    @GetMapping("/remove-one/{type}/{id}")
-    public String decItemQuantity(@PathVariable String type,
-                                  @PathVariable Integer id,
+    @GetMapping("/remove-one/{category}/{type}/{cartItemId}")
+    public String decItemQuantity(@PathVariable String category,
+                                  @PathVariable String type, // todo mb optimize it
+                                  @PathVariable Integer cartItemId,
                                   @CookieValue Long userId) {
         // todo implement authorization checking
         boolean authorization = false;
-        Optional<? extends Item> optionalItem = itemRepositoryProvider.getItemRepositoryByItemClassName(type).findById(id);
-        optionalItem.ifPresent(item -> cartService.decItemQuantityInCart(item, userId, authorization));
+        cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,false); // because of decrementing
         return "redirect:/shopping-cart";
     }
 }

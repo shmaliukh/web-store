@@ -6,10 +6,7 @@ import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
-import com.vshmaliukh.webstore.services.CartService;
-import com.vshmaliukh.webstore.services.ItemService;
-import com.vshmaliukh.webstore.services.UnauthorizedUserService;
-import com.vshmaliukh.webstore.services.UserService;
+import com.vshmaliukh.webstore.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,6 +27,7 @@ public class MainPageController {
     final ItemService itemService;
     final UserService userService;
     final CartService cartService;
+    final CartItemService cartItemService;
     final ItemRepositoryProvider itemRepositoryProvider;
     final UnauthorizedUserService unauthorizedUserService;
 
@@ -95,7 +93,7 @@ public class MainPageController {
             }
         }
 
-        final Long finalUserId = userId;
+        final Long finalUserId = userId; // todo change item to cart item
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = itemRepository.findById(id);
 
