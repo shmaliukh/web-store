@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
+import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -18,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -61,32 +59,28 @@ public class AdminItemController {
             modelMap.addAttribute("itemImageList", itemImageList);
             return new ModelAndView("/admin/item/details", modelMap);
         }
-        log.warn("problem to generate '/item/details/{}' template // not found item with '{}' id", itemId, itemId);
+        log.warn("problem to generate '/item/{}/details' template // not found item with '{}' id", itemId, itemId);
         return new ModelAndView("redirect:/admin/item/catalog", modelMap);
     }
 
     @GetMapping("/view/{itemType}")
     public ModelAndView doGetView(@RequestParam(required = false) String keyword,
                                   @RequestParam(defaultValue = "1") int page,
-                                  @RequestParam(defaultValue = ConstantsForControllers.DEFAULT_ITEM_QUANTITY_ON_PAGE) int size,
-                                  @RequestParam(defaultValue = "id,asc") String[] sort,
+                                  @RequestParam(defaultValue = "5") int size,
+                                  @RequestParam(defaultValue = "id") String sortField,
+                                  @RequestParam(defaultValue = "asc") String sortDirection,
                                   @PathVariable("itemType") String itemType,
                                   ModelMap modelMap) {
-        BaseItemRepository itemRepository = getItemRepositoryByItemType(itemType);
-        List<? extends Item> itemList = AdminControllerUtils.getSortedItemsContent(keyword, page, size, sort, modelMap, itemRepository);
+        BaseItemRepository itemRepository = itemService.getItemRepositoryByItemTypeName(itemType);
 
+        TableContentImp<? extends Item> tableContent = AdminControllerUtils.generateTableContentForItemView(keyword, page, size, sortField, sortDirection, itemRepository);
+        List<? extends Item> itemList = tableContent.readContentList();
+        ModelMap contentModelMap = tableContent.readContentModelMap();
+
+        modelMap.addAllAttributes(contentModelMap);
         modelMap.addAttribute("itemType", itemType.toLowerCase());
         modelMap.addAttribute("itemList", itemList);
         return new ModelAndView("/admin/item/view", modelMap);
-    }
-
-    private BaseItemRepository getItemRepositoryByItemType(String itemType) {
-        // TODO solve 'Raw use of parameterized class 'BaseItemRepository''
-        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType);
-        if (itemRepository != null) {
-            return itemRepository;
-        }
-        return itemRepositoryProvider.getAllItemRepository();
     }
 
     @DeleteMapping("/delete")
@@ -121,14 +115,16 @@ public class AdminItemController {
 
     @GetMapping("/add/{itemType}")
     public ModelAndView doGet(@PathVariable("itemType") String itemType,
+                              @RequestParam(value = "categoryName", required = false) String categoryName,
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
-            List<String> statusList = itemService.readStatusNameList();
+            Set<String> statusSet = itemService.readStatusNameSet();
             List<String> categoryNameList = categoryService.readCategoryNameList();
 
+            modelMap.addAttribute("categoryName", categoryName);
             modelMap.addAttribute("itemType", itemType.toLowerCase());
-            modelMap.addAttribute("statusList", statusList);
+            modelMap.addAttribute("statusList", statusSet);
             modelMap.addAttribute("categoryNameList", categoryNameList);
             return new ModelAndView("admin/item/create", modelMap);
         }

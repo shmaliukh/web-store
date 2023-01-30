@@ -19,7 +19,6 @@ public abstract class LiteratureItem extends Item {
     private int pages;
 
     protected LiteratureItem(Integer id,
-                             String category,
                              String name,
                              int currentQuantity,
                              int availableToBuyQuantity,
@@ -30,7 +29,7 @@ public abstract class LiteratureItem extends Item {
                              boolean isAvailableInStore,
                              int soldOutQuantity,
                              int pages) {
-        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity);
+        super(id, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity);
         setPages(pages);
     }
 

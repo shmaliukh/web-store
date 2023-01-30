@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
 import java.util.Optional;
 
 @Slf4j
@@ -21,27 +22,27 @@ public class ImageController {
     final ImageService imageService;
 
     @GetMapping("/image/{id}")
-    public ResponseEntity<byte[]> showProductImage(@PathVariable Long id) {
+    public ResponseEntity<byte[]> showProductImage(@PathVariable @Min(1) Long id) {
         Optional<Image> optionalImage = imageService.getImageById(id);
         if (optionalImage.isPresent()) {
             Image itemImage = optionalImage.get();
-            byte[] decompressedImage = itemImage.getImageData();
+            byte[] imageData = itemImage.getImageData();
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_PNG)
-                    .body(decompressedImage);
+                    .body(imageData);
         }
         return ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/image/{id}")
-    public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteImage(@PathVariable @Min(1) Long id) {
         Optional<Image> optionalImage = imageService.getImageById(id);
         if (optionalImage.isPresent()) {
             Image itemImage = optionalImage.get();
             imageService.deleteImage(itemImage);
             return ResponseEntity.ok().build();
         }
-        log.warn("not found image by '{}' id to delete", id);
+        log.warn("problem to delete image by '{}' // not found image", id);
         return ResponseEntity.badRequest().build();
     }
 

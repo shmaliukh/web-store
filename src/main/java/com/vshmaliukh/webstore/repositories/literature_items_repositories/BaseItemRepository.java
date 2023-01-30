@@ -11,6 +11,6 @@ public interface BaseItemRepository<T extends Item>  extends JpaRepository<T, In
 
     Page<T> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
 
-    T getById(Integer id);
+    T readById(Integer id);
 
 }

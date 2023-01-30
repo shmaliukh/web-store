@@ -11,7 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.*;
+import static com.vshmaliukh.webstore.ConstantsForEntities.COMICS_TABLE;
+import static com.vshmaliukh.webstore.ConstantsForEntities.PUBLISHER_COLUMN;
 
 @Getter
 @Setter
@@ -25,7 +26,6 @@ public class Comics extends LiteratureItem {
 
     @JsonCreator
     public Comics(@JsonProperty("itemId") Integer id,
-                  @JsonProperty("category") String category,
                   @JsonProperty("name") String name,
                   @JsonProperty("currentQuantity") int currentQuantity,
                   @JsonProperty("availableToBuyQuantity") int availableToBuyQuantity,
@@ -37,7 +37,7 @@ public class Comics extends LiteratureItem {
                   @JsonProperty("soldOutQuantity") int soldOutQuantity,
                   @JsonProperty("pages") int pages,
                   @JsonProperty("publisher") String publisher) {
-        super(id, name, category, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
+        super(id, name, currentQuantity, availableToBuyQuantity, costPrice, salePrice, description, status, isAvailableInStore, soldOutQuantity, pages);
         this.publisher = publisher;
     }
 
@@ -63,7 +63,6 @@ public class Comics extends LiteratureItem {
     public String toString() {
         return "Comics{" +
                 "id=" + getId() +
-                ", category='" + getCategory() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", currentQuantity=" + getCurrentQuantity() +
                 ", availableToBuyQuantity=" + getAvailableToBuyQuantity() +
@@ -73,7 +72,6 @@ public class Comics extends LiteratureItem {
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
-                ", imageList=" + getImageList() +
                 ", pages=" + getPages() +
                 ", publisher=" + getPublisher() +
                 '}';

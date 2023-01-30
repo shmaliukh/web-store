@@ -17,7 +17,7 @@
     <div th:insert="blocks/order/menu :: edit-addition-menu(${order.getId()})"></div>
 </div>
 
-<div class="album py-5 bg-light text-center">
+<div class="album py-3 bg-light text-center">
 
     <div class="container">
         <p class="lead" th:text="|${order.getUser().getUsername()} order info|"></p>
@@ -27,7 +27,7 @@
     <div class="container">
         <div class="table-responsive-md ">
             <table class="w-100 table table-striped">
-                <caption>Order</caption>
+                <caption>order</caption>
                 <thead>
                 <tr class="table-dark">
                     <th class="align-middle" scope="col">ID</th>
@@ -81,36 +81,35 @@
         </div>
     </div>
 
+    <hr>
+
     <div class="container">
-        <hr>
-        <p class="lead">All order items table</p>
+        <th:block th:insert="blocks/navigation :: tools('/admin/order/edit/' + ${order.getId()})"></th:block>
     </div>
 
     <div class="container">
         <th:block th:unless="${orderItemList.isEmpty()}">
+            <div class="container">
+                <p class="lead">Order items table</p>
+            </div>
             <div class="table-responsive-md ">
                 <table class="w-100 table table-striped">
-                    <caption th:text="|Order items|"></caption>
+                    <caption th:text="|order items|"></caption>
                     <thead>
                     <tr class="table-dark">
-                        <th class="align-middle" scope="row">#</th>
-                        <th class="align-middle" scope="col">ID</th>
-                        <th class="align-middle" scope="col">UPDATED</th>
-                        <th class="align-middle" scope="col">CATEGORY</th>
-                        <th class="align-middle" scope="col">TYPE</th>
-                        <th class="align-middle" scope="col">NAME</th>
-                        <th class="align-middle" scope="col">PRICE</th>
-                        <th class="align-middle" scope="col">QUANTITY</th>
-                        <th class="align-middle" scope="col">ACTIVE</th>
+                        <th:block
+                                th:insert="blocks/table-titles :: order-item-titles-with-sorting('/admin/oder/edit/' + ${order.getId()})">
+                        </th:block>
                         <th colspan="2">TOOLS</th>
                     </tr>
                     </thead>
                     <tbody class="table-group-divider">
                     <tr th:each="orderItem, iterator: ${orderItemList}">
-                        <th class="align-middle" scope="row" th:text="${iterator.count}">#</th>
+                        <th class="align-middle" scope="row"
+                            th:text="${iterator.count + (currentPage - 1) * pageSize}">#
+                        </th>
                         <td class="align-middle" th:text="${orderItem.getOrderItemId()}">Id</td>
                         <td class="align-middle" th:text="${orderItem.getUpdatedAt()}">Date</td>
-                        <td class="align-middle" th:text="${orderItem.getItem().getCategory()}">Category</td>
                         <td class="align-middle" th:text="${orderItem.getItem().getTypeStr()}">Type</td>
                         <td class="align-middle" th:text="${orderItem.getItem().getName()}">Name</td>
                         <form th:id="'formElem' +${iterator.count}"
@@ -134,8 +133,8 @@
                                        th:checked="${orderItem.isActive()}">
                                 <script th:replace="/blocks/generated-scripts :: checkBox('checkbox', ${iterator})"></script>
                             </td>
-                            <script th:inline="javascript" th:utext="
-                               |var checker${iterator.count} = document.getElementById('checkbox${iterator.count}');
+                            <script th:inline="javascript" th:utext="|
+                                var checker${iterator.count} = document.getElementById('checkbox${iterator.count}');
                                 var priceInput${iterator.count} = document.getElementById('price${iterator.count}');
                                 var quantityInput${iterator.count} = document.getElementById('quantity${iterator.count}');
                                 checker${iterator.count}.onchange = function(){
@@ -155,8 +154,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <!--                TODO implement pagination               -->
-                <!--                <th:block th:insert="blocks/navigation :: pagination('/admin/order/view/' + ${order.getId()})"></th:block>-->
+                <th:block th:insert="blocks/navigation :: pagination('/admin/order/edit/' + ${order.getId()})"></th:block>
             </div>
         </th:block>
 

@@ -19,13 +19,15 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Table(name = INVOICE_TABLE)
 public class Invoice extends AuditModel {
 
+//  TODO refactor entity
+
     @Id
     @Column(name = INVOICE_ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = USER_ID_COLUMN, nullable = false)
-    private Long userId;
+    @OneToOne(cascade = CascadeType.ALL)
+    private User userId;
 
     @Column(name = INVOICE_DATE_COLUMN, nullable = false)
     @JsonFormat(pattern = DD_MM_YYYY_ORDER_DATE_PATTERN_STR)
