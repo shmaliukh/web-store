@@ -65,7 +65,7 @@ public class MainPageController {
     }
 
     @PostMapping("/catalog/{category}/{type}/{id}")
-    public String addToCart(@PathVariable String category,
+    public String addItemToCartFromMainPage(@PathVariable String category,
                             @PathVariable String type,
                             @PathVariable Integer id,
                             @RequestHeader String referer,
@@ -76,24 +76,20 @@ public class MainPageController {
 
         boolean authorization = false;
 
-        if(!authorization){
-            if (userId == 0) {
-                UnauthorizedUserCart unauthorizedUserCart = new UnauthorizedUserCart();
-                cartService.addNewCart(unauthorizedUserCart);
-                userId = unauthorizedUserService.createUnauthorizedUser(unauthorizedUserCart).getId();
-                response.addCookie(new CookieHandler().createUserIdCookie(userId));
-            }
-            if (!unauthorizedUserService.existsById(userId)){
-                UnauthorizedUserCart unauthorizedUserCart = new UnauthorizedUserCart();
-                cartService.addNewCart(unauthorizedUserCart);
-                UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
-                unauthorizedUser.setUnauthorizedUserCart(unauthorizedUserCart);
+        if(!authorization) {
+            UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
+            if (userId != 0 && !unauthorizedUserService.existsById(userId)) {
                 unauthorizedUser.setId(userId);
-                unauthorizedUserService.saveUser(unauthorizedUser);
             }
+            unauthorizedUserService.saveUser(unauthorizedUser);
+            UnauthorizedUserCart unauthorizedUserCart = new UnauthorizedUserCart();
+            unauthorizedUserCart.setUnauthorizedUser(unauthorizedUser);
+            cartService.addNewCart(unauthorizedUserCart);
+            response.addCookie(new CookieHandler().createUserIdCookie(unauthorizedUser.getId()));
         }
 
         final Long finalUserId = userId; // todo change item to cart item
+
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = itemRepository.findById(id);
 
