@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
 import com.vshmaliukh.webstore.login.UserRole;
+import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import static com.vshmaliukh.webstore.login.LogInProvider.LOCAL;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService implements EntityValidator<User> {
 
     @Getter
     final UserRepository userRepository;
@@ -39,6 +40,7 @@ public class UserService {
         return false;
     }
 
+    // TODO add test for 'processOAuthPostLogin' method
     public void processOAuthPostLogin(String username) {
         User user = userRepository.getUserByUsername(username);
         if (user == null) {
@@ -48,7 +50,7 @@ public class UserService {
 
     public void insertUser(String username, LogInProvider logInProvider) {
         User user = new User();
-        user.setId(1L);
+        user.setId(null);
         user.setUsername(username);
         user.setLogInProvider(logInProvider);
         user.setEnabled(true);
@@ -56,16 +58,6 @@ public class UserService {
         userRepository.save(user);
         log.info("Created new user: '{}', provider: '{}'", user, logInProvider);
     }
-
-    public Long readUserIdByName(String userName) {
-        User user = userRepository.getUserByUsername(userName);
-        if (user != null) {
-            return user.getId();
-        }
-        log.warn("problem to find user entity with '{}' username // return NULL", userName);
-        return null;
-    }
-
 
     public User createBaseUser(String userName, String email, UserRole role, boolean enabled) {
         User user = new User();
@@ -79,10 +71,10 @@ public class UserService {
     }
 
     public void save(User user) {
-        if (user != null) {
+        if (isValidEntity(user)) {
             userRepository.save(user);
         } else {
-            log.warn("user not saved // user == NULL");
+            log.error("user not saved // invalid user");
         }
     }
 

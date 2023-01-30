@@ -6,8 +6,6 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -17,23 +15,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Setter
 @Service
 @AllArgsConstructor
-public class CategoryService {
+public class CategoryService implements EntityValidator<Category> {
 
-    protected ImageService imageService;
+    protected final ImageService imageService;
 
     @Getter
-    protected CategoryRepository categoryRepository;
+    protected final CategoryRepository categoryRepository;
 
     public List<Category> readAll() {
         return categoryRepository.findAll();
     }
 
     public void save(Category category) {
-        // TODO is necessary to create test for this method ?
-        categoryRepository.save(category);
+        if (isValidEntity(category)) {
+            categoryRepository.save(category);
+        } else {
+            log.error("category not saved // invalid category");
+        }
     }
 
     public List<String> readCategoryNameList() {
