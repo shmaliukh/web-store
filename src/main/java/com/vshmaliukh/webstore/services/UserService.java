@@ -30,7 +30,7 @@ public class UserService {
     }
 
     public boolean isAdminUser(Long userId) {
-        User user = null;
+        User user;
         String userRole = null;
         if (userId != null) {
             user = userRepository.getUserById(userId);

@@ -9,5 +9,8 @@ logging:
     root: INFO
 
 spring:
+  output:
+    ansi:
+      enabled: always
   profiles:
     active: secrets, database-mysql, oath2

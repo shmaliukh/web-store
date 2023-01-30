@@ -1,6 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
-import com.vshmaliukh.webstore.services.TempService;
+import com.vshmaliukh.webstore.services.DemoService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -15,11 +15,11 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/test-data")
 public class AdminTempController {
 
-    final TempService tempService;
+    final DemoService demoService;
 
     @GetMapping
     public ModelAndView doGetAddData(ModelMap modelMap) {
-        tempService.addDataToDatabase();
+        demoService.addDataToDatabase();
         return new ModelAndView("redirect:/admin/category/create", modelMap);
     }
 
