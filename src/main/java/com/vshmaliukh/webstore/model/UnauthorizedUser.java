@@ -22,7 +22,4 @@ public class UnauthorizedUser extends AuditModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    UnauthorizedUserCart unauthorizedUserCart;
-
 }
