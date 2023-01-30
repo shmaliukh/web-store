@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.UnauthorizedUser;
-import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +34,8 @@ public class UnauthorizedUserService {
         unauthorizedUserRepository.deleteAll(unauthorizedUserRepository.readUnauthorizedUsersByCreatedAtBefore(date));
     }
 
-    public UnauthorizedUser createUnauthorizedUser(UnauthorizedUserCart unauthorizedUserCart){
+    public UnauthorizedUser createUnauthorizedUser(){
         UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
-        unauthorizedUser.setUnauthorizedUserCart(unauthorizedUserCart);
         unauthorizedUserRepository.save(unauthorizedUser);
         return unauthorizedUser;
     }
