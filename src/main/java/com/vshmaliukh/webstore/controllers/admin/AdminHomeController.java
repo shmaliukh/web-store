@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/admin")
 @AllArgsConstructor
 public class AdminHomeController {
-//  TODO refactor 'home' page
+    // TODO refactor 'home' page
 
     final UserService userService;
     final ItemRepositoryProvider itemRepositoryProvider;

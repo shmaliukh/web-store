@@ -116,7 +116,7 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_updateCategoryTest_failToUpdate")
-    void updateCategoryTest_failToUpdate(String name, String description, Boolean isDeleted, Boolean isActivated, Category categoryToUpdate) {
+    void updateCategoryTest(String name, String description, Boolean isDeleted, Boolean isActivated, Category categoryToUpdate) {
         Optional<Category> optionalCategory
                 = categoryService.updateCategory(name, description, isDeleted, isActivated, categoryToUpdate);
 
@@ -137,14 +137,13 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_updateCategoryTest")
-    void updateCategoryTest_failToUpdate(String name, String description, Boolean isDeleted, Boolean isActivated, Category categoryToUpdate, Category expected) {
+    void updateCategoryTest(String name, String description, Boolean isDeleted, Boolean isActivated, Category categoryToUpdate, Category expected) {
         Optional<Category> optionalCategory
                 = categoryService.updateCategory(name, description, isDeleted, isActivated, categoryToUpdate);
 
         assertNotNull(optionalCategory);
         assertTrue(optionalCategory.isPresent());
-//        FIXME
-        assertEquals(expected, optionalCategory.get());
+        assertEquals(expected.toString(), optionalCategory.get().toString());
     }
 
     private static Stream<Arguments> providedArgs_readCategoryByIdTest_failToFind() {

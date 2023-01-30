@@ -46,6 +46,11 @@ public class AdminCategoryController {
     final ImageService imageService;
     final CategoryService categoryService;
 
+    @GetMapping("/**")
+    public ModelAndView doGetAll(ModelMap modelMap){
+        return new ModelAndView("redirect:/catalog", modelMap);
+    }
+
     @GetMapping("/catalog")
     public ModelAndView doGetCatalog(@RequestParam(required = false) String keyword,
                                      @RequestParam(defaultValue = "1") int page,
