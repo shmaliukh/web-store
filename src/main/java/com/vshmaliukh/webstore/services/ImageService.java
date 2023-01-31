@@ -19,28 +19,36 @@ import java.util.function.Supplier;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ImageService {
+public class ImageService implements EntityValidator<Image>{
 
     final ImageRepository imageRepository;
     final ItemImageRepository itemImageRepository;
 
     public void saveImage(Image image) {
-        imageRepository.save(image);
+        if(isValidEntity(image)){
+            imageRepository.save(image);
+            log.info("saved image: {}", image);
+        } else {
+            log.error("image not saved // invalid image");
+        }
     }
 
     public Optional<Image> buildImageFromFile(MultipartFile file) {
         try {
-            if (!file.isEmpty()) {
+            if (file != null && !file.isEmpty()) {
                 String filename = file.getOriginalFilename();
                 String fileContentType = file.getContentType();
-                byte[] compressedImage = file.getBytes();
+                byte[] fileBytes = file.getBytes();
 
                 Image image = new Image();
                 image.setName(filename);
                 image.setType(fileContentType);
-                image.setImageData(compressedImage);
+                image.setImageData(fileBytes);
 
                 return Optional.of(image);
+            } else {
+                log.error("problem to build image out of the file"
+                        + (file == null ? " // file is NULL" : " // file is empty"));
             }
         } catch (IOException ioe) {
             log.error(ioe.getMessage(), ioe);
