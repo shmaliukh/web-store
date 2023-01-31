@@ -4,6 +4,7 @@ import com.vshmaliukh.webstore.login.LogInProvider;
 import com.vshmaliukh.webstore.login.UserRole;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,6 +17,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -31,6 +35,15 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    // TODO implement validation check
+    Validator validator;
+
+    @BeforeEach
+    void setUp() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
 
     private static Stream<Long> providedArgs_readUserByIdTest() {
         return Stream.of(1L, 2L, 3L, 1_000_000L, 1234_5678_9012_3456L);
@@ -160,6 +173,8 @@ class UserServiceTest {
 //        if(!expectedIsValid){
 //            assertTrue(output.getOut().contains("invalid user"));
 //        }
+//        Set<ConstraintViolation<User>> validation = validator.validate(user);
+//        assertEquals(1, validation.size(), "should be 1 exception");
     }
 
 }
