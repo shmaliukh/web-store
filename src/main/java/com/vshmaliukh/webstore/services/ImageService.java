@@ -50,6 +50,8 @@ public class ImageService implements EntityValidator<Image> {
                         + (file == null ? " // file is NULL" : " // file is empty"));
             }
         } catch (IOException ioe) {
+            // TODO create test to catch 'IOException' messages
+            log.error("problem to build image out of the file // IOException");
             log.error(ioe.getMessage(), ioe);
         }
         return Optional.empty();
@@ -57,20 +59,26 @@ public class ImageService implements EntityValidator<Image> {
 
     public Optional<ItemImage> formItemImageFromFile(Item item, MultipartFile file) {
         Optional<Image> optionalImage = buildImageFromFile(file);
-        if (optionalImage.isPresent()) {
+        if (item != null && optionalImage.isPresent()) {
             ItemImage itemImage = new ItemImage(optionalImage.get(), item);
             return Optional.of(itemImage);
         }
-        log.warn("problem to generate  image entity from file '{}'", file);
+        log.warn("problem to generate item image"
+                + (item == null ? " // item is NULL" : " // problem to generate image out of file"));
         return Optional.empty();
     }
 
     public Optional<Image> findImageById(Long id) {
-        return imageRepository.findById(id);
+        if (id != null && id > 0L) {
+            return imageRepository.findById(id);
+        }
+        log.warn("problem to find image by id"
+                + (id == null ? " // id is NULL" : " // id < 1"));
+        return Optional.empty();
     }
 
     public List<ItemImage> findImageListByItem(Item item) {
-        List<ItemImage> imagesByItem = itemImageRepository.findImagesByItem(item);
+        List<ItemImage> imagesByItem = item != null ? itemImageRepository.findImagesByItem(item) : null;
         return imagesByItem != null
                 ? imagesByItem
                 : Collections.emptyList();
@@ -79,9 +87,10 @@ public class ImageService implements EntityValidator<Image> {
     public void deleteImage(Image image) {
         if (isValidEntity(image)) {
             imageRepository.delete(image);
-            log.info("deleted '{}' image", image);
+            log.info("deleted image: '{}'", image);
+        } else {
+            log.warn("image not deleted // invalid image");
         }
-        log.warn("image not deleted // invalid image");
     }
 
 }
