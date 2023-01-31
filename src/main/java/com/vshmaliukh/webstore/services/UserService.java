@@ -72,6 +72,7 @@ public class UserService implements EntityValidator<User> {
     public void save(User user) {
         if (isValidEntity(user)) {
             userRepository.save(user);
+            log.info("saved user: {}", user);
         } else {
             log.error("user not saved // invalid user");
         }

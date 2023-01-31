@@ -31,6 +31,7 @@ public class CategoryService implements EntityValidator<Category> {
     public void save(Category category) {
         if (isValidEntity(category)) {
             categoryRepository.save(category);
+            log.info("saved category: {}", category);
         } else {
             log.error("category not saved // invalid category");
         }
