@@ -14,18 +14,17 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ImageService implements EntityValidator<Image>{
+public class ImageService implements EntityValidator<Image> {
 
     final ImageRepository imageRepository;
     final ItemImageRepository itemImageRepository;
 
     public void saveImage(Image image) {
-        if(isValidEntity(image)){
+        if (isValidEntity(image)) {
             imageRepository.save(image);
             log.info("saved image: {}", image);
         } else {
@@ -62,11 +61,11 @@ public class ImageService implements EntityValidator<Image>{
             ItemImage itemImage = new ItemImage(optionalImage.get(), item);
             return Optional.of(itemImage);
         }
-        log.warn("problem to generate '{}' file to image entity", file);
+        log.warn("problem to generate  image entity from file '{}'", file);
         return Optional.empty();
     }
 
-    public Optional<Image> getImageById(Long id) {
+    public Optional<Image> findImageById(Long id) {
         return imageRepository.findById(id);
     }
 
@@ -78,11 +77,11 @@ public class ImageService implements EntityValidator<Image>{
     }
 
     public void deleteImage(Image image) {
-        if (image != null) {
+        if (isValidEntity(image)) {
             imageRepository.delete(image);
             log.info("deleted '{}' image", image);
         }
-        log.warn("image not deleted // image == NULL");
+        log.warn("image not deleted // invalid image");
     }
 
 }

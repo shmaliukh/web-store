@@ -23,7 +23,7 @@ public class ImageController {
 
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> showProductImage(@PathVariable @Min(1) Long id) {
-        Optional<Image> optionalImage = imageService.getImageById(id);
+        Optional<Image> optionalImage = imageService.findImageById(id);
         if (optionalImage.isPresent()) {
             Image itemImage = optionalImage.get();
             byte[] imageData = itemImage.getImageData();
@@ -36,7 +36,7 @@ public class ImageController {
 
     @DeleteMapping("/image/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable @Min(1) Long id) {
-        Optional<Image> optionalImage = imageService.getImageById(id);
+        Optional<Image> optionalImage = imageService.findImageById(id);
         if (optionalImage.isPresent()) {
             Image itemImage = optionalImage.get();
             imageService.deleteImage(itemImage);

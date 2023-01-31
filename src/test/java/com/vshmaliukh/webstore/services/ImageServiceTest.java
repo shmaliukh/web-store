@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -72,7 +73,6 @@ class ImageServiceTest {
         }
     }
 
-
     private static Stream<Arguments> providedArgs_buildImageFromFileTest() {
         return Stream.of(
                 Arguments.of(multipartFile1),
@@ -128,5 +128,37 @@ class ImageServiceTest {
         assertTrue(output.getOut().contains("image not saved // invalid image"));
     }
 
+    @Test
+    void deleteImageTest_null(CapturedOutput output) {
+        imageService.deleteImage(null);
+
+        assertTrue(output.getOut().contains("image not deleted // invalid image"));
+    }
+
+    private static Stream<Long> providedArgs_findImageByIdTest() {
+        return Stream.of(1L, 2L, 3L, 1_000_000L, 1234_5678_9012_3456L);
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_findImageByIdTest")
+    void findImageByIdTest(Long id) {
+        Image image = null;
+        Optional<Image> optionalImage = imageService.buildImageFromFile(multipartFile1);
+        if(optionalImage.isPresent()){
+            image = optionalImage.get();
+            image.setId(id);
+        }
+        Mockito
+                .when(imageRepository.findById(id))
+                .thenReturn(Optional.ofNullable(image));
+
+        Optional<Image> optionalImageById = imageService.findImageById(id);
+        assertTrue(optionalImageById.isPresent());
+        Image imageById = optionalImageById.get();
+        assertNotNull(imageById.getId());
+        assertNotNull(imageById.getName());
+        assertNotNull(imageById.getType());
+        assertNotNull(imageById.getImageData());
+    }
 
 }
