@@ -137,14 +137,14 @@ class OrderItemServiceTest {
     }
 
     @Test
-    void saveTest_null(CapturedOutput output){
+    void saveTest_null(CapturedOutput output) {
         orderItemService.save(null);
 
         assertTrue(output.getOut().contains("problem to save order item"));
     }
 
     @Test
-    void saveTest_quantityIsLessThan1(CapturedOutput output){
+    void saveTest_quantityIsLessThan1(CapturedOutput output) {
         OrderItem orderItem = new OrderItem();
         orderItem.setQuantity(0);
         orderItemService.save(orderItem);
@@ -153,12 +153,66 @@ class OrderItemServiceTest {
     }
 
     @Test
-    void saveTest(CapturedOutput output){
+    void saveTest(CapturedOutput output) {
         OrderItem orderItem = new OrderItem();
         orderItem.setQuantity(1);
         orderItemService.save(orderItem);
 
         assertTrue(output.getOut().contains("saved orderItem"));
+    }
+
+    private static Stream<Arguments> providedArgs_generateOrderItemIfExistTest() {
+        OrderItem orderItem1 = new OrderItem();
+        orderItem1.setQuantity(0);
+        orderItem1.setOrder(new Order());
+        orderItem1.setItem(new Magazine());
+        orderItem1.setPrice(100);
+        OrderItem orderItem2 = new OrderItem();
+        orderItem2.setQuantity(1);
+        orderItem2.setOrder(new Order());
+        orderItem2.setItem(new Magazine());
+        orderItem2.setPrice(100);
+        OrderItem orderItem3 = new OrderItem();
+        orderItem3.setQuantity(-1);
+        orderItem3.setOrder(new Order());
+        orderItem3.setItem(new Book());
+        orderItem3.setPrice(100);
+        OrderItem orderItem4 = new OrderItem();
+        orderItem4.setQuantity(0);
+        orderItem4.setOrder(new Order());
+        orderItem4.setItem(new Comics());
+        orderItem4.setPrice(100);
+        OrderItem orderItem5 = new OrderItem();
+        orderItem5.setQuantity(5);
+        orderItem5.setOrder(new Order());
+        orderItem5.setItem(new Newspaper());
+        orderItem5.setPrice(100);
+        OrderItem orderItem6 = new OrderItem();
+        orderItem6.setQuantity(-100);
+        orderItem6.setOrder(new Order());
+        orderItem6.setItem(new Book());
+        orderItem6.setPrice(100);
+        return Stream.of(
+                Arguments.of(1, orderItem1, 1),
+                Arguments.of(1, orderItem2, 2),
+                Arguments.of(1, orderItem3, 1),
+                Arguments.of(3, orderItem4, 3),
+                Arguments.of(5, orderItem5, 10),
+                Arguments.of(3, orderItem6, 3)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_generateOrderItemIfExistTest")
+    void generateOrderItemIfExistTest(int quantity, OrderItem orderItem, int expectedQuantity) {
+        OrderItem updatedOrderItem = orderItemService.generateOrderItemIfExist(quantity, orderItem);
+
+        assertNotNull(updatedOrderItem);
+        assertEquals(updatedOrderItem.getOrderItemId(), orderItem.getOrderItemId());
+        assertEquals(expectedQuantity, updatedOrderItem.getQuantity());
+        assertEquals(orderItem.getOrderItemPrice(), updatedOrderItem.getOrderItemPrice());
+        assertNotNull(updatedOrderItem.getOrder());
+        assertNotNull(updatedOrderItem.getItem());
     }
 
 }

@@ -42,7 +42,7 @@ public class OrderItemService implements EntityValidator<OrderItem> {
     }
 
     public OrderItem generateOrderItemIfExist(Integer quantity, OrderItem orderItem) {
-        int orderItemQuantity = orderItem.getQuantity();
+        int orderItemQuantity = Math.max(orderItem.getQuantity(), 0);
         orderItem.setQuantity(orderItemQuantity + quantity);
         if (orderItem.getQuantity() >= 1) {
             orderItem.setActive(false);

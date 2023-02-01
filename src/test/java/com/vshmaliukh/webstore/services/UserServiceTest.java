@@ -100,7 +100,7 @@ class UserServiceTest {
     void isAdminUserTest(User user, boolean isAdminExpectedResult) {
         boolean isAdminResult = userService.isAdminUser(user);
 
-        assertEquals(isAdminResult, isAdminExpectedResult);
+        assertEquals(isAdminExpectedResult, isAdminResult);
     }
 
     @Test
@@ -146,7 +146,7 @@ class UserServiceTest {
                 .when(userRepository.existsById(user.getId()))
                 .thenReturn(expectedIsSaved);
 
-        assertEquals(userService.isUserSaved(user), expectedIsSaved);
+        assertEquals(expectedIsSaved, userService.isUserSaved(user));
     }
 
     @Test
@@ -177,7 +177,7 @@ class UserServiceTest {
     @ParameterizedTest
     @MethodSource("providedArgs_isValidEntityTest")
     void isValidEntityTest(User user, boolean expectedIsValid) {
-        assertEquals(userService.isValidEntity(user), expectedIsValid);
+        assertEquals(expectedIsValid, userService.isValidEntity(user));
 
 //        TODO solve problem to read and check output from ParameterizedTest
 //        if(!expectedIsValid){
@@ -212,15 +212,15 @@ class UserServiceTest {
         assertNotNull(baseUser);
         assertNull(baseUser.getId());
         assertNotNull(baseUser.getRole());
-        assertEquals(baseUser.getRole(), role);
+        assertEquals(role, baseUser.getRole());
         assertNotNull(baseUser.getUsername());
-        assertEquals(baseUser.getUsername(), username);
+        assertEquals(username, baseUser.getUsername());
         assertNotNull(baseUser.getEmail());
-        assertEquals(baseUser.getEmail(), email);
+        assertEquals(email, baseUser.getEmail());
         assertTrue(baseUser.getEmail().length() >= 5);
-        assertEquals(baseUser.isEnabled(), enabled);
-        assertEquals(baseUser.getPassword(), DEFAULT_PASSWORD);
-        assertEquals(baseUser.getLogInProvider(), LogInProvider.LOCAL);
+        assertEquals(enabled, baseUser.isEnabled());
+        assertEquals(DEFAULT_PASSWORD, baseUser.getPassword());
+        assertEquals(LogInProvider.LOCAL, baseUser.getLogInProvider());
     }
 
     @Test
@@ -248,7 +248,7 @@ class UserServiceTest {
         List<User> userList = userService.readAllUserList();
 
         assertNotNull(userList);
-        assertEquals(userList, repositoryUserList);
+        assertEquals(repositoryUserList, userList);
         assertTrue(Collections.unmodifiableList(userList).getClass().isInstance(Collections.unmodifiableList(new ArrayList<>())));
     }
 
