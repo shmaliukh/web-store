@@ -19,6 +19,8 @@ import static com.vshmaliukh.webstore.login.LogInProvider.LOCAL;
 @AllArgsConstructor
 public class UserService implements EntityValidator<User> {
 
+    public static final String DEFAULT_PASSWORD = "1234";
+
     @Getter
     final UserRepository userRepository;
 
@@ -41,12 +43,13 @@ public class UserService implements EntityValidator<User> {
 
     // TODO add test for 'processOAuthPostLogin' method
     public void processOAuthPostLogin(String username) {
-        User user = userRepository.getUserByUsername(username);
-        if (user == null) {
+        User user = userRepository.findUserByUsername(username);
+        if (!isValidEntity(user) ) {
             insertUser(username, LogInProvider.GOOGLE);
         }
     }
 
+    // TODO refactor 'insertUser' method
     public void insertUser(String username, LogInProvider logInProvider) {
         User user = new User();
         user.setId(null);
@@ -58,14 +61,22 @@ public class UserService implements EntityValidator<User> {
         log.info("Created new user: '{}', provider: '{}'", user, logInProvider);
     }
 
-    public User createBaseUser(String userName, String email, UserRole role, boolean enabled) {
+    // TODO implement service layer validation
+    public User createBaseUser(
+                                //  @Size(min = 3, max = 50)
+                                String userName,
+                                //  @Email
+                                String email,
+                                //  @NotEmpty
+                                UserRole role,
+                                boolean enabled) {
         User user = new User();
         user.setUsername(userName);
         user.setEmail(email);
         user.setRole(role);
         user.setLogInProvider(LOCAL);
         user.setEnabled(enabled);
-        user.setPassword("1234");
+        user.setPassword(DEFAULT_PASSWORD);
         return user;
     }
 

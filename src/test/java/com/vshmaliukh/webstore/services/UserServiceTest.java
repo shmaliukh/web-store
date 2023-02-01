@@ -23,6 +23,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.vshmaliukh.webstore.services.UserService.DEFAULT_PASSWORD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -103,10 +104,19 @@ class UserServiceTest {
     }
 
     @Test
-    void saveTest(CapturedOutput output) {
+    void saveTest_null(CapturedOutput output) {
         userService.save(null);
 
         assertTrue(output.getOut().contains("user not saved // invalid user"));
+    }
+
+
+    @Test
+    void saveTest(CapturedOutput output) {
+        User user = new User(1L, "some username", "some@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        userService.save(user);
+
+        assertTrue(output.getOut().contains("saved user"));
     }
 
 
@@ -176,5 +186,43 @@ class UserServiceTest {
 //        Set<ConstraintViolation<User>> validation = validator.validate(user);
 //        assertEquals(1, validation.size(), "should be 1 exception");
     }
+
+    private static Stream<Arguments> providedArgs_createBaseUserTest() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < 50; i++) {
+            stringBuilder.append("a");
+        }
+        String maxLengthNameStr = stringBuilder.toString();
+        return Stream.of(
+                Arguments.of(maxLengthNameStr, "some1@mail.com", UserRole.CUSTOMER, true),
+                Arguments.of("username1", "some1@mail.com", UserRole.CUSTOMER, true),
+                Arguments.of("username2", "some2@mail.com", UserRole.CUSTOMER, false),
+                Arguments.of("username3", "some2@mail.com", UserRole.ADMIN, false),
+                Arguments.of("username4", "a@b.c", UserRole.ADMIN, false),
+                Arguments.of("abc", "a@b.c", UserRole.ADMIN, true),
+                Arguments.of("ac", "a@b.c", UserRole.ADMIN, false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_createBaseUserTest")
+    void createBaseUserTest(String username, String email, UserRole role, boolean enabled) {
+        User baseUser = userService.createBaseUser(username, email, role, enabled);
+
+        assertNotNull(baseUser);
+        assertNull(baseUser.getId());
+        assertNotNull(baseUser.getRole());
+        assertEquals(baseUser.getRole(), role);
+        assertNotNull(baseUser.getUsername());
+        assertEquals(baseUser.getUsername(), username);
+        assertNotNull(baseUser.getEmail());
+        assertEquals(baseUser.getEmail(), email);
+        assertTrue(baseUser.getEmail().length() >= 5);
+        assertEquals(baseUser.isEnabled(), enabled);
+        assertEquals(baseUser.getPassword(), DEFAULT_PASSWORD);
+        assertEquals(baseUser.getLogInProvider(), LogInProvider.LOCAL);
+    }
+
+    // TODO add test for 'createBaseUser' with invalid data
 
 }
