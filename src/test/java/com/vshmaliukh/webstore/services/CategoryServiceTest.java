@@ -67,13 +67,14 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_readAllTest")
-    void readAllEmptyTest(List<Category> expectedList) {
+    void readAllEmptyTest(List<Category> repositoryCategoryList) {
         Mockito
                 .when(categoryRepository.findAll())
-                .thenReturn(expectedList);
-        List<Category> actual = categoryService.readAll();
-        assertNotNull(actual);
-        assertEquals(expectedList, actual);
+                .thenReturn(repositoryCategoryList);
+        List<Category> categoryList = categoryService.readAll();
+        assertNotNull(categoryList);
+        assertEquals(repositoryCategoryList, categoryList);
+        assertTrue(Collections.unmodifiableList(categoryList).getClass().isInstance(Collections.unmodifiableList(new ArrayList<>())));
     }
 
     private static Stream<Arguments> providedArgs_readCategoryNameListTest() {
@@ -365,7 +366,7 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_deleteCategoryTest")
-    // TODO is need to refactor original 'deleteCategory' method ?
+        // TODO is need to refactor original 'deleteCategory' method ?
     void deleteCategoryTest(Category category) {
         categoryService.deleteCategory(category);
 
@@ -373,9 +374,15 @@ class CategoryServiceTest {
     }
 
     @Test
-    void saveTest(CapturedOutput output){
+    void saveTest(CapturedOutput output) {
         categoryService.save(null);
 
         assertTrue(output.getOut().contains("category not saved // invalid category"));
     }
+
+    @Test
+    void getCategoryRepositoryTest() {
+        assertNotNull(categoryService.getCategoryRepository());
+    }
+
 }

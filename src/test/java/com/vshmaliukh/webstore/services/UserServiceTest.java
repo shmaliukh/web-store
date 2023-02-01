@@ -20,7 +20,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.vshmaliukh.webstore.services.UserService.DEFAULT_PASSWORD;
@@ -221,6 +221,35 @@ class UserServiceTest {
         assertEquals(baseUser.isEnabled(), enabled);
         assertEquals(baseUser.getPassword(), DEFAULT_PASSWORD);
         assertEquals(baseUser.getLogInProvider(), LogInProvider.LOCAL);
+    }
+
+    @Test
+    void getUserRepositoryTest() {
+        assertNotNull(userService.getUserRepository());
+    }
+
+    private static Stream<Arguments> providedArgs_readAllUserListTest() {
+        User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", true);
+        User user3 = new User(3L, "some username3", "some3@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        return Stream.of(
+                Arguments.of(Collections.emptyList()),
+                Arguments.of(Collections.singletonList(user1)),
+                Arguments.of(Arrays.asList(user1, user2, user3))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readAllUserListTest")
+    void readAllUserListTest(List<User> repositoryUserList) {
+        Mockito
+                .when(userRepository.findAll())
+                .thenReturn(repositoryUserList);
+        List<User> userList = userService.readAllUserList();
+
+        assertNotNull(userList);
+        assertEquals(userList, repositoryUserList);
+        assertTrue(Collections.unmodifiableList(userList).getClass().isInstance(Collections.unmodifiableList(new ArrayList<>())));
     }
 
     // TODO add test for 'createBaseUser' with invalid data

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class UserService implements EntityValidator<User> {
     }
 
     public List<User> readAllUserList() {
-        return userRepository.findAll();
+        return Collections.unmodifiableList(userRepository.findAll());
     }
 
     public boolean isAdminUser(User user) {

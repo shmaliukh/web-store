@@ -25,7 +25,7 @@ public class CategoryService implements EntityValidator<Category> {
     protected final CategoryRepository categoryRepository;
 
     public List<Category> readAll() {
-        return categoryRepository.findAll();
+        return Collections.unmodifiableList(categoryRepository.findAll());
     }
 
     public void save(Category category) {
