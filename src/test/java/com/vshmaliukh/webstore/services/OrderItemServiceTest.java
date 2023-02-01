@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import java.util.*;
@@ -96,6 +97,68 @@ class OrderItemServiceTest {
         assertNotNull(orderItemList);
         assertEquals(orderItemList, repositoryOrderItemList);
         assertTrue(Collections.unmodifiableList(orderItemList).getClass().isInstance(Collections.unmodifiableList(new ArrayList<>())));
+    }
+
+    private static Stream<Arguments> providedArgs_readOrderItemByOrderItemIdTest() {
+        return Stream.of(
+                Arguments.of(1L, new OrderItem()),
+                Arguments.of(2L, new OrderItem()),
+                Arguments.of(123_456_789L, new OrderItem())
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readOrderItemByOrderItemIdTest")
+    void readOrderItemByOrderItemIdTest(Long id, OrderItem repositoryOrderItem) {
+        Mockito
+                .when(orderItemRepository.readOrderItemByOrderItemId(id))
+                .thenReturn(Optional.ofNullable(repositoryOrderItem));
+        Optional<OrderItem> optionalOrderItem = orderItemService.readOrderItemByOrderItemId(id);
+
+        assertNotNull(optionalOrderItem);
+        assertTrue(optionalOrderItem.isPresent());
+        assertTrue(orderItemService.isValidEntity(optionalOrderItem.get()));
+    }
+
+    private static Stream<Long> providedArgs_readOrderItemByOrderItemIdTest_invalid() {
+        return Stream.of(0L, -1L, null);
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readOrderItemByOrderItemIdTest_invalid")
+    void readOrderItemByOrderItemIdTest_invalid(Long id) {
+        Mockito
+                .when(orderItemRepository.readOrderItemByOrderItemId(id))
+                .thenReturn(Optional.empty());
+        Optional<OrderItem> optionalOrderItem = orderItemService.readOrderItemByOrderItemId(id);
+
+        assertNotNull(optionalOrderItem);
+        assertFalse(optionalOrderItem.isPresent());
+    }
+
+    @Test
+    void saveTest_null(CapturedOutput output){
+        orderItemService.save(null);
+
+        assertTrue(output.getOut().contains("problem to save order item"));
+    }
+
+    @Test
+    void saveTest_quantityIsLessThan1(CapturedOutput output){
+        OrderItem orderItem = new OrderItem();
+        orderItem.setQuantity(0);
+        orderItemService.save(orderItem);
+
+        assertTrue(output.getOut().contains("order item quantity < 1, set active state as 'false'"));
+    }
+
+    @Test
+    void saveTest(CapturedOutput output){
+        OrderItem orderItem = new OrderItem();
+        orderItem.setQuantity(1);
+        orderItemService.save(orderItem);
+
+        assertTrue(output.getOut().contains("saved orderItem"));
     }
 
 }

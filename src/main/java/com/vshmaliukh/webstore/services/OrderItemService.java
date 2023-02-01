@@ -53,11 +53,13 @@ public class OrderItemService implements EntityValidator<OrderItem> {
     public void save(OrderItem orderItem) {
         if (isValidEntity(orderItem)) {
             if (orderItem.getQuantity() < 1) {
+                log.warn("order item quantity < 1, set active state as 'false' // orderItem: '{}'", orderItem);
                 orderItem.setActive(false);
             }
             orderItemRepository.save(orderItem);
+            log.info("saved orderItem: {}", orderItem);
         } else {
-            log.warn("problem to save order item // orderItem == NULL");
+            log.error("problem to save order item // invalid orderItem");
         }
     }
 
