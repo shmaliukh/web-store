@@ -73,7 +73,7 @@ public class OrderService {
     }
 
     public Integer calcTotalOrderItems(Order order) {
-        List<OrderItem> orderProducts = orderItemService.readOrderItemsByOrder(order);
+        List<OrderItem> orderProducts = orderItemService.readOrderItemListByOrder(order);
         if (orderProducts != null) {
             return orderProducts.stream()
                     .mapToInt(OrderItem::getQuantity)
@@ -93,7 +93,7 @@ public class OrderService {
     }
 
     public Integer calcTotalOrderPrice(Order order) {
-        List<OrderItem> orderProducts = orderItemService.readOrderItemsByOrder(order);
+        List<OrderItem> orderProducts = orderItemService.readOrderItemListByOrder(order);
         if (orderProducts != null) {
             return orderProducts.stream()
                     .filter(OrderItem::isActive)
@@ -110,7 +110,7 @@ public class OrderService {
 
     public List<OrderItem> readOrderItemListByOrderId(Long id) {
         Order order = readOrderById(id);
-        return orderItemService.readOrderItemsByOrder(order);
+        return orderItemService.readOrderItemListByOrder(order);
     }
 
     public void saveOrder(Order order) {
@@ -120,7 +120,7 @@ public class OrderService {
 
     private void setUpSoldQuantityIfOrderIsCompleted(Order order) {
         if (order.getStatus().equals(ORDER_STATUS_COMPLETED)) {
-            List<OrderItem> orderItems = orderItemService.readOrderItemsByOrder(order);
+            List<OrderItem> orderItems = orderItemService.readOrderItemListByOrder(order);
             for (OrderItem orderItem : orderItems) {
                 Item item = orderItem.getItem();
                 item.setSoldOutQuantity(orderItem.getQuantity());
@@ -184,7 +184,7 @@ public class OrderService {
     }
 
     public List<Order> findUserOrderList(User user) {
-        return orderRepository.findAllByUser(user);
+        return Collections.unmodifiableList(orderRepository.findAllByUser(user));
     }
 
 }
