@@ -31,7 +31,7 @@ public class OrderController {
                               ModelMap modelMap) {
 //        FIXME
 //        List<Item> itemList = orderService.;
-        int totalPrice = orderService.calcOrderTotalSumByUserId(userId);
+        int totalPrice = orderService.calcOrderTotalSumById(userId);
 
 //        FIXME
 //        modelMap.addAttribute("itemList", itemList);

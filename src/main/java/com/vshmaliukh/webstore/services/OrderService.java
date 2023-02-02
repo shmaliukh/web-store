@@ -161,14 +161,21 @@ public class OrderService implements EntityValidator<Order> {
         }
     }
 
-    public int calcOrderTotalSumByUserId(long orderId) {
-        List<Item> itemListByUserId = readOrderItemListByUserId(orderId);
-        if (itemListByUserId != null) {
-            return itemListByUserId.stream()
-                    .filter(Item::isAvailableInStore)
-                    .mapToInt(Item::getSalePrice)
-                    .sum();
+    public int calcOrderTotalSumById(Long orderId) {
+        if (orderId != null && orderId > 0) {
+            Optional<Order> optionalOrder = readOrderById(orderId);
+            if (optionalOrder.isPresent()) {
+                Order order = optionalOrder.get();
+                return order.getOrderItemList().stream()
+                        .filter(OrderItem::isActive)
+                        .mapToInt(o -> o.getOrderItemPrice() * o.getQuantity())
+                        .sum();
+            } else {
+                log.error("problem to calculate order total sum // not found order by id: '{}'", orderId);
+            }
         }
+        log.error("problem to calculate order total sum"
+                + (orderId == null ? " // id is NULL" : " // id < 1"));
         return 0;
     }
 
