@@ -227,6 +227,42 @@ class OrderServiceTest {
         assertTrue(output.getOut().contains("invalid order"));
     }
 
+    private static Stream<Arguments> providedArgs_calcTotalOrderItemQuantityTest() {
+        Order order1 = new Order();
+        Order order2 = new Order();
+        Order order3 = new Order();
+        Order order4 = new Order();
+        Order order5 = new Order();
+        return Stream.of(
+                Arguments.of(null, Collections.emptyList(), 0),
+                Arguments.of(order1, Collections.emptyList(), 0),
+                Arguments.of(order2, Collections.singletonList(new OrderItem(null, 1, 1, true, null, order2)), 1),
+                Arguments.of(order3, Collections.singletonList(new OrderItem(null, 2, 1, false, new Magazine(), order3)), 2),
+                Arguments.of(order4, Arrays.asList(
+                        new OrderItem(null, 1, 1, true, new Magazine(), order4),
+                        new OrderItem(null, 1, 1, true, new Book(), order4),
+                        new OrderItem(null, 1, 1, true, new Newspaper(), order4),
+                        new OrderItem(null, 1, 1, true, new Comics(), order4)
+                ), 4),
+                Arguments.of(order5, Arrays.asList(
+                        new OrderItem(null, 2, 5, true, new Magazine(), order5),
+                        new OrderItem(null, 3, 4, false, new Book(), order5),
+                        new OrderItem(null, 4, 3, false, new Newspaper(), order5),
+                        new OrderItem(null, 5, 2, false, new Comics(), order5)
+                ), 14)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_calcTotalOrderItemQuantityTest")
+    void calcTotalOrderItemQuantityTest(Order order, List<OrderItem> repositoryOrderItemList, int expectedQuantity) {
+        Mockito
+                .when(orderItemService.readOrderItemListByOrder(order))
+                .thenReturn(repositoryOrderItemList);
+        int itemQuantity = orderService.calcTotalOrderItemQuantity(order);
+
+        assertEquals(expectedQuantity, itemQuantity);
+    }
 
     @Test
     void calcTotalOrderItemQuantityTest_null(CapturedOutput output) {

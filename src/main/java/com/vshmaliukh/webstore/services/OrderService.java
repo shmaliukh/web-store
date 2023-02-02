@@ -73,7 +73,8 @@ public class OrderService implements EntityValidator<Order> {
 
     public int calcTotalOrderItemQuantity(Order order) {
         if (isValidEntity(order)) {
-            return orderItemService.readOrderItemListByOrder(order).stream()
+            List<OrderItem> orderItemList = orderItemService.readOrderItemListByOrder(order);
+            return orderItemList.stream()
                     .mapToInt(OrderItem::getQuantity)
                     .sum();
         }
