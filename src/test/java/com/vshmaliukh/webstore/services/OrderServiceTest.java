@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
+import com.vshmaliukh.webstore.model.items.OrderItem;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,15 +27,47 @@ class OrderServiceTest {
 
     @MockBean
     ItemService itemService;
+
     @MockBean
     UserService userService;
+
     @MockBean
     OrderRepository orderRepository;
+
     @MockBean
     OrderItemService orderItemService;
 
     @Autowired
     OrderService orderService;
+
+    @Test
+    void readOrderItemByIdTest_0(CapturedOutput output){
+        Optional<OrderItem> optionalOrderItem = orderService.readOrderItemById(0L);
+
+        assertNotNull(optionalOrderItem);
+        assertFalse(optionalOrderItem.isPresent());
+        assertTrue(output.getOut().contains("problem to find order item"));
+        assertTrue(output.getOut().contains("id < 1"));
+    }
+
+    @Test
+    void readOrderItemByIdTest_null(CapturedOutput output){
+        Optional<OrderItem> optionalOrderItem = orderService.readOrderItemById(null);
+
+        assertNotNull(optionalOrderItem);
+        assertFalse(optionalOrderItem.isPresent());
+        assertTrue(output.getOut().contains("problem to find order item"));
+        assertTrue(output.getOut().contains("id is NULL"));
+    }
+
+    @Test
+    void calcTotalOrderItemsTest_null(CapturedOutput output) {
+        int itemQuantity = orderService.calcTotalOrderItemQuantity(null);
+
+        assertTrue(output.getOut().contains("problem to calc order items quantity"));
+        assertTrue(output.getOut().contains("invalid order"));
+        assertEquals(0, itemQuantity);
+    }
 
     @Test
     void saveTest(CapturedOutput output) {

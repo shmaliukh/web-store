@@ -23,7 +23,7 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_
 @Service
 @Getter
 @AllArgsConstructor
-public class OrderService implements EntityValidator<Order>{
+public class OrderService implements EntityValidator<Order> {
 
     final ItemService itemService;
     final UserService userService;
@@ -72,24 +72,23 @@ public class OrderService implements EntityValidator<Order>{
         }
     }
 
-    public Integer calcTotalOrderItems(Order order) {
-        List<OrderItem> orderItemList = orderItemService.readOrderItemListByOrder(order);
-        if (orderItemList != null) {
-            return orderItemList.stream()
+    public int calcTotalOrderItemQuantity(Order order) {
+        if (isValidEntity(order)) {
+            return orderItemService.readOrderItemListByOrder(order).stream()
                     .mapToInt(OrderItem::getQuantity)
                     .sum();
         }
+        log.error("problem to calc order items quantity // invalid order");
         return 0;
     }
 
-    public OrderItem readOrderItemById(Long id) {
-        Optional<OrderItem> optionalOrderItem = orderItemService.readOrderItemByOrderItemId(id);
-        if (optionalOrderItem.isPresent()) {
-            return optionalOrderItem.get();
-        } else {
-            log.warn("problem to find order item by '{}' id", id);
-            return null;
+    public Optional<OrderItem> readOrderItemById(Long id) {
+        if (id != null && id > 0) {
+            return orderItemService.readOrderItemByOrderItemId(id);
         }
+        log.error("problem to find order item"
+                + (id == null ? " // id is NULL" : " // id < 1"));
+        return Optional.empty();
     }
 
     public Integer calcTotalOrderPrice(Order order) {
@@ -114,7 +113,7 @@ public class OrderService implements EntityValidator<Order>{
     }
 
     public void save(Order order) {
-        if(isValidEntity(order)){
+        if (isValidEntity(order)) {
             setUpSoldQuantityIfOrderIsCompleted(order);
             orderRepository.save(order);
             log.info("saved order: {}", order);
@@ -134,14 +133,17 @@ public class OrderService implements EntityValidator<Order>{
         }
     }
 
-    public void changeOrderStatus(long userId, String newStatusStr) {
-        Order orderByUserId = readOrderByUserId(userId);
-        if (orderByUserId != null && StringUtils.isNotBlank(newStatusStr)) {
+    public void changeOrderStatus(long orderId, String newStatusStr) {
+        Optional<Order> optionalOrder = readOrderByUserId(orderId);
+        if (optionalOrder.isPresent() && StringUtils.isNotBlank(newStatusStr)) {
+            Order orderByUserId = optionalOrder.get();
             orderByUserId.setStatus(newStatusStr);
             orderRepository.save(orderByUserId);
-            log.info("userId: '{}' // changed order status, new status: '{}'", userId, newStatusStr);
+            log.info("orderId: '{}' // changed order status, new status: '{}'", orderId, newStatusStr);
         } else {
-            log.warn("userId: '{}' // problem to change order status // order: '{} // status str: '{}'", userId, orderByUserId, newStatusStr);
+            log.warn("orderId: '{}' // problem to change order status // status str: '{}'", orderId, newStatusStr);
+            log.error("problem to change order status"
+                    + (!optionalOrder.isPresent() ? " // not found order by id: '" + orderId + "'" : " // new status is empty"));
         }
     }
 
@@ -157,8 +159,8 @@ public class OrderService implements EntityValidator<Order>{
     }
 
     public List<Item> readOrderItemListByUserId(long userId) {
-        Order readOrderByUserId = readOrderByUserId(userId);
-        if (readOrderByUserId != null) {
+        Optional<Order> optionalOrder = readOrderByUserId(userId);
+        if (optionalOrder.isPresent()) {
             // FIXME
 //            return readOrderByUserId.getItemList();
         }
@@ -166,7 +168,7 @@ public class OrderService implements EntityValidator<Order>{
         return Collections.emptyList();
     }
 
-    public Order readOrderByUserId(long userId) {
+    public Optional<Order> readOrderByUserId(long userId) {
         return orderRepository.findByUserId(userId);
     }
 

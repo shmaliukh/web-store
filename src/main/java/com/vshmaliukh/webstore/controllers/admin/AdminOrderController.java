@@ -134,8 +134,9 @@ public class AdminOrderController {
                                        ModelMap modelMap) {
         Order order = orderService.readOrderById(orderId);
         if (order != null) {
-            OrderItem orderItem = orderService.readOrderItemById(orderItemId);
-            if (orderItem != null) {
+            Optional<OrderItem> optionalOrderItem = orderService.readOrderItemById(orderItemId);
+            if (optionalOrderItem.isPresent()) {
+                OrderItem orderItem = optionalOrderItem.get();
                 int oldOrderItemQuantity = orderItem.getQuantity();
 
                 orderItem.setOrderItemPrice(price);
@@ -164,7 +165,7 @@ public class AdminOrderController {
         if (order != null) {
             ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
             AdminControllerUtils.addTableContentWithItems(keyword, page, size, sortField, sortDirection, "all", modelMap, allItemRepository);
-            Integer totalOrderItems = orderService.calcTotalOrderItems(order);
+            Integer totalOrderItems = orderService.calcTotalOrderItemQuantity(order);
 
             modelMap.addAttribute("order", order);
             modelMap.addAttribute("totalOrderItems", totalOrderItems);

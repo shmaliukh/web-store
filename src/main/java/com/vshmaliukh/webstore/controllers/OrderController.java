@@ -40,10 +40,11 @@ public class OrderController {
     }
 
     @PostMapping
-    public ModelAndView doPost(@CookieValue(defaultValue = "1") long userId,
+    // TODO refactor
+    public ModelAndView doPost(@CookieValue(defaultValue = "1") long orderId,
                                ModelMap modelMap) {
         // TODO update user data
-        orderService.changeOrderStatus(userId, POST_MAPPING_ORDER_STATUS_STR);
+        orderService.changeOrderStatus(orderId, POST_MAPPING_ORDER_STATUS_STR);
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 
