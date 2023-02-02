@@ -377,7 +377,7 @@ class CategoryServiceTest {
     void saveTest(CapturedOutput output) {
         categoryService.save(null);
 
-        assertTrue(output.getOut().contains("category not saved // invalid category"));
+        assertTrue(output.getOut().contains("problem to save category // invalid category"));
     }
 
     @Test

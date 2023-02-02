@@ -33,7 +33,7 @@ public class CategoryService implements EntityValidator<Category> {
             categoryRepository.save(category);
             log.info("saved category: {}", category);
         } else {
-            log.error("category not saved // invalid category");
+            log.error("problem to save category // invalid category");
         }
     }
 

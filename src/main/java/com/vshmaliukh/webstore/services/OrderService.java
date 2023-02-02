@@ -23,7 +23,7 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_
 @Service
 @Getter
 @AllArgsConstructor
-public class OrderService {
+public class OrderService implements EntityValidator<Order>{
 
     final ItemService itemService;
     final UserService userService;
@@ -73,9 +73,9 @@ public class OrderService {
     }
 
     public Integer calcTotalOrderItems(Order order) {
-        List<OrderItem> orderProducts = orderItemService.readOrderItemListByOrder(order);
-        if (orderProducts != null) {
-            return orderProducts.stream()
+        List<OrderItem> orderItemList = orderItemService.readOrderItemListByOrder(order);
+        if (orderItemList != null) {
+            return orderItemList.stream()
                     .mapToInt(OrderItem::getQuantity)
                     .sum();
         }
@@ -113,9 +113,14 @@ public class OrderService {
         return orderItemService.readOrderItemListByOrder(order);
     }
 
-    public void saveOrder(Order order) {
-        setUpSoldQuantityIfOrderIsCompleted(order);
-        orderRepository.save(order);
+    public void save(Order order) {
+        if(isValidEntity(order)){
+            setUpSoldQuantityIfOrderIsCompleted(order);
+            orderRepository.save(order);
+            log.info("saved order: {}", order);
+        } else {
+            log.error("problem to save order");
+        }
     }
 
     private void setUpSoldQuantityIfOrderIsCompleted(Order order) {
@@ -163,10 +168,6 @@ public class OrderService {
 
     public Order readOrderByUserId(long userId) {
         return orderRepository.findByUserId(userId);
-    }
-
-    public void saveOrderItem(OrderItem orderItem) {
-        orderItemService.save(orderItem);
     }
 
     public Optional<Order> createEmptyOrder(Long userId, String status, String comment) {

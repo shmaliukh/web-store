@@ -119,7 +119,6 @@ class UserServiceTest {
         assertTrue(output.getOut().contains("saved user"));
     }
 
-
     private static Stream<Arguments> providedArgs_isUserSavedTest() {
         User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
         User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", true);

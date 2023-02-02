@@ -112,7 +112,7 @@ public class AdminOrderController {
         if (order != null) {
             order.setStatus(status);
             order.setComment(comment);
-            orderService.saveOrder(order);
+            orderService.save(order);
 
             modelMap.addAttribute("keyword", keyword);
             modelMap.addAttribute("page", page);
@@ -144,7 +144,7 @@ public class AdminOrderController {
 
                 orderService.setUpItemAvailableQuantity(orderItem, oldOrderItemQuantity);
 
-                orderService.saveOrderItem(orderItem);
+                orderItemService.save(orderItem);
             }
         } else {
             return new ModelAndView("redirect:/admin/catalog", modelMap);
@@ -207,7 +207,7 @@ public class AdminOrderController {
         Optional<Order> optionalOrder = orderService.createEmptyOrder(userId, status, comment);
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
-            orderService.saveOrder(order);
+            orderService.save(order);
             return new ModelAndView("redirect:/admin/order/edit/" + order.getId(), modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog/", modelMap);
