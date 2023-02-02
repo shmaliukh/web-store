@@ -90,13 +90,19 @@ public class OrderService implements EntityValidator<Order> {
         return Optional.empty();
     }
 
-    public Integer calcTotalOrderPrice(Order order) {
-        List<OrderItem> orderProducts = orderItemService.readOrderItemListByOrder(order);
-        if (orderProducts != null) {
-            return orderProducts.stream()
-                    .filter(OrderItem::isActive)
-                    .map(orderItem -> orderItem.getOrderItemPrice() * orderItem.getQuantity())
-                    .mapToInt(Integer::intValue).sum();
+    public int calcOrderTotalSum(Order order) {
+        if (isValidEntity(order)) {
+            List<OrderItem> orderItemList = order.getOrderItemList();
+            if (orderItemList != null) {
+                return orderItemList.stream()
+                        .filter(OrderItem::isActive)
+                        .mapToInt(o -> o.getOrderItemPrice() * o.getQuantity())
+                        .sum();
+            } else {
+                log.error("problem to calculate order total sum // order item list is NULL");
+            }
+        } else {
+            log.error("problem to calculate order total sum // invalid order: '{}'", order);
         }
         return 0;
     }
@@ -148,7 +154,7 @@ public class OrderService implements EntityValidator<Order> {
     }
 
     public void changeOrderStatus(long orderId, String newStatusStr) {
-        Optional<Order> optionalOrder = readOrderByUserId(orderId);
+        Optional<Order> optionalOrder = readOrderById(orderId);
         if (optionalOrder.isPresent() && StringUtils.isNotBlank(newStatusStr)) {
             Order orderByUserId = optionalOrder.get();
             orderByUserId.setStatus(newStatusStr);
@@ -159,31 +165,6 @@ public class OrderService implements EntityValidator<Order> {
             log.error("problem to change order status"
                     + (!optionalOrder.isPresent() ? " // not found order by id: '" + orderId + "'" : " // new status is empty"));
         }
-    }
-
-    public int calcOrderTotalSumByUserId(long orderId) {
-        List<Item> itemListByUserId = readOrderItemListByUserId(orderId);
-        if (itemListByUserId != null) {
-            return itemListByUserId.stream()
-                    .filter(Item::isAvailableInStore)
-                    .mapToInt(Item::getSalePrice)
-                    .sum();
-        }
-        return 0;
-    }
-
-    public List<Item> readOrderItemListByUserId(long userId) {
-        Optional<Order> optionalOrder = readOrderByUserId(userId);
-        if (optionalOrder.isPresent()) {
-            // FIXME
-//            return readOrderByUserId.getItemList();
-        }
-        log.warn("userId: '{}' // order item list is empty", userId);
-        return Collections.emptyList();
-    }
-
-    public Optional<Order> readOrderByUserId(long userId) {
-        return orderRepository.findByUserId(userId);
     }
 
     public Optional<Order> createEmptyOrder(Long userId, String status, String comment) {

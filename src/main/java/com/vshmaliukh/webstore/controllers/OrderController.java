@@ -31,11 +31,11 @@ public class OrderController {
                               ModelMap modelMap) {
 //        FIXME
 //        List<Item> itemList = orderService.;
-        int totalPrice = orderService.calcOrderTotalSumByUserId(userId);
+//        int totalPrice = orderService.calcOrderTotalSum(userId);
 
 //        FIXME
 //        modelMap.addAttribute("itemList", itemList);
-        modelMap.addAttribute("totalPrice", totalPrice);
+        modelMap.addAttribute("totalPrice", 0);
         return new ModelAndView(ORDER_PAGE, modelMap);
     }
 

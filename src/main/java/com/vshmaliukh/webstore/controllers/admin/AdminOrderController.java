@@ -65,7 +65,7 @@ public class AdminOrderController {
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
             List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(id);
-            Integer totalOrderPrice = orderService.calcTotalOrderPrice(order);
+            Integer totalOrderPrice = orderService.calcOrderTotalSum(order);
 
             modelMap.addAttribute("orderItemList", orderItemList);
             modelMap.addAttribute("order", order);
@@ -188,7 +188,9 @@ public class AdminOrderController {
                                       ModelMap modelMap) {
         Optional<Order> optionalOrder = orderService.readOrderById(orderId);
         Optional<Item> optionalItem = itemService.readItemById(itemId);
-        if (optionalOrder.isPresent() && optionalItem.isPresent()) {
+        boolean isOptionalOrderPresent = optionalOrder.isPresent();
+        boolean isOptionalItemPresent = optionalItem.isPresent();
+        if (isOptionalOrderPresent && isOptionalItemPresent) {
             Order order = optionalOrder.get();
             Item item = optionalItem.get();
             orderService.insertItemToOrder(order, item, quantityToBuy);
@@ -196,7 +198,9 @@ public class AdminOrderController {
             modelMap.addAttribute("order", order);
             return new ModelAndView("redirect:/admin/order/view/" + orderId, modelMap);
         }
-//        log.warn();
+        log.warn("problem to add item"
+                + (!isOptionalOrderPresent ? " // not found order by id" : "")
+                + (!isOptionalItemPresent ? " // not found item by id" : ""));
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
     }
 

@@ -3,6 +3,7 @@ package com.vshmaliukh.webstore.model.items;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vshmaliukh.webstore.model.AuditModel;
 import com.vshmaliukh.webstore.model.Order;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,12 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.*;
-
 @Slf4j
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Order_items")
 public class OrderItem extends AuditModel {

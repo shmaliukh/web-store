@@ -3,6 +3,10 @@ package com.vshmaliukh.webstore.services;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.OrderItem;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -148,8 +152,84 @@ class OrderServiceTest {
         assertTrue(output.getOut().contains("id is NULL"));
     }
 
+    private static Stream<Arguments> providedArgs_calcOrderTotalSumTest() {
+        Order order0 = new Order();
+        Order order1 = new Order();
+        Order order2 = new Order();
+        Order order3 = new Order();
+        Order order4 = new Order();
+        Order order5 = new Order();
+        Order order6 = new Order();
+        Order order7 = new Order();
+        Order order8 = new Order();
+        order0.setOrderItemList(Collections.emptyList());
+        order1.setOrderItemList(Collections.singletonList(new OrderItem(null, 2, 3, true, new Magazine(), order1)));
+        order2.setOrderItemList(Collections.singletonList(new OrderItem(null, 2, 3, false, new Magazine(), order2)));
+        order3.setOrderItemList(Collections.singletonList(new OrderItem(null, 1, 21, true, new Book(), order3)));
+        order4.setOrderItemList(Collections.singletonList(new OrderItem(null, 11, 2, true, new Book(), order4)));
+        order5.setOrderItemList(Collections.singletonList(new OrderItem(null, 23, 1, true, new Comics(), order5)));
+        order6.setOrderItemList(Arrays.asList(
+                new OrderItem(null, 2, 3, true, new Magazine(), order6),
+                new OrderItem(null, 2, 3, true, new Book(), order6),
+                new OrderItem(null, 2, 3, true, new Newspaper(), order6),
+                new OrderItem(null, 2, 3, true, new Comics(), order6)));
+        order7.setOrderItemList(Arrays.asList(
+                new OrderItem(null, 2, 3, true, new Magazine(), order7),
+                new OrderItem(null, 2, 3, true, new Magazine(), order7),
+                new OrderItem(null, 3, 2, true, new Magazine(), order7),
+                new OrderItem(null, 3, 2, true, new Comics(), order7),
+                new OrderItem(null, 1, 1, true, new Book(), order7)));
+        order8.setOrderItemList(Arrays.asList(
+                new OrderItem(null, 5, 4, true, new Magazine(), order8),
+                new OrderItem(null, 3, 3, false, new Magazine(), order8),
+                new OrderItem(null, 2, 3, true, new Book(), order8),
+                new OrderItem(null, 3, 3, false, new Book(), order8)));
+        return Stream.of(
+                Arguments.of(null, 0),
+                Arguments.of(null, 0),
+                Arguments.of(order0, 0),
+                Arguments.of(order1, 6),
+                Arguments.of(order2, 0),
+                Arguments.of(order3, 21),
+                Arguments.of(order4, 22),
+                Arguments.of(order5, 23),
+                Arguments.of(order6, 24),
+                Arguments.of(order7, 25),
+                Arguments.of(order8, 26)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_calcOrderTotalSumTest")
+    void calcOrderTotalSumTest(Order order, int expectedSum) {
+        int orderTotalSum = orderService.calcOrderTotalSum(order);
+
+        assertEquals(expectedSum, orderTotalSum);
+    }
+
     @Test
-    void calcTotalOrderItemsTest_null(CapturedOutput output) {
+    void calcOrderTotalSumTest_notFoundOrder(CapturedOutput output) {
+        Order order = new Order();
+        order.setOrderItemList(null);
+        int orderTotalSum = orderService.calcOrderTotalSum(order);
+
+        assertEquals(0, orderTotalSum);
+        assertTrue(output.getOut().contains("problem to calculate order total sum"));
+        assertTrue(output.getOut().contains("order item list is NULL"));
+    }
+
+    @Test
+    void calcOrderTotalSumTest_orderIsNull(CapturedOutput output) {
+        int orderTotalSum = orderService.calcOrderTotalSum(null);
+
+        assertEquals(0, orderTotalSum);
+        assertTrue(output.getOut().contains("problem to calculate order total sum"));
+        assertTrue(output.getOut().contains("invalid order"));
+    }
+
+
+    @Test
+    void calcTotalOrderItemQuantityTest_null(CapturedOutput output) {
         int itemQuantity = orderService.calcTotalOrderItemQuantity(null);
 
         assertTrue(output.getOut().contains("problem to calc order items quantity"));
