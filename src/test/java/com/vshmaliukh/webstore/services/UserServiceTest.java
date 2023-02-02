@@ -23,6 +23,7 @@ import javax.validation.ValidatorFactory;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableList;
 import static com.vshmaliukh.webstore.services.UserService.DEFAULT_PASSWORD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -248,7 +249,7 @@ class UserServiceTest {
 
         assertNotNull(userList);
         assertEquals(repositoryUserList, userList);
-        assertTrue(Collections.unmodifiableList(userList).getClass().isInstance(Collections.unmodifiableList(new ArrayList<>())));
+        assertTrue(isUnmodifiableList(userList));
     }
 
     // TODO add test for 'createBaseUser' with invalid data

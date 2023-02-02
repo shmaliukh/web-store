@@ -19,6 +19,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableList;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -40,13 +41,58 @@ class OrderServiceTest {
     @Autowired
     OrderService orderService;
 
+    private static Stream<Arguments> providedArgs_readOrderItemListByOrderIdTest() {
+        return Stream.of(
+                Arguments.of(1L, Collections.emptyList()),
+                Arguments.of(2L, Collections.singletonList(new OrderItem())),
+                Arguments.of(100L, Arrays.asList(new OrderItem(), new OrderItem(), new OrderItem()))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readOrderItemListByOrderIdTest")
+    void readOrderItemListByOrderIdTest(Long id, List<OrderItem> repositoryOrderItemList){
+        Order order = new Order();
+        Mockito
+                .when( orderRepository.findById(id))
+                .thenReturn(Optional.of(order));
+        Mockito
+                .when(orderItemService.readOrderItemListByOrder(order))
+                .thenReturn(repositoryOrderItemList);
+
+        List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(id);
+        assertNotNull(orderItemList);
+        assertEquals(repositoryOrderItemList, orderItemList);
+        assertTrue(isUnmodifiableList(orderItemList));
+    }
+
+    @Test
+    void readOrderItemListByOrderIdTest_0(CapturedOutput output){
+        List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(0L);
+
+        assertNotNull(orderItemList);
+        assertTrue(orderItemList.isEmpty());
+        assertTrue(output.getOut().contains("problem to read order item list by order id"));
+        assertTrue(output.getOut().contains("id < 1"));
+    }
+
+    @Test
+    void readOrderItemListByOrderIdTest_null(CapturedOutput output){
+        List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(null);
+
+        assertNotNull(orderItemList);
+        assertTrue(orderItemList.isEmpty());
+        assertTrue(output.getOut().contains("problem to read order item list by order id"));
+        assertTrue(output.getOut().contains("id is NULL"));
+    }
+
     @Test
     void readOrderItemByIdTest_0(CapturedOutput output){
         Optional<OrderItem> optionalOrderItem = orderService.readOrderItemById(0L);
 
         assertNotNull(optionalOrderItem);
         assertFalse(optionalOrderItem.isPresent());
-        assertTrue(output.getOut().contains("problem to find order item"));
+        assertTrue(output.getOut().contains("problem to read order item"));
         assertTrue(output.getOut().contains("id < 1"));
     }
 
@@ -56,7 +102,7 @@ class OrderServiceTest {
 
         assertNotNull(optionalOrderItem);
         assertFalse(optionalOrderItem.isPresent());
-        assertTrue(output.getOut().contains("problem to find order item"));
+        assertTrue(output.getOut().contains("problem to read order item"));
         assertTrue(output.getOut().contains("id is NULL"));
     }
 
@@ -102,7 +148,7 @@ class OrderServiceTest {
 
         assertNotNull(userOrderList);
         assertEquals(repositoryOrderList, userOrderList);
-        assertTrue(Collections.unmodifiableList(userOrderList).getClass().isInstance(Collections.unmodifiableList(new ArrayList<>())));
+        assertTrue(isUnmodifiableList(userOrderList));
     }
 
 }

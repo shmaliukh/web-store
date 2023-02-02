@@ -23,6 +23,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableList;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -74,7 +75,7 @@ class CategoryServiceTest {
         List<Category> categoryList = categoryService.readAll();
         assertNotNull(categoryList);
         assertEquals(repositoryCategoryList, categoryList);
-        assertTrue(Collections.unmodifiableList(categoryList).getClass().isInstance(Collections.unmodifiableList(new ArrayList<>())));
+        assertTrue(isUnmodifiableList(categoryList));
     }
 
     private static Stream<Arguments> providedArgs_readCategoryNameListTest() {

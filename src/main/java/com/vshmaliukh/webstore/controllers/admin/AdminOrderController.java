@@ -5,7 +5,8 @@ import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.OrderItem;
-import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;import com.vshmaliukh.webstore.repositories.OrderItemRepository;
+import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.OrderItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import com.vshmaliukh.webstore.services.ItemService;
 import com.vshmaliukh.webstore.services.OrderItemService;
@@ -59,8 +60,9 @@ public class AdminOrderController {
     @GetMapping("/view/{oderId}")
     public ModelAndView doGetView(@PathVariable(name = "oderId") Long id,
                                   ModelMap modelMap) {
-        Order order = orderService.readOrderById(id);
-        if (order != null) {
+        Optional<Order> optionalOrder = orderService.readOrderById(id);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
             List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(id);
             Integer totalOrderPrice = orderService.calcTotalOrderPrice(order);
 
@@ -81,8 +83,9 @@ public class AdminOrderController {
                                   @RequestParam(defaultValue = "id") String sortField,
                                   @RequestParam(defaultValue = "asc") String sortDirection,
                                   ModelMap modelMap) {
-        Order order = orderService.readOrderById(orderId);
-        if (order != null) {
+        Optional<Order> optionalOrder = orderService.readOrderById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
             OrderItemRepository orderItemRepository = orderItemService.getOrderItemRepository();
             TableContentImp<OrderItem> orderItemTableContent
                     = generateOrderItemTableContentForOrderDetails(keyword, page, size, sortField, sortDirection, orderItemRepository, order);
@@ -108,8 +111,9 @@ public class AdminOrderController {
                                         @RequestParam(defaultValue = "id") String sortField,
                                         @RequestParam(defaultValue = "asc") String sortDirection,
                                         ModelMap modelMap) {
-        Order order = orderService.readOrderById(orderId);
-        if (order != null) {
+        Optional<Order> optionalOrder = orderService.readOrderById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
             order.setStatus(status);
             order.setComment(comment);
             orderService.save(order);
@@ -132,8 +136,8 @@ public class AdminOrderController {
                                        @RequestParam(value = "quantity") Integer newOrderItemQuantity,
                                        @RequestParam(value = "active", defaultValue = "false") boolean active,
                                        ModelMap modelMap) {
-        Order order = orderService.readOrderById(orderId);
-        if (order != null) {
+        Optional<Order> optionalOrder = orderService.readOrderById(orderId);
+        if (optionalOrder.isPresent()) {
             Optional<OrderItem> optionalOrderItem = orderService.readOrderItemById(orderItemId);
             if (optionalOrderItem.isPresent()) {
                 OrderItem orderItem = optionalOrderItem.get();
@@ -161,8 +165,9 @@ public class AdminOrderController {
                                      @RequestParam(defaultValue = "asc") String sortDirection,
                                      @PathVariable(name = "oderId") Long orderId,
                                      ModelMap modelMap) {
-        Order order = orderService.readOrderById(orderId);
-        if (order != null) {
+        Optional<Order> optionalOrder = orderService.readOrderById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
             ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
             AdminControllerUtils.addTableContentWithItems(keyword, page, size, sortField, sortDirection, "all", modelMap, allItemRepository);
             Integer totalOrderItems = orderService.calcTotalOrderItemQuantity(order);
@@ -179,8 +184,9 @@ public class AdminOrderController {
                                       @RequestParam(name = "itemId") Integer itemId,
                                       @RequestParam(name = "quantityToBuy") Integer quantityToBuy,
                                       ModelMap modelMap) {
-        Order order = orderService.readOrderById(orderId);
-        if (order != null) {
+        Optional<Order> optionalOrder = orderService.readOrderById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
             orderService.insertItemToOrder(orderId, itemId, quantityToBuy);
 
             modelMap.addAttribute("order", order);

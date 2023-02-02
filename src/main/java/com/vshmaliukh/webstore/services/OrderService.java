@@ -86,7 +86,7 @@ public class OrderService implements EntityValidator<Order> {
         if (id != null && id > 0) {
             return orderItemService.readOrderItemByOrderItemId(id);
         }
-        log.error("problem to find order item"
+        log.error("problem to read order item"
                 + (id == null ? " // id is NULL" : " // id < 1"));
         return Optional.empty();
     }
@@ -102,14 +102,28 @@ public class OrderService implements EntityValidator<Order> {
         return 0;
     }
 
-    public Order readOrderById(Long id) {
-        Optional<Order> orderOptional = orderRepository.findById(id);
-        return orderOptional.orElse(null);
+    public Optional<Order> readOrderById(Long id) {
+        if (id != null && id > 0) {
+            return orderRepository.findById(id);
+        } else {
+            log.error("problem to read order by id"
+                    + (id == null ? " // id is NULL" : " // id < 1"));
+            return Optional.empty();
+        }
     }
 
     public List<OrderItem> readOrderItemListByOrderId(Long id) {
-        Order order = readOrderById(id);
-        return orderItemService.readOrderItemListByOrder(order);
+        if (id != null && id > 0) {
+            Optional<Order> optionalOrder = readOrderById(id);
+            if (optionalOrder.isPresent()){
+                Order order = optionalOrder.get();
+                return Collections.unmodifiableList(orderItemService.readOrderItemListByOrder(order));
+            }
+        }
+        log.error("problem to read order item list by order id"
+                + (id == null ? " // id is NULL" : " // id < 1"));
+        return Collections.emptyList();
+
     }
 
     public void save(Order order) {

@@ -23,6 +23,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableList;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -96,7 +97,7 @@ class OrderItemServiceTest {
 
         assertNotNull(orderItemList);
         assertEquals(orderItemList, repositoryOrderItemList);
-        assertTrue(Collections.unmodifiableList(orderItemList).getClass().isInstance(Collections.unmodifiableList(new ArrayList<>())));
+        assertTrue(isUnmodifiableList(orderItemList));
     }
 
     private static Stream<Arguments> providedArgs_readOrderItemByOrderItemIdTest() {
