@@ -31,8 +31,9 @@ public class OrderService implements EntityValidator<Order> {
     final OrderItemService orderItemService;
 
     public void setUpItemAvailableQuantity(OrderItem orderItem, int oldOrderItemQuantity) {
+        // TODO refactor
         Item item = orderItem.getItem();
-        if (item != null) {
+        if (orderItemService.isValidEntity(orderItem) && itemService.isValidEntity(item)) {
             int newQuantity = orderItem.getQuantity();
             int availableToBuyQuantity = item.getAvailableToBuyQuantity() + oldOrderItemQuantity - newQuantity;
             item.setAvailableToBuyQuantity(availableToBuyQuantity);
@@ -40,23 +41,21 @@ public class OrderService implements EntityValidator<Order> {
                 orderItem.setActive(false);
             }
             itemService.saveItem(item);
+        } else {
+            log.error("problem to set up item available quantity"
+                    + (!orderItemService.isValidEntity(orderItem) ? " // invalid order item" : " // invalid item"));
         }
     }
 
-    public void insertItemToOrder(Long orderId, Integer itemId, Integer quantity) {
-        Optional<Item> optionalItem = itemService.readItemById(itemId);
-        Optional<Order> optionalOrder = orderRepository.findById(orderId);
-        if (optionalOrder.isPresent() && optionalItem.isPresent()) {
-            Item item = optionalItem.get();
-            Order order = optionalOrder.get();
-
+    public void insertItemToOrder(Order order, Item item, int quantity) {
+        if (isValidEntity(order) && itemService.isValidEntity(item)) {
             OrderItem orderItem = orderItemService.formOrderItem(quantity, item, order);
             orderItemService.save(orderItem);
             setUpItemAvailableToBuyQuantity(quantity, item, orderItem);
         } else {
-            log.warn("problem to insert item to order "
-                    + (optionalOrder.isPresent() ? ("// not found order by '" + orderId + "' id") : "")
-                    + (optionalOrder.isPresent() ? ("// not found item by '" + itemId + "' id") : ""));
+            log.warn("problem to insert item to order"
+                    + (!isValidEntity(order) ? (" // invalid order") : " // invalid item"));
+            log.trace("order: '{}', item: '{}'", order, item);
         }
     }
 
@@ -115,7 +114,7 @@ public class OrderService implements EntityValidator<Order> {
     public List<OrderItem> readOrderItemListByOrderId(Long id) {
         if (id != null && id > 0) {
             Optional<Order> optionalOrder = readOrderById(id);
-            if (optionalOrder.isPresent()){
+            if (optionalOrder.isPresent()) {
                 Order order = optionalOrder.get();
                 return Collections.unmodifiableList(orderItemService.readOrderItemListByOrder(order));
             }
@@ -137,13 +136,14 @@ public class OrderService implements EntityValidator<Order> {
     }
 
     private void setUpSoldQuantityIfOrderIsCompleted(Order order) {
-        if (order.getStatus().equals(ORDER_STATUS_COMPLETED)) {
+        if (isValidEntity(order) && order.getStatus().equalsIgnoreCase(ORDER_STATUS_COMPLETED)) {
             List<OrderItem> orderItems = orderItemService.readOrderItemListByOrder(order);
             for (OrderItem orderItem : orderItems) {
                 Item item = orderItem.getItem();
                 item.setSoldOutQuantity(orderItem.getQuantity());
                 itemService.saveItem(item);
             }
+            log.info("successfully save order items as completed, order: '{}'", order);
         }
     }
 

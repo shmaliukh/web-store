@@ -4,6 +4,7 @@ import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
+import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.OrderItemRepository;
@@ -147,6 +148,7 @@ public class AdminOrderController {
                 orderItem.setActive(active);
                 orderItem.setQuantity(newOrderItemQuantity);
 
+                // TODO refactor
                 orderService.setUpItemAvailableQuantity(orderItem, oldOrderItemQuantity);
 
                 orderItemService.save(orderItem);
@@ -185,13 +187,16 @@ public class AdminOrderController {
                                       @RequestParam(name = "quantityToBuy") Integer quantityToBuy,
                                       ModelMap modelMap) {
         Optional<Order> optionalOrder = orderService.readOrderById(orderId);
-        if (optionalOrder.isPresent()) {
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
+        if (optionalOrder.isPresent() && optionalItem.isPresent()) {
             Order order = optionalOrder.get();
-            orderService.insertItemToOrder(orderId, itemId, quantityToBuy);
+            Item item = optionalItem.get();
+            orderService.insertItemToOrder(order, item, quantityToBuy);
 
             modelMap.addAttribute("order", order);
             return new ModelAndView("redirect:/admin/order/view/" + orderId, modelMap);
         }
+//        log.warn();
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
     }
 

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class ItemService {
+public class ItemService implements EntityValidator<Item>{
 
     @Getter
     final ItemRepository itemRepository;
