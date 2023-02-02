@@ -41,6 +41,48 @@ class OrderServiceTest {
     @Autowired
     OrderService orderService;
 
+    private static Stream<Arguments> providedArgs_readOrderByIdTest() {
+        return Stream.of(
+                Arguments.of(1L, new Order()),
+                Arguments.of(2L, new Order(1L, new User(), new Date(), "some status", "", Collections.emptyList())),
+                Arguments.of(100L, new Order(23313L, new User(), new Date(), "some status2", "", Collections.emptyList()))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readOrderByIdTest")
+    void readOrderByIdTest(Long id, Order repositoryOrder) {
+        Mockito
+                .when(orderRepository.findById(id))
+                .thenReturn(Optional.of(repositoryOrder));
+        Optional<Order> optionalOrder = orderService.readOrderById(id);
+
+        assertNotNull(optionalOrder);
+        assertTrue(optionalOrder.isPresent());
+        Order order = optionalOrder.get();
+        assertEquals(repositoryOrder, order);
+    }
+
+    @Test
+    void readOrderByIdTest_0(CapturedOutput output) {
+        Optional<Order> optionalOrder = orderService.readOrderById(0L);
+
+        assertNotNull(optionalOrder);
+        assertFalse(optionalOrder.isPresent());
+        assertTrue(output.getOut().contains("problem to read order by id"));
+        assertTrue(output.getOut().contains("id < 1"));
+    }
+
+    @Test
+    void readOrderByIdTest_null(CapturedOutput output) {
+        Optional<Order> optionalOrder = orderService.readOrderById(null);
+
+        assertNotNull(optionalOrder);
+        assertFalse(optionalOrder.isPresent());
+        assertTrue(output.getOut().contains("problem to read order by id"));
+        assertTrue(output.getOut().contains("id is NULL"));
+    }
+
     private static Stream<Arguments> providedArgs_readOrderItemListByOrderIdTest() {
         return Stream.of(
                 Arguments.of(1L, Collections.emptyList()),
@@ -51,10 +93,10 @@ class OrderServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_readOrderItemListByOrderIdTest")
-    void readOrderItemListByOrderIdTest(Long id, List<OrderItem> repositoryOrderItemList){
+    void readOrderItemListByOrderIdTest(Long id, List<OrderItem> repositoryOrderItemList) {
         Order order = new Order();
         Mockito
-                .when( orderRepository.findById(id))
+                .when(orderRepository.findById(id))
                 .thenReturn(Optional.of(order));
         Mockito
                 .when(orderItemService.readOrderItemListByOrder(order))
@@ -67,7 +109,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void readOrderItemListByOrderIdTest_0(CapturedOutput output){
+    void readOrderItemListByOrderIdTest_0(CapturedOutput output) {
         List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(0L);
 
         assertNotNull(orderItemList);
@@ -77,7 +119,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void readOrderItemListByOrderIdTest_null(CapturedOutput output){
+    void readOrderItemListByOrderIdTest_null(CapturedOutput output) {
         List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(null);
 
         assertNotNull(orderItemList);
@@ -87,7 +129,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void readOrderItemByIdTest_0(CapturedOutput output){
+    void readOrderItemByIdTest_0(CapturedOutput output) {
         Optional<OrderItem> optionalOrderItem = orderService.readOrderItemById(0L);
 
         assertNotNull(optionalOrderItem);
@@ -97,7 +139,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void readOrderItemByIdTest_null(CapturedOutput output){
+    void readOrderItemByIdTest_null(CapturedOutput output) {
         Optional<OrderItem> optionalOrderItem = orderService.readOrderItemById(null);
 
         assertNotNull(optionalOrderItem);
