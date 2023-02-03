@@ -1,8 +1,10 @@
 package com.vshmaliukh.webstore;
 
+import lombok.Getter;
+
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum OrderStatus {
 
@@ -21,6 +23,7 @@ public enum OrderStatus {
     ManualVerificationRequired(new Status("Manual Verification Required", "Order on hold while some aspect, such as tax-exempt documentation, is manually confirmed. Orders with this status must be updated manually. Capturing funds or other order actions will not automatically update the status of an order marked Manual Verification Required.")),
     PartiallyRefunded(new Status("Partially Refunded", "Seller has partially refunded the order."));
 
+    @Getter
     final Status status;
 
     OrderStatus(Status status) {
@@ -29,11 +32,13 @@ public enum OrderStatus {
 
     @Override
     public String toString() {
-        return status.statusName;
+        return status.getStatusName();
     }
 
-    public static List<OrderStatus> getAllOrderStatusList() {
-        return Collections.unmodifiableList(Arrays.asList(values()));
+    public static Map<String, String> getStatusNameDescriptionMap() {
+        return Arrays.stream(values())
+                .map(OrderStatus::getStatus)
+                .collect(Collectors.toMap(Status::getStatusName, Status::getDescription));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
-import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
+import com.vshmaliukh.webstore.OrderStatus;
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
@@ -70,7 +70,7 @@ public class AdminOrderController {
             modelMap.addAttribute("orderItemList", orderItemList);
             modelMap.addAttribute("order", order);
             modelMap.addAttribute("totalOrderPrice", totalOrderPrice);
-            modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);
+            modelMap.addAttribute("orderStatusDescriptionMap", OrderStatus.getStatusNameDescriptionMap());
             return new ModelAndView("/admin/order/view", modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
@@ -96,7 +96,7 @@ public class AdminOrderController {
             modelMap.addAllAttributes(contentModelMap);
             modelMap.addAttribute("order", order);
             modelMap.addAttribute("orderItemList", orderItemList);
-            modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);
+            modelMap.addAttribute("orderStatusDescriptionMap", OrderStatus.getStatusNameDescriptionMap());
             return new ModelAndView("/admin/order/edit", modelMap);
         }
         return new ModelAndView("redirect:/admin/order/catalog", modelMap);
@@ -211,7 +211,7 @@ public class AdminOrderController {
 
         modelMap.addAttribute("userName", userName);
         modelMap.addAttribute("userList", userList);
-        modelMap.addAttribute("orderStatusDescriptionMap", ConstantsForControllers.orderStatusDescriptionMap);
+        modelMap.addAttribute("orderStatusDescriptionMap", OrderStatus.getStatusNameDescriptionMap());
         return new ModelAndView("/admin/order/create", modelMap);
     }
 
