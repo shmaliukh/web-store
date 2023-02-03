@@ -69,6 +69,7 @@ public class MainPageController {
                                             @PathVariable String type,
                                             @PathVariable Integer id,
                                             @CookieValue(defaultValue = "0") Long cartId,
+                                            @RequestHeader String referer,
                                             HttpServletResponse response) {
         // todo add checking user authorization
         boolean authorization = false;
@@ -85,7 +86,7 @@ public class MainPageController {
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = itemRepository.findById(id);
         cartService.addItemToCart(optionalItem.get(), cartId);
-        return "redirect:/main/catalog/"+category+"/"+type;
+        return "redirect:" + referer;
     }
 
 }
