@@ -46,7 +46,7 @@
                             </div>
 <!--                            todo change literature to variable -->
                             <span class="text-muted" th:text="'$' + ${item.getItem().getSalePrice()*item.getQuantity()}">0</span>
-                            <a th:href="'/shopping-cart/remove-all/literature/' + ${item.getItem().getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
+                            <a th:href="'/shopping-cart/remove-all/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
                             <img class="cart-plus-minus-icon" style="width: 1.5pc; height: 1.5pc" src="/icons/rubbish-basket.png">
                             </a>
                         </div>
