@@ -89,4 +89,17 @@ public class CartService {
         return baseCartRepository.findById(id);
     }
 
+    public Cart removeOneCartItemsTypeFromCart(Cart cart, Integer cartItemId){
+        List<CartItem> cartItems = cart.getItems();
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getId().equals(cartItemId)){
+                cartItems.remove(cartItem);
+                cartItemRepository.delete(cartItem);
+                break;
+            }
+        }
+        cart.setItems(cartItems);
+        return cartRepositoryProvider.getCartRepositoryByCart(cart).save(cart);
+    }
+
 }
