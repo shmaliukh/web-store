@@ -397,4 +397,12 @@ class OrderServiceTest {
         assertFalse(optionalOrder.isPresent());
     }
 
+    @Test
+    void setUpSoldQuantityIfOrderIsCompletedTest_invalidOrderLogErr(CapturedOutput output){
+        orderService.setUpSoldQuantityIfOrderIsCompleted(null);
+
+        assertTrue(output.getOut().contains("problem to set up sold out quantity if order is completed"));
+        assertTrue(output.getOut().contains("invalid order"));
+    }
+
 }

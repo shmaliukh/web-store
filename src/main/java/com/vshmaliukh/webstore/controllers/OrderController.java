@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers;
 
+import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.services.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.HOME_PAGE;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_PAGE;
@@ -41,10 +44,14 @@ public class OrderController {
 
     @PostMapping
     // TODO refactor
-    public ModelAndView doPost(@CookieValue(defaultValue = "1") long orderId,
+    public ModelAndView doPost(Long orderId,
                                ModelMap modelMap) {
         // TODO update user data
-        orderService.changeOrderStatus(orderId, POST_MAPPING_ORDER_STATUS_STR);
+        Optional<Order> optionalOrder = orderService.readOrderById(orderId);
+        if(optionalOrder.isPresent()){
+            orderService.changeOrderStatus(optionalOrder, POST_MAPPING_ORDER_STATUS_STR);
+            // TODO redirect to order page
+        }
         return new ModelAndView("redirect:/" + HOME_PAGE, modelMap);
     }
 

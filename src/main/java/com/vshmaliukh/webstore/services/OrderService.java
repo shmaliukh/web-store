@@ -142,29 +142,32 @@ public class OrderService implements EntityValidator<Order> {
         }
     }
 
-    private void setUpSoldQuantityIfOrderIsCompleted(Order order) {
-        if (isValidEntity(order) && order.getStatus().equalsIgnoreCase(ORDER_STATUS_COMPLETED)) {
-            List<OrderItem> orderItems = orderItemService.readOrderItemListByOrder(order);
-            for (OrderItem orderItem : orderItems) {
-                Item item = orderItem.getItem();
-                item.setSoldOutQuantity(orderItem.getQuantity());
-                itemService.saveItem(item);
+    public void setUpSoldQuantityIfOrderIsCompleted(Order order) {
+        if (isValidEntity(order)) {
+            if (order.getStatus().equalsIgnoreCase(ORDER_STATUS_COMPLETED)) {
+                List<OrderItem> orderItems = orderItemService.readOrderItemListByOrder(order);
+                for (OrderItem orderItem : orderItems) {
+                    Item item = orderItem.getItem();
+                    item.setSoldOutQuantity(orderItem.getQuantity());
+                    itemService.saveItem(item);
+                }
+                log.info("successfully save order items as completed, order: '{}'", order);
             }
-            log.info("successfully save order items as completed, order: '{}'", order);
+        } else {
+            log.error("problem to set up sold out quantity if order is completed // invalid order");
         }
     }
 
-    public void changeOrderStatus(long orderId, String newStatusStr) {
-        Optional<Order> optionalOrder = readOrderById(orderId);
+    public void changeOrderStatus(Optional<Order> optionalOrder, String newStatusStr) {
         if (optionalOrder.isPresent() && StringUtils.isNotBlank(newStatusStr)) {
-            Order orderByUserId = optionalOrder.get();
-            orderByUserId.setStatus(newStatusStr);
-            orderRepository.save(orderByUserId);
-            log.info("orderId: '{}' // changed order status, new status: '{}'", orderId, newStatusStr);
+            Order order = optionalOrder.get();
+            order.setStatus(newStatusStr);
+            orderRepository.save(order);
+            log.info("changed order status, new status: '{}'", newStatusStr);
         } else {
-            log.warn("orderId: '{}' // problem to change order status // status str: '{}'", orderId, newStatusStr);
+            log.warn("problem to change order status // status str: '{}'", newStatusStr);
             log.error("problem to change order status"
-                    + (!optionalOrder.isPresent() ? " // not found order by id: '" + orderId + "'" : " // new status is empty"));
+                    + (!optionalOrder.isPresent() ? " // not found order" : " // new status is empty"));
         }
     }
 
