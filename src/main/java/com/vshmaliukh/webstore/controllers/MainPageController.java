@@ -1,8 +1,7 @@
 package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
-import com.vshmaliukh.webstore.model.UnauthorizedUser;
-import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
+import com.vshmaliukh.webstore.controllers.handlers.ShoppingCartHandler;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
@@ -30,6 +29,7 @@ public class MainPageController {
     final CartItemService cartItemService;
     final ItemRepositoryProvider itemRepositoryProvider;
     final UnauthorizedUserService unauthorizedUserService;
+    ShoppingCartHandler shoppingCartHandler;
 
     @GetMapping
     public ModelAndView showMainPage(ModelMap modelMap) { // todo refactor template for links
@@ -66,43 +66,26 @@ public class MainPageController {
 
     @PostMapping("/catalog/{category}/{type}/{id}")
     public String addItemToCartFromMainPage(@PathVariable String category,
-                            @PathVariable String type,
-                            @PathVariable Integer id,
-                            @RequestHeader String referer,
-                            @CookieValue(required = false, defaultValue = "0") Long userId,
-                            HttpServletResponse response) {
-
+                                            @PathVariable String type,
+                                            @PathVariable Integer id,
+                                            @CookieValue(defaultValue = "0") Long cartId,
+                                            HttpServletResponse response) {
         // todo add checking user authorization
-
         boolean authorization = false;
 
-        boolean createdNewUser = false;
-        if(!authorization) {
-            if(userId==0||!unauthorizedUserService.existsById(userId)) {
-
-                UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
-                if (userId != 0 && !unauthorizedUserService.existsById(userId)) {
-                    unauthorizedUser.setId(userId);
-                }
-                unauthorizedUserService.saveUser(unauthorizedUser);
-                UnauthorizedUserCart unauthorizedUserCart = new UnauthorizedUserCart();
-                unauthorizedUserCart.setUnauthorizedUser(unauthorizedUser);
-                cartService.addNewCart(unauthorizedUserCart);
-
-                userId=unauthorizedUser.getId();
-                response.addCookie(new CookieHandler().createUserIdCookie(userId));
-                createdNewUser = true;
+        if(!authorization){
+            if(cartId==0){
+                cartId = shoppingCartHandler.createNewCart().getCartId();
+                Long userId = cartService.getCartByCartId(cartId).get().getCartId(); // todo remove its usage
+                response.addCookie(new CookieHandler().createCookie(cartId,"cartId"));
+                response.addCookie(new CookieHandler().createCookie(userId,"userId"));
             }
-
         }
+
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = itemRepository.findById(id);
-        if (createdNewUser) {
-            cartService.addItemToCart(optionalItem.get(), userId, authorization);
-        } else {
-            cartService.addItemToCart(optionalItem.get(),userId,authorization);
-        }
-        return "redirect:" + referer;
+        cartService.addItemToCart(optionalItem.get(), cartId);
+        return "redirect:/main/catalog/"+category+"/"+type;
     }
 
 }
