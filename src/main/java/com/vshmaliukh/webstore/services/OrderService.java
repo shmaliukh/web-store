@@ -170,7 +170,7 @@ public class OrderService implements EntityValidator<Order> {
 
     public Optional<Order> createEmptyOrder(Long userId, String status, String comment) {
         Optional<User> optionalUser = userService.readUserById(userId);
-        if (optionalUser.isPresent()) {
+        if (optionalUser.isPresent() && StringUtils.isNotBlank(status)) {
             Order order = new Order();
             order.setDateCreated(new Date());
             order.setUser(optionalUser.get());
@@ -179,6 +179,8 @@ public class OrderService implements EntityValidator<Order> {
             order.setOrderItemList(Collections.emptyList());
             return Optional.of(order);
         }
+        log.error("problem to created empty order"
+                + (!optionalUser.isPresent() ? " // user not found" : " // status is blank"));
         return Optional.empty();
     }
 

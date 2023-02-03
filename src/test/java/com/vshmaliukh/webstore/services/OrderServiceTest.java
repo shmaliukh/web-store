@@ -1,5 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.login.LogInProvider;
+import com.vshmaliukh.webstore.login.UserRole;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.OrderItem;
@@ -105,8 +107,8 @@ class OrderServiceTest {
         Mockito
                 .when(orderItemService.readOrderItemListByOrder(order))
                 .thenReturn(repositoryOrderItemList);
-
         List<OrderItem> orderItemList = orderService.readOrderItemListByOrderId(id);
+
         assertNotNull(orderItemList);
         assertEquals(repositoryOrderItemList, orderItemList);
         assertTrue(isUnmodifiableList(orderItemList));
@@ -307,6 +309,92 @@ class OrderServiceTest {
         assertNotNull(userOrderList);
         assertEquals(repositoryOrderList, userOrderList);
         assertTrue(isUnmodifiableList(userOrderList));
+    }
+
+    private static Stream<Arguments> providedArgs_createEmptyOrderTest() {
+        return Stream.of(
+                Arguments.of(1L, "some status", ""),
+                Arguments.of(2L, "s", ""),
+                Arguments.of(3L, "s", "some comment"),
+                Arguments.of(4L, "s", null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_createEmptyOrderTest")
+    void createEmptyOrderTest(Long userId, String status, String comment) {
+        User user = new User(userId, "some name", "some@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        Mockito
+                .when(userService.readUserById(userId))
+                .thenReturn(Optional.of(user));
+        Optional<Order> optionalOrder = orderService.createEmptyOrder(userId, status, comment);
+
+        assertTrue(optionalOrder.isPresent());
+        Order order = optionalOrder.get();
+        assertNull(order.getId());
+        assertNotNull(order.getOrderItemList());
+        assertTrue(order.getOrderItemList().isEmpty());
+        assertNotNull(order.getUser());
+        assertEquals(userId, order.getUser().getId());
+        assertEquals(comment, order.getComment());
+        assertEquals(status, order.getStatus());
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_createEmptyOrderTest")
+    void createEmptyOrderTest_notFoundUser(Long userId, String status, String comment) {
+        Mockito
+                .when(userService.readUserById(userId))
+                .thenReturn(Optional.empty());
+        Optional<Order> optionalOrder = orderService.createEmptyOrder(userId, status, comment);
+
+        assertNotNull(optionalOrder);
+        assertFalse(optionalOrder.isPresent());
+    }
+
+    @Test
+    void createEmptyOrderTest_notFoundUserLogErr(CapturedOutput output) {
+        Long id = 1L;
+        Mockito
+                .when(userService.readUserById(id))
+                .thenReturn(Optional.empty());
+        Optional<Order> optionalOrder = orderService.createEmptyOrder(id, "some status", "some comment");
+
+        assertNotNull(optionalOrder);
+        assertFalse(optionalOrder.isPresent());
+        assertTrue(output.getOut().contains("problem to created empty order"));
+        assertTrue(output.getOut().contains("user not found"));
+    }
+
+    @Test
+    void createEmptyOrderTest_statusIsBlankLogErr(CapturedOutput output) {
+        Long id = 1L;
+        Mockito
+                .when(userService.readUserById(id))
+                .thenReturn(Optional.of(new User(id, "some name", "some@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true)));
+        Optional<Order> optionalOrder = orderService.createEmptyOrder(id, "", "some comment");
+
+        assertNotNull(optionalOrder);
+        assertFalse(optionalOrder.isPresent());
+        assertTrue(output.getOut().contains("problem to created empty order"));
+        assertTrue(output.getOut().contains("status is blank"));
+    }
+
+    private static Stream<Arguments> providedArgs_createEmptyOrderTest_invalidUserId() {
+        return Stream.of(
+                Arguments.of(null, "some status", ""),
+                Arguments.of(0L, "some status", ""),
+                Arguments.of(-1L, "s", "")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_createEmptyOrderTest_invalidUserId")
+    void createEmptyOrderTest_invalidUserId(Long userId, String status, String comment) {
+        Optional<Order> optionalOrder = orderService.createEmptyOrder(userId, status, comment);
+
+        assertNotNull(optionalOrder);
+        assertFalse(optionalOrder.isPresent());
     }
 
 }
