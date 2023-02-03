@@ -92,12 +92,15 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/remove-all/{cartItemId}")
-    public String removeItemsType(
-                                  @PathVariable Integer cartItemId,
-                                  @CookieValue(defaultValue = "0") Long cartId) {
-        // todo implement authorization checking
-        boolean authorization = false;
+    public String removeItemsType(@PathVariable Integer cartItemId,
+                                  @CookieValue Long cartId) {
         cartService.removeOneCartItemsTypeFromCart(cartService.getCartByCartId(cartId).get(),cartItemId);
+        return "redirect:/shopping-cart";
+    }
+
+    @GetMapping("/remove-all")
+    public String removeAllItemsFromCart(@CookieValue Long cartId) {
+        cartService.removeAllItemsFromCart(cartId);
         return "redirect:/shopping-cart";
     }
 
