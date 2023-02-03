@@ -22,26 +22,26 @@ public class User extends AuditModel {
     @Column(name = "user_id")
     private Long id;
 
-    @Size(min = 3, max = 50, message = "Please provide a valid 'username' (min = 3, max = 50)")
+//    @Size(min = 3, max = 50, message = "Please provide a valid 'username' (min = 3, max = 50)")
     @Column(unique = true)
     private String username;
 
-    @Email(message = "Please provide a valid 'email'")
+//    @Email(message = "Please provide a valid 'email'")
     @Column(unique = true, nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @NotEmpty(message = "'role' cannot be empty")
+//    @NotEmpty(message = "'role' cannot be empty")
     @Column(name = "log_in_provider", nullable = false)
     private LogInProvider logInProvider;
 
     @Enumerated(EnumType.STRING)
-    @NotEmpty(message = "'role' cannot be empty")
+//    @NotEmpty(message = "'role' cannot be empty")
     @Column(nullable = false)
     private UserRole role;
 
     @ToString.Exclude
-    @Size(min = 4, max = 50, message = "Please provide a valid 'password' (min = 4, max = 50)")
+//    @Size(min = 4, max = 50, message = "Please provide a valid 'password' (min = 4, max = 50)")
     private String password;
 
     private boolean enabled;

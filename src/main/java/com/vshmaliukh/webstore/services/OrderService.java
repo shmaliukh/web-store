@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_STATUS_COMPLETED;
+import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_STATUS_COMPLETED_STR;
 
 
 @Slf4j
@@ -144,7 +144,7 @@ public class OrderService implements EntityValidator<Order> {
 
     public void setUpSoldQuantityIfOrderIsCompleted(Order order) {
         if (isValidEntity(order)) {
-            if (order.getStatus().equalsIgnoreCase(ORDER_STATUS_COMPLETED)) {
+            if (order.getStatus().equalsIgnoreCase(ORDER_STATUS_COMPLETED_STR)) {
                 List<OrderItem> orderItems = orderItemService.readOrderItemListByOrder(order);
                 for (OrderItem orderItem : orderItems) {
                     Item item = orderItem.getItem();

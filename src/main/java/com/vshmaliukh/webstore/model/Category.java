@@ -26,8 +26,8 @@ public class Category extends AuditModel {
     private Integer id;
 
     @Column(nullable = false, unique = true)
-    @NotBlank(message = "Category name is mandatory")
-    @Size(min=3, max=50)
+//    @NotBlank(message = "Category name is mandatory")
+//    @Size(min=3, max=50)
     private String name;
 
     @Column(columnDefinition = "LONGTEXT")

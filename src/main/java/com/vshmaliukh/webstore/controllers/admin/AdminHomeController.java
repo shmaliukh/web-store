@@ -26,24 +26,29 @@ public class AdminHomeController {
     final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping("/**")
+    public ModelAndView doGetAll(ModelMap modelMap) {
+        return new ModelAndView("redirect:/admin/home", modelMap);
+    }
+
+    @GetMapping("/home")
     public ModelAndView doGet(@CookieValue(defaultValue = "0") Long userId,
                               ModelMap modelMap) {
         long allItemTypesQuantity = calcAllItem();
         Map<String, Long> categoryItemQuantityMap = Collections.singletonMap("Literature", allItemTypesQuantity);
-        Optional<User> optionalUser = userService.readUserById(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            boolean isAdminUser = userService.isAdminUser(user);
-            if (
-                    ! // TODO remove '!'
-                            isAdminUser) {
+//        Optional<User> optionalUser = userService.readUserById(userId);
+//        if (optionalUser.isPresent()) {
+//            User user = optionalUser.get();
+//            boolean isAdminUser = userService.isAdminUser(user);
+//            if (
+//                    ! // TODO remove '!'
+//                            isAdminUser) {
                 return new ModelAndView("admin/admin-home", modelMap);
-            }
-        }
+//            }
+//        }
 
         // TODO create interceptor for admin verification
-        modelMap.addAttribute("categoryItemQuantityMap", categoryItemQuantityMap);
-        return new ModelAndView("redirect:/home", modelMap);
+//        modelMap.addAttribute("categoryItemQuantityMap", categoryItemQuantityMap);
+//        return new ModelAndView("redirect:/home", modelMap);
     }
 
     private long calcAllItem() {
