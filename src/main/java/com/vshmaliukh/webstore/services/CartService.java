@@ -91,22 +91,30 @@ public class CartService {
 
     public Cart removeOneCartItemsTypeFromCart(Cart cart, Integer cartItemId){
         List<CartItem> cartItems = cart.getItems();
+        CartItem cartItemToRemove = new CartItem();
         for (CartItem cartItem : cartItems) {
             if (cartItem.getId().equals(cartItemId)){
+                cartItemToRemove = cartItem;
                 cartItems.remove(cartItem);
-                cartItemRepository.delete(cartItem);
                 break;
             }
         }
         cart.setItems(cartItems);
-        return cartRepositoryProvider.getCartRepositoryByCart(cart).save(cart);
+        cart = cartRepositoryProvider.getCartRepositoryByCart(cart).save(cart);
+        if(cartItemToRemove.getId()!=null){
+            cartItemRepository.delete(cartItemToRemove);
+        }
+        return cart;
     }
 
     public Cart removeAllItemsFromCart(Long cartId){
         Cart cart = getCartByCartId(cartId).get();
-        List<CartItem> cartItems = new ArrayList<>();
-        cart.setItems(cartItems);
-        return addNewCart(cart);
+        List<CartItem> newCartItems = new ArrayList<>();
+        List<CartItem> cartItems = cart.getItems();
+        cart.setItems(newCartItems);
+        cart = addNewCart(cart);
+        cartItemRepository.deleteAll(cartItems);
+        return cart;
     }
 
 }
