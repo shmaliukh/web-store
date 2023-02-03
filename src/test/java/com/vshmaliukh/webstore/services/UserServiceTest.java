@@ -81,7 +81,28 @@ class UserServiceTest {
                 .thenReturn(Optional.empty());
         Optional<User> optionalUser = userService.readUserById(id);
 
+        assertNotNull(optionalUser);
         assertFalse(optionalUser.isPresent());
+    }
+
+    @Test
+    void readUserByIdTest_idIsNullLogErr(CapturedOutput output) {
+        Optional<User> optionalUser = userService.readUserById(null);
+
+        assertNotNull(optionalUser);
+        assertFalse(optionalUser.isPresent());
+        assertTrue(output.getOut().contains("problem to read user by id"));
+        assertTrue(output.getOut().contains("id is NULL"));
+    }
+
+    @Test
+    void readUserByIdTest_idIsLessThan1LogErr(CapturedOutput output) {
+        Optional<User> optionalUser = userService.readUserById(0L);
+
+        assertNotNull(optionalUser);
+        assertFalse(optionalUser.isPresent());
+        assertTrue(output.getOut().contains("problem to read user by id"));
+        assertTrue(output.getOut().contains("id < 1"));
     }
 
     private static Stream<Arguments> providedArgs_isAdminUserTest() {
