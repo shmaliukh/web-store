@@ -98,7 +98,7 @@ public class ShoppingCartController {
         return "redirect:/shopping-cart";
     }
 
-    @GetMapping("/remove-all")
+    @GetMapping("/remove-all-items")
     public String removeAllItemsFromCart(@CookieValue Long cartId) {
         cartService.removeAllItemsFromCart(cartId);
         return "redirect:/shopping-cart";
