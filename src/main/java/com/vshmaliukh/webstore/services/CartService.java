@@ -102,4 +102,11 @@ public class CartService {
         return cartRepositoryProvider.getCartRepositoryByCart(cart).save(cart);
     }
 
+    public Cart removeAllItemsFromCart(Long cartId){
+        Cart cart = getCartByCartId(cartId).get();
+        List<CartItem> cartItems = new ArrayList<>();
+        cart.setItems(cartItems);
+        return addNewCart(cart);
+    }
+
 }
