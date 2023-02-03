@@ -87,21 +87,21 @@ public class CategoryService implements EntityValidator<Category> {
         if (categoryId != null && categoryId > 0) {
             return categoryRepository.findById(categoryId);
         }
-        log.warn("problem to read category by id "
+        log.error("problem to read category by id "
                 + (categoryId == null ? " // categoryId is NULL" : " // categoryId must be greater than 0"));
         return Optional.empty();
     }
 
     public void addImageToCategory(Long imageId, Optional<Image> optionalImage, Category category) {
-        if (optionalImage.isPresent() && category != null) {
+        if (optionalImage.isPresent() && isValidEntity(category)) {
             Image image = optionalImage.get();
             image.setId(imageId);
             category.setImage(image);
             save(category);
         } else {
-            log.warn("problem to add image to '{}' category"
-                    + (optionalImage.isPresent() ? " // image is not present" : "")
-                    + (category == null ? " // category is NULL" : ""), category);
+            log.error("problem to add image to '{}' category"
+                    + (!optionalImage.isPresent() ? " // image is not present" : "")
+                    + (!isValidEntity(category) ? " // invalid category" : ""), category);
         }
     }
 
@@ -113,7 +113,7 @@ public class CategoryService implements EntityValidator<Category> {
             log.info("deleted '{}' category image", category);
             return ResponseEntity.ok().build();
         }
-        log.warn("problem to delete category image // category not found");
+        log.error("problem to delete category image // category not found");
         return ResponseEntity.badRequest().build();
     }
 
@@ -126,7 +126,7 @@ public class CategoryService implements EntityValidator<Category> {
             categoryRepository.save(category);
             log.info("item '{}' added to category '{}'", item, category);
         } else {
-            log.warn("problem to add item to category"
+            log.error("problem to add item to category"
                     + (item == null ? " // item is NULL" : " // category is NULL"));
         }
     }
@@ -145,7 +145,7 @@ public class CategoryService implements EntityValidator<Category> {
                         + " // '{}' category does not contain '{}' item", category, item);
             }
         } else {
-            log.warn("problem to remove item from category"
+            log.error("problem to remove item from category"
                     + (item == null ? " // item is NULL" : " // category is NULL"));
         }
     }
@@ -157,7 +157,7 @@ public class CategoryService implements EntityValidator<Category> {
             save(category);
             log.info("deleted category: '{}'", category);
         } else {
-            log.warn("problem to delete category"
+            log.error("problem to delete category"
                     + (category == null ? " // category is NULL" : "category already deleted"));
         }
     }

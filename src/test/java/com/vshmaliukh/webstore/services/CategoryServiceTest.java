@@ -382,6 +382,30 @@ class CategoryServiceTest {
     }
 
     @Test
+    void deleteImageByCategoryTest_categoryNotFoundLogErr(CapturedOutput output) {
+        categoryService.deleteImageByCategory(Optional.empty());
+
+        assertTrue(output.getOut().contains("problem to delete category image"));
+        assertTrue(output.getOut().contains("category not found"));
+    }
+
+    @Test
+    void addImageToCategoryTest_imageNotFoundLogErr(CapturedOutput output) {
+        categoryService.addImageToCategory(null, Optional.empty(), new Category());
+
+        assertTrue(output.getOut().contains("problem to add image"));
+        assertTrue(output.getOut().contains("image is not present"));
+    }
+
+    @Test
+    void addImageToCategoryTest_invalidCategoryLogErr(CapturedOutput output) {
+        categoryService.addImageToCategory(null, Optional.of(new Image()), null);
+
+        assertTrue(output.getOut().contains("problem to add image"));
+        assertTrue(output.getOut().contains("invalid category"));
+    }
+
+    @Test
     void getCategoryRepositoryTest() {
         assertNotNull(categoryService.getCategoryRepository());
     }
