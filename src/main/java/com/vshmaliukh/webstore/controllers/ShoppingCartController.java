@@ -90,4 +90,15 @@ public class ShoppingCartController {
         cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,false); // because of decrementing
         return "redirect:/shopping-cart";
     }
+
+    @GetMapping("/remove-all/{cartItemId}")
+    public String removeItemsType(
+                                  @PathVariable Integer cartItemId,
+                                  @CookieValue(defaultValue = "0") Long cartId) {
+        // todo implement authorization checking
+        boolean authorization = false;
+        cartService.removeOneCartItemsTypeFromCart(cartService.getCartByCartId(cartId).get(),cartItemId);
+        return "redirect:/shopping-cart";
+    }
+
 }
