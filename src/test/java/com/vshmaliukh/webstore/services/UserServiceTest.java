@@ -126,6 +126,15 @@ class UserServiceTest {
     }
 
     @Test
+    void isAdminUserTest_invalidUserLogErr(CapturedOutput output) {
+        boolean isAdminResult = userService.isAdminUser(null);
+
+        assertFalse(isAdminResult);
+        assertTrue(output.getOut().contains("problem to check user role"));
+        assertTrue(output.getOut().contains("invalid user"));
+    }
+
+    @Test
     void saveTest_null(CapturedOutput output) {
         userService.save(null);
 

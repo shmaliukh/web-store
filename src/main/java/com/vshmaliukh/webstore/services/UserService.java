@@ -26,7 +26,12 @@ public class UserService implements EntityValidator<User> {
     final UserRepository userRepository;
 
     public Optional<User> readUserById(Long userId) {
-        return userRepository.findById(userId);
+        if(userId != null && userId > 0){
+            return userRepository.findById(userId);
+        }
+        log.error("problem to read user by id"
+                + (userId == null ? " // id is NULL" : " // id < 1"));
+        return Optional.empty();
     }
 
     public List<User> readAllUserList() {
@@ -34,11 +39,11 @@ public class UserService implements EntityValidator<User> {
     }
 
     public boolean isAdminUser(User user) {
-        if (user != null) {
+        if (isValidEntity(user)) {
             UserRole userRole = user.getRole();
             return userRole != null && userRole.equals(UserRole.ADMIN);
         }
-        log.warn("problem to check user role // user is NULL");
+        log.warn("problem to check user role // invalid user");
         return false;
     }
 
