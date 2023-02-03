@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.OrderStatus;
 import com.vshmaliukh.webstore.login.LogInProvider;
 import com.vshmaliukh.webstore.login.UserRole;
 import com.vshmaliukh.webstore.model.Order;
@@ -398,11 +399,74 @@ class OrderServiceTest {
     }
 
     @Test
-    void setUpSoldQuantityIfOrderIsCompletedTest_invalidOrderLogErr(CapturedOutput output){
+    void setUpSoldQuantityIfOrderIsCompletedTest_invalidOrderLogErr(CapturedOutput output) {
         orderService.setUpSoldQuantityIfOrderIsCompleted(null);
 
         assertTrue(output.getOut().contains("problem to set up sold out quantity if order is completed"));
         assertTrue(output.getOut().contains("invalid order"));
+    }
+
+    @Test
+    void setUpSoldQuantityIfOrderIsCompletedTest_successfullyChangedLogInfo(CapturedOutput output) {
+        Order order = new Order();
+        order.setStatus(OrderStatus.Completed.getStatus().getStatusName());
+        Mockito
+                .when(orderItemService.readOrderItemListByOrder(order))
+                .thenReturn(Collections.emptyList());
+        orderService.setUpSoldQuantityIfOrderIsCompleted(order);
+
+        assertTrue(output.getOut().contains("successfully save order items as completed"));
+    }
+
+    private static Stream<Arguments> providedArgs_setUpSoldQuantityIfOrderIsCompletedTest() {
+        Order order = new Order();
+        order.setStatus(OrderStatus.Completed.getStatus().getStatusName());
+
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Magazine magazine = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
+        Newspaper newspaper = new Newspaper(3, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
+        Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
+        Book book2 = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Magazine magazine2 = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
+        Newspaper newspaper2 = new Newspaper(3, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
+        Comics comics2 = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
+        Comics comics3 = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 5, 567, "some publisher");
+        Comics comics4 = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 5, 567, "some publisher");
+
+        OrderItem orderItem1 = new OrderItem(null, 1, 3, true, book, order);
+        OrderItem orderItem2 = new OrderItem(null, 2, 3, true, magazine, order);
+        OrderItem orderItem3 = new OrderItem(null, 3, 3, true, newspaper, order);
+        OrderItem orderItem4 = new OrderItem(null, 4, 3, true, comics, order);
+        OrderItem orderItem5 = new OrderItem(null, 5, 3, true, book2, order);
+        OrderItem orderItem6 = new OrderItem(null, 6, 3, true, magazine2, order);
+        OrderItem orderItem7 = new OrderItem(null, 7, 3, true, newspaper2, order);
+        OrderItem orderItem8 = new OrderItem(null, 8, 3, true, comics2, order);
+        OrderItem orderItem9 = new OrderItem(null, 4, 3, true, comics3, order);
+        OrderItem orderItem10 = new OrderItem(null, 5, 3, true, comics4, order);
+
+        return Stream.of(
+                Arguments.of(order, Collections.singletonList(orderItem1), Collections.singletonList(1L)),
+                Arguments.of(order, Collections.singletonList(orderItem2), Collections.singletonList(2L)),
+                Arguments.of(order, Collections.singletonList(orderItem3), Collections.singletonList(3L)),
+                Arguments.of(order, Collections.singletonList(orderItem4), Collections.singletonList(4L)),
+                Arguments.of(order, Arrays.asList(orderItem5, orderItem6), Arrays.asList(5L, 6L)),
+                Arguments.of(order, Arrays.asList(orderItem7, orderItem8, orderItem9, orderItem10), Arrays.asList(7L, 8L, 9L, 10L))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_setUpSoldQuantityIfOrderIsCompletedTest")
+    void setUpSoldQuantityIfOrderIsCompletedTest(Order order, List<OrderItem> repositoryOrderItemList, List<Long> expectedResult) {
+        // TODO add test variants
+        Mockito
+                .when(orderItemService.readOrderItemListByOrder(order))
+                .thenReturn(repositoryOrderItemList);
+        orderService.setUpSoldQuantityIfOrderIsCompleted(order);
+
+        for (int i = 0; i < repositoryOrderItemList.size(); i++) {
+            int soldOutQuantity = repositoryOrderItemList.get(i).getItem().getSoldOutQuantity();
+            assertEquals(expectedResult.get(i), soldOutQuantity);
+        }
     }
 
 }

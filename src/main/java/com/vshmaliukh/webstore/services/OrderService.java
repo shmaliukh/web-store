@@ -144,11 +144,13 @@ public class OrderService implements EntityValidator<Order> {
 
     public void setUpSoldQuantityIfOrderIsCompleted(Order order) {
         if (isValidEntity(order)) {
-            if (order.getStatus().equalsIgnoreCase(ORDER_STATUS_COMPLETED_STR)) {
-                List<OrderItem> orderItems = orderItemService.readOrderItemListByOrder(order);
-                for (OrderItem orderItem : orderItems) {
+            String orderStatus = order.getStatus();
+            if (orderStatus.equalsIgnoreCase(ORDER_STATUS_COMPLETED_STR)) {
+                List<OrderItem> orderItemList = orderItemService.readOrderItemListByOrder(order);
+                for (OrderItem orderItem : orderItemList) {
                     Item item = orderItem.getItem();
-                    item.setSoldOutQuantity(orderItem.getQuantity());
+                    int newSoldOutQuantity = item.getSoldOutQuantity() + orderItem.getQuantity();
+                    item.setSoldOutQuantity(newSoldOutQuantity);
                     itemService.saveItem(item);
                 }
                 log.info("successfully save order items as completed, order: '{}'", order);
