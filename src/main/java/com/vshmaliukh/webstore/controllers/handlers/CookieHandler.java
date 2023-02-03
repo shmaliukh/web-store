@@ -4,11 +4,12 @@ import javax.servlet.http.Cookie;
 
 public class CookieHandler {
 
-    public Cookie createUserIdCookie(Long userId){
-        Cookie cookie = new Cookie("userId",userId.toString());
-        cookie.setMaxAge(24*60*60);
+    public Cookie createCookie(Long value, String name){
+        Cookie cookie = new Cookie(name,value.toString());
+        cookie.setMaxAge(24*60*60*100);
         cookie.setSecure(true);
-        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+//        cookie.setHttpOnly(true);
         return cookie;
     }
 
