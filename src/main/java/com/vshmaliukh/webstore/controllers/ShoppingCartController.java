@@ -41,39 +41,30 @@ public class ShoppingCartController {
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
                                      HttpServletResponse response,
-                                     @CookieValue(required = false, defaultValue = "0") Long userId) {
+//                                     HttpServletRequest request,
+
+                                     @CookieValue(defaultValue = "0", name = "cartId") Long cartId) {
 
         // userId can be 0 if user authorized, or it can be a new user - then check authorization
 
         // todo add checking for user authorizing
-
         boolean authorization = false;
-        if(!authorization) {
-//            unauthorizedUserService.removeOldUsers(); // todo refactor usage of old unauthorized users removing
-            if (userId == 0) {
-                UnauthorizedUser unauthorizedUser = unauthorizedUserService.createUnauthorizedUser();
-                UnauthorizedUserCart unauthorizedUserCart  = new UnauthorizedUserCart();
-                unauthorizedUserCart.setUnauthorizedUser(unauthorizedUser);
-                cartService.addNewCart(unauthorizedUserCart);
+
+        if(!authorization){
+            if(cartId==null){
+                cartId = shoppingCartHandler.createNewCart().getCartId();
                 response.addCookie(
-                        cookieHandler.createUserIdCookie(unauthorizedUser.getId())
+                        cookieHandler.createCookie(cartId,"cartId")
                 );
             }
-            Cart cart = cartService.getCartByUserId(unauthorizedUserService.getUserById(userId).getId(),authorization);
-            if(cart!=null) {
-                List<CartItem> cartItems = cart.getItems();
-                int totalCount = shoppingCartHandler.countAllItemsQuantity(cartItems);
-                int totalPrice = shoppingCartHandler.countAllItemsPrice(cartItems);
-                modelMap.addAttribute("items", cartItems);
-                modelMap.addAttribute("totalItems", totalCount);
-                modelMap.addAttribute("totalPrice", totalPrice);
-            }
-        } else {
-            if(userId!=0){
-                shoppingCartHandler.changeCartToAuthorized(
-                        cartService.getCartByUserId(userId,false),
-                        userService.getUserById(userId)); // todo check authorized user id
-            }
+
+            Cart cart = cartService.getCartByCartId(cartId).get();
+            List<CartItem> cartItems = cart.getItems();
+            int totalCount = shoppingCartHandler.countAllItemsQuantity(cartItems);
+            int totalPrice = shoppingCartHandler.countAllItemsPrice(cartItems);
+            modelMap.addAttribute("items", cartItems);
+            modelMap.addAttribute("totalItems", totalCount);
+            modelMap.addAttribute("totalPrice", totalPrice);
         }
         return new ModelAndView("shopping-cart");
     }
