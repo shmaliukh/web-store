@@ -2,9 +2,13 @@ package com.vshmaliukh.webstore.controllers.handlers;
 
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.carts.Cart;
+import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.carts.UserCart;
 import com.vshmaliukh.webstore.model.items.CartItem;
+import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
 import com.vshmaliukh.webstore.repositories.cart_repositories.UserCartRepository;
+import com.vshmaliukh.webstore.services.CartService;
+import com.vshmaliukh.webstore.services.UnauthorizedUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ShoppingCartHandler {
 
+    CartService cartService;
+    UnauthorizedUserService unauthorizedUserService;
     UserCartRepository userCartRepository;
 
     public int countAllItemsPrice(List<CartItem> cartItems){
@@ -37,6 +43,12 @@ public class ShoppingCartHandler {
         userCart.setUser(authorizedUser);
         userCart.setItems(unauthorizedUserCart.getItems());
         userCartRepository.save(userCart);
+    }
+
+    public Cart createNewCart(){
+        UnauthorizedUserCart unauthorizedUserCart = new UnauthorizedUserCart();
+        unauthorizedUserCart.setUnauthorizedUser(unauthorizedUserService.createUnauthorizedUser());
+        return cartService.addNewCart(unauthorizedUserCart);
     }
 
 }
