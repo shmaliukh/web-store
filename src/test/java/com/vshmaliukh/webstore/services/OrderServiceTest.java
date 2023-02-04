@@ -406,6 +406,50 @@ class OrderServiceTest {
         assertTrue(output.getOut().contains("invalid order"));
     }
 
+    private static Stream<Arguments> providedArgs_changeOrderStatusTest() {
+        return Stream.of(
+                Arguments.of(new Order(), OrderStatus.Completed.getStatus().getStatusName()),
+                Arguments.of(new Order(), "some status"),
+                Arguments.of(new Order(), "s")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_changeOrderStatusTest")
+    void changeOrderStatusTest(Order order, String newStatusStr) {
+        Mockito
+                .when(orderRepository.save(order))
+                .thenReturn(order);
+        orderService.changeOrderStatus(Optional.of(order), newStatusStr);
+
+        assertNotNull(order);
+        assertEquals(newStatusStr, order.getStatus());
+    }
+
+    @Test
+    void changeOrderStatusTest_orderIsNotPresentLogErr(CapturedOutput output) {
+        orderService.changeOrderStatus(Optional.empty(), OrderStatus.Pending.getStatus().getStatusName());
+
+        assertTrue(output.getOut().contains("problem to change order status"));
+        assertTrue(output.getOut().contains("order is not present"));
+    }
+
+    @Test
+    void changeOrderStatusTest_statusIsBlankLogErr(CapturedOutput output) {
+        orderService.changeOrderStatus(Optional.of(new Order()), "");
+
+        assertTrue(output.getOut().contains("problem to change order status"));
+        assertTrue(output.getOut().contains("new status is blank"));
+    }
+
+    @Test
+    void changeOrderStatusTest_statusIsNullLogErr(CapturedOutput output) {
+        orderService.changeOrderStatus(Optional.of(new Order()), null);
+
+        assertTrue(output.getOut().contains("problem to change order status"));
+        assertTrue(output.getOut().contains("new status is blank"));
+    }
+
     @Test
     void setUpSoldQuantityIfOrderIsCompletedTest_successfullyChangedLogInfo(CapturedOutput output) {
         Order order = new Order();

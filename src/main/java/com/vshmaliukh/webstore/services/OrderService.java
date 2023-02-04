@@ -169,7 +169,7 @@ public class OrderService implements EntityValidator<Order> {
         } else {
             log.warn("problem to change order status // status str: '{}'", newStatusStr);
             log.error("problem to change order status"
-                    + (!optionalOrder.isPresent() ? " // not found order" : " // new status is empty"));
+                    + (!optionalOrder.isPresent() ? " // order is not present" : " // new status is blank"));
         }
     }
 
