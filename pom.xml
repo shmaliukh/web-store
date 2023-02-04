@@ -11,7 +11,7 @@
 
     <groupId>com.vshmaliukh</groupId>
     <artifactId>web-store</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>web-store</name>
     <description>web-store</description>
 

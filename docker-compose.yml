@@ -1,0 +1,19 @@
+version: "3.5"
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        JDK_VERSION: ${JDK_VERSION}
+        APP_MODULE_NAME: ${APP_MODULE_NAME}
+        APP_VERSION: ${APP_VERSION}
+    volumes:
+      - "/data/web-store/${APP_MODULE_NAME}/${APP_VERSION}:/root/web-store/"
+    restart: on-failure
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "1000M"
+
