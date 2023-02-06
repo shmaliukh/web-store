@@ -117,4 +117,8 @@ public class CartService {
         return cart;
     }
 
+    public boolean existsById(Long id, boolean authorization){
+        return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).existsById(id);
+    }
+
 }

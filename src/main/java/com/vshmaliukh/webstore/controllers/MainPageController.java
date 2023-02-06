@@ -75,7 +75,7 @@ public class MainPageController {
         boolean authorization = false;
 
         if(!authorization){
-            if(cartId==0){
+            if(cartId==0||!cartService.existsById(cartId,authorization)){
                 cartId = shoppingCartHandler.createNewCart().getCartId();
                 Long userId = cartService.getCartByCartId(cartId).get().getCartId(); // todo remove its usage
                 response.addCookie(new CookieHandler().createCookie(cartId,"cartId"));
