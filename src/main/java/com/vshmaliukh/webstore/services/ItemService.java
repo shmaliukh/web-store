@@ -9,6 +9,7 @@ import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRe
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,17 +25,18 @@ public class ItemService implements EntityValidator<Item> {
     final ItemRepositoryProvider itemRepositoryProvider;
     final ImageService imageService;
 
-    public void addImageToItem(Integer itemId, MultipartFile file) {
-        Optional<Item> optionalItem = readItemById(itemId);
-        if (optionalItem.isPresent()) {
-            Item item = optionalItem.get();
+    public void addImageToItem(Item item, MultipartFile file) {
+        if (isValidEntity(item)) {
             Optional<ItemImage> optionalImage = imageService.formItemImageFromFile(item, file);
             if (optionalImage.isPresent()) {
                 ItemImage itemImageToSave = optionalImage.get();
                 imageService.saveImage(itemImageToSave);
+                log.info("successfully added image to item // item: '{}', image: '{}'", item, itemImageToSave);
+            } else {
+                log.error("problem to add image to item // problem to generate image for item: '{}'", item);
             }
         } else {
-            log.warn("image not added to item with '{}'", itemId);
+            log.error("problem to add image to item // invalid item: '{}'", item);
         }
     }
 
@@ -120,11 +122,16 @@ public class ItemService implements EntityValidator<Item> {
         return Collections.unmodifiableSet(itemRepositoryProvider.readTypeNameSet());
     }
 
-    public BaseItemRepository getItemRepositoryByItemTypeName(String itemType) {
-        // TODO solve 'Raw use of parameterized class 'BaseItemRepository''
-        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType.toLowerCase());
-        if (itemRepository != null) {
-            return itemRepository;
+    public BaseItemRepository getItemRepositoryByItemTypeName(String itemTypeStr) {
+        if (StringUtils.isNotBlank(itemTypeStr)) {
+            BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeStr.toLowerCase());
+            if (itemRepository != null) {
+                return itemRepository;
+            } else {
+                log.warn("problem to find repository by type // not found repository by type: '{}' // return all item repository", itemTypeStr);
+            }
+        } else {
+            log.warn("problem to find repository by type // item type str is blank // return all item repository");
         }
         return itemRepositoryProvider.getAllItemRepository();
     }

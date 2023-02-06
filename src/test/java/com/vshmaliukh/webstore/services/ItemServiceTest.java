@@ -6,6 +6,7 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,12 +19,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
 import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableList;
 import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableSet;
+import static com.vshmaliukh.webstore.services.ImageServiceTest.IMAGE_1_NAME;
+import static com.vshmaliukh.webstore.services.ImageServiceTest.SRC_TEST_RESOURCES_PATH_STR;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -274,6 +282,52 @@ class ItemServiceTest {
         assertNotNull(statusNameList);
         assertFalse(statusNameList.isEmpty());
         assertTrue(isUnmodifiableList(statusNameList));
+    }
+
+    @Test
+    void getItemRepositoryByItemTypeNameTest_typeStrIsNullLogErr(CapturedOutput output) {
+        Mockito
+                .when(itemRepositoryProvider.getAllItemRepository())
+                .thenReturn(itemService.itemRepository);
+        BaseItemRepository repository = itemService.getItemRepositoryByItemTypeName(null);
+
+        assertNotNull(repository);
+        assertEquals(itemService.itemRepository, repository);
+        assertTrue(output.getOut().contains("problem to find repository by type"));
+        assertTrue(output.getOut().contains("item type str is blank"));
+        assertTrue(output.getOut().contains("return all item repository"));
+    }
+
+    @Test
+    void getItemRepositoryByItemTypeNameTest_notFoundRepositoryLogErr(CapturedOutput output) {
+        Mockito
+                .when(itemRepositoryProvider.getAllItemRepository())
+                .thenReturn(itemService.itemRepository);
+        BaseItemRepository repository = itemService.getItemRepositoryByItemTypeName("some type");
+
+        assertNotNull(repository);
+        assertEquals(itemService.itemRepository, repository);
+        assertTrue(output.getOut().contains("problem to find repository by type"));
+        assertTrue(output.getOut().contains("not found repository by type"));
+        assertTrue(output.getOut().contains("return all item repository"));
+    }
+
+    @Test
+    void addImageToItem_invalidItemLogErr(CapturedOutput output) throws IOException {
+        MockMultipartFile mockMultipartFile = new MockMultipartFile(IMAGE_1_NAME, IMAGE_1_NAME, MediaType.IMAGE_PNG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_1_NAME)));
+        itemService.addImageToItem(null, mockMultipartFile);
+
+        assertTrue(output.getOut().contains("problem to add image to item"));
+        assertTrue(output.getOut().contains("invalid item"));
+    }
+
+    @Test
+    void addImageToItem_invalidImageFileLogErr(CapturedOutput output) {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        itemService.addImageToItem(book, null);
+
+        assertTrue(output.getOut().contains("problem to add image to item"));
+        assertTrue(output.getOut().contains("problem to generate image for item"));
     }
 
 }

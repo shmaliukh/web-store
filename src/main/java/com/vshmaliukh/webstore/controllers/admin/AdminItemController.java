@@ -151,22 +151,25 @@ public class AdminItemController {
     }
 
     @PostMapping("/{itemId}/image")
-    public ModelAndView uploadImage(@PathVariable Integer itemId,
-                                    @RequestParam("imageFile") MultipartFile imageFile,
-                                    ModelMap modelMap) {
-        if (!imageFile.isEmpty()) {
-            itemService.addImageToItem(itemId, imageFile);
+    public ModelAndView uploadItemImage(@PathVariable Integer itemId,
+                                        @RequestParam("imageFile") MultipartFile imageFile,
+                                        ModelMap modelMap) {
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
+        if (!imageFile.isEmpty() && optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            itemService.addImageToItem(item, imageFile);
         } else {
-            log.warn("problem to upload image // imageFile == NULL");
+            log.warn("problem to upload image"
+                    + (imageFile.isEmpty() ? " // imageFile is empty" : " // item is not present"));
         }
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 
     @PostMapping("/{itemId}/image/{imageId}")
-    public ModelAndView uploadImage(@PathVariable Integer itemId,
-                                    @PathVariable Long imageId,
-                                    @RequestParam("imageFile") MultipartFile imageFile,
-                                    ModelMap modelMap) {
+    public ModelAndView uploadItemImage(@PathVariable Integer itemId,
+                                        @PathVariable Long imageId,
+                                        @RequestParam("imageFile") MultipartFile imageFile,
+                                        ModelMap modelMap) {
         itemService.changeItemImage(itemId, imageId, imageFile);
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
