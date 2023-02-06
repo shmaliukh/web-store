@@ -64,18 +64,18 @@ public class ItemService implements EntityValidator<Item> {
     }
 
     public <T extends Item> void saveItem(T item) {
-        BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
-        if (baseItemRepository != null) {
-            if (item.getCurrentQuantity() < 1) {
-                item.setAvailableInStore(false);
-            }
+        if (isValidEntity(item)) {
+//            if (item.getCurrentQuantity() < 1) {
+//                item.setAvailableInStore(false);
+//            }
             if (item.getId() != null) {
                 List<ItemImage> imageListByItem = imageService.findImageListByItem(item);
                 item.setImageList(imageListByItem);
             }
-            baseItemRepository.save(item);
+            itemRepository.save(item);
+            log.info("item successfully saved // item: '{}'", item);
         } else {
-            log.warn("problem to save '{}' item , repository not found", item);
+            log.error("problem to save item // invalid item");
         }
     }
 

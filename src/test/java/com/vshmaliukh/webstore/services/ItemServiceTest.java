@@ -142,5 +142,20 @@ class ItemServiceTest {
         assertTrue(output.getOut().contains("item id < 1"));
     }
 
+    @Test
+    void saveItemTest_itemIsInvalidLogErr(CapturedOutput output) {
+        itemService.saveItem(null);
+
+        assertTrue(output.getOut().contains("problem to save item"));
+        assertTrue(output.getOut().contains("invalid item"));
+    }
+
+    @Test
+    void saveItemTest_successLogInfo(CapturedOutput output) {
+        Book item = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        itemService.saveItem(item);
+
+        assertTrue(output.getOut().contains("item successfully saved"));
+    }
 
 }
