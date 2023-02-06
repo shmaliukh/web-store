@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -28,7 +27,7 @@ public class ItemController {
 
     @GetMapping("/item/type-names")
     public ResponseEntity<Set<String>> readItemTypeNameSet(){
-        Set<String> itemTypeNameSet = itemService.typeNameSet();
+        Set<String> itemTypeNameSet = itemService.readTypeNameSet();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemTypeNameSet);

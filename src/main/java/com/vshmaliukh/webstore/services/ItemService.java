@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class ItemService implements EntityValidator<Item>{
+public class ItemService implements EntityValidator<Item> {
 
     @Getter
     final ItemRepository itemRepository;
@@ -133,8 +133,8 @@ public class ItemService implements EntityValidator<Item>{
         );
     }
 
-    public Set<String> typeNameSet() {
-        return itemRepositoryProvider.itemClassNameRepositoryMap.keySet();
+    public Set<String> readTypeNameSet() {
+        return Collections.unmodifiableSet(itemRepositoryProvider.readTypeNameSet());
     }
 
     public BaseItemRepository getItemRepositoryByItemTypeName(String itemType) {
