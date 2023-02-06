@@ -158,4 +158,71 @@ class ItemServiceTest {
         assertTrue(output.getOut().contains("item successfully saved"));
     }
 
+    @Test
+    void isItemSavedTest_itemIsInvalidLogErr(CapturedOutput output) {
+        boolean isSaved = itemService.isItemSaved(null);
+
+        assertFalse(isSaved);
+        assertTrue(output.getOut().contains("problem to check if the item is saved"));
+        assertTrue(output.getOut().contains("invalid item"));
+    }
+
+    @Test
+    void isItemSavedTest_idIsNullLogErr(CapturedOutput output) {
+        Book item = new Book();
+        boolean isSaved = itemService.isItemSaved(item);
+
+        assertFalse(isSaved);
+        assertTrue(output.getOut().contains("problem to check if the item is saved"));
+        assertTrue(output.getOut().contains("id is NULL"));
+    }
+
+    @Test
+    void isItemSavedTest_idIsLessThan1LogErr(CapturedOutput output) {
+        Book item = new Book(0, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        boolean isSaved = itemService.isItemSaved(item);
+
+        assertFalse(isSaved);
+        assertTrue(output.getOut().contains("problem to check if the item is saved"));
+        assertTrue(output.getOut().contains("id < 1"));
+    }
+
+    private static Stream<Arguments> providedArgs_isItemSavedTest() {
+        Book book_1 = new Book(-1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Book book0 = new Book(0, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Magazine magazine0 = new Magazine(0, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
+        Newspaper newspaper0 = new Newspaper(0, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
+        Comics comics0 = new Comics(0, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Magazine magazine = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
+        Newspaper newspaper = new Newspaper(3, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
+        Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
+        return Stream.of(
+                Arguments.of(book, true),
+                Arguments.of(magazine, true),
+                Arguments.of(newspaper, true),
+                Arguments.of(comics, true),
+                Arguments.of(book, false),
+                Arguments.of(magazine, false),
+                Arguments.of(newspaper, false),
+                Arguments.of(comics, false),
+                Arguments.of(book_1, false),
+                Arguments.of(book0, false),
+                Arguments.of(magazine0, false),
+                Arguments.of(newspaper0, false),
+                Arguments.of(comics0, false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_isItemSavedTest")
+    void isItemSavedTest(Item item, boolean expectedResult) {
+        Mockito
+                .when(itemRepository.existsById(item.getId()))
+                .thenReturn(expectedResult);
+        boolean isSaved = itemService.isItemSaved(item);
+
+        assertEquals(expectedResult, isSaved);
+    }
+
 }

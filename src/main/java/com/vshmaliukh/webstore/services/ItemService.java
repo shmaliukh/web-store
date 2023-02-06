@@ -80,12 +80,16 @@ public class ItemService implements EntityValidator<Item> {
     }
 
     public boolean isItemSaved(Item item) {
-        BaseItemRepository<? extends Item> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
-        if (baseItemRepository != null) {
-            List<? extends Item> allItemList = baseItemRepository.findAll();
-            return allItemList.contains(item);
+        if (isValidEntity(item)) {
+            Integer id = item.getId();
+            if (id != null && id > 0) {
+                return itemRepository.existsById(id);
+            } else {
+                log.error("problem to check if the item is saved"
+                        + (id == null ? " // id is NULL" : " // id < 1"));
+            }
         } else {
-            log.warn("problem to check if the item is saved // item '{}'", item);
+            log.error("problem to check if the item is saved // invalid item: '{}'", item);
         }
         return false;
     }
