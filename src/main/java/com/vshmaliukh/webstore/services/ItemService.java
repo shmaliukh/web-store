@@ -104,16 +104,10 @@ public class ItemService implements EntityValidator<Item> {
     }
 
     public <T extends Item> void deleteItem(T item) {
-        BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
-        if (baseItemRepository != null) {
-            Integer itemId = item.getId();
-            if (itemId != null) {
-                baseItemRepository.deleteById(itemId);
-            } else {
-                log.warn("problem to save '{}' item , item id is NULL", item);
-            }
+        if (isValidEntity(item)) {
+            itemRepositoryProvider.getAllItemRepository().delete(item);
         } else {
-            log.warn("problem to save '{}' item , repository not found", item);
+            log.error("problem to delete item: '{}' // invalid item", item);
         }
     }
 

@@ -1,9 +1,12 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
+import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,12 +15,10 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableSet;
@@ -63,5 +64,12 @@ class ItemServiceTest {
         assertTrue(isUnmodifiableSet(typeNameSet));
     }
 
+    @Test
+    void deleteItemTest_null(CapturedOutput output) {
+        itemService.deleteItem(null);
+
+        assertTrue(output.getOut().contains("problem to delete item"));
+        assertTrue(output.getOut().contains("invalid item"));
+    }
 
 }
