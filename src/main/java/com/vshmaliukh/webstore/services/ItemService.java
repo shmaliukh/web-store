@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.ItemStatus;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -112,20 +112,8 @@ public class ItemService implements EntityValidator<Item> {
         }
     }
 
-    public Set<String> readStatusNameSet() {
-        // TODO implement enum
-        return new HashSet<>(
-                Arrays.asList(
-                        "In stock",
-                        //You’re currently accepting orders for this product and can fulfill the purchase request. You’re certain that the product will ship (or be in-transit to the customer) in a timely manner because it's available for sale. You can deliver the product to all of the locations that you support in your product data and account shipping settings.
-                        "Out of stock",
-                        //You’re not currently accepting orders for this product, or the product is not available for purchase or needs to be backordered.
-                        "Preorder",
-                        //You’re currently taking orders for this product, but it’s not yet been released for sale. You're required to provide the availability date [availability_date] attribute to indicate the day that the product becomes available for delivery.
-                        "Backorder"
-                        //The product is not available at the moment, but you’re accepting orders and it'll be shipped as soon as it becomes available again. You're required to provide the availability date [availability_date] attribute to indicate the day that the product becomes available for delivery.
-                )
-        );
+    public List<String> readStatusNameList() {
+        return Collections.unmodifiableList(ItemStatus.getStatusNameList());
     }
 
     public Set<String> readTypeNameSet() {

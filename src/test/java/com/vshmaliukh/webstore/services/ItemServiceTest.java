@@ -267,4 +267,13 @@ class ItemServiceTest {
 //        assertEquals(repositoryItemList, allItemsByTypeName);
     }
 
+    @Test
+    void readStatusNameListTest() {
+        List<String> statusNameList = itemService.readStatusNameList();
+
+        assertNotNull(statusNameList);
+        assertFalse(statusNameList.isEmpty());
+        assertTrue(isUnmodifiableList(statusNameList));
+    }
+
 }

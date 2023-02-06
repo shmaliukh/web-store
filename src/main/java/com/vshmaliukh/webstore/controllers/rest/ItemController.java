@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -18,8 +19,8 @@ public class ItemController {
     final ItemService itemService;
 
     @GetMapping("/item/status-names")
-    public ResponseEntity<Set<String>> readItemStatusNameSet(){
-        Set<String> statusSet = itemService.readStatusNameSet();
+    public ResponseEntity<List<String>> readItemStatusNameList(){
+        List<String> statusSet = itemService.readStatusNameList();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(statusSet);

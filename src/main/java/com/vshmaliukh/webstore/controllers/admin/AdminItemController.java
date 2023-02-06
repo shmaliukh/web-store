@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.ItemUtil;
-import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
@@ -119,12 +118,12 @@ public class AdminItemController {
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
-            Set<String> statusSet = itemService.readStatusNameSet();
+            List<String> statusNameList = itemService.readStatusNameList();
             List<String> categoryNameList = categoryService.readCategoryNameList();
 
             modelMap.addAttribute("categoryName", categoryName);
             modelMap.addAttribute("itemType", itemType.toLowerCase());
-            modelMap.addAttribute("statusList", statusSet);
+            modelMap.addAttribute("statusList", statusNameList);
             modelMap.addAttribute("categoryNameList", categoryNameList);
             return new ModelAndView("admin/item/create", modelMap);
         }
