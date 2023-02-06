@@ -6,10 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,6 +38,10 @@ public class UnauthorizedUserService {
         UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
         unauthorizedUserRepository.save(unauthorizedUser);
         return unauthorizedUser;
+    }
+
+    public void saveUser(UnauthorizedUser unauthorizedUser){
+        unauthorizedUserRepository.save(unauthorizedUser);
     }
 
 }

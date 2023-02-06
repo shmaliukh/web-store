@@ -60,7 +60,7 @@
 
                     <div class="col">
                         <div class="card shadow-sm">
-                            <a th:href="'/main/catalog/'+${item.getCategory()} + '/' + ${item.getId()}">
+                            <a th:href="'/main/catalog/literature/' + ${item.getClass().getSimpleName().toUpperCase()} + '/' + ${item.getId()}">
                                 <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
                                      xmlns="http://www.w3.org/2000/svg" role="img"
                                      aria-label="Placeholder: знову якийсь текст" preserveAspectRatio="xMidYMid slice"
@@ -75,7 +75,8 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
                                             <form method="post"
-                                                  th:action="'/main/catalog/' + ${item.getCategory()} + '/' + ${item.getId()}">
+                                                  th:action="'/main/catalog/literature/' + ${item.getClass().getSimpleName().toUpperCase()} + '/' + ${item.getId()}">
+<!--                                                todo literature change to getCategory()-->
                                                 <button type="submit" class="btn btn-sm btn-outline-secondary">
                                                     <img class="shopping-icon" src="/icons/shopping-cart.png">
                                                 </button>
@@ -86,7 +87,7 @@
                                             </a>
                                         </div>
                                         <b class="price">$
-                                            <text th:text="${item.getPrice()}"></text>
+                                            <text th:text="${item.getSalePrice()}"></text>
                                         </b>
                                     </div>
                                 </div>

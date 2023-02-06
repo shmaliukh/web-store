@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface BaseCartRepository<T extends Cart> extends JpaRepository<T,Long> {
 
-    List<UserCart> findCartsByUser(User user);
+    UserCart findCartByUser(User user);
 
-    List<UnauthorizedUserCart> findCartsByUnauthorizedUser(UnauthorizedUser user);
+    UnauthorizedUserCart findCartByUnauthorizedUser(UnauthorizedUser user);
 
 
 }

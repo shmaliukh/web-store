@@ -59,7 +59,7 @@
                         <div style="text-align: center;"><h4 th:text="${item.getName()}">Item name</h4></div>
                         <br>
                         <div class="price-details">
-                            <h5>Price: $<b th:text="${item.getPrice()}">0</b></h5>
+                            <h5>Price: $<b th:text="${item.getSalePrice()}">0</b></h5>
                             <div style="text-align: center">
                                 <div class="btn-group">
                                     <form method="post" th:action="${href}">
@@ -69,7 +69,8 @@
                                 </div>
                                 <div class="btn-group">
                                     <form method="post"
-                                          th:action="'/main/catalog/' + ${item.getCategory()} + '/' + ${item.getId()}">
+                                          th:action="'/main/catalog/literature/' + ${item.getClass().getSimpleName()} + '/' + ${item.getId()}">
+                                        <!--todo literature change to getCategory()-->
                                         <button type="submit" class="btn btn-sm btn-outline-secondary"><img
                                                 class="shopping-icon" src="/icons/buy.png"></button>
                                     </form>
