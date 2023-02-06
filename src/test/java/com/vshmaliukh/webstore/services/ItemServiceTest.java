@@ -1,10 +1,11 @@
 package com.vshmaliukh.webstore.services;
 
-import com.vshmaliukh.webstore.model.Image;
+import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
-import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,11 +66,74 @@ class ItemServiceTest {
     }
 
     @Test
-    void deleteItemTest_null(CapturedOutput output) {
+    void deleteItemTest_nullLogErr(CapturedOutput output) {
         itemService.deleteItem(null);
 
         assertTrue(output.getOut().contains("problem to delete item"));
         assertTrue(output.getOut().contains("invalid item"));
     }
+
+    private static Stream<Arguments> providedArgs_readItemByIdTest() {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Magazine magazine = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
+        Newspaper newspaper = new Newspaper(3, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
+        Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
+        return Stream.of(
+                Arguments.of(1, book),
+                Arguments.of(2, magazine),
+                Arguments.of(3, newspaper),
+                Arguments.of(4, comics)
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readItemByIdTest")
+    void readItemByIdTest(Integer id, Item expectedItem) {
+        Mockito
+                .when(itemRepository.findById(id))
+                .thenReturn(Optional.of(expectedItem));
+        Optional<Item> optionalItem = itemService.readItemById(id);
+
+        assertNotNull(optionalItem);
+        assertTrue(optionalItem.isPresent());
+        Item item = optionalItem.get();
+        assertEquals(expectedItem.getId(), item.getId());
+        assertEquals(expectedItem, item);
+    }
+
+    private static Stream<Integer> providedArgs_readItemByIdTest_illegalId() {
+        return Stream.of(null, 0, -1);
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readItemByIdTest_illegalId")
+    void readItemByIdTest_illegalId(Integer id) {
+        Optional<Item> optionalItem = itemService.readItemById(id);
+
+        assertNotNull(optionalItem);
+        assertFalse(optionalItem.isPresent());
+    }
+
+    @Test
+    void readItemByIdTest_idIsNullLogErr(CapturedOutput output) {
+        Optional<Item> optionalItem = itemService.readItemById(null);
+
+        assertNotNull(optionalItem);
+        assertFalse(optionalItem.isPresent());
+        assertTrue(output.getOut().contains("problem to read item by id"));
+        assertTrue(output.getOut().contains("item id is NULL"));
+    }
+
+    @Test
+    void readItemByIdTest_idIsLessThan1LogErr(CapturedOutput output) {
+        Optional<Item> optionalItem = itemService.readItemById(0);
+
+        assertNotNull(optionalItem);
+        assertFalse(optionalItem.isPresent());
+        assertTrue(output.getOut().contains("problem to read item by id"));
+        assertTrue(output.getOut().contains("item id < 1"));
+    }
+
 
 }

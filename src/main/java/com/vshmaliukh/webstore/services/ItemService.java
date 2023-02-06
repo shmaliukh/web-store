@@ -54,8 +54,13 @@ public class ItemService implements EntityValidator<Item> {
     }
 
     public Optional<Item> readItemById(Integer itemId) {
-        ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
-        return allItemRepository.findById(itemId);
+        if (itemId != null && itemId > 0) {
+            return itemRepository.findById(itemId);
+        } else {
+            log.error("problem to read item by id"
+                    + (itemId == null ? " // item id is NULL" : " // item id < 1"));
+            return Optional.empty();
+        }
     }
 
     // TODO implement read items via repository
