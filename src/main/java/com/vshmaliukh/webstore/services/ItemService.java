@@ -97,9 +97,9 @@ public class ItemService implements EntityValidator<Item> {
     public List<? extends Item> readAllItemsByTypeName(String itemTypeName) {
         BaseItemRepository<? extends Item> itemRepositoryByItemTypeNameByType = itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeName);
         if (itemRepositoryByItemTypeNameByType != null) {
-            return itemRepositoryByItemTypeNameByType.findAll();
+            return Collections.unmodifiableList(itemRepositoryByItemTypeNameByType.findAll());
         }
-        log.warn("problem to read all items by type name // not found repository // itemTypeName: {}", itemTypeName);
+        log.error("problem to read all items by type name // not found repository // itemTypeName: {}", itemTypeName);
         return Collections.emptyList();
     }
 

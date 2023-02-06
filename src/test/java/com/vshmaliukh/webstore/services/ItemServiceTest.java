@@ -22,6 +22,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableList;
 import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableSet;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -223,6 +224,47 @@ class ItemServiceTest {
         boolean isSaved = itemService.isItemSaved(item);
 
         assertEquals(expectedResult, isSaved);
+    }
+
+    @Test
+    void readAllItemsByTypeNameTest_notFoundRepositoryLogErr(CapturedOutput output) {
+        Book item = new Book();
+        String itemTypeStr = item.getTypeStr();
+        Mockito
+                .when(itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeStr))
+                .thenReturn(null);
+        List<? extends Item> allItemsByTypeName = itemService.readAllItemsByTypeName(itemTypeStr);
+
+        assertNotNull(allItemsByTypeName);
+        assertTrue(allItemsByTypeName.isEmpty());
+        assertTrue(output.getOut().contains("problem to read all items by type name"));
+    }
+
+    private static Stream<Arguments> providedArgs_readAllItemsByTypeNameTest() {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Magazine magazine = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
+        Newspaper newspaper = new Newspaper(3, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
+        Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
+        return Stream.of(
+                Arguments.of(Collections.singletonList(book)),
+                Arguments.of(Collections.singletonList(magazine)),
+                Arguments.of(Collections.singletonList(newspaper)),
+                Arguments.of(Collections.singletonList(comics))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readAllItemsByTypeNameTest")
+    void readAllItemsByTypeNameTest(List<Item> repositoryItemList) {
+        // FIXME solve problem to mock repository by type
+        Book item = new Book();
+        String itemTypeStr = item.getTypeStr();
+        List<? extends Item> allItemsByTypeName = itemService.readAllItemsByTypeName(itemTypeStr);
+
+        assertNotNull(allItemsByTypeName);
+//        assertFalse(allItemsByTypeName.isEmpty());
+//        assertTrue(isUnmodifiableList(allItemsByTypeName));
+//        assertEquals(repositoryItemList, allItemsByTypeName);
     }
 
 }
