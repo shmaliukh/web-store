@@ -63,15 +63,6 @@ public class ItemService implements EntityValidator<Item> {
         }
     }
 
-    // TODO implement read items via repository
-    public List<Item> readItemsAvailableToBuy() {
-        ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
-//        return allItemRepository.findAllByQuantityGreaterThanEqualAndAvailableInStoreEquals(1, true);
-        return allItemRepository.findAll().stream()
-                .filter(item -> item.getAvailableToBuyQuantity() > 0)
-                .collect(Collectors.toList());
-    }
-
     public <T extends Item> void saveItem(T item) {
         BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
         if (baseItemRepository != null) {
@@ -110,7 +101,8 @@ public class ItemService implements EntityValidator<Item> {
 
     public <T extends Item> void deleteItem(T item) {
         if (isValidEntity(item)) {
-            itemRepositoryProvider.getAllItemRepository().delete(item);
+            itemRepository.delete(item);
+            log.info("item successfully deleted // item: '{}'", item);
         } else {
             log.error("problem to delete item: '{}' // invalid item", item);
         }

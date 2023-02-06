@@ -73,6 +73,14 @@ class ItemServiceTest {
         assertTrue(output.getOut().contains("invalid item"));
     }
 
+    @Test
+    void deleteItemTest_successLogInfo(CapturedOutput output) {
+        Book item = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        itemService.deleteItem(item);
+
+        assertTrue(output.getOut().contains("item successfully deleted"));
+    }
+
     private static Stream<Arguments> providedArgs_readItemByIdTest() {
         Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
         Magazine magazine = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
@@ -85,7 +93,6 @@ class ItemServiceTest {
                 Arguments.of(4, comics)
         );
     }
-
 
     @ParameterizedTest
     @MethodSource("providedArgs_readItemByIdTest")
