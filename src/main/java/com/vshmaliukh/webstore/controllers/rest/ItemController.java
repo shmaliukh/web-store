@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -18,11 +19,19 @@ public class ItemController {
     final ItemService itemService;
 
     @GetMapping("/item/status-names")
-    public ResponseEntity<List<String>> readItemStatusNameList(){
-        List<String> statusList = itemService.readStatusNameList();
+    public ResponseEntity<Set<String>> readItemStatusNameSet(){
+        Set<String> statusSet = itemService.readStatusNameSet();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(statusList);
+                .body(statusSet);
+    }
+
+    @GetMapping("/item/type-names")
+    public ResponseEntity<Set<String>> readItemTypeNameSet(){
+        Set<String> itemTypeNameSet = itemService.typeNameSet();
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(itemTypeNameSet);
     }
 
 }

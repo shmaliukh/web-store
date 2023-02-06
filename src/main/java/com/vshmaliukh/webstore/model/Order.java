@@ -26,8 +26,8 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 public class Order extends AuditModel {
 
     @Id
-    @Column(name = ORDER_ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -44,7 +44,15 @@ public class Order extends AuditModel {
     @Column(name = ORDER_COMMENT_COLUMN)
     private String comment;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "Order_OrderItem",
+            joinColumns = @JoinColumn(
+                    name = "order_id",
+                    referencedColumnName = "order_id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "order_item_id",
+                    referencedColumnName = "order_item_id")
+    )
     private List<OrderItem> orderItemList;
 
 }

@@ -79,7 +79,7 @@ public final class ItemRepositoryProvider {
     }
 
     public BaseItemRepository<? extends Item> getItemRepositoryByItemClassName(String itemClassName) {
-        return itemClassNameRepositoryMap.getOrDefault(itemClassName.toLowerCase(), null);
+        return itemClassNameRepositoryMap.getOrDefault(itemClassName.toLowerCase(), allItemRepository);
     }
 
 }

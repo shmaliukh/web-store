@@ -16,7 +16,7 @@
     <div th:insert="blocks/order/menu :: add-item-addition-menu(${order.getId()})"></div>
 </div>
 
-<div class="album py-5 bg-light text-center">
+<div class="album py-3 bg-light text-center">
 
     <div class="container">
         <p class="lead" th:text="|${order.getUser().getUsername()} order info|"></p>
@@ -25,7 +25,7 @@
     <div class="container">
         <div class="table-responsive-md ">
             <table class="w-100 table table-striped">
-                <caption>Order</caption>
+                <caption>order</caption>
                 <thead>
                 <tr class="table-dark">
                     <th class="align-middle" scope="col">ID</th>
@@ -62,7 +62,7 @@
 
             <div class="table-responsive-md ">
                 <table class="w-100 table table-striped">
-                    <caption th:text="|Add item to order table|"></caption>
+                    <caption th:text="|add item to order table|"></caption>
                     <thead>
                     <tr class="table-dark">
                         <th:block th:insert="blocks/table-titles :: order-item-titles-with-sorting('/admin/order/' + ${order.getId()} + '/add-item/')"></th:block>
@@ -75,7 +75,6 @@
                         <th th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" scope="row" th:text="${iterator.count + ( currentPage - 1 ) * pageSize}">#</th>
                         <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getTypeStr()}">Type</td>
                         <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getId()}">Id</td>
-                        <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getCategory()}">Category</td>
                         <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getName()}">Name</td>
                         <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getCostPrice()}">Cost Price</td>
                         <td th:class="${item.isAvailableInStore()} ? 'align-middle' : 'text-muted align-middle'" th:text="${item.getSalePrice()}">Sale Price</td>

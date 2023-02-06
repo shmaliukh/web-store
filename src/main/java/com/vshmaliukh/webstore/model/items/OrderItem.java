@@ -17,15 +17,15 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = ORDER_ITEM_TABLE)
+@Table(name = "Order_items")
 public class OrderItem extends AuditModel {
 
     public static final int DEFAULT_PRICE = 0;
     public static final int DEFAULT_QUANTITY = 0;
 
     @Id
-    @Column(name = ORDER_ITEM_ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_item_id")
     private Long orderItemId;
 
     private int quantity;

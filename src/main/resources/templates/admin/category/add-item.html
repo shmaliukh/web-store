@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Add item to category</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:insert="blocks/attachments.html :: links">
+</head>
+<body>
+<header th:insert="blocks/admin/header"></header>
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 text-center my-md-4">
+    <h1 class="display-4">Add item to category</h1>
+    <hr>
+    <p class="lead" th:text="|You are able to add item to ${category.getName()} category|"></p>
+</div>
+
+<div class="album py-3 bg-light text-center">
+
+    <div class="container">
+        <p class="lead" th:text="|${category.getName()} category info|"></p>
+    </div>
+
+    <div class="container">
+        <div class="table-responsive-md">
+            <table class="w-100 table table-striped">
+                <caption>category table</caption>
+                <thead>
+                <tr class="table-dark">
+                    <th:block
+                            th:insert="blocks/table-titles :: base-category-titles"></th:block>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="align-middle" th:text="${category.getId()}">ID</td>
+                    <td class="align-middle" th:text="${category.getCreatedAt()}">CREATED</td>
+                    <td class="align-middle" th:text="${category.getUpdatedAt()}">UPDATED</td>
+                    <td class="align-middle" th:text="${category.getName()}">NAME</td>
+                    <td class="align-middle">
+                        <input class="form-check-input align-middle" type="checkbox" name="isActivated"
+                               th:value="${category.isActivated()}" th:checked="${category.isActivated()}"
+                               disabled>
+                    </td>
+                    <td class="align-middle">
+                        <input class="form-check-input align-middle" type="checkbox" name="isDeleted"
+                               th:value="${category.isDeleted()}" th:checked="${category.isDeleted()}"
+                               disabled>
+                    </td>
+                    <td class="align-middle">
+                        <a th:href="|@{/admin/category/}${category.getId()}@{/details}?tab=nav-items|">
+                            <button type="button" class="w-100 btn btn-outline-secondary">
+                                Details
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="container">
+        <form method="get" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
+            <input name="categoryName" th:value="${category.getName()}" hidden>
+            <div class="input-group">
+                <select class="form-select" id="selectCategoryToAdd" aria-label="Add item" name="itemType">
+                    <option th:value="${itemType}" th:text="${itemType}" selected></option>
+                    <option th:value="all" th:text="all"></option>
+                    <script th:inline="javascript">
+                        generateOptionUsingDataFromApi("selectCategoryToAdd", "http://localhost:8082/item/type-names");
+                    </script>
+                </select>
+                <button class="btn btn-outline-secondary" type="submit">Add from exists</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="container">
+        <th:block th:insert="blocks/navigation :: tools('/admin/category/' + ${category.getId()} + '/add-item')">
+        </th:block>
+    </div>
+
+    <th:block th:if="${itemList.size() > 0}">
+        <div class="container">
+            <div class="table-responsive-md ">
+                <table class="w-100 table table-striped">
+                    <caption th:text="|${itemType} type table|"></caption>
+                    <thead>
+                    <tr class="table-dark">
+                        <th:block
+                                th:insert="blocks/table-titles :: item-titles-with-sorting('/admin/category/' + ${category.getId()} + '/add-item')">
+                        </th:block>
+                        <th class="align-middle" scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item, iterator: ${itemList}">
+                        <th class="align-middle" scope="row" th:text="${iterator.count+(currentPage - 1)*pageSize}">#
+                        </th>
+                        <td class="align-middle" th:text="${item.getTypeStr()}">Type</td>
+                        <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
+                        <td class="align-middle" th:text="${item.getId()}">Id</td>
+                        <td class="align-middle" th:text="${item.getName()}">Name</td>
+                        <td class="align-middle" th:text="${item.getCostPrice()}">Cost Price</td>
+                        <td class="align-middle" th:text="${item.getSalePrice()}">Sale Price</td>
+                        <td class="align-middle" th:text="${item.getAvailableToBuyQuantity()}">Quantity</td>
+                        <th:block th:insert="blocks/view-item-table-values :: ${itemType}"></th:block>
+                        <td class="align-middle">
+                            <input class="form-check-input align-middle" type="checkbox" name="isAvailableInStore"
+                                   th:value="${item.isAvailableInStore()}" th:checked="${item.isAvailableInStore()}"
+                                   disabled>
+                        </td>
+                        <td class="align-middle">
+                            <th:block th:if="${category.getItemSet().contains(item)}">
+                                <!--  TODO rebase this button with another to remove item from category -->
+                                <button type="button" class="btn btn-outline-secondary w-100" disabled>Already in
+                                    category
+                                </button>
+                            </th:block>
+                            <th:block th:unless="${category.getItemSet().contains(item)}">
+                                <form method="post" th:action="|@{/admin/category/}${category.getId()}@{/add-item}|">
+                                    <input name="itemId" th:value="${item.getId()}" hidden>
+                                    <input name="itemType" th:value="${itemType}" hidden>
+                                    <button type="submit" class="btn btn-outline-success w-100">Add to category</button>
+                                </form>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <th:block
+                        th:insert="blocks/navigation :: pagination('/admin/category/' + ${category.getId()} + '/add-item')">
+                </th:block>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:if="${itemList.isEmpty()}">
+        <div class="container">
+            <p class="lead" th:text="|No ${itemType.toUpperCase()} items|"></p>
+        </div>
+    </th:block>
+</div>
+
+<footer th:insert="blocks/page-blocks.html :: footer"></footer>
+</body>
+</html>

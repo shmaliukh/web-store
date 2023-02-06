@@ -21,6 +21,15 @@ public class ItemImage extends Image {
     @ManyToOne
     private Item item;
 
+    public ItemImage(Image image, Item item) {
+        this(image.getId(), image.getName(), image.getType(), image.getImageData(), item);
+    }
+
+    public ItemImage(Long id, String name, String type, byte[] imageData, Item item) {
+        super(id, name, type, imageData);
+        this.item = item;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

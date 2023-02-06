@@ -15,7 +15,7 @@
     <p class="lead" th:text="|${itemType.toUpperCase()} items view table|"></p>
 </div>
 
-<div class="album py-5 bg-light text-center">
+<div class="album py-3 bg-light text-center">
     <div class="m-2">
         <th:block th:if="${itemList.size() > 0}">
 
@@ -36,7 +36,6 @@
                         <td class="align-middle" th:text="${item.getTypeStr()}">Type</td>
                         <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
                         <td class="align-middle" th:text="${item.getId()}">Id</td>
-                        <td class="align-middle" th:text="${item.getCategory()}">Category</td>
                         <td class="align-middle" th:text="${item.getName()}">Name</td>
                         <td class="align-middle" th:text="${item.getCostPrice()}">Cost Price</td>
                         <td class="align-middle" th:text="${item.getSalePrice()}">Sale Price</td>

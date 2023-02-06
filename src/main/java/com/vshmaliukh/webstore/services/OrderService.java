@@ -44,22 +44,19 @@ public class OrderService {
     }
 
     public void insertItemToOrder(Long orderId, Integer itemId, Integer quantity) {
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
-        if (optionalOrder.isPresent()) {
+        if (optionalOrder.isPresent() && optionalItem.isPresent()) {
+            Item item = optionalItem.get();
             Order order = optionalOrder.get();
-            Optional<Item> optionalItem = itemService.readItemById(itemId);
-            if (optionalItem.isPresent()) {
-                Item item = optionalItem.get();
-                OrderItem orderItem = orderItemService.formOrderItem(quantity, item, order);
 
-                orderItemService.save(orderItem);
-
-                setUpItemAvailableToBuyQuantity(quantity, item, orderItem);
-            } else {
-                log.warn("problem to insert item to order // not found item by '{}' id", itemId);
-            }
+            OrderItem orderItem = orderItemService.formOrderItem(quantity, item, order);
+            orderItemService.save(orderItem);
+            setUpItemAvailableToBuyQuantity(quantity, item, orderItem);
         } else {
-            log.warn("problem to insert item to order // not found order by '{}' id", orderId);
+            log.warn("problem to insert item to order "
+                    + (optionalOrder.isPresent() ? ("// not found order by '" + orderId + "' id") : "")
+                    + (optionalOrder.isPresent() ? ("// not found item by '" + itemId + "' id") : ""));
         }
     }
 

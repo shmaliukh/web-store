@@ -3,15 +3,15 @@
 </th:block>
 
 <th:block th:fragment="checkBoxWithName(checkboxName)">
-    <script th:inline="javascript">
-        let checkbox = document.getElementById([[${checkboxName}]]);
-        checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-                checkbox.value = 'true';
+    <script th:utext="|
+        let ${checkboxName} = document.getElementById('${checkboxName}');
+        ${checkboxName}.addEventListener('change', () => {
+            if (${checkboxName}.checked) {
+                ${checkboxName}.value = 'true';
             } else {
-                checkbox.value = 'false';
+                ${checkboxName}.value = 'false';
             }
-        });
+        });|">
     </script>
 </th:block>
 
