@@ -78,13 +78,6 @@ public class CartService {
         }
     }
 
-    public Cart getNewCartByAuthorization(boolean authorized){
-        if(authorized) {
-            return new UserCart();
-        }
-        return new UnauthorizedUserCart();
-    }
-
     public Optional<Cart> getCartByCartId(Long id){
         return baseCartRepository.findById(id);
     }
