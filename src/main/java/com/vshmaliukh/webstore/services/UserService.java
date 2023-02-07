@@ -107,7 +107,8 @@ public class UserService implements EntityValidator<User> {
 
     @Override
     public boolean isValidEntity(User user) {
-        boolean isValid = user != null && (user.getId() == null || user.getId() > 0);
+        boolean isValid = user != null
+                && (user.getId() == null || user.getId() > 0);
         if (!isValid) {
             log.error("invalid user"
                     + (user != null

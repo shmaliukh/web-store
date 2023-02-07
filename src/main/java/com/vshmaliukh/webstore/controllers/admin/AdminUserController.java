@@ -76,7 +76,7 @@ public class AdminUserController {
         if (user != null) {
             userService.save(user);
             if (userService.isUserSaved(user)) {
-                log.info("saved user to database: '{}'", user);
+                log.info("successfully saved user to database: '{}'", user);
                 return ResponseEntity.ok().build();
             }
         }
