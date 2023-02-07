@@ -16,276 +16,342 @@
 </div>
 
 <div class="album py-3 bg-light text-center">
-
     <div class="container">
-        <div class="table-responsive-md">
-            <table class="w-100 table table-striped">
-                <caption th:text="|additional info|"></caption>
-                <thead>
-                <tr class="table-dark">
-                    <th class="align-middle" scope="col">ID</th>
-                    <th class="align-middle" scope="col">CREATED</th>
-                    <th class="align-middle" scope="col">UPDATED</th>
-                    <th class="align-middle" scope="col">SOLD</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="align-middle" th:text="${item.getId()}">CreatedAt</td>
-                    <td class="align-middle" th:text="${item.getCreatedAt()}">CreatedAt</td>
-                    <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
-                    <td class="align-middle" th:text="${item.getSoldOutQuantity()}">Sold</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <nav class="pb-3">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button th:class="'nav-link ' + ${tab != null && !#strings.isEmpty(tab) ? (tab.equalsIgnoreCase('nav-main') ? 'active': '') : 'active'}"
+                        id="nav-main-tab" data-bs-toggle="tab" data-bs-target="#nav-main"
+                        type="button" role="tab"
+                        aria-controls="nav-main"
+                        th:aria-selected="${tab != null ? tab.equalsIgnoreCase('nav-main') : true}">
+                    Base info
+                </button>
+                <button th:class="'nav-link ' + ${tab != null ? (tab.equalsIgnoreCase('nav-images') ? 'active': '') : ''}"
+                        id="nav-image-tab" data-bs-toggle="tab" data-bs-target="#nav-images"
+                        type="button"
+                        role="tab"
+                        aria-controls="nav-images"
+                        th:aria-selected="${tab != null ? tab.equalsIgnoreCase('nav-images') : false}">
+                    Image
+                </button>
+                <button th:class="'nav-link ' + ${tab != null ? (tab.equalsIgnoreCase('nav-additional') ? 'active': '') : ''}"
+                        id="nav-additional-tab" data-bs-toggle="tab" data-bs-target="#nav-additional"
+                        type="button" role="tab"
+                        aria-controls="nav-additional"
+                        th:aria-selected="${tab != null ? tab.equalsIgnoreCase('nav-additional') : false}">
+                    Additional
+                </button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div th:class="'tab-pane fade ' + (${tab != null ? (tab.equalsIgnoreCase('nav-main') ? 'show active' : '') : 'show active'})"
+                 id="nav-main" role="tabpanel" aria-labelledby="nav-main-tab"
+                 tabindex="0">
+                <div class="container">
+                    <div class="album mb-3 bg-light text-center">
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-header">
+                                <h3 class="my-0 font-weight-normal" th:text="|${item.getTypeStr().toUpperCase()} card|">
+                                    Item card</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="formElem" class="needs-validation">
+                                    <input type="hidden" th:value="${item.getId()}" name="itemId">
+                                    <input type="hidden" th:value="${item.getSoldOutQuantity()}" name="soldOutQuantity">
 
-    <hr>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-2 col-form-label d-flex justify-content-end d-flex justify-content-end">Id</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control" th:value="${item.getId()}"
+                                                   disabled="">
+                                        </div>
+                                    </div>
 
-    <div class="container">
-        <div class="album mb-3 bg-light text-center">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h3 class="my-0 font-weight-normal" th:text="|${item.getTypeStr().toUpperCase()} card|">Item card</h3>
+                                    <div class="mb-3 row">
+                                        <label for="itemName"
+                                               class="col-sm-2 col-form-label d-flex justify-content-end">Item
+                                            name</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group has-validation">
+                                                <span class="input-group-text">@</span>
+                                                <input type="text" name="name" class="form-control" id="itemName"
+                                                       placeholder="Item name"
+                                                       th:value="${item.getName()}" required="">
+                                                <div class="invalid-feedback">
+                                                    Item name is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                        <label for="costPrice"
+                                               class="col-sm-2 col-form-label d-flex justify-content-end">Cost
+                                            price</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group has-validation">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" name="costPrice" class="form-control"
+                                                       id="costPrice" placeholder="0" min="0"
+                                                       th:value="${item.getCostPrice()}" required="">
+                                                <div class="invalid-feedback">
+                                                    Item cost price is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                        <label for="salePrice"
+                                               class="col-sm-2 col-form-label d-flex justify-content-end">Sale
+                                            price</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group has-validation">
+                                                <span class="input-group-text">$</span>
+                                                <!--                                TODO implement script to change 'min' value (min value = costPrice)-->
+                                                <input type="number" name="salePrice" class="form-control"
+                                                       id="salePrice" placeholder="0" min="0"
+                                                       th:value="${item.getSalePrice()}" required="">
+                                                <div class="invalid-feedback">
+                                                    Valid item sale price is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                        <label for="availableToBuyQuantity"
+                                               class="col-sm-2 col-form-label d-flex justify-content-end">Available
+                                            quantity to
+                                            sell</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group has-validation">
+                                                <input type="number" name="availableToBuyQuantity" class="form-control"
+                                                       id="availableToBuyQuantity"
+                                                       placeholder="1" min="0"
+                                                       th:value="${item.getAvailableToBuyQuantity()}" required="">
+                                                <div class="invalid-feedback">
+                                                    Item quantity is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                        <label for="currentQuantity"
+                                               class="col-sm-2 col-form-label d-flex justify-content-end">Current
+                                            quantity</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group has-validation">
+                                                <input type="number" name="currentQuantity" class="form-control"
+                                                       id="currentQuantity" placeholder="1" min="0"
+                                                       th:value="${item.getCurrentQuantity()}" required="">
+                                                <div class="invalid-feedback">
+                                                    Item quantity is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="mb-3 row">
+                                        <label for="selectStatus"
+                                               class="col-sm-2 col-form-label d-flex justify-content-end">Status</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group has-validation">
+                                                <select id="selectStatus" name="status" class="form-select">
+                                                    <option th:value="${item.getStatus()}"
+                                                            th:text="${item.getStatus()}"
+                                                            selected>
+                                                    </option>
+                                                    <script th:inline="javascript">
+                                                        generateOptionUsingDataFromApi("selectStatus", "http://localhost:8082/item/status-names");
+                                                    </script>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    Item status is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <th:block
+                                            th:insert="blocks/details-item-form-blocks :: ${item.getTypeStr()}"></th:block>
+
+                                    <div class="mb-3 row">
+                                        <div class="col-12">
+                                            <label for="description" class="col-sm-2 col-form-label">Description</label>
+                                            <textarea id="description" name="description" class="form-control"
+                                                      placeholder="Product description"
+                                                      th:value="${item.getDescription()}"
+                                                      th:text="${item.getDescription()}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-around align-items-center">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" name="isAvailableInStore" type="checkbox"
+                                                   role="switch"
+                                                   id="flexSwitchCheckChecked"
+                                                   th:value="${item.isAvailableInStore()}"
+                                                   th:checked="${item.isAvailableInStore()}">
+                                            <label class="form-check-label" for="flexSwitchCheckChecked">Is available in
+                                                store</label>
+                                            <th:block
+                                                    th:insert="blocks/generated-scripts :: checkBoxWithName('flexSwitchCheckChecked')"></th:block>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+                                    <button class="w-100 btn btn-primary btn-lg" type="submit">Save</button>
+                                </form>
+                                <script th:inline="javascript">
+                                    formElem.onsubmit = async (e) => {
+                                        e.preventDefault();
+                                        fetchAddingItemFormWithJsonBodyWithItemClassType(
+                                            "formElem",
+                                            "/admin/item/add",
+                                            "post",
+                                            "/admin/item/" + [[${item.getId()}]] + "/details",
+                                            [[${item.getTypeStr()}]]
+                                        );
+                                    };
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <button id="deleteButton" class="btn btn-outline-danger w-100" type="submit">
+                            Delete
+                        </button>
+                        <script th:inline="javascript">
+                            deleteButton.onclick = async (e) => {
+                                e.preventDefault();
+                                askToDeleteItem(
+                                    [[${item.getId()}]],
+                                    "/admin/item/catalog/"
+                                );
+                            };
+                        </script>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form id="formElem" class="needs-validation">
-                        <input type="hidden" th:value="${item.getId()}" name="itemId">
-                        <input type="hidden" th:value="${item.getSoldOutQuantity()}" name="soldOutQuantity">
+            </div>
 
-                        <div class="mb-3 row">
-                            <label class="col-sm-2 col-form-label d-flex justify-content-end d-flex justify-content-end">Id</label>
-                            <div class="col-sm-10">
-                                <input type="number" class="form-control" th:value="${item.getId()}" disabled="">
-                            </div>
+            <div th:class="'tab-pane fade ' + ${tab != null ? (tab.equalsIgnoreCase('nav-images') ? 'show active' : '') : ''}"
+                 id="nav-images" role="tabpanel" aria-labelledby="nav-image-tab" tabindex="0">
+                <div class="container">
+                    <h2>Upload Image</h2>
+                    <form method="post" th:action="|@{/admin/item/}${item.getId()}@{/image}|"
+                          enctype="multipart/form-data">
+                        <div class="input-group">
+                            <input type="file" class="form-control" id="inputGroupFile"
+                                   aria-describedby="inputGroupFileAddon04"
+                                   name="imageFile" accept="image/*"
+                                   aria-label="Upload">
+                            <button class="btn btn-outline-secondary" type="submit">Upload image</button>
                         </div>
-
-                        <div class="mb-3 row">
-                            <label for="itemName" class="col-sm-2 col-form-label d-flex justify-content-end">Item name</label>
-                            <div class="col-sm-10">
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text">@</span>
-                                    <input type="text" name="name" class="form-control" id="itemName" placeholder="Item name"
-                                           th:value="${item.getName()}" required="">
-                                    <div class="invalid-feedback">
-                                        Item name is required.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="costPrice" class="col-sm-2 col-form-label d-flex justify-content-end">Cost price</label>
-                            <div class="col-sm-10">
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" name="costPrice" class="form-control" id="costPrice" placeholder="0" min="0"
-                                           th:value="${item.getCostPrice()}" required="">
-                                    <div class="invalid-feedback">
-                                        Item cost price is required.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="salePrice" class="col-sm-2 col-form-label d-flex justify-content-end">Sale price</label>
-                            <div class="col-sm-10">
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text">$</span>
-                                    <!--                                TODO implement script to change 'min' value (min value = costPrice)-->
-                                    <input type="number" name="salePrice" class="form-control" id="salePrice" placeholder="0" min="0"
-                                           th:value="${item.getSalePrice()}" required="">
-                                    <div class="invalid-feedback">
-                                        Valid item sale price is required.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="availableToBuyQuantity" class="col-sm-2 col-form-label d-flex justify-content-end">Available quantity to
-                                sell</label>
-                            <div class="col-sm-10">
-                                <div class="input-group has-validation">
-                                    <input type="number" name="availableToBuyQuantity" class="form-control" id="availableToBuyQuantity"
-                                           placeholder="1" min="0"
-                                           th:value="${item.getAvailableToBuyQuantity()}" required="">
-                                    <div class="invalid-feedback">
-                                        Item quantity is required.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="currentQuantity" class="col-sm-2 col-form-label d-flex justify-content-end">Current quantity</label>
-                            <div class="col-sm-10">
-                                <div class="input-group has-validation">
-                                    <input type="number" name="currentQuantity" class="form-control" id="currentQuantity" placeholder="1" min="0"
-                                           th:value="${item.getCurrentQuantity()}" required="">
-                                    <div class="invalid-feedback">
-                                        Item quantity is required.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="mb-3 row">
-                            <label for="selectStatus" class="col-sm-2 col-form-label d-flex justify-content-end">Status</label>
-                            <div class="col-sm-10">
-                                <div class="input-group has-validation">
-                                    <select id="selectStatus" name="status" class="form-select">
-                                        <option th:value="${item.getStatus()}"
-                                                th:text="${item.getStatus()}"
-                                                selected>
-                                        </option>
-                                        <script th:inline="javascript">
-                                            generateOptionUsingDataFromApi("selectStatus", "http://localhost:8082/item/status-names");
-                                        </script>
-                                    </select>
-                                    <div class="invalid-feedback">
-                                        Item status is required.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <th:block th:insert="blocks/details-item-form-blocks :: ${item.getTypeStr()}"></th:block>
-
-                        <div class="mb-3 row">
-                            <div class="col-12">
-                                <label for="description" class="col-sm-2 col-form-label">Description</label>
-                                <textarea id="description" name="description" class="form-control" placeholder="Product description"
-                                          th:value="${item.getDescription()}" th:text="${item.getDescription()}"></textarea>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-around align-items-center">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" name="isAvailableInStore" type="checkbox" role="switch"
-                                       id="flexSwitchCheckChecked"
-                                       th:value="${item.isAvailableInStore()}"
-                                       th:checked="${item.isAvailableInStore()}">
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Is available in store</label>
-                                <th:block th:insert="blocks/generated-scripts :: checkBoxWithName('flexSwitchCheckChecked')"></th:block>
-                            </div>
-                        </div>
-
-                        <hr>
-                        <button class="btn btn-outline-success w-100 btn-lg" type="submit">Save</button>
                     </form>
+                </div>
+                <th:block th:unless="${itemImageList.isEmpty()}">
+                    <div class="m-2">
+                        <div class="table-responsive-md">
+                            <table class="w-100 table table-striped">
+                                <caption th:text="|item images table|"></caption>
+                                <thead>
+                                <tr class="table-dark">
+                                    <th class="align-middle" scope="row">#</th>
+                                    <th class="align-middle" scope="col">ID</th>
+                                    <th class="align-middle" scope="col">UPDATED</th>
+                                    <th class="align-middle" scope="col">NAME</th>
+                                    <th class="align-middle" scope="col">SIZE</th>
+                                    <th class="align-middle" scope="col">IMAGE</th>
+                                    <th class="align-middle" scope="col"></th>
+                                    <th class="align-middle" scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="itemImage, iterator: ${itemImageList}">
+                                    <td class="align-middle" th:text="${iterator.count}">#</td>
+                                    <td class="align-middle" th:text="${itemImage.getId()}">ID</td>
+                                    <td class="align-middle" th:text="${itemImage.getUpdatedAt()}">UPDATED</td>
+                                    <td class="align-middle" th:text="${itemImage.getName()}">NAME</td>
+                                    <td class="align-middle" th:text="${itemImage.getImageData().length}">SIZE</td>
+                                    <td class="align-middle">
+                                        <img th:src="|@{/image/}${itemImage.getId()}|"
+                                             th:alt="${itemImage.getName()}"
+                                             height="220">
+                                    </td>
 
-                    <script th:inline="javascript">
-                        formElem.onsubmit = async (e) => {
-                            e.preventDefault();
-                            fetchAddingItemFormWithJsonBodyWithItemClassType(
-                                "formElem",
-                                "/admin/item/add",
-                                "post",
-                                "/admin/item/" + [[${item.getId()}]] + "/details",
-                                [[${item.getTypeStr()}]]
-                            );
-                        };
-                    </script>
+                                    <td class="align-middle">
+                                        <form method="post"
+                                              th:action="|@{/admin/item/}${item.getId()}@{/image/}${itemImage.getId()}|"
+                                              enctype="multipart/form-data">
+                                            <div class="input-group">
+                                                <input type="file" class="form-control"
+                                                       aria-describedby="inputGroupFileAddon04" aria-label="Upload"
+                                                       name="imageFile" accept="image/*">
+                                                <button class="btn btn-outline-success" type="submit">Upload
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </td>
 
-                    <hr>
-                    <button id="deleteButton" class="btn btn-outline-danger w-100 btn-lg" type="submit">Delete</button>
-                    <script th:inline="javascript">
-                        deleteButton.onclick = async (e) => {
-                            e.preventDefault();
-                            askToDeleteItem(
-                                [[${item.getId()}]],
-                                "/admin/item/catalog/"
-                            );
-                        };
-                    </script>
+                                    <td class="align-middle">
+                                        <button th:id="${'deleteImageButton'+itemImage.getId()}" type="button"
+                                                class="w-100 btn btn-outline-danger">
+                                            Delete
+                                        </button>
+                                        <script th:inline="javascript">
+                                            document.getElementById([[${'deleteImageButton'+itemImage.getId()}]]).onclick = async (e) => {
+                                                e.preventDefault();
+                                                askToDelete(
+                                                    [[${'/image/'+itemImage.getId()}]],
+                                                    [[${'/admin/item/'+item.getId()+'/details?tab=nav-images'}]]
+                                                );
+                                            };
+                                        </script>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+
+            <div th:class="'tab-pane fade ' + ${tab != null ? (tab.equalsIgnoreCase('nav-additional') ? 'show active' : '') : ''}"
+                 id="nav-additional" role="tabpanel" aria-labelledby="nav-additional-tab"
+                 tabindex="0">
+                <div class="container">
+                    <div class="table-responsive-md">
+                        <table class="w-100 table table-striped">
+                            <caption th:text="|additional info|"></caption>
+                            <thead>
+                            <tr class="table-dark">
+                                <th class="align-middle" scope="col">ID</th>
+                                <th class="align-middle" scope="col">CREATED</th>
+                                <th class="align-middle" scope="col">UPDATED</th>
+                                <th class="align-middle" scope="col">SOLD</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="align-middle" th:text="${item.getId()}">CreatedAt</td>
+                                <td class="align-middle" th:text="${item.getCreatedAt()}">CreatedAt</td>
+                                <td class="align-middle" th:text="${item.getUpdatedAt()}">UpdateAt</td>
+                                <td class="align-middle" th:text="${item.getSoldOutQuantity()}">Sold</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
-
-    <hr>
-
-    <div class="container">
-        <h2>Upload Image</h2>
-        <form method="post" th:action="|@{/admin/item/}${item.getId()}@{/image}|" enctype="multipart/form-data">
-            <div class="input-group">
-                <input type="file" class="form-control" id="inputGroupFile" aria-describedby="inputGroupFileAddon04" name="imageFile" accept="image/*"
-                       aria-label="Upload">
-                <button class="btn btn-outline-secondary" type="submit">Upload image</button>
-            </div>
-        </form>
-    </div>
-
-    <hr>
-
-    <th:block th:unless="${itemImageList.isEmpty()}">
-        <div class="m-2">
-            <div class="table-responsive-md">
-                <table class="w-100 table table-striped">
-                    <caption th:text="|item images table|"></caption>
-                    <thead>
-                    <tr class="table-dark">
-                        <th class="align-middle" scope="row">#</th>
-                        <th class="align-middle" scope="col">ID</th>
-                        <th class="align-middle" scope="col">UPDATED</th>
-                        <th class="align-middle" scope="col">NAME</th>
-                        <th class="align-middle" scope="col">SIZE</th>
-                        <th class="align-middle" scope="col">IMAGE</th>
-                        <th class="align-middle" scope="col"></th>
-                        <th class="align-middle" scope="col"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="itemImage, iterator: ${itemImageList}">
-                        <td class="align-middle" th:text="${iterator.count}">#</td>
-                        <td class="align-middle" th:text="${itemImage.getId()}">ID</td>
-                        <td class="align-middle" th:text="${itemImage.getUpdatedAt()}">UPDATED</td>
-                        <td class="align-middle" th:text="${itemImage.getName()}">NAME</td>
-                        <td class="align-middle" th:text="${itemImage.getImageData().length}">SIZE</td>
-                        <td class="align-middle">
-                            <img th:src="|@{/image/}${itemImage.getId()}|"
-                                 th:alt="${itemImage.getName()}"
-                                 height="220">
-                        </td>
-
-                        <td class="align-middle">
-                            <form method="post" th:action="|@{/admin/item/}${item.getId()}@{/image/}${itemImage.getId()}|"
-                                  enctype="multipart/form-data">
-                                <div class="input-group">
-                                    <input type="file" class="form-control" aria-describedby="inputGroupFileAddon04" aria-label="Upload"
-                                           name="imageFile" accept="image/*">
-                                    <button class="btn btn-outline-success" type="submit">Upload</button>
-                                </div>
-                            </form>
-                        </td>
-
-                        <td class="align-middle">
-                            <button th:id="${'deleteImageButton'+itemImage.getId()}" type="button" class="w-100 btn btn-outline-danger">
-                                Delete
-                            </button>
-                            <script th:inline="javascript">
-                                document.getElementById([[${'deleteImageButton'+itemImage.getId()}]]).onclick = async (e) => {
-                                    e.preventDefault();
-                                    askToDelete(
-                                        [[${'/image/'+itemImage.getId()}]],
-                                        [[${'/admin/item/'+item.getId()+'/details'}]]
-                                    );
-                                };
-                            </script>
-                        </td>
-
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </th:block>
-
 </div>
 
 <footer th:insert="blocks/page-blocks.html :: footer"></footer>
+
 </body>
 </html>

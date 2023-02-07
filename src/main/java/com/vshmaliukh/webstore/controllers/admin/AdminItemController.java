@@ -27,6 +27,9 @@ import java.util.*;
 @RequestMapping("/admin/item")
 public class AdminItemController {
 
+    public static final String NAV_MAIN_STR = "nav-main";
+    public static final String NAV_IMAGES_STR = "nav-images";
+
     final ItemService itemService;
     final ImageService imageService;
     final CategoryService categoryService;
@@ -49,6 +52,7 @@ public class AdminItemController {
 
     @GetMapping("/{itemId}/details")
     public ModelAndView doGetDetails(@PathVariable(name = "itemId") Integer itemId,
+                                     @RequestParam(defaultValue = NAV_MAIN_STR) String tab,
                                      ModelMap modelMap) {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
         if (optionalItem.isPresent()) {
@@ -57,6 +61,7 @@ public class AdminItemController {
 
             modelMap.addAttribute("item", item);
             modelMap.addAttribute("itemImageList", itemImageList);
+            modelMap.addAttribute("tab", tab);
             return new ModelAndView("/admin/item/details", modelMap);
         }
         log.warn("problem to generate '/item/{}/details' template // not found item with '{}' id", itemId, itemId);
@@ -163,6 +168,7 @@ public class AdminItemController {
             log.warn("problem to upload image"
                     + (imageFile.isEmpty() ? " // imageFile is empty" : " // item is not present"));
         }
+        modelMap.addAttribute("tab", NAV_IMAGES_STR);
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 
@@ -183,6 +189,7 @@ public class AdminItemController {
                     + (!optionalImage.isPresent() ? " // image is not present" : "")
                     + (imageFile.isEmpty() ? " // image file is empty" : ""));
         }
+        modelMap.addAttribute("tab", NAV_IMAGES_STR);
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 
