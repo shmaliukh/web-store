@@ -24,9 +24,10 @@ public class OrderItemService implements EntityValidator<OrderItem> {
 
     final ItemService itemService;
 
+    // FIXME
     public OrderItem formOrderItem(Integer quantity, Item item, Order order) {
-        Optional<OrderItem> orderItemByItem = orderItemRepository.findOrderItemByItem(item);
-        return orderItemByItem
+        Optional<OrderItem> optionalOrderItem = orderItemRepository.readOrderItemByItemAndOrder(item, order);
+        return optionalOrderItem
                 .map(orderItem -> generateOrderItemIfExist(quantity, orderItem))
                 .orElseGet(() -> generateOrderItemIfNotExist(quantity, item, order));
     }

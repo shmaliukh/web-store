@@ -216,4 +216,62 @@ class OrderItemServiceTest {
         assertNotNull(updatedOrderItem.getItem());
     }
 
+    private static Stream<Arguments> providedArgs_formOrderItemTest_orderItemNotExists() {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Magazine magazine = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
+        Newspaper newspaper = new Newspaper(3, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
+        Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
+        return Stream.of(
+                Arguments.of(1, book, new Order()),
+                Arguments.of(2, magazine, new Order()),
+                Arguments.of(3, newspaper, new Order()),
+                Arguments.of(4, comics, new Order())
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_formOrderItemTest_orderItemNotExists")
+    void formOrderItemTest_orderItemNotExists(Integer quantity, Item item, Order order) {
+        Mockito
+                .when(orderItemRepository.readOrderItemByItemAndOrder(item, order))
+                .thenReturn(Optional.empty());
+        OrderItem orderItem = orderItemService.formOrderItem(quantity, item, order);
+
+        assertNotNull(orderItem);
+        assertEquals(orderItemService.generateOrderItemIfNotExist(quantity, item, order), orderItem);
+    }
+
+    private static Stream<Arguments> providedArgs_formOrderItemTest_orderItemExists() {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Magazine magazine = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);
+        Newspaper newspaper = new Newspaper(3, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
+        Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
+        return Stream.of(
+                Arguments.of(0, book, new Order()),
+                Arguments.of(1, magazine, new Order()),
+                Arguments.of(2, newspaper, new Order()),
+                Arguments.of(3, comics, new Order())
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_formOrderItemTest_orderItemExists")
+    void formOrderItemTest_orderItemExists(Integer quantity, Item item, Order order) {
+        int quantity1 = 1;
+        long repositoryOrderItemId = 1L;
+        OrderItem repositoryOrderItem = orderItemService.generateOrderItemIfNotExist(quantity1, item, order);
+        repositoryOrderItem.setOrderItemId(repositoryOrderItemId);
+        Mockito
+                .when(orderItemRepository.readOrderItemByItemAndOrder(item, order))
+                .thenReturn(Optional.of(repositoryOrderItem));
+        OrderItem orderItem = orderItemService.formOrderItem(quantity, item, order);
+
+        assertNotNull(orderItem);
+        assertEquals(quantity + quantity1, orderItem.getQuantity());
+        assertEquals(item, orderItem.getItem());
+        assertEquals(order, orderItem.getOrder());
+        assertEquals(repositoryOrderItemId, orderItem.getOrderItemId());
+    }
+
 }

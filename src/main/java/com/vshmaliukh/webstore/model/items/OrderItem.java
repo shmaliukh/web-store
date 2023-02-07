@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Slf4j
 @Getter
@@ -59,6 +60,24 @@ public class OrderItem extends AuditModel {
             log.warn("order item id: '{}' // invalid quantity value to set: '{}' // set up default quantity value: '{}'",
                     getOrderItemId(), quantity, DEFAULT_QUANTITY);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return quantity == orderItem.quantity
+                && orderItemPrice == orderItem.orderItemPrice
+                && active == orderItem.active
+                && Objects.equals(orderItemId, orderItem.orderItemId)
+                && Objects.equals(item, orderItem.item)
+                && Objects.equals(order, orderItem.order);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderItemId, quantity, orderItemPrice, active, item, order);
     }
 
 }
