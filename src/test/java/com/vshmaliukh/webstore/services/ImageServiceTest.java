@@ -236,6 +236,36 @@ class ImageServiceTest {
         assertTrue(output.getOut().contains("problem to find image by id // id < 1"));
     }
 
+    @Test
+    void readItemImageByIdTest_null(CapturedOutput output) {
+        imageService.readItemImageById(null);
+
+        assertTrue(output.getOut().contains("problem to find item image by id"));
+        assertTrue(output.getOut().contains("id is NULL"));
+    }
+
+    @Test
+    void readItemImageByIdTest_zero(CapturedOutput output) {
+        imageService.readItemImageById(0L);
+
+        assertTrue(output.getOut().contains("problem to find item image by id"));
+        assertTrue(output.getOut().contains("id < 1"));
+    }
+
+    private static Stream<Long> providedArgs_readItemImageByIdTest_invalid() {
+        return Stream.of(0L, -1L, -123_456_789_101L, null);
+    }
+
+    @ParameterizedTest
+    @MethodSource("providedArgs_readItemImageByIdTest_invalid")
+    void readItemImageByIdTest_invalid(Long id) {
+        Optional<ItemImage> optionalItemImage = imageService.readItemImageById(id);
+
+        assertNotNull(optionalItemImage);
+        assertFalse(optionalItemImage.isPresent());
+    }
+
+
     private static Stream<Arguments> providedArgs_findImageListByItemTest() {
         return Stream.of(
                 Arguments.of(new Book(), Collections.singletonList(new ItemImage(new Image(), new Book()))),
