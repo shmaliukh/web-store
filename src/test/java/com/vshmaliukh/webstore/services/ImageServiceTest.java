@@ -264,8 +264,7 @@ class ImageServiceTest {
         assertNotNull(optionalItemImage);
         assertFalse(optionalItemImage.isPresent());
     }
-
-
+    
     private static Stream<Arguments> providedArgs_findImageListByItemTest() {
         return Stream.of(
                 Arguments.of(new Book(), Collections.singletonList(new ItemImage(new Image(), new Book()))),
