@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
@@ -30,8 +31,7 @@ import java.util.stream.Stream;
 
 import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableList;
 import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableSet;
-import static com.vshmaliukh.webstore.services.ImageServiceTest.IMAGE_1_NAME;
-import static com.vshmaliukh.webstore.services.ImageServiceTest.SRC_TEST_RESOURCES_PATH_STR;
+import static com.vshmaliukh.webstore.services.ImageServiceTest.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -337,6 +337,79 @@ class ItemServiceTest {
         itemService.addImageToItem(book, mockMultipartFile);
 
         assertTrue(output.getOut().contains("successfully added image to item"));
+    }
+
+    @Test
+    void changeItemImageTest_invalidItemLogErr(CapturedOutput output) throws IOException {
+        MockMultipartFile mockMultipartFile1 = new MockMultipartFile(IMAGE_1_NAME, IMAGE_1_NAME, MediaType.IMAGE_PNG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_1_NAME)));
+        MockMultipartFile mockMultipartFile2 = new MockMultipartFile(IMAGE_2_NAME, IMAGE_2_NAME, MediaType.IMAGE_JPEG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_2_NAME)));
+        Optional<ItemImage> optionalItemImage = imageService.formItemImageFromFile(new Magazine(), mockMultipartFile1);
+        assertTrue(optionalItemImage.isPresent());
+        ItemImage itemImage = optionalItemImage.get();
+        itemService.changeItemImage(null, itemImage, mockMultipartFile2);
+
+        assertTrue(output.getOut().contains("problem to change item image"));
+        assertTrue(output.getOut().contains("invalid item"));
+    }
+
+    @Test
+    void changeItemImageTest_invalidImageLogErr(CapturedOutput output) throws IOException {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        MockMultipartFile mockMultipartFile2 = new MockMultipartFile(IMAGE_2_NAME, IMAGE_2_NAME, MediaType.IMAGE_JPEG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_2_NAME)));
+        itemService.changeItemImage(book, null, mockMultipartFile2);
+
+        assertTrue(output.getOut().contains("problem to change item image"));
+        assertTrue(output.getOut().contains("invalid image"));
+    }
+
+    @Test
+    void changeItemImageTest_invalidItemAndImageLogErr(CapturedOutput output) throws IOException {
+        MockMultipartFile mockMultipartFile1 = new MockMultipartFile(IMAGE_1_NAME, IMAGE_1_NAME, MediaType.IMAGE_PNG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_1_NAME)));
+        itemService.changeItemImage(null, null, mockMultipartFile1);
+
+        assertTrue(output.getOut().contains("problem to change item image"));
+        assertTrue(output.getOut().contains("invalid item"));
+        assertTrue(output.getOut().contains("invalid image"));
+    }
+
+    @Test
+    void changeItemImageTest_notGeneratedNewImageLogErr(CapturedOutput output) throws IOException {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        MockMultipartFile mockMultipartFile1 = new MockMultipartFile(IMAGE_1_NAME, IMAGE_1_NAME, MediaType.IMAGE_PNG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_1_NAME)));
+        Optional<ItemImage> optionalItemImage = imageService.formItemImageFromFile(book, mockMultipartFile1);
+        assertTrue(optionalItemImage.isPresent());
+        ItemImage itemImage = optionalItemImage.get();
+        itemService.changeItemImage(book, itemImage, null);
+
+        assertTrue(output.getOut().contains("problem to change item image"));
+        assertTrue(output.getOut().contains("new image is not generated"));
+    }
+
+    @Test
+    void changeItemImageTest_successLogInfo(CapturedOutput output) throws IOException {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        MockMultipartFile mockMultipartFile1 = new MockMultipartFile(IMAGE_1_NAME, IMAGE_1_NAME, MediaType.IMAGE_PNG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_1_NAME)));
+        MockMultipartFile mockMultipartFile2 = new MockMultipartFile(IMAGE_2_NAME, IMAGE_2_NAME, MediaType.IMAGE_JPEG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_2_NAME)));
+        Optional<ItemImage> optionalItemImage = imageService.formItemImageFromFile(book, mockMultipartFile1);
+        assertTrue(optionalItemImage.isPresent());
+        ItemImage itemImage = optionalItemImage.get();
+        itemService.changeItemImage(book, itemImage, mockMultipartFile2);
+
+        assertTrue(output.getOut().contains("successfully changed item image"));
+    }
+
+    @Test
+    void changeItemImageTest_imageDoesNotBelongToItemLogInfo(CapturedOutput output) throws IOException {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        MockMultipartFile mockMultipartFile1 = new MockMultipartFile(IMAGE_1_NAME, IMAGE_1_NAME, MediaType.IMAGE_PNG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_1_NAME)));
+        MockMultipartFile mockMultipartFile2 = new MockMultipartFile(IMAGE_2_NAME, IMAGE_2_NAME, MediaType.IMAGE_JPEG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_2_NAME)));
+        Optional<ItemImage> optionalItemImage = imageService.formItemImageFromFile(new Magazine(), mockMultipartFile1);
+        assertTrue(optionalItemImage.isPresent());
+        ItemImage itemImage = optionalItemImage.get();
+        itemService.changeItemImage(book, itemImage, mockMultipartFile2);
+
+        assertTrue(output.getOut().contains("problem to change item image"));
+        assertTrue(output.getOut().contains("existing image does not belong to item"));
     }
 
 }

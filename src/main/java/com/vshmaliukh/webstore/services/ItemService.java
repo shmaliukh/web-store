@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.ItemStatus;
-import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -41,16 +40,26 @@ public class ItemService implements EntityValidator<Item> {
         }
     }
 
-    public void changeItemImage(Item item, Image image, MultipartFile file) {
-        if (isValidEntity(item) && imageService.isValidEntity(image)) {
+    public void changeItemImage(Item item, ItemImage itemImage, MultipartFile file) {
+        if (isValidEntity(item) && imageService.isValidEntity(itemImage)) {
             Optional<ItemImage> optionalImage = imageService.formItemImageFromFile(item, file);
             if (optionalImage.isPresent()) {
                 ItemImage itemImageToSave = optionalImage.get();
-                itemImageToSave.setId(image.getId());
-                imageService.saveImage(itemImageToSave);
+                if (itemImage.getItem().equals(item)) {
+                    itemImageToSave.setId(itemImage.getId());
+                    imageService.saveImage(itemImageToSave);
+                    log.info("successfully changed item image // item: '{}', new image: '{}'", item, itemImageToSave);
+                } else {
+                    log.error("problem to change item image // existing image does not belong to item" +
+                            " // item: '{}', image: '{}'", item, itemImage);
+                }
+            } else {
+                log.error("problem to change item image // new image is not generated");
             }
         } else {
-            log.warn("problem to change item image");
+            log.error("problem to change item image"
+                    + (!isValidEntity(item) ? " // invalid item: '{}'" : "")
+                    + (!imageService.isValidEntity(itemImage) ? " // invalid image: '{}'" : ""), item, itemImage);
         }
     }
 

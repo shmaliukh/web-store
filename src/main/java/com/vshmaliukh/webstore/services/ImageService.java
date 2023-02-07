@@ -77,6 +77,15 @@ public class ImageService implements EntityValidator<Image> {
         return Optional.empty();
     }
 
+    public Optional<ItemImage> readItemImageById(Long id) {
+        if (id != null && id > 0L) {
+            return itemImageRepository.findById(id);
+        }
+        log.warn("problem to find item image by id"
+                + (id == null ? " // id is NULL" : " // id < 1"));
+        return Optional.empty();
+    }
+
     public List<ItemImage> readImageListByItem(Item item) {
         List<ItemImage> imagesByItem = item != null ? itemImageRepository.findImagesByItem(item) : null;
         return imagesByItem != null

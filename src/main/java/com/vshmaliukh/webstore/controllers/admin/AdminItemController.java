@@ -172,11 +172,11 @@ public class AdminItemController {
                                         @RequestParam("imageFile") MultipartFile imageFile,
                                         ModelMap modelMap) {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
-        Optional<Image> optionalImage = imageService.readImageById(imageId);
+        Optional<ItemImage> optionalImage = imageService.readItemImageById(imageId);
         if (optionalItem.isPresent() && optionalImage.isPresent() && !imageFile.isEmpty()) {
             Item item = optionalItem.get();
-            Image image = optionalImage.get();
-            itemService.changeItemImage(item, image, imageFile);
+            ItemImage itemImage = optionalImage.get();
+            itemService.changeItemImage(item, itemImage, imageFile);
         } else {
             log.warn("problem to change item image"
                     + (!optionalItem.isPresent() ? " // item is not present" : "")
