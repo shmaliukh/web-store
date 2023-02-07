@@ -39,9 +39,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemServiceTest {
 
     @MockBean
-    ImageService imageService;
-
-    @MockBean
     ItemRepository itemRepository;
 
     @MockBean
@@ -49,6 +46,9 @@ class ItemServiceTest {
 
     @Autowired
     ItemService itemService;
+
+    @Autowired
+    ImageService imageService;
 
     private static Stream<Arguments> providedArgs_readTypeNameTest() {
         return Stream.of(
@@ -328,6 +328,15 @@ class ItemServiceTest {
 
         assertTrue(output.getOut().contains("problem to add image to item"));
         assertTrue(output.getOut().contains("problem to generate image for item"));
+    }
+
+    @Test
+    void addImageToItem_successfulLogInfo(CapturedOutput output) throws IOException {
+        Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        MockMultipartFile mockMultipartFile = new MockMultipartFile(IMAGE_1_NAME, IMAGE_1_NAME, MediaType.IMAGE_PNG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_1_NAME)));
+        itemService.addImageToItem(book, mockMultipartFile);
+
+        assertTrue(output.getOut().contains("successfully added image to item"));
     }
 
 }

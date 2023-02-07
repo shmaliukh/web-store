@@ -2,6 +2,7 @@ package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.ItemUtil;
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -52,7 +53,7 @@ public class AdminItemController {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
-            List<ItemImage> itemImageList = imageService.findImageListByItem(item);
+            List<ItemImage> itemImageList = imageService.readImageListByItem(item);
 
             modelMap.addAttribute("item", item);
             modelMap.addAttribute("itemImageList", itemImageList);
@@ -170,7 +171,18 @@ public class AdminItemController {
                                         @PathVariable Long imageId,
                                         @RequestParam("imageFile") MultipartFile imageFile,
                                         ModelMap modelMap) {
-        itemService.changeItemImage(itemId, imageId, imageFile);
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
+        Optional<Image> optionalImage = imageService.readImageById(imageId);
+        if (optionalItem.isPresent() && optionalImage.isPresent() && !imageFile.isEmpty()) {
+            Item item = optionalItem.get();
+            Image image = optionalImage.get();
+            itemService.changeItemImage(item, image, imageFile);
+        } else {
+            log.warn("problem to change item image"
+                    + (!optionalItem.isPresent() ? " // item is not present" : "")
+                    + (!optionalImage.isPresent() ? " // image is not present" : "")
+                    + (imageFile.isEmpty() ? " // image file is empty" : ""));
+        }
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 

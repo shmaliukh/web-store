@@ -201,7 +201,7 @@ class ImageServiceTest {
                 .when(imageRepository.findById(id))
                 .thenReturn(Optional.ofNullable(image));
 
-        Optional<Image> optionalImageById = imageService.findImageById(id);
+        Optional<Image> optionalImageById = imageService.readImageById(id);
         assertTrue(optionalImageById.isPresent());
         Image imageById = optionalImageById.get();
         assertNotNull(imageById.getId());
@@ -217,21 +217,21 @@ class ImageServiceTest {
     @ParameterizedTest
     @MethodSource("providedArgs_findImageByIdTest_invalid")
     void findImageByIdTest_invalid(Long id) {
-        Optional<Image> optionalImageById = imageService.findImageById(id);
+        Optional<Image> optionalImageById = imageService.readImageById(id);
 
         assertFalse(optionalImageById.isPresent());
     }
 
     @Test
     void findImageByIdTest_null(CapturedOutput output) {
-        imageService.findImageById(null);
+        imageService.readImageById(null);
 
         assertTrue(output.getOut().contains("problem to find image by id // id is NULL"));
     }
 
     @Test
     void findImageByIdTest_zero(CapturedOutput output) {
-        imageService.findImageById(0L);
+        imageService.readImageById(0L);
 
         assertTrue(output.getOut().contains("problem to find image by id // id < 1"));
     }
@@ -252,7 +252,7 @@ class ImageServiceTest {
         Mockito
                 .when(itemImageRepository.findImagesByItem(item))
                 .thenReturn(imageList);
-        List<ItemImage> imageListByItem = imageService.findImageListByItem(item);
+        List<ItemImage> imageListByItem = imageService.readImageListByItem(item);
 
         assertNotNull(imageListByItem);
         assertFalse(imageListByItem.isEmpty());
@@ -276,7 +276,7 @@ class ImageServiceTest {
         Mockito
                 .when(itemImageRepository.findImagesByItem(item))
                 .thenReturn(Collections.emptyList());
-        List<ItemImage> imageListByItem = imageService.findImageListByItem(item);
+        List<ItemImage> imageListByItem = imageService.readImageListByItem(item);
 
         assertNotNull(imageListByItem);
         assertTrue(imageListByItem.isEmpty());

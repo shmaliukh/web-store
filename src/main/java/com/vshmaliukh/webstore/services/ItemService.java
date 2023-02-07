@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.ItemStatus;
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -40,18 +41,16 @@ public class ItemService implements EntityValidator<Item> {
         }
     }
 
-    public void changeItemImage(Integer itemId, Long imageId, MultipartFile file) {
-        Optional<Item> optionalItem = readItemById(itemId);
-        if (optionalItem.isPresent()) {
-            Item item = optionalItem.get();
+    public void changeItemImage(Item item, Image image, MultipartFile file) {
+        if (isValidEntity(item) && imageService.isValidEntity(image)) {
             Optional<ItemImage> optionalImage = imageService.formItemImageFromFile(item, file);
             if (optionalImage.isPresent()) {
                 ItemImage itemImageToSave = optionalImage.get();
-                itemImageToSave.setId(imageId);
+                itemImageToSave.setId(image.getId());
                 imageService.saveImage(itemImageToSave);
             }
         } else {
-            log.warn("image not changed // item id: '{}' // image id: '{}'", itemId, imageId);
+            log.warn("problem to change item image");
         }
     }
 
@@ -71,7 +70,7 @@ public class ItemService implements EntityValidator<Item> {
 //                item.setAvailableInStore(false);
 //            }
             if (item.getId() != null) {
-                List<ItemImage> imageListByItem = imageService.findImageListByItem(item);
+                List<ItemImage> imageListByItem = imageService.readImageListByItem(item);
                 item.setImageList(imageListByItem);
             }
             itemRepository.save(item);
