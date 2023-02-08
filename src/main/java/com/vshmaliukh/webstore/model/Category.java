@@ -26,8 +26,6 @@ public class Category extends AuditModel {
     private Integer id;
 
     @Column(nullable = false, unique = true)
-//    @NotBlank(message = "Category name is mandatory")
-//    @Size(min=3, max=50)
     private String name;
 
     @Column(columnDefinition = "LONGTEXT")
@@ -60,7 +58,6 @@ public class Category extends AuditModel {
     @ToString.Exclude
     private Set<Item> itemSet;
 
-
     public Category(String name, String description) {
         setName(name);
         setDescription(description);
@@ -71,7 +68,13 @@ public class Category extends AuditModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return isDeleted == category.isDeleted && isActivated == category.isActivated && Objects.equals(id, category.id) && name.equals(category.name) && Objects.equals(description, category.description) && Objects.equals(image, category.image) && Objects.equals(itemSet, category.itemSet);
+        return isDeleted == category.isDeleted
+                && isActivated == category.isActivated
+                && Objects.equals(id, category.id)
+                && name.equals(category.name)
+                && Objects.equals(description, category.description)
+                && Objects.equals(image, category.image)
+                && Objects.equals(itemSet, category.itemSet);
     }
 
     @Override
