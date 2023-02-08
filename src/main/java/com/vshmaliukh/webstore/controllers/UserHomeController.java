@@ -8,6 +8,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/user-home")
 public class UserHomeController {
@@ -25,8 +27,8 @@ public class UserHomeController {
         if(authorization){
             return new ModelAndView("unauthorizedUserPage"); // todo implement unauthorized user page -> "you should authorize to get this page"
         }
-        User user = userService.readUserById(userId).get();
-        modelMap.addAttribute("user", user);
+        Optional<User> optionalUser = userService.readUserById(userId);
+        optionalUser.ifPresent(user -> modelMap.addAttribute("user", user));
         return new ModelAndView("user-home-page");
     }
 
@@ -47,19 +49,25 @@ public class UserHomeController {
     @PostMapping("/edit-email-user-page")
     public String editEmailUsersPage(@CookieValue Long userId, @RequestParam String email) {
 
-        User user = userService.readUserById(userId).get();
-        user.setEmail(email);
-        userService.save(user);
+
+        Optional<User> optionalUser = userService.readUserById(userId);
+        if(optionalUser.isPresent()){
+            User user =  optionalUser.get();
+            user.setEmail(email);
+            userService.save(user);
+        }
         return "redirect:/user-home";
     }
 
     @PostMapping("/edit-username-user-page")
     public String editUsernameUsersPage(@CookieValue Long userId, @RequestParam String username) {
 
-        User user = userService.readUserById(userId).get();
-        user.setUsername(username);
-        userService.save(user);
-
+        Optional<User> optionalUser = userService.readUserById(userId);
+        if(optionalUser.isPresent()){
+            User user =  optionalUser.get();
+            user.setUsername(username);
+            userService.save(user);
+        }
         return "redirect:/user-home";
     }
 

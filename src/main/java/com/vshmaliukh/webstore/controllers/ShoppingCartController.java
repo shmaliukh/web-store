@@ -59,7 +59,7 @@ public class ShoppingCartController {
     @GetMapping("/remove-all/{cartItemId}")
     public String removeItemsType(@PathVariable Integer cartItemId,
                                   @CookieValue Long cartId) {
-        cartService.removeOneCartItemsTypeFromCart(cartService.getCartByCartId(cartId).get(),cartItemId);
+        cartService.getCartByCartId(cartId).ifPresent(cart -> cartService.removeOneCartItemsTypeFromCart(cart,cartItemId));
         return "redirect:/shopping-cart";
     }
 
