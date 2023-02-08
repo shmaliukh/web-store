@@ -9,6 +9,7 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,13 +17,17 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableList;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ExtendWith(OutputCaptureExtension.class)
 class CategoryServiceTest {
 
     //TODO refactor values
@@ -43,13 +48,11 @@ class CategoryServiceTest {
     @MockBean
     CategoryRepository categoryRepository;
 
+    @MockBean
+    ImageService imageService;
+
     @Autowired
     CategoryService categoryService;
-
-    @BeforeEach
-    void beforeEach() {
-        categoryService.setCategoryRepository(categoryRepository);
-    }
 
     private static Stream<Arguments> providedArgs_readAllTest() {
         return Stream.of(
@@ -65,13 +68,14 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_readAllTest")
-    void readAllEmptyTest(List<Category> expectedList) {
+    void readAllEmptyTest(List<Category> repositoryCategoryList) {
         Mockito
                 .when(categoryRepository.findAll())
-                .thenReturn(expectedList);
-        List<Category> actual = categoryService.readAll();
-        assertNotNull(actual);
-        assertEquals(expectedList, actual);
+                .thenReturn(repositoryCategoryList);
+        List<Category> categoryList = categoryService.readAll();
+        assertNotNull(categoryList);
+        assertEquals(repositoryCategoryList, categoryList);
+        assertTrue(isUnmodifiableList(categoryList));
     }
 
     private static Stream<Arguments> providedArgs_readCategoryNameListTest() {
@@ -363,11 +367,47 @@ class CategoryServiceTest {
 
     @ParameterizedTest
     @MethodSource("providedArgs_deleteCategoryTest")
-    // TODO is need to refactor original 'deleteCategory' method ?
+        // TODO is need to refactor original 'deleteCategory' method ?
     void deleteCategoryTest(Category category) {
         categoryService.deleteCategory(category);
 
         assertTrue(category.isDeleted());
+    }
+
+    @Test
+    void saveTest(CapturedOutput output) {
+        categoryService.save(null);
+
+        assertTrue(output.getOut().contains("problem to save category // invalid category"));
+    }
+
+    @Test
+    void deleteImageByCategoryTest_categoryNotFoundLogErr(CapturedOutput output) {
+        categoryService.deleteImageByCategory(Optional.empty());
+
+        assertTrue(output.getOut().contains("problem to delete category image"));
+        assertTrue(output.getOut().contains("category not found"));
+    }
+
+    @Test
+    void addImageToCategoryTest_imageNotFoundLogErr(CapturedOutput output) {
+        categoryService.addImageToCategory(null, Optional.empty(), new Category());
+
+        assertTrue(output.getOut().contains("problem to add image"));
+        assertTrue(output.getOut().contains("image is not present"));
+    }
+
+    @Test
+    void addImageToCategoryTest_invalidCategoryLogErr(CapturedOutput output) {
+        categoryService.addImageToCategory(null, Optional.of(new Image()), null);
+
+        assertTrue(output.getOut().contains("problem to add image"));
+        assertTrue(output.getOut().contains("invalid category"));
+    }
+
+    @Test
+    void getCategoryRepositoryTest() {
+        assertNotNull(categoryService.getCategoryRepository());
     }
 
 }

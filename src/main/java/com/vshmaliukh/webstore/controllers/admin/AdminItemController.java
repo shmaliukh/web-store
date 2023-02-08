@@ -1,8 +1,8 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.ItemUtil;
-import com.vshmaliukh.webstore.controllers.ConstantsForControllers;
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -27,6 +27,9 @@ import java.util.*;
 @RequestMapping("/admin/item")
 public class AdminItemController {
 
+    public static final String NAV_MAIN_STR = "nav-main";
+    public static final String NAV_IMAGES_STR = "nav-images";
+
     final ItemService itemService;
     final ImageService imageService;
     final CategoryService categoryService;
@@ -49,14 +52,16 @@ public class AdminItemController {
 
     @GetMapping("/{itemId}/details")
     public ModelAndView doGetDetails(@PathVariable(name = "itemId") Integer itemId,
+                                     @RequestParam(defaultValue = NAV_MAIN_STR) String tab,
                                      ModelMap modelMap) {
         Optional<Item> optionalItem = itemService.readItemById(itemId);
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
-            List<ItemImage> itemImageList = imageService.findImageListByItem(item);
+            List<ItemImage> itemImageList = imageService.readImageListByItem(item);
 
             modelMap.addAttribute("item", item);
             modelMap.addAttribute("itemImageList", itemImageList);
+            modelMap.addAttribute("tab", tab);
             return new ModelAndView("/admin/item/details", modelMap);
         }
         log.warn("problem to generate '/item/{}/details' template // not found item with '{}' id", itemId, itemId);
@@ -119,12 +124,12 @@ public class AdminItemController {
                               ModelMap modelMap) {
         boolean itemTypeExist = ItemUtil.itemNameList.stream().anyMatch(itemType::equalsIgnoreCase);
         if (itemTypeExist) {
-            Set<String> statusSet = itemService.readStatusNameSet();
+            List<String> statusNameList = itemService.readStatusNameList();
             List<String> categoryNameList = categoryService.readCategoryNameList();
 
             modelMap.addAttribute("categoryName", categoryName);
             modelMap.addAttribute("itemType", itemType.toLowerCase());
-            modelMap.addAttribute("statusList", statusSet);
+            modelMap.addAttribute("statusList", statusNameList);
             modelMap.addAttribute("categoryNameList", categoryNameList);
             return new ModelAndView("admin/item/create", modelMap);
         }
@@ -152,23 +157,39 @@ public class AdminItemController {
     }
 
     @PostMapping("/{itemId}/image")
-    public ModelAndView uploadImage(@PathVariable Integer itemId,
-                                    @RequestParam("imageFile") MultipartFile imageFile,
-                                    ModelMap modelMap) {
-        if (!imageFile.isEmpty()) {
-            itemService.addImageToItem(itemId, imageFile);
+    public ModelAndView uploadItemImage(@PathVariable Integer itemId,
+                                        @RequestParam("imageFile") MultipartFile imageFile,
+                                        ModelMap modelMap) {
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
+        if (!imageFile.isEmpty() && optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            itemService.addImageToItem(item, imageFile);
         } else {
-            log.warn("problem to upload image // imageFile == NULL");
+            log.warn("problem to upload image"
+                    + (imageFile.isEmpty() ? " // imageFile is empty" : " // item is not present"));
         }
+        modelMap.addAttribute("tab", NAV_IMAGES_STR);
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 
     @PostMapping("/{itemId}/image/{imageId}")
-    public ModelAndView uploadImage(@PathVariable Integer itemId,
-                                    @PathVariable Long imageId,
-                                    @RequestParam("imageFile") MultipartFile imageFile,
-                                    ModelMap modelMap) {
-        itemService.changeItemImage(itemId, imageId, imageFile);
+    public ModelAndView uploadItemImage(@PathVariable Integer itemId,
+                                        @PathVariable Long imageId,
+                                        @RequestParam("imageFile") MultipartFile imageFile,
+                                        ModelMap modelMap) {
+        Optional<Item> optionalItem = itemService.readItemById(itemId);
+        Optional<ItemImage> optionalImage = imageService.readItemImageById(imageId);
+        if (optionalItem.isPresent() && optionalImage.isPresent() && !imageFile.isEmpty()) {
+            Item item = optionalItem.get();
+            ItemImage itemImage = optionalImage.get();
+            itemService.changeItemImage(item, itemImage, imageFile);
+        } else {
+            log.warn("problem to change item image"
+                    + (!optionalItem.isPresent() ? " // item is not present" : "")
+                    + (!optionalImage.isPresent() ? " // image is not present" : "")
+                    + (imageFile.isEmpty() ? " // image file is empty" : ""));
+        }
+        modelMap.addAttribute("tab", NAV_IMAGES_STR);
         return new ModelAndView("redirect:/admin/item/{itemId}/details", modelMap);
     }
 

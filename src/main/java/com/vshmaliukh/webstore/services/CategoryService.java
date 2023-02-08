@@ -6,8 +6,6 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -17,23 +15,26 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Setter
 @Service
 @AllArgsConstructor
-public class CategoryService {
+public class CategoryService implements EntityValidator<Category> {
 
-    protected ImageService imageService;
+    protected final ImageService imageService;
 
     @Getter
-    protected CategoryRepository categoryRepository;
+    protected final CategoryRepository categoryRepository;
 
     public List<Category> readAll() {
-        return categoryRepository.findAll();
+        return Collections.unmodifiableList(categoryRepository.findAll());
     }
 
     public void save(Category category) {
-        // TODO is necessary to create test for this method ?
-        categoryRepository.save(category);
+        if (isValidEntity(category)) {
+            categoryRepository.save(category);
+            log.info("saved category: {}", category);
+        } else {
+            log.error("problem to save category // invalid category");
+        }
     }
 
     public List<String> readCategoryNameList() {
@@ -86,21 +87,21 @@ public class CategoryService {
         if (categoryId != null && categoryId > 0) {
             return categoryRepository.findById(categoryId);
         }
-        log.warn("problem to read category by id "
+        log.error("problem to read category by id "
                 + (categoryId == null ? " // categoryId is NULL" : " // categoryId must be greater than 0"));
         return Optional.empty();
     }
 
     public void addImageToCategory(Long imageId, Optional<Image> optionalImage, Category category) {
-        if (optionalImage.isPresent() && category != null) {
+        if (optionalImage.isPresent() && isValidEntity(category)) {
             Image image = optionalImage.get();
             image.setId(imageId);
             category.setImage(image);
             save(category);
         } else {
-            log.warn("problem to add image to '{}' category"
-                    + (optionalImage.isPresent() ? " // image is not present" : "")
-                    + (category == null ? " // category is NULL" : ""), category);
+            log.error("problem to add image to '{}' category"
+                    + (!optionalImage.isPresent() ? " // image is not present" : "")
+                    + (!isValidEntity(category) ? " // invalid category" : ""), category);
         }
     }
 
@@ -112,7 +113,7 @@ public class CategoryService {
             log.info("deleted '{}' category image", category);
             return ResponseEntity.ok().build();
         }
-        log.warn("problem to delete category image // category not found");
+        log.error("problem to delete category image // category not found");
         return ResponseEntity.badRequest().build();
     }
 
@@ -125,7 +126,7 @@ public class CategoryService {
             categoryRepository.save(category);
             log.info("item '{}' added to category '{}'", item, category);
         } else {
-            log.warn("problem to add item to category"
+            log.error("problem to add item to category"
                     + (item == null ? " // item is NULL" : " // category is NULL"));
         }
     }
@@ -144,7 +145,7 @@ public class CategoryService {
                         + " // '{}' category does not contain '{}' item", category, item);
             }
         } else {
-            log.warn("problem to remove item from category"
+            log.error("problem to remove item from category"
                     + (item == null ? " // item is NULL" : " // category is NULL"));
         }
     }
@@ -156,7 +157,7 @@ public class CategoryService {
             save(category);
             log.info("deleted category: '{}'", category);
         } else {
-            log.warn("problem to delete category"
+            log.error("problem to delete category"
                     + (category == null ? " // category is NULL" : "category already deleted"));
         }
     }

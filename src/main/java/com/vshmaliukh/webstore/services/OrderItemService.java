@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,31 +17,33 @@ import java.util.Optional;
 @Getter
 @Service
 @AllArgsConstructor
-public class OrderItemService {
+public class OrderItemService implements EntityValidator<OrderItem> {
 
     @Getter
     final OrderItemRepository orderItemRepository;
+
     final ItemService itemService;
 
+    // FIXME
     public OrderItem formOrderItem(Integer quantity, Item item, Order order) {
-        Optional<OrderItem> orderItemByItem = orderItemRepository.findOrderItemByItem(item);
-        return orderItemByItem
+        Optional<OrderItem> optionalOrderItem = orderItemRepository.readOrderItemByItemAndOrder(item, order);
+        return optionalOrderItem
                 .map(orderItem -> generateOrderItemIfExist(quantity, orderItem))
                 .orElseGet(() -> generateOrderItemIfNotExist(quantity, item, order));
     }
 
-    private OrderItem generateOrderItemIfNotExist(Integer quantity, Item item, Order order) {
+    public OrderItem generateOrderItemIfNotExist(Integer quantity, Item item, Order order) {
         OrderItem orderItem = new OrderItem();
-        orderItem.setOrderItemPrice(item.getSalePrice());
-        orderItem.setQuantity(quantity);
+        orderItem.setOrderItemPrice(Math.max(item.getSalePrice(), 0));
+        orderItem.setQuantity(quantity != null && quantity > 0 ? quantity : 0);
         orderItem.setActive(true);
         orderItem.setOrder(order);
         orderItem.setItem(item);
         return orderItem;
     }
 
-    private OrderItem generateOrderItemIfExist(Integer quantity, OrderItem orderItem) {
-        int orderItemQuantity = orderItem.getQuantity();
+    public OrderItem generateOrderItemIfExist(Integer quantity, OrderItem orderItem) {
+        int orderItemQuantity = Math.max(orderItem.getQuantity(), 0);
         orderItem.setQuantity(orderItemQuantity + quantity);
         if (orderItem.getQuantity() >= 1) {
             orderItem.setActive(false);
@@ -49,18 +52,20 @@ public class OrderItemService {
     }
 
     public void save(OrderItem orderItem) {
-        if (orderItem != null) {
+        if (isValidEntity(orderItem)) {
             if (orderItem.getQuantity() < 1) {
+                log.warn("order item quantity < 1, set active state as 'false' // orderItem: '{}'", orderItem);
                 orderItem.setActive(false);
             }
             orderItemRepository.save(orderItem);
+            log.info("saved orderItem: {}", orderItem);
         } else {
-            log.warn("problem to save order item // orderItem == NULL");
+            log.error("problem to save order item // invalid orderItem");
         }
     }
 
-    public List<OrderItem> readOrderItemsByOrder(Order order) {
-        return orderItemRepository.readOrderItemsByOrder(order);
+    public List<OrderItem> readOrderItemListByOrder(Order order) {
+        return Collections.unmodifiableList(orderItemRepository.readOrderItemsByOrder(order));
     }
 
     public Optional<OrderItem> readOrderItemByOrderItemId(Long id) {

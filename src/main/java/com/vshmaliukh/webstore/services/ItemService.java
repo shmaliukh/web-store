@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.ItemStatus;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
@@ -8,88 +9,97 @@ import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRe
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @AllArgsConstructor
-public class ItemService {
+public class ItemService implements EntityValidator<Item> {
 
     @Getter
     final ItemRepository itemRepository;
     final ItemRepositoryProvider itemRepositoryProvider;
     final ImageService imageService;
 
-    public void addImageToItem(Integer itemId, MultipartFile file) {
-        Optional<Item> optionalItem = readItemById(itemId);
-        if (optionalItem.isPresent()) {
-            Item item = optionalItem.get();
+    public void addImageToItem(Item item, MultipartFile file) {
+        if (isValidEntity(item)) {
             Optional<ItemImage> optionalImage = imageService.formItemImageFromFile(item, file);
             if (optionalImage.isPresent()) {
                 ItemImage itemImageToSave = optionalImage.get();
                 imageService.saveImage(itemImageToSave);
+                log.info("successfully added image to item // item: '{}', image: '{}'", item, itemImageToSave);
+            } else {
+                log.error("problem to add image to item // problem to generate image for item: '{}'", item);
             }
         } else {
-            log.warn("image not added to item with '{}'", itemId);
+            log.error("problem to add image to item // invalid item: '{}'", item);
         }
     }
 
-    public void changeItemImage(Integer itemId, Long imageId, MultipartFile file) {
-        Optional<Item> optionalItem = readItemById(itemId);
-        if (optionalItem.isPresent()) {
-            Item item = optionalItem.get();
+    public void changeItemImage(Item item, ItemImage itemImage, MultipartFile file) {
+        if (isValidEntity(item) && imageService.isValidEntity(itemImage)) {
             Optional<ItemImage> optionalImage = imageService.formItemImageFromFile(item, file);
             if (optionalImage.isPresent()) {
                 ItemImage itemImageToSave = optionalImage.get();
-                itemImageToSave.setId(imageId);
-                imageService.saveImage(itemImageToSave);
+                if (itemImage.getItem().equals(item)) {
+                    itemImageToSave.setId(itemImage.getId());
+                    imageService.saveImage(itemImageToSave);
+                    log.info("successfully changed item image // item: '{}', new image: '{}'", item, itemImageToSave);
+                } else {
+                    log.error("problem to change item image // existing image does not belong to item" +
+                            " // item: '{}', image: '{}'", item, itemImage);
+                }
+            } else {
+                log.error("problem to change item image // new image is not generated");
             }
         } else {
-            log.warn("image not changed // item id: '{}' // image id: '{}'", itemId, imageId);
+            log.error("problem to change item image"
+                    + (!isValidEntity(item) ? " // invalid item: '{}'" : "")
+                    + (!imageService.isValidEntity(itemImage) ? " // invalid image: '{}'" : ""), item, itemImage);
         }
     }
 
     public Optional<Item> readItemById(Integer itemId) {
-        ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
-        return allItemRepository.findById(itemId);
-    }
-
-    // TODO implement read items via repository
-    public List<Item> readItemsAvailableToBuy() {
-        ItemRepository allItemRepository = itemRepositoryProvider.getAllItemRepository();
-//        return allItemRepository.findAllByQuantityGreaterThanEqualAndAvailableInStoreEquals(1, true);
-        return allItemRepository.findAll().stream()
-                .filter(item -> item.getAvailableToBuyQuantity() > 0)
-                .collect(Collectors.toList());
+        if (itemId != null && itemId > 0) {
+            return itemRepository.findById(itemId);
+        } else {
+            log.error("problem to read item by id"
+                    + (itemId == null ? " // item id is NULL" : " // item id < 1"));
+            return Optional.empty();
+        }
     }
 
     public <T extends Item> void saveItem(T item) {
-        BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
-        if (baseItemRepository != null) {
-            if (item.getCurrentQuantity() < 1) {
-                item.setAvailableInStore(false);
-            }
+        if (isValidEntity(item)) {
+//            if (item.getCurrentQuantity() < 1) {
+//                item.setAvailableInStore(false);
+//            }
             if (item.getId() != null) {
-                List<ItemImage> imageListByItem = imageService.findImageListByItem(item);
+                List<ItemImage> imageListByItem = imageService.readImageListByItem(item);
                 item.setImageList(imageListByItem);
             }
-            baseItemRepository.save(item);
+            itemRepository.save(item);
+            log.info("item successfully saved // item: '{}'", item);
         } else {
-            log.warn("problem to save '{}' item , repository not found", item);
+            log.error("problem to save item // invalid item");
         }
     }
 
     public boolean isItemSaved(Item item) {
-        BaseItemRepository<? extends Item> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
-        if (baseItemRepository != null) {
-            List<? extends Item> allItemList = baseItemRepository.findAll();
-            return allItemList.contains(item);
+        if (isValidEntity(item)) {
+            Integer id = item.getId();
+            if (id != null && id > 0) {
+                return itemRepository.existsById(id);
+            } else {
+                log.error("problem to check if the item is saved"
+                        + (id == null ? " // id is NULL" : " // id < 1"));
+            }
         } else {
-            log.warn("problem to check if the item is saved // item '{}'", item);
+            log.error("problem to check if the item is saved // invalid item: '{}'", item);
         }
         return false;
     }
@@ -97,51 +107,39 @@ public class ItemService {
     public List<? extends Item> readAllItemsByTypeName(String itemTypeName) {
         BaseItemRepository<? extends Item> itemRepositoryByItemTypeNameByType = itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeName);
         if (itemRepositoryByItemTypeNameByType != null) {
-            return itemRepositoryByItemTypeNameByType.findAll();
+            return Collections.unmodifiableList(itemRepositoryByItemTypeNameByType.findAll());
         }
-        log.warn("problem to read all items by type name // not found repository // itemTypeName: {}", itemTypeName);
+        log.error("problem to read all items by type name // not found repository // itemTypeName: {}", itemTypeName);
         return Collections.emptyList();
     }
 
     public <T extends Item> void deleteItem(T item) {
-        BaseItemRepository<T> baseItemRepository = itemRepositoryProvider.getItemRepositoryByItemClassType(item);
-        if (baseItemRepository != null) {
-            Integer itemId = item.getId();
-            if (itemId != null) {
-                baseItemRepository.deleteById(itemId);
-            } else {
-                log.warn("problem to save '{}' item , item id is NULL", item);
-            }
+        if (isValidEntity(item)) {
+            itemRepository.delete(item);
+            log.info("item successfully deleted // item: '{}'", item);
         } else {
-            log.warn("problem to save '{}' item , repository not found", item);
+            log.error("problem to delete item: '{}' // invalid item", item);
         }
     }
 
-    public Set<String> readStatusNameSet() {
-        // TODO implement enum
-        return new HashSet<>(
-                Arrays.asList(
-                        "In stock",
-                        //You’re currently accepting orders for this product and can fulfill the purchase request. You’re certain that the product will ship (or be in-transit to the customer) in a timely manner because it's available for sale. You can deliver the product to all of the locations that you support in your product data and account shipping settings.
-                        "Out of stock",
-                        //You’re not currently accepting orders for this product, or the product is not available for purchase or needs to be backordered.
-                        "Preorder",
-                        //You’re currently taking orders for this product, but it’s not yet been released for sale. You're required to provide the availability date [availability_date] attribute to indicate the day that the product becomes available for delivery.
-                        "Backorder"
-                        //The product is not available at the moment, but you’re accepting orders and it'll be shipped as soon as it becomes available again. You're required to provide the availability date [availability_date] attribute to indicate the day that the product becomes available for delivery.
-                )
-        );
+    public List<String> readStatusNameList() {
+        return Collections.unmodifiableList(ItemStatus.getStatusNameList());
     }
 
-    public Set<String> typeNameSet() {
-        return itemRepositoryProvider.itemClassNameRepositoryMap.keySet();
+    public Set<String> readTypeNameSet() {
+        return Collections.unmodifiableSet(itemRepositoryProvider.readTypeNameSet());
     }
 
-    public BaseItemRepository getItemRepositoryByItemTypeName(String itemType) {
-        // TODO solve 'Raw use of parameterized class 'BaseItemRepository''
-        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemType.toLowerCase());
-        if (itemRepository != null) {
-            return itemRepository;
+    public BaseItemRepository getItemRepositoryByItemTypeName(String itemTypeStr) {
+        if (StringUtils.isNotBlank(itemTypeStr)) {
+            BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeStr.toLowerCase());
+            if (itemRepository != null) {
+                return itemRepository;
+            } else {
+                log.warn("problem to find repository by type // not found repository by type: '{}' // return all item repository", itemTypeStr);
+            }
+        } else {
+            log.warn("problem to find repository by type // item type str is blank // return all item repository");
         }
         return itemRepositoryProvider.getAllItemRepository();
     }

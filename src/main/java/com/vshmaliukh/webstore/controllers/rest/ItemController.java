@@ -19,8 +19,8 @@ public class ItemController {
     final ItemService itemService;
 
     @GetMapping("/item/status-names")
-    public ResponseEntity<Set<String>> readItemStatusNameSet(){
-        Set<String> statusSet = itemService.readStatusNameSet();
+    public ResponseEntity<List<String>> readItemStatusNameList(){
+        List<String> statusSet = itemService.readStatusNameList();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(statusSet);
@@ -28,7 +28,7 @@ public class ItemController {
 
     @GetMapping("/item/type-names")
     public ResponseEntity<Set<String>> readItemTypeNameSet(){
-        Set<String> itemTypeNameSet = itemService.typeNameSet();
+        Set<String> itemTypeNameSet = itemService.readTypeNameSet();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemTypeNameSet);

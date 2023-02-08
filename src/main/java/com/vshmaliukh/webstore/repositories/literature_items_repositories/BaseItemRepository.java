@@ -7,10 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface BaseItemRepository<T extends Item>  extends JpaRepository<T, Integer> {
+public interface BaseItemRepository<T extends Item> extends JpaRepository<T, Integer> {
 
     Page<T> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
-
-    T readById(Integer id);
 
 }

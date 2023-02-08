@@ -10,15 +10,12 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Getter
-public final class ItemRepositoryProvider {
+public class ItemRepositoryProvider {
 
     // TODO refactor
 
@@ -50,6 +47,10 @@ public final class ItemRepositoryProvider {
         generateItemClassTypeRepositoryMap();
         generateItemClassNameRepositoryMap();
         generateItemRepositoryList();
+    }
+
+    public Set<String> readTypeNameSet() {
+        return Collections.unmodifiableSet(itemClassNameRepositoryMap.keySet());
     }
 
     private void generateItemRepositoryList() {
