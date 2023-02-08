@@ -24,8 +24,8 @@ public class UserHomeController {
         // todo implement authorizing checking
 
         boolean authorization = false;
-        if(authorization){
-            return new ModelAndView("unauthorizedUserPage"); // todo implement unauthorized user page -> "you should authorize to get this page"
+        if(!authorization){
+            return new ModelAndView("unauthorized-user-page");
         }
         Optional<User> optionalUser = userService.readUserById(userId);
         optionalUser.ifPresent(user -> modelMap.addAttribute("user", user));
