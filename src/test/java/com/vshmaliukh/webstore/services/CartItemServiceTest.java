@@ -1,7 +1,5 @@
 package com.vshmaliukh.webstore.services;
 
-import com.vshmaliukh.webstore.model.Category;
-import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
