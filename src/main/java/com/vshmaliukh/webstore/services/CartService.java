@@ -70,7 +70,7 @@ public class CartService {
 
     public Cart getCartByUserId(Long userId, boolean authorization){
         if(authorization){
-            User user = userRepository.getUserById(userId);
+            User user = userRepository.getReferenceById(userId);
             return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUser(user);
         } else {
             UnauthorizedUser user = unauthorizedUserRepository.getUnauthorizedUserById(userId);

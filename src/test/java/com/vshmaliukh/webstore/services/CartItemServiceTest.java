@@ -40,28 +40,43 @@ class CartItemServiceTest {
     @MockBean
     CartItemRepository cartItemRepository;
 
-    @MockBean
+    @Autowired
     CartItemService cartItemService;
 
 
-    private static Stream<Arguments> provideItemsForGettingCartItems() {
+
+
+    private static Stream<Arguments> provideItemsForTrueExistenceChecking() {
         return Stream.of(
-                Arguments.of(comics, cartItemComics),
-                Arguments.of(magazine,cartItemMagazine),
-                Arguments.of(newspaper,cartItemNewspaper)
+                Arguments.of(comics, true),
+                Arguments.of(newspaper, true)
         );
     }
 
     @ParameterizedTest
-    @MethodSource("provideItemsAndQuantityForCartItemCreation")
-    void readCategoryByIdTest_failToFind(Item item,int quantityCartItem) {
-        cartItemService.createNewCartItem(item,quantityCartItem);
+    @MethodSource("provideItemsForTrueExistenceChecking")
+    void existsCartByIdPositiveTest(Item item, boolean exists) {
+        Mockito.when(cartItemRepository.existsByItem(item)).thenReturn(exists);
         assertTrue(cartItemService.existsByItem(item));
+    }
+
+    private static Stream<Arguments> provideItemsForExistenceCheckingNegative() {
+        return Stream.of(
+                Arguments.of(magazine, false),
+                Arguments.of(null,false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideItemsForExistenceCheckingNegative")
+    void existsCartByIdNegativeTest(Item item, boolean exists) {
+        Mockito.when(cartItemRepository.existsByItem(item)).thenReturn(exists);
+        assertFalse(cartItemService.existsByItem(item));
     }
 
     @ParameterizedTest
     @MethodSource("provideItemsAndQuantityForCartItemCreation")
-    void addCartItems(Item item, int quantity){
+    void addCartItemsTest(Item item, int quantity){
         CartItem cartItem = cartItemService.createNewCartItem(item,quantity);
         assertNotNull(cartItem);
         assertEquals(item, cartItem.getItem());
@@ -73,6 +88,24 @@ class CartItemServiceTest {
                 Arguments.of(magazine,2),
                 Arguments.of(newspaper, 5)
         );
+    }
+
+    private static Stream<Arguments> provideItemsForGettingCartItems() {
+        return Stream.of(
+                Arguments.of(comics, cartItemComics),
+                Arguments.of(magazine, cartItemMagazine),
+                Arguments.of(newspaper, cartItemNewspaper),
+                Arguments.of(null, null),
+                Arguments.of(book, null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideItemsForGettingCartItems")
+    void addCartItems(Item item, CartItem expectedCartItem){
+        Mockito.when(cartItemRepository.getCartItemByItem(item)).thenReturn(expectedCartItem);
+        CartItem cartItem = cartItemService.getCartItemByItem(item);
+        assertEquals(expectedCartItem, cartItem);
     }
 
 }
