@@ -29,7 +29,7 @@
         <div class="container">
             <th:block th:insert="blocks/navigation :: tools('/admin/category/catalog')"></th:block>
         </div>
-        <th:block th:if="${categoryList.size() > 0}">
+        <th:block th:if="${categoryList != null && categoryList.size() > 0}">
             <div class="table-responsive-md m-3">
                 <table class="w-100 table table-striped">
                     <caption>order table</caption>
@@ -72,7 +72,7 @@
                 <th:block th:insert="blocks/navigation :: pagination('/admin/category/catalog')"></th:block>
             </div>
         </th:block>
-        <th:block th:if="${categoryList.isEmpty()}">
+        <th:block th:if="${categoryList!= null && categoryList.isEmpty()}">
             <p class="lead" th:text="|No available catalog|"></p>
         </th:block>
     </div>

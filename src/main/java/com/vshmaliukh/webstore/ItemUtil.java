@@ -16,7 +16,6 @@ public final class ItemUtil {
     public static final String DATE_FORMAT_STR = "yyyy-MM-dd";
 
     public static List<String> itemNameList;
-    public static List<String> categoryNameList;
     public static Map<String, Class<? extends Item>> itemNameClassTypeMap;
 
     public static final Class<Book> BOOK_CLASS = Book.class;
@@ -40,14 +39,4 @@ public final class ItemUtil {
         itemNameClassTypeMap = Collections.unmodifiableMap(nameClassMap);
     }
 
-    public static List<Item> readAllItems(ItemService itemService) {
-        List<Item> itemAllTypeList = new ArrayList<>();
-        for (String itemTypeStr : itemNameList) {
-            List<? extends Item> itemListByType = itemService.readAllItemsByTypeName(itemTypeStr);
-            if(itemListByType != null){
-                itemAllTypeList.addAll(itemListByType);
-            }
-        }
-        return itemAllTypeList;
-    }
 }

@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 @AllArgsConstructor
 @Controller
-@RequestMapping("/demo")
+@RequestMapping("/admin/demo")
 public class AdminDemoController {
 
     // add demo values to database
@@ -22,7 +22,7 @@ public class AdminDemoController {
     @GetMapping
     public ModelAndView doGetAddData(ModelMap modelMap) {
         demoService.addDataToDatabase();
-        return new ModelAndView("redirect:/admin/category/create", modelMap);
+        return new ModelAndView("redirect:/admin/home", modelMap);
     }
 
 }

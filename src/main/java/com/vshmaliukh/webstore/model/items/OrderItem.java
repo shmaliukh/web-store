@@ -3,19 +3,20 @@ package com.vshmaliukh.webstore.model.items;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vshmaliukh.webstore.model.AuditModel;
 import com.vshmaliukh.webstore.model.Order;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
-
-import static com.vshmaliukh.webstore.ConstantsForEntities.*;
+import java.util.Objects;
 
 @Slf4j
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Order_items")
 public class OrderItem extends AuditModel {
@@ -59,6 +60,24 @@ public class OrderItem extends AuditModel {
             log.warn("order item id: '{}' // invalid quantity value to set: '{}' // set up default quantity value: '{}'",
                     getOrderItemId(), quantity, DEFAULT_QUANTITY);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return quantity == orderItem.quantity
+                && orderItemPrice == orderItem.orderItemPrice
+                && active == orderItem.active
+                && Objects.equals(orderItemId, orderItem.orderItemId)
+                && Objects.equals(item, orderItem.item)
+                && Objects.equals(order, orderItem.order);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderItemId, quantity, orderItemPrice, active, item, order);
     }
 
 }

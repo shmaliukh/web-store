@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
+import com.vshmaliukh.webstore.login.UserRole;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
@@ -59,7 +60,7 @@ public class AdminUserController {
     @PostMapping("/create")
     public ModelAndView doPostCreate(@RequestParam("userName") String userName,
                                      @RequestParam("email") String email,
-                                     @RequestParam("role") String role,
+                                     @RequestParam("role") UserRole role,
                                      @RequestParam(value = "enabled", defaultValue = "false") boolean enabled,
                                      ModelMap modelMap) {
         User user = userService.createBaseUser(userName, email, role, enabled);
@@ -75,7 +76,7 @@ public class AdminUserController {
         if (user != null) {
             userService.save(user);
             if (userService.isUserSaved(user)) {
-                log.info("saved user to database: '{}'", user);
+                log.info("successfully saved user to database: '{}'", user);
                 return ResponseEntity.ok().build();
             }
         }
@@ -112,7 +113,7 @@ public class AdminUserController {
     public ModelAndView doPostEdit(@PathVariable(name = "userId") Long userId,
                                    @RequestParam("userName") String userName,
                                    @RequestParam("email") String email,
-                                   @RequestParam("role") String role,
+                                   @RequestParam("role") UserRole role,
                                    @RequestParam(value = "enabled", defaultValue = "false") boolean enabled,
                                    ModelMap modelMap) {
         User user = userService.createBaseUser(userName, email, role, enabled);
