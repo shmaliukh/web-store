@@ -35,9 +35,7 @@ public class UnauthorizedUserService {
     }
 
     public UnauthorizedUser createUnauthorizedUser(){
-        UnauthorizedUser unauthorizedUser = new UnauthorizedUser();
-        unauthorizedUserRepository.save(unauthorizedUser);
-        return unauthorizedUser;
+        return unauthorizedUserRepository.save(new UnauthorizedUser());
     }
 
     public void saveUser(UnauthorizedUser unauthorizedUser){
