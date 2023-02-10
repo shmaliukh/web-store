@@ -64,7 +64,8 @@ function informAboutResultAndRedirect(formElemId, pageToRedirect) {
                 window.location.href = pageToRedirect;
             } else {
                 alert('Item NOT saved');
-                alert('Problem status: ' + res.status);
+                alert('Problem status: ' + res.status +
+                    'Message: ' + res.body);
             }
         } catch (e) {
             informAboutError(e);

@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +39,7 @@ import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.gen
 @Controller
 @RequestMapping("/admin/category")
 @AllArgsConstructor
+@Validated
 public class AdminCategoryController {
 
     public static final String NAV_MAIN_STR = "nav-main";
@@ -86,14 +88,17 @@ public class AdminCategoryController {
 //    }
 
     @PostMapping("/save")
-    public ResponseEntity<Void> doPostSaveDto(@RequestBody @Valid CategoryDto categoryDto) {
+    public ResponseEntity<CategoryDto> doPostSaveDto(@RequestBody @Valid CategoryDto categoryDto) {
         Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
         categoryService.save(category);
         String categoryDtoName = categoryDto.getName();
-        if(categoryService.isExistCategoryByName(categoryDtoName)){
-            return ResponseEntity.ok().build();
+        if (categoryService.isExistCategoryByName(categoryDtoName)) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new CategoryDto(category));
         } else {
-            return ResponseEntity.badRequest().build();
+            log.warn("problem to save category");
+            return ResponseEntity.badRequest()
+                    .build();
         }
     }
 

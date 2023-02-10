@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.dto;
 
+import com.vshmaliukh.webstore.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,13 @@ public class CategoryDto {
     private boolean isArchived = false;
 
     private boolean isActivated = true;
+
+    public CategoryDto(Category category){
+        this.id = category.getId();
+        this.name = category.getName();
+        this.description = category.getDescription();
+        this.isArchived = category.isArchived();
+        this.isActivated = category.isActivated();
+    }
 
 }

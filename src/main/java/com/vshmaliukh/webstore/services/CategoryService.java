@@ -76,7 +76,7 @@ public class CategoryService implements EntityValidator<Category> {
             category.setName(name);
             category.setDescription(description);
             category.setActivated(isActivated);
-            category.setDeleted(isDeleted);
+            category.setArchived(isDeleted);
             return Optional.of(category);
         }
         log.warn("problem to update category"
@@ -161,8 +161,8 @@ public class CategoryService implements EntityValidator<Category> {
 
     public void deleteCategory(Category category) {
         // TODO is it normal to set up category instance state as deleted one
-        if (category != null && !category.isDeleted()) {
-            category.setDeleted(true);
+        if (category != null && !category.isArchived()) {
+            category.setArchived(true);
             save(category);
             log.info("deleted category: '{}'", category);
         } else {
@@ -171,4 +171,7 @@ public class CategoryService implements EntityValidator<Category> {
         }
     }
 
+    public CategoryDto entityToDto(Category category) {
+        return null;
+    }
 }

@@ -116,8 +116,8 @@
                                             <input class="form-check-input" name="isDeleted" type="checkbox"
                                                    role="switch"
                                                    id="isDeletedCheck"
-                                                   th:value="${category.isDeleted()}"
-                                                   th:checked="${category.isDeleted()}">
+                                                   th:value="${category.isArchived()}"
+                                                   th:checked="${category.isArchived()}">
                                             <label class="form-check-label" for="isDeletedCheck">Is deleted</label>
                                             <th:block
                                                     th:insert="blocks/generated-scripts :: checkBoxWithName('isDeletedCheck')"></th:block>

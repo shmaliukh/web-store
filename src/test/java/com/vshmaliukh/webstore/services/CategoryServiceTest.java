@@ -130,12 +130,12 @@ class CategoryServiceTest {
 
     private static Stream<Arguments> providedArgs_updateCategoryTest() {
         return Stream.of(
-                Arguments.of(category2.getName(), category2.getDescription(), category2.isDeleted(), category2.isActivated(), category,
-                        new Category(category.getId(), category2.getName(), category2.getDescription(), category2.isDeleted(), category2.isActivated(), null, Collections.EMPTY_SET)),
-                Arguments.of(category3.getName(), category3.getDescription(), category3.isDeleted(), category3.isActivated(), category,
-                        new Category(category.getId(), category3.getName(), category3.getDescription(), category3.isDeleted(), category3.isActivated(), null, Collections.EMPTY_SET)),
-                Arguments.of("some name", category3.getDescription(), category2.isDeleted(), category.isActivated(), category2,
-                        new Category(category2.getId(), "some name", category3.getDescription(), category2.isDeleted(), category.isActivated(), null, Collections.EMPTY_SET))
+                Arguments.of(category2.getName(), category2.getDescription(), category2.isArchived(), category2.isActivated(), category,
+                        new Category(category.getId(), category2.getName(), category2.getDescription(), category2.isArchived(), category2.isActivated(), null, Collections.EMPTY_SET)),
+                Arguments.of(category3.getName(), category3.getDescription(), category3.isArchived(), category3.isActivated(), category,
+                        new Category(category.getId(), category3.getName(), category3.getDescription(), category3.isArchived(), category3.isActivated(), null, Collections.EMPTY_SET)),
+                Arguments.of("some name", category3.getDescription(), category2.isArchived(), category.isActivated(), category2,
+                        new Category(category2.getId(), "some name", category3.getDescription(), category2.isArchived(), category.isActivated(), null, Collections.EMPTY_SET))
         );
     }
 
@@ -371,7 +371,7 @@ class CategoryServiceTest {
     void deleteCategoryTest(Category category) {
         categoryService.deleteCategory(category);
 
-        assertTrue(category.isDeleted());
+        assertTrue(category.isArchived());
     }
 
     @Test

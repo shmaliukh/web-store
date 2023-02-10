@@ -5,8 +5,6 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,7 +29,7 @@ public class Category extends AuditModel {
     @Column(columnDefinition = "LONGTEXT")
     private String description;
 
-    private boolean isDeleted = false;
+    private boolean isArchived = false;
     private boolean isActivated = true;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -68,7 +66,7 @@ public class Category extends AuditModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return isDeleted == category.isDeleted
+        return isArchived == category.isArchived
                 && isActivated == category.isActivated
                 && Objects.equals(id, category.id)
                 && name.equals(category.name)
@@ -79,7 +77,7 @@ public class Category extends AuditModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, isDeleted, isActivated, image, itemSet);
+        return Objects.hash(id, name, description, isArchived, isActivated, image, itemSet);
     }
 
 }
