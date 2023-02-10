@@ -29,6 +29,14 @@ public class CategoryService implements EntityValidator<Category> {
         return Collections.unmodifiableList(categoryRepository.findAll());
     }
 
+    public List<CategoryDto> readAllAsDto() {
+        List<Category> categoryList = categoryRepository.findAll();
+        List<CategoryDto> categoryDtoList = categoryList.stream()
+                .map(CategoryDto::new)
+                .collect(Collectors.toList());
+        return Collections.unmodifiableList(categoryDtoList);
+    }
+
     public void save(Category category) {
         if (isValidEntity(category)) {
             categoryRepository.save(category);
@@ -90,6 +98,10 @@ public class CategoryService implements EntityValidator<Category> {
 
     public boolean isExistCategoryByName(String name) {
         return categoryRepository.existsCategoryByName(name);
+    }
+
+    public Optional<Category> readCategoryByName(String name) {
+        return categoryRepository.readCategoryByName(name);
     }
 
     public Optional<Category> readCategoryById(Integer categoryId) {
