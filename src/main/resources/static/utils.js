@@ -11,6 +11,16 @@ function generateJsonBodyWithType(formElemId, itemClassType) {
     return [jsonBodyStr.slice(0, 1), jsonType, jsonBodyStr.slice(1)].join('');
 }
 
+function fetchJson(pageToSend, method, formElemId) {
+    return fetch(pageToSend, {
+        method: method,
+        body: JSON.stringify(getJsonObj(formElemId)),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
+
 function generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType) {
     return fetch(pageToSend, {
         method: method,
