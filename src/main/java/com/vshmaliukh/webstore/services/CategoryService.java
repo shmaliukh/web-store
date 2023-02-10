@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.dto.CategoryDto;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
@@ -46,13 +47,17 @@ public class CategoryService implements EntityValidator<Category> {
         );
     }
 
-    public Category getUpdatedOrCreateBaseCategory(Integer id,
-                                                   String name, String description,
-                                                   boolean isDeleted, boolean isActivated) {
-        Optional<Category> optionalCategory = readCategoryById(id);
+    public Category getUpdatedOrCreateBaseCategory(CategoryDto categoryDto) {
+        Optional<Category> optionalCategory = readCategoryById(categoryDto.getId());
+        String name = categoryDto.getName();
+        String description = categoryDto.getDescription();
         if (optionalCategory.isPresent()) {
-            Optional<Category> updatedCategory
-                    = updateCategory(name, description, isDeleted, isActivated, optionalCategory.get());
+            Optional<Category> updatedCategory = updateCategory(
+                    name,
+                    description,
+                    categoryDto.isArchived(),
+                    categoryDto.isActivated(),
+                    optionalCategory.get());
             if (updatedCategory.isPresent()) {
                 return updatedCategory.get();
             }
@@ -81,6 +86,10 @@ public class CategoryService implements EntityValidator<Category> {
                 + (isActivated == null ? " // isActivated is NULL" : "")
                 + (category == null ? " // category is NULL" : ""));
         return Optional.empty();
+    }
+
+    public boolean isExistCategoryByName(String name) {
+        return categoryRepository.existsCategoryByName(name);
     }
 
     public Optional<Category> readCategoryById(Integer categoryId) {

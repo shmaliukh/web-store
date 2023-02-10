@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
 import com.vshmaliukh.webstore.controllers.utils.TableContentImp;
+import com.vshmaliukh.webstore.dto.CategoryDto;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +49,7 @@ public class AdminCategoryController {
     final CategoryService categoryService;
 
     @GetMapping("/**")
-    public ModelAndView doGetAll(ModelMap modelMap){
+    public ModelAndView doGetAll(ModelMap modelMap) {
         return new ModelAndView("redirect:/catalog", modelMap);
     }
 
@@ -74,17 +76,25 @@ public class AdminCategoryController {
         return new ModelAndView("admin/category/create", modelMap);
     }
 
+//    @PostMapping("/save")
+//    public ModelAndView doPostSave(@RequestBody @Valid CategoryDto categoryDto,
+//                                   ModelMap modelMap) {
+//        Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
+//        categoryService.save(category);
+//        modelMap.addAttribute("tab", NAV_MAIN_STR);
+//        return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
+//    }
+
     @PostMapping("/save")
-    public ModelAndView doPostSave(@RequestParam(name = "id", defaultValue = "") Integer id,
-                                   @RequestParam(name = "name") String name,
-                                   @RequestParam(name = "description") String description,
-                                   @RequestParam(name = "isDeleted", defaultValue = "false") boolean isDeleted,
-                                   @RequestParam(name = "isActivated", defaultValue = "false") boolean isActivated,
-                                   ModelMap modelMap) {
-        Category category = categoryService.getUpdatedOrCreateBaseCategory(id, name, description, isDeleted, isActivated);
+    public ResponseEntity<Void> doPostSaveDto(@RequestBody @Valid CategoryDto categoryDto) {
+        Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
         categoryService.save(category);
-        modelMap.addAttribute("tab", NAV_MAIN_STR);
-        return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
+        String categoryDtoName = categoryDto.getName();
+        if(categoryService.isExistCategoryByName(categoryDtoName)){
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/{categoryId}/image")
