@@ -33,17 +33,33 @@
 
 <header th:insert="/blocks/page-blocks :: header"></header>
 
+
 <main>
 
     <div class="item-details-block">
         <div class="container">
-            <div class="col">
+            <th:block th:if="${item == null}">
+                <p>
+                    / <a href="/main">main page</a>
+                </p>
+                <div class="col">
+                    <div class="card shadow-sm" >
+                        <p style="display: flex; margin: 3% 4% 3%">There's no such element</p>
+                    </div>
+                </div>
+            </th:block>
+            <div class="col" th:each="item: ${item}">
+                <p>
+                    / <a href="/main">main page</a>
+                    / <a th:href="'/main/catalog/' + ${item.getCategory()}"
+                         th:text="'catalog / ' + ${item.getCategory()}"></a>
+                </p>
                 <div class="card shadow-sm">
-                    <div class="item-details" th:each="item: ${item}">
+                    <div class="item-details">
                         <div style="text-align: center;"><h4 th:text="${item.getName()}">Item name</h4></div>
                         <br>
                         <div class="price-details">
-                            <h5>Price: $<b th:text="${item.getPrice()}">0</b></h5>
+                            <h5>Price: $<b th:text="${item.getSalePrice()}">0</b></h5>
                             <div style="text-align: center">
                                 <div class="btn-group">
                                     <form method="post" th:action="${href}">
@@ -52,9 +68,11 @@
                                     </form>
                                 </div>
                                 <div class="btn-group">
-                                    <form method="post" th:action="'/main/catalog/' + ${item.getCategory()} + '/' + ${item.getId()}">
-                                    <button type="submit" class="btn btn-sm btn-outline-secondary"><img
-                                            class="shopping-icon" src="/icons/buy.png"></button>
+                                    <form method="post"
+                                          th:action="'/main/catalog/literature/' + ${item.getClass().getSimpleName()} + '/' + ${item.getId()}">
+                                        <!--todo literature change to getCategory()-->
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary"><img
+                                                class="shopping-icon" src="/icons/buy.png"></button>
                                     </form>
                                 </div>
                             </div>
@@ -67,7 +85,6 @@
                     <div class="item-info" th:each="item: ${item}">
                         <div>
                             <div th:insert="/blocks/item-details :: ${type}">
-
                             </div>
                         </div>
                     </div>

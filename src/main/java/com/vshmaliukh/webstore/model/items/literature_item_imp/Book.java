@@ -58,7 +58,6 @@ public class Book extends LiteratureItem {
                 ", soldOutQuantity=" + getSoldOutQuantity() +
                 ", costPrice=" + getCostPrice() +
                 ", salePrice=" + getSalePrice() +
-                ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore() +
                 ", pages=" + getPages() +
