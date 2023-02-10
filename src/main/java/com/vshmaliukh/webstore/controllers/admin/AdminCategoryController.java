@@ -76,13 +76,25 @@ public class AdminCategoryController {
         return new ModelAndView("admin/category/create", modelMap);
     }
 
+//    @PostMapping("/save")
+//    public ModelAndView doPostSave(@RequestBody @Valid CategoryDto categoryDto,
+//                                   ModelMap modelMap) {
+//        Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
+//        categoryService.save(category);
+//        modelMap.addAttribute("tab", NAV_MAIN_STR);
+//        return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
+//    }
+
     @PostMapping("/save")
-    public ModelAndView doPostSave(@RequestParam(name = "category") @Valid CategoryDto categoryDto,
-                                   ModelMap modelMap) {
+    public ResponseEntity<Void> doPostSaveDto(@RequestBody @Valid CategoryDto categoryDto) {
         Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
         categoryService.save(category);
-        modelMap.addAttribute("tab", NAV_MAIN_STR);
-        return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
+        String categoryDtoName = categoryDto.getName();
+        if(categoryService.isExistCategoryByName(categoryDtoName)){
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/{categoryId}/image")

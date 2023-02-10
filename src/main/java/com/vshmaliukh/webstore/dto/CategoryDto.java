@@ -19,8 +19,8 @@ public class CategoryDto {
     @Size(max = 450, message = "Category description size require: max = 450")
     private String description;
 
-    private boolean isDeleted;
+    private boolean isArchived = false;
 
-    private boolean isActivated;
+    private boolean isActivated = true;
 
 }

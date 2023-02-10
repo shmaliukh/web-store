@@ -55,7 +55,7 @@ public class CategoryService implements EntityValidator<Category> {
             Optional<Category> updatedCategory = updateCategory(
                     name,
                     description,
-                    categoryDto.isDeleted(),
+                    categoryDto.isArchived(),
                     categoryDto.isActivated(),
                     optionalCategory.get());
             if (updatedCategory.isPresent()) {
@@ -86,6 +86,10 @@ public class CategoryService implements EntityValidator<Category> {
                 + (isActivated == null ? " // isActivated is NULL" : "")
                 + (category == null ? " // category is NULL" : ""));
         return Optional.empty();
+    }
+
+    public boolean isExistCategoryByName(String name) {
+        return categoryRepository.existsCategoryByName(name);
     }
 
     public Optional<Category> readCategoryById(Integer categoryId) {

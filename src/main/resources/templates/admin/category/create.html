@@ -48,10 +48,11 @@
                 <script th:inline="javascript">
                     categoryForm.onsubmit = async (e) => {
                         e.preventDefault();
-                        fetchJson(
+                        fetchJsonAdnInformAboutResult(
+                            "categoryForm",
                             "/admin/category/save",
                             "post",
-                            "categoryForm"
+                            "/admin/category/details"
                         );
                     };
                 </script>

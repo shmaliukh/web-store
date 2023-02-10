@@ -21,6 +21,11 @@ function fetchJson(pageToSend, method, formElemId) {
     });
 }
 
+function fetchJsonAdnInformAboutResult(formElemId, pageToSend, method, pageToRedirect) {
+    fetchJson(pageToSend, method, formElemId)
+        .then(informAboutResultAndRedirect(formElemId, pageToRedirect));
+}
+
 function generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType) {
     return fetch(pageToSend, {
         method: method,
@@ -41,6 +46,21 @@ function informAboutResult(formElemId, pageToRedirect, itemClassType) {
             if (res.ok) {
                 let prettyItemJsonStr = getPrettyItemJsonStr(itemClassType, formElemId);
                 alert('Item to save: \n' + prettyItemJsonStr)
+                window.location.href = pageToRedirect;
+            } else {
+                alert('Item NOT saved');
+                alert('Problem status: ' + res.status);
+            }
+        } catch (e) {
+            informAboutError(e);
+        }
+    };
+}
+
+function informAboutResultAndRedirect(formElemId, pageToRedirect) {
+    return (res) => {
+        try {
+            if (res.ok) {
                 window.location.href = pageToRedirect;
             } else {
                 alert('Item NOT saved');
@@ -88,7 +108,7 @@ function askToDelete(pageToDoDelete, pageToRedirect) {
 
 function fetchAddingItemFormWithJsonBodyWithItemClassType(formElemId, pageToSend, method, pageToRedirect, itemClassType) {
     generateJsonWithTypeFetch(pageToSend, method, formElemId, itemClassType)
-        .then(informAboutResult(formElemId, pageToRedirect, itemClassType));
+        .then(informAboutResultAndRedirect(formElemId, pageToRedirect, itemClassType));
 }
 
 async function getJsonFromApiCall(url) {
