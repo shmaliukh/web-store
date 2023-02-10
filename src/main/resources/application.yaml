@@ -9,8 +9,10 @@ logging:
     root: INFO
 
 spring:
+  application:
+    name: web-store
   output:
     ansi:
       enabled: always
   profiles:
-    active: secrets, database-mysql, oath2
+    active: secrets, database-h2, oath2

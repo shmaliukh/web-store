@@ -15,7 +15,7 @@
 
 <main class="container">
     <div class="edit-user-info">
-        <form method="post">
+        <form method="post" th:href="'/user-home/' + ${form}">
 
             <div class="d-flex align-items-center p-3 my-3 rounded shadow-sm">
                 <div class="col-12" th:insert="/blocks/forms-for-users-edit-page :: ${form}">

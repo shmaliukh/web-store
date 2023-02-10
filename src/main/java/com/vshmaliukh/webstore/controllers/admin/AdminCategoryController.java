@@ -18,18 +18,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.generateItemTableContentForCategoryDetails;
@@ -39,7 +34,6 @@ import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.gen
 @Controller
 @RequestMapping("/admin/category")
 @AllArgsConstructor
-@Validated
 public class AdminCategoryController {
 
     public static final String NAV_MAIN_STR = "nav-main";
@@ -148,16 +142,16 @@ public class AdminCategoryController {
             modelMap.addAllAttributes(contentModelMap);
             modelMap.addAttribute("itemList", itemList);
             modelMap.addAttribute("category", category);
-            modelMap.addAttribute("tab", reaTabAttributeValue(tabRequestParam, modelMap));
+            modelMap.addAttribute("tab", readTabAttributeValue(tabRequestParam, modelMap));
             return new ModelAndView("admin/category/details", modelMap);
         }
         return new ModelAndView("admin/category/catalog", modelMap);
     }
 
-    private static String reaTabAttributeValue(String tabRequestParam, ModelMap modelMap) {
-        Object mapAttribute = modelMap.getAttribute("tab");
-        return mapAttribute != null
-                ? (String) mapAttribute
+    private static String readTabAttributeValue(String tabRequestParam, ModelMap modelMap) {
+        String mapAttribute = (String) modelMap.getAttribute("tab");
+        return StringUtils.isNotBlank(mapAttribute)
+                ? mapAttribute
                 : StringUtils.isNotBlank(tabRequestParam) ? tabRequestParam : NAV_MAIN_STR;
     }
 
@@ -240,18 +234,18 @@ public class AdminCategoryController {
         return ResponseEntity.badRequest().build();
     }
 
-    // TODO use @ControllerAdvice exception handlers for all admin controllers
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException manve) {
-        Map<String, String> errors = new HashMap<>();
-        List<FieldError> fieldErrorList = AdminControllerUtils.getFieldErrorList(manve);
-        for (FieldError fieldError : fieldErrorList) {
-            String fieldName = fieldError.getField();
-            String errorMessage = fieldError.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        }
-        return errors;
-    }
+//    // TODO use @ControllerAdvice exception handlers for all admin controllers
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException manve) {
+//        Map<String, String> errors = new HashMap<>();
+//        List<FieldError> fieldErrorList = AdminControllerUtils.getFieldErrorList(manve);
+//        for (FieldError fieldError : fieldErrorList) {
+//            String fieldName = fieldError.getField();
+//            String errorMessage = fieldError.getDefaultMessage();
+//            errors.put(fieldName, errorMessage);
+//        }
+//        return errors;
+//    }
 
 }

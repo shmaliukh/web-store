@@ -20,31 +20,36 @@
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span style="color: #1c1c1c">Your cart</span>
 
-                <div class="navbar-cart-block" style="width: 14%">
+                <div class="navbar-cart-block" style="width: 17%">
                     <span>Amount</span>
 <!--                    <span class="badge  rounded-pill" style="background-color: #1c1c1c;" th:text="${totalItems}">0</span>-->
                     <span>Price</span>
+                    <span></span>
                 </div>
             </h4>
             <ul class="list-group mb-3" >
                 <th:block th:each="item : ${items}">
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
-                            <h6 class="my-0" th:text="${item.getName()}"></h6>
-                            <small class="text-muted" th:text="${item.getCategory()}"></small>
+                            <h6 class="my-0" th:text="${item.getItem().getName()}"></h6>
+                            <small class="text-muted" th:text="${item.getItem().getCategory()}"></small>
                         </div>
                         <div class="navbar-cart-block" style="width: 11.5%">
-                            <div class=" width: 40%">
-                                <!-- FIXME -->
-                                <a th:href="'/shopping-cart/remove-one/' + ${item.getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
+
+                            <div class=" width: 50%">
+                                <a th:href="'/shopping-cart/remove-one/literature/' + ${item.getItem().getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
                                         <img class="cart-plus-minus-icon" src="/icons/minus-icon.png" alt="">
                                 </a>
                                 <span class="text-muted" th:text=" ${item.getQuantity()}">0</span>
-                                <a th:href="'/shopping-cart/add-one/' + ${item.getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
+                                <a th:href="'/shopping-cart/add-one/literature/' + ${item.getItem().getCategory()} + '/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
                                     <img class="cart-plus-minus-icon" src="/icons/plus-icon.png">
                                 </a>
                             </div>
-                            <span class="text-muted" th:text="'$' + ${item.getPrice()}">0</span>
+<!--                            todo change literature to variable -->
+                            <span class="text-muted" th:text="'$' + ${item.getItem().getSalePrice()*item.getQuantity()}">0</span>
+                            <a th:href="'/shopping-cart/remove-all/' + ${item.getId()}" class="navbar-toggler" style="color: darkgrey">
+                            <img class="cart-plus-minus-icon" style="width: 1.5pc; height: 1.5pc" src="/icons/rubbish-basket.png">
+                            </a>
                         </div>
                     </li>
                 </th:block>
@@ -53,6 +58,9 @@
                     <div class="navbar-cart-block">
                         <strong th:text="${totalItems}">0</strong>
                         <strong th:text="'$' + ${totalPrice}">0</strong>
+                        <a th:href="'/shopping-cart/remove-all-items'" class="navbar-toggler" style="color: darkgrey">
+                            <img class="cart-plus-minus-icon" style="width: 1.5pc; height: 1.5pc" src="/icons/rubbish-basket.png">
+                        </a>
                     </div>
                 </li>
 <!--                <li class="list-group-item d-flex justify-content-between bg-light">-->
