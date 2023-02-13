@@ -37,7 +37,7 @@ public class ShoppingCartController {
     @GetMapping("/add-one/{category}/{type}/{cartItemId}")
     public String incItemQuantity(@PathVariable String category,
                                   @PathVariable String type, // todo mb optimize it
-                                  @PathVariable Integer cartItemId,
+                                  @PathVariable Long cartItemId,
                                   @CookieValue Long userId) {
         // todo add checking authorization
         boolean authorization = false;
@@ -48,7 +48,7 @@ public class ShoppingCartController {
     @GetMapping("/remove-one/{category}/{type}/{cartItemId}")
     public String decItemQuantity(@PathVariable String category,
                                   @PathVariable String type, // todo mb optimize it
-                                  @PathVariable Integer cartItemId,
+                                  @PathVariable Long cartItemId,
                                   @CookieValue Long userId) {
         // todo implement authorization checking
         boolean authorization = false;
@@ -57,7 +57,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/remove-all/{cartItemId}")
-    public String removeItemsType(@PathVariable Integer cartItemId,
+    public String removeItemsType(@PathVariable Long cartItemId,
                                   @CookieValue Long cartId) {
         cartService.getCartByCartId(cartId).ifPresent(cart -> cartService.removeOneCartItemsTypeFromCart(cart,cartItemId));
         return "redirect:/shopping-cart";

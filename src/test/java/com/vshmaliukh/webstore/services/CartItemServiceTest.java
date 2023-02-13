@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
@@ -30,9 +31,9 @@ class CartItemServiceTest {
     static final Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
 
 
-    static final CartItem cartItemMagazine = new CartItem(2,magazine,2);
-    static final CartItem cartItemNewspaper = new CartItem(3,newspaper,2);
-    static final CartItem cartItemComics = new CartItem(4, comics,3);
+    static final CartItem cartItemMagazine = new CartItem(2L,magazine, new UnauthorizedUserCart(), 2);
+    static final CartItem cartItemNewspaper = new CartItem(3L,newspaper, new UnauthorizedUserCart(), 2);
+    static final CartItem cartItemComics = new CartItem(4L, comics, new UnauthorizedUserCart(), 3);
 
     @MockBean
     CartItemRepository cartItemRepository;

@@ -5,7 +5,6 @@ import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import com.vshmaliukh.webstore.repositories.CartItemRepository;
 import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
 import com.vshmaliukh.webstore.repositories.UserRepository;
@@ -30,11 +29,11 @@ public class CartService {
     CartItemService cartItemService;
     CartItemRepository cartItemRepository;
 
-    public void changeCartItemQuantityInCartOnOne(Integer cartItemId, Long userId, boolean authorized, boolean increment){
+    public void changeCartItemQuantityInCartOnOne(Long cartItemId, Long userId, boolean authorized, boolean increment){
         Cart cart = getCartByUserId(userId,authorized);
         List<CartItem> cartItems = cart.getItems();
         for (CartItem cartItem : cartItems) {
-            if(cartItem.getId().equals(cartItemId)){
+            if(Objects.equals(cartItem.getId(), cartItemId)){
                 int resultQuantity;
                 if(increment){
                     resultQuantity = cartItem.getQuantity()+1;
@@ -87,17 +86,17 @@ public class CartService {
         return cartRepository.findByCartId(id);
     }
 
-    public Cart removeOneCartItemsTypeFromCart(Cart cart, Integer cartItemId){
+    public Cart removeOneCartItemsTypeFromCart(Cart cart, Long cartItemId){
         return cartRepositoryProvider
                 .getCartRepositoryByCart(cart)
                 .save(removeItemFromCart(cart,cartItemId));
     }
 
-    Cart removeItemFromCart(Cart cart, Integer cartItemId){
+    Cart removeItemFromCart(Cart cart, Long cartItemId){
         List<CartItem> cartItems = cart.getItems();
         CartItem cartItemToRemove = new CartItem();
         for (CartItem cartItem : cartItems) {
-            if (cartItem.getId().equals(cartItemId)){
+            if (Objects.equals(cartItem.getId(), cartItemId)){
                 cartItemToRemove = cartItem;
                 cartItems.remove(cartItem);
                 break;

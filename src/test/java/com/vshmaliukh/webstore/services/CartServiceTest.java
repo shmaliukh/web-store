@@ -52,9 +52,9 @@ class CartServiceTest {
     static final Newspaper newspaper = new Newspaper(3, "newspaper name", 3, 3, 3, 3, "some description", "some status", true, 0, 456);
     static final Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
 
-    static final CartItem cartItemNewspaper = new CartItem(3, newspaper,3);
-    static final CartItem cartItemComics = new CartItem(4,comics,4);
-    static final CartItem cartItemMagazine = new CartItem(2,magazine,1);
+    static final CartItem cartItemNewspaper = new CartItem(3L, newspaper,new UnauthorizedUserCart(),3);
+    static final CartItem cartItemComics = new CartItem(4L,comics, new UnauthorizedUserCart(),4);
+    static final CartItem cartItemMagazine = new CartItem(2L,magazine, new UnauthorizedUserCart(),1);
 
     final static Cart userCart = new UserCart(new User());
     final static Cart unauthorizedUserCart = new UnauthorizedUserCart(new UnauthorizedUser(1L));
@@ -148,25 +148,25 @@ class CartServiceTest {
                 Arguments.of(userCart,
                         new ArrayList<>(Arrays.asList(cartItemComics,cartItemMagazine,cartItemNewspaper)),
                         new ArrayList<>(Arrays.asList(cartItemComics,cartItemNewspaper)),
-                        2),
+                        2L),
                 Arguments.of(unauthorizedUserCart,
                         new ArrayList<>(Collections.singletonList(cartItemNewspaper)),
                         new ArrayList<>(),
-                        3),
+                        3L),
                 Arguments.of(unauthorizedUserCart,
                         new ArrayList<>(),
                         new ArrayList<>(),
-                        3),
+                        3L),
                 Arguments.of(unauthorizedUserCart,
                         new ArrayList<>(),
                         new ArrayList<>(),
-                        0)
+                        0L)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideCartsForRemoveCartItem")
-    void removeOneCartItemsTypeFromCartTest(Cart cart, List<CartItem> cartItems, List<CartItem> expectedCartItems, Integer cartItemId) {
+    void removeOneCartItemsTypeFromCartTest(Cart cart, List<CartItem> cartItems, List<CartItem> expectedCartItems, Long cartItemId) {
         cart = generateCartForTests(cart,1L,cartItems);
         Mockito.when(cartRepositoryProvider.getCartRepositoryByCart(cart)).thenReturn(baseCartRepository);
         assertTrue(expectedCartItems.containsAll(cartService.removeItemFromCart(cart,cartItemId).getItems()));
