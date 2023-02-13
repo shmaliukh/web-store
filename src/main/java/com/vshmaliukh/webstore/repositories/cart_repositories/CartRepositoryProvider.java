@@ -23,6 +23,8 @@ public class CartRepositoryProvider {
 
     Map<String, BaseCartRepository> cartRepositoryMap;
 
+    CartRepository cartRepository;
+
     public CartRepositoryProvider(
             BaseCartRepository<UnauthorizedUserCart> unauthorizedUserCartRepository,
             BaseCartRepository<UserCart> userCartRepository) {

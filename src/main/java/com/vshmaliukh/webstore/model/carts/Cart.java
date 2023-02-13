@@ -3,6 +3,7 @@ package com.vshmaliukh.webstore.model.carts;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.vshmaliukh.webstore.model.items.CartItem;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Transactional
 @Entity(name = "cart")
 @Inheritance(strategy = InheritanceType.JOINED)

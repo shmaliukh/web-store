@@ -3,14 +3,8 @@ package com.vshmaliukh.webstore.services;
 import com.vshmaliukh.webstore.model.UnauthorizedUser;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.carts.Cart;
-import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
-import com.vshmaliukh.webstore.model.carts.UserCart;
 import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.repositories.CartItemRepository;
-import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
-import com.vshmaliukh.webstore.repositories.UserRepository;
-import com.vshmaliukh.webstore.repositories.cart_repositories.BaseCartRepository;
 import com.vshmaliukh.webstore.repositories.cart_repositories.CartRepositoryProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,19 +18,16 @@ import java.util.*;
 public class CartService {
 
     final CartRepositoryProvider cartRepositoryProvider;
-
-    BaseCartRepository baseCartRepository;
-    UserRepository userRepository;
-    UnauthorizedUserRepository unauthorizedUserRepository;
+    UserService userService;
+    UnauthorizedUserService unauthorizedUserService;
 
     CartItemService cartItemService;
-    CartItemRepository cartItemRepository;
 
-    public void changeCartItemQuantityInCartOnOne(Integer cartItemId, Long userId, boolean authorized, boolean increment){
+    public void changeCartItemQuantityInCartOnOne(Long cartItemId, Long userId, boolean authorized, boolean increment){
         Cart cart = getCartByUserId(userId,authorized);
         List<CartItem> cartItems = cart.getItems();
         for (CartItem cartItem : cartItems) {
-            if(cartItem.getId().equals(cartItemId)){
+            if(Objects.equals(cartItem.getId(), cartItemId)){
                 int resultQuantity;
                 if(increment){
                     resultQuantity = cartItem.getQuantity()+1;
@@ -44,7 +35,7 @@ public class CartService {
                     resultQuantity = cartItem.getQuantity()-1;
                 }
                 if(resultQuantity<=cartItem.getItem().getAvailableToBuyQuantity()&&resultQuantity>0) {
-                    cartItem.setQuantity(resultQuantity);cartItemRepository.save(cartItem);
+                    cartItem.setQuantity(resultQuantity);cartItemService.saveCartItem(cartItem);
                     cart.setItems(cartItems);
                     addNewCart(cart);
                     break;
@@ -54,13 +45,20 @@ public class CartService {
     }
 
     public void addItemToCart(Item item, Long cartId) {
-        Cart cart = getCartByCartId(cartId).get();
-        List<CartItem> cartItems = cart.getItems();
-        if(cartItems.isEmpty()||!cartItems.stream().anyMatch(o->o.getItem().getId().equals(item.getId()))){
-            CartItem cartItem = cartItemService.createNewCartItem(item, 1); // todo implement quantity checking
-            cartItems.add(cartItem);
-            cart.setItems(cartItems);
-            addNewCart(cart);
+        Optional<Cart> optionalCart = getCartByCartId(cartId);
+        if(optionalCart.isPresent()) {
+            Cart cart = optionalCart.get();
+            List<CartItem> cartItems = cart.getItems();
+            Optional<CartItem> optionalCartItem = cartItemService.readCartItemById(cartId);
+            if (optionalCartItem.isPresent()) {
+                CartItem cartItem = optionalCartItem.get();
+                if (!cartItem.getCart().equals(cart)) {
+                    CartItem newCartItem = cartItemService.createNewCartItem(item, 1); // todo implement quantity checking
+                    cartItems.add(newCartItem);
+                    cart.setItems(cartItems);
+                    addNewCart(cart);
+                }
+            }
         }
     }
 
@@ -70,39 +68,37 @@ public class CartService {
 
     public Cart getCartByUserId(Long userId, boolean authorization){
         if(authorization){
-            User user = userRepository.getUserById(userId);
+            User user = userService.readUserById(userId).get();
             return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUser(user);
         } else {
-            UnauthorizedUser user = unauthorizedUserRepository.getUnauthorizedUserById(userId);
+            UnauthorizedUser user = unauthorizedUserService.getUserById(userId);
             return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUnauthorizedUser(user);
         }
     }
 
-    public Cart getNewCartByAuthorization(boolean authorized){
-        if(authorized) {
-            return new UserCart();
-        }
-        return new UnauthorizedUserCart();
-    }
-
     public Optional<Cart> getCartByCartId(Long id){
-        return baseCartRepository.findById(id);
+        return cartRepositoryProvider.getCartRepository().findByCartId(id);
     }
 
-    public Cart removeOneCartItemsTypeFromCart(Cart cart, Integer cartItemId){
+    public Cart removeOneCartItemsTypeFromCart(Cart cart, Long cartItemId){
+        return cartRepositoryProvider
+                .getCartRepositoryByCart(cart)
+                .save(removeItemFromCart(cart,cartItemId));
+    }
+
+    Cart removeItemFromCart(Cart cart, Long cartItemId){
         List<CartItem> cartItems = cart.getItems();
         CartItem cartItemToRemove = new CartItem();
         for (CartItem cartItem : cartItems) {
-            if (cartItem.getId().equals(cartItemId)){
+            if (Objects.equals(cartItem.getId(), cartItemId)){
                 cartItemToRemove = cartItem;
                 cartItems.remove(cartItem);
                 break;
             }
         }
         cart.setItems(cartItems);
-        cart = cartRepositoryProvider.getCartRepositoryByCart(cart).save(cart);
         if(cartItemToRemove.getId()!=null){
-            cartItemRepository.delete(cartItemToRemove);
+            cartItemService.removeCartItem(cartItemToRemove);
         }
         return cart;
     }
@@ -113,7 +109,7 @@ public class CartService {
         List<CartItem> cartItems = cart.getItems();
         cart.setItems(newCartItems);
         cart = addNewCart(cart);
-        cartItemRepository.deleteAll(cartItems);
+        cartItemService.removeAllCartItems(cartItems);
         return cart;
     }
 

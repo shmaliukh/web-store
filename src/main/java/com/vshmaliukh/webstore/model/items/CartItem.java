@@ -1,5 +1,7 @@
 package com.vshmaliukh.webstore.model.items;
 
+import com.vshmaliukh.webstore.model.carts.Cart;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +13,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Cart_item")
 public class CartItem {
@@ -18,10 +21,14 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_item_id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @OneToOne
     private Item item;
+
+    @ManyToOne
+//            TODO
+    Cart cart;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;

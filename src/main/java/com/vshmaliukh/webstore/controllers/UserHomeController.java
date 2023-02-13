@@ -1,16 +1,14 @@
 package com.vshmaliukh.webstore.controllers;
 
-import com.vshmaliukh.webstore.model.UnauthorizedUser;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.services.UnauthorizedUserService;
 import com.vshmaliukh.webstore.services.UserService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.USER_HOME;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/user-home")
@@ -26,16 +24,11 @@ public class UserHomeController {
         // todo implement authorizing checking
 
         boolean authorization = false;
-        if(authorization){
-            return new ModelAndView("unauthorizedUserPage"); // todo implement unauthorized user page -> "you should authorize to get this page"
+        if(!authorization){
+            return new ModelAndView("unauthorized-user-page");
         }
-        User user = userService.getUserById(userId);
-        modelMap.addAttribute("user", user);
-
-//        User testUser = new User(); // for tests
-//        testUser.setEmail("user@gmail.com");
-//        testUser.setUsername("Your First User");
-//        modelMap.addAttribute("user", testUser);
+        Optional<User> optionalUser = userService.readUserById(userId);
+        optionalUser.ifPresent(user -> modelMap.addAttribute("user", user));
         return new ModelAndView("user-home-page");
     }
 
@@ -56,19 +49,25 @@ public class UserHomeController {
     @PostMapping("/edit-email-user-page")
     public String editEmailUsersPage(@CookieValue Long userId, @RequestParam String email) {
 
-        User user = userService.getUserById(userId);
-        user.setEmail(email);
-        userService.save(user);
+
+        Optional<User> optionalUser = userService.readUserById(userId);
+        if(optionalUser.isPresent()){
+            User user =  optionalUser.get();
+            user.setEmail(email);
+            userService.save(user);
+        }
         return "redirect:/user-home";
     }
 
     @PostMapping("/edit-username-user-page")
     public String editUsernameUsersPage(@CookieValue Long userId, @RequestParam String username) {
 
-        User user = userService.getUserById(userId);
-        user.setUsername(username);
-        userService.save(user);
-
+        Optional<User> optionalUser = userService.readUserById(userId);
+        if(optionalUser.isPresent()){
+            User user =  optionalUser.get();
+            user.setUsername(username);
+            userService.save(user);
+        }
         return "redirect:/user-home";
     }
 

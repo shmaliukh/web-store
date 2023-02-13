@@ -1,10 +1,8 @@
 package com.vshmaliukh.webstore.controllers;
 
-import com.vshmaliukh.webstore.controllers.handlers.CookieHandler;
 import com.vshmaliukh.webstore.controllers.handlers.ShoppingCartHandler;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
-import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,12 +22,8 @@ import java.util.Optional;
 public class MainPageController {
 
     final ItemService itemService;
-    final UserService userService;
-    final CartService cartService;
-    final CartItemService cartItemService;
     final ItemRepositoryProvider itemRepositoryProvider;
-    final UnauthorizedUserService unauthorizedUserService;
-    ShoppingCartHandler shoppingCartHandler;
+    final ShoppingCartHandler shoppingCartHandler;
 
     @GetMapping
     public ModelAndView showMainPage(ModelMap modelMap) { // todo refactor template for links
@@ -64,28 +58,16 @@ public class MainPageController {
         return new ModelAndView("item-page");
     }
 
-    @PostMapping("/catalog/{category}/{type}/{id}")
+    @PostMapping("/catalog/{category}/{type}/{itemId}")
     public String addItemToCartFromMainPage(@PathVariable String category,
                                             @PathVariable String type,
-                                            @PathVariable Integer id,
+                                            @PathVariable Integer itemId,
                                             @CookieValue(defaultValue = "0") Long cartId,
                                             @RequestHeader String referer,
                                             HttpServletResponse response) {
         // todo add checking user authorization
         boolean authorization = false;
-
-        if(!authorization){
-            if(cartId==0||!cartService.existsById(cartId,authorization)){
-                cartId = shoppingCartHandler.createNewCart().getCartId();
-                Long userId = cartService.getCartByCartId(cartId).get().getCartId(); // todo remove its usage
-                response.addCookie(new CookieHandler().createCookie(cartId,"cartId"));
-                response.addCookie(new CookieHandler().createCookie(userId,"userId"));
-            }
-        }
-
-        BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
-        Optional<Item> optionalItem = itemRepository.findById(id);
-        cartService.addItemToCart(optionalItem.get(), cartId);
+        shoppingCartHandler.addItemToCartFromMainPage(authorization,cartId,itemId,type,response);
         return "redirect:" + referer;
     }
 
