@@ -30,7 +30,6 @@ class CartItemServiceTest {
     static final Comics comics = new Comics(4, "newspaper name", 4, 4, 4, 4, "some description", "some status", true, 0, 567, "some publisher");
 
 
-    static final CartItem cartItemBook = new CartItem(1,book,1);
     static final CartItem cartItemMagazine = new CartItem(2,magazine,2);
     static final CartItem cartItemNewspaper = new CartItem(3,newspaper,2);
     static final CartItem cartItemComics = new CartItem(4, comics,3);
@@ -40,9 +39,6 @@ class CartItemServiceTest {
 
     @Autowired
     CartItemService cartItemService;
-
-
-
 
     private static Stream<Arguments> provideItemsForTrueExistenceChecking() {
         return Stream.of(

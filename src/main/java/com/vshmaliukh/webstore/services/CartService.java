@@ -3,19 +3,19 @@ package com.vshmaliukh.webstore.services;
 import com.vshmaliukh.webstore.model.UnauthorizedUser;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.carts.Cart;
-import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
-import com.vshmaliukh.webstore.model.carts.UserCart;
 import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
+import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
 import com.vshmaliukh.webstore.repositories.CartItemRepository;
 import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
 import com.vshmaliukh.webstore.repositories.UserRepository;
-import com.vshmaliukh.webstore.repositories.cart_repositories.BaseCartRepository;
+import com.vshmaliukh.webstore.repositories.cart_repositories.CartRepository;
 import com.vshmaliukh.webstore.repositories.cart_repositories.CartRepositoryProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @Slf4j
@@ -24,8 +24,7 @@ import java.util.*;
 public class CartService {
 
     final CartRepositoryProvider cartRepositoryProvider;
-
-    BaseCartRepository baseCartRepository;
+    CartRepository cartRepository;
     UserRepository userRepository;
     UnauthorizedUserRepository unauthorizedUserRepository;
 
@@ -79,10 +78,16 @@ public class CartService {
     }
 
     public Optional<Cart> getCartByCartId(Long id){
-        return baseCartRepository.findById(id);
+        return cartRepository.findByCartId(id);
     }
 
     public Cart removeOneCartItemsTypeFromCart(Cart cart, Integer cartItemId){
+        return cartRepositoryProvider
+                .getCartRepositoryByCart(cart)
+                .save(removeItemFromCart(cart,cartItemId));
+    }
+
+    Cart removeItemFromCart(Cart cart, Integer cartItemId){
         List<CartItem> cartItems = cart.getItems();
         CartItem cartItemToRemove = new CartItem();
         for (CartItem cartItem : cartItems) {
@@ -93,7 +98,6 @@ public class CartService {
             }
         }
         cart.setItems(cartItems);
-        cart = cartRepositoryProvider.getCartRepositoryByCart(cart).save(cart);
         if(cartItemToRemove.getId()!=null){
             cartItemRepository.delete(cartItemToRemove);
         }
