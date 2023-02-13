@@ -5,7 +5,6 @@ import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.repositories.CartItemRepository;
 import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import com.vshmaliukh.webstore.repositories.cart_repositories.CartRepository;
@@ -27,7 +26,6 @@ public class CartService {
     UnauthorizedUserRepository unauthorizedUserRepository;
 
     CartItemService cartItemService;
-    CartItemRepository cartItemRepository;
 
     public void changeCartItemQuantityInCartOnOne(Long cartItemId, Long userId, boolean authorized, boolean increment){
         Cart cart = getCartByUserId(userId,authorized);
@@ -41,7 +39,7 @@ public class CartService {
                     resultQuantity = cartItem.getQuantity()-1;
                 }
                 if(resultQuantity<=cartItem.getItem().getAvailableToBuyQuantity()&&resultQuantity>0) {
-                    cartItem.setQuantity(resultQuantity);cartItemRepository.save(cartItem);
+                    cartItem.setQuantity(resultQuantity);cartItemService.saveCartItem(cartItem);
                     cart.setItems(cartItems);
                     addNewCart(cart);
                     break;
@@ -104,7 +102,7 @@ public class CartService {
         }
         cart.setItems(cartItems);
         if(cartItemToRemove.getId()!=null){
-            cartItemRepository.delete(cartItemToRemove);
+            cartItemService.removeCartItem(cartItemToRemove);
         }
         return cart;
     }
@@ -115,7 +113,7 @@ public class CartService {
         List<CartItem> cartItems = cart.getItems();
         cart.setItems(newCartItems);
         cart = addNewCart(cart);
-        cartItemRepository.deleteAll(cartItems);
+        cartItemService.removeAllCartItems(cartItems);
         return cart;
     }
 
