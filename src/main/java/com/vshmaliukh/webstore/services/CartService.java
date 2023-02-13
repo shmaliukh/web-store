@@ -5,9 +5,6 @@ import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
-import com.vshmaliukh.webstore.repositories.UnauthorizedUserRepository;
-import com.vshmaliukh.webstore.repositories.UserRepository;
-import com.vshmaliukh.webstore.repositories.cart_repositories.CartRepository;
 import com.vshmaliukh.webstore.repositories.cart_repositories.CartRepositoryProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +18,8 @@ import java.util.*;
 public class CartService {
 
     final CartRepositoryProvider cartRepositoryProvider;
-    CartRepository cartRepository;
-    UserRepository userRepository;
-    UnauthorizedUserRepository unauthorizedUserRepository;
+    UserService userService;
+    UnauthorizedUserService unauthorizedUserService;
 
     CartItemService cartItemService;
 
@@ -72,16 +68,16 @@ public class CartService {
 
     public Cart getCartByUserId(Long userId, boolean authorization){
         if(authorization){
-            User user = userRepository.getReferenceById(userId);
+            User user = userService.readUserById(userId).get();
             return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUser(user);
         } else {
-            UnauthorizedUser user = unauthorizedUserRepository.getUnauthorizedUserById(userId);
+            UnauthorizedUser user = unauthorizedUserService.getUserById(userId);
             return cartRepositoryProvider.getCartRepositoryByUserAuthorization(authorization).findCartByUnauthorizedUser(user);
         }
     }
 
     public Optional<Cart> getCartByCartId(Long id){
-        return cartRepository.findByCartId(id);
+        return cartRepositoryProvider.getCartRepository().findByCartId(id);
     }
 
     public Cart removeOneCartItemsTypeFromCart(Cart cart, Long cartItemId){
