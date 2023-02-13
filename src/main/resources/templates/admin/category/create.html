@@ -22,13 +22,16 @@
                 <h3 class="my-0 font-weight-normal">New category card</h3>
             </div>
             <div class="card-body">
-                <form id="categoryForm" class="needs-validation" enctype="multipart/form-data">
+                <form id="categoryForm" th:object="${categoryDto}"
+                      th:action="@{/admin/category/save}" method="post"
+                      class="needs-validation">
                     <div class="row g-3">
                         <div class="col-12">
                             <label for="categoryName" class="form-label">Category name</label>
                             <div class="input-group has-validation">
                                 <span class="input-group-text">@</span>
                                 <input type="text" name="name" class="form-control" id="categoryName"
+                                       th:field="*{name}"
                                        placeholder="Category name"
                                        required="">
                                 <div class="invalid-feedback">
@@ -39,23 +42,24 @@
                         <div class="col-12">
                             <label for="description" class="form-label">Description</label>
                             <textarea id="description" name="description" class="form-control"
+                                      th:field="*{description}"
                                       placeholder="Category description"></textarea>
                         </div>
                     </div>
                     <hr>
                     <button class="w-100 btn btn-primary btn-lg" type="submit">Create new category</button>
                 </form>
-                <script th:inline="javascript">
-                    categoryForm.onsubmit = async (e) => {
-                        e.preventDefault();
-                        fetchJsonAdnInformAboutResult(
-                            "categoryForm",
-                            "/admin/category/save",
-                            "post",
-                                "/admin/category/catalog"
-                        );
-                    };
-                </script>
+            <!--                <script th:inline="javascript">-->
+            <!--                    categoryForm.onsubmit = async (e) => {-->
+            <!--                        e.preventDefault();-->
+            <!--                        fetchJsonAdnInformAboutResult(-->
+            <!--                            "categoryForm",-->
+            <!--                            "/admin/category/save",-->
+            <!--                            "post",-->
+            <!--                                "/admin/category/catalog"-->
+            <!--                        );-->
+            <!--                    };-->
+            <!--                </script>-->
             </div>
         </div>
     </div>

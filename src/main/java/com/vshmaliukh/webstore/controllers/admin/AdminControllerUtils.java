@@ -123,6 +123,7 @@ public final class AdminControllerUtils {
 
             @Override
             public Page<OrderItem> formPageWithContentByKeyword(String keyword, Pageable pageable) {
+                // TODO refactor service 'orderItems' filtering, do it via repository
                 List<OrderItem> orderItems = repository.readOrderItemsByOrder(order).stream()
                         .filter(o -> StringUtils.containsIgnoreCase(o.getItem().getName(), keyword))
                         .collect(Collectors.toList());

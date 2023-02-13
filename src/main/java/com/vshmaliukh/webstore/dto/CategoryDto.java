@@ -26,8 +26,6 @@ public class CategoryDto {
             message = "Invalid category 'name': name size min = " + NAME_MIN_LENGTH + ", max = " + NAME_MAX_LENGTH)
     private String name;
 
-    @NotBlank(message = "Invalid category 'description': Empty description")
-    @NotNull(message = "Invalid category 'description': description is NULL")
     @Size(max = DESCRIPTION_MAX_LENGTH,
             message = "Invalid category 'description': description size max = " + DESCRIPTION_MAX_LENGTH)
     private String description;

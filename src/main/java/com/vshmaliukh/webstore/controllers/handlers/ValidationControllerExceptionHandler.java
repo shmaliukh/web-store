@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.controllers.handlers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ControllerAdvice
 public class ValidationControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -33,6 +35,8 @@ public class ValidationControllerExceptionHandler extends ResponseEntityExceptio
                 .collect(Collectors.toList());
         body.put("errors", errorList);
         body.put("path", request.getDescription(false).replace("uri=", ""));
+        log.warn("MethodArgumentNotValidException exception: '{}'", body);
+        log.error(exception.getMessage(), exception);
         return new ResponseEntity<>(body, headers, status);
     }
 

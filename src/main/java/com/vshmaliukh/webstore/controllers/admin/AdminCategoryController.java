@@ -14,10 +14,10 @@ import com.vshmaliukh.webstore.services.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,6 +32,7 @@ import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.gen
 
 @Slf4j
 @Controller
+@Validated
 @RequestMapping("/admin/category")
 @AllArgsConstructor
 public class AdminCategoryController {
@@ -46,7 +47,7 @@ public class AdminCategoryController {
 
     @GetMapping("/**")
     public ModelAndView doGetAll(ModelMap modelMap) {
-        return new ModelAndView("redirect:/catalog", modelMap);
+        return new ModelAndView("redirect:/admin/category/catalog", modelMap);
     }
 
     @GetMapping("/catalog")
@@ -69,32 +70,33 @@ public class AdminCategoryController {
 
     @GetMapping("/create")
     public ModelAndView doGetCreate(ModelMap modelMap) {
+        modelMap.addAttribute("categoryDto", new CategoryDto());
         return new ModelAndView("admin/category/create", modelMap);
     }
 
-//    @PostMapping("/save")
-//    public ModelAndView doPostSave(@RequestBody @Valid CategoryDto categoryDto,
-//                                   ModelMap modelMap) {
-//        Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
-//        categoryService.save(category);
-//        modelMap.addAttribute("tab", NAV_MAIN_STR);
-//        return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
-//    }
-
     @PostMapping("/save")
-    public ResponseEntity<CategoryDto> doPostSaveDto(@RequestBody @Valid CategoryDto categoryDto) {
+    public ModelAndView doPostSave(@ModelAttribute @Valid CategoryDto categoryDto,
+                                   ModelMap modelMap) {
         Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
         categoryService.save(category);
-        String categoryDtoName = categoryDto.getName();
-        if (categoryService.isExistCategoryByName(categoryDtoName)) {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new CategoryDto(category));
-        } else {
-            log.warn("problem to save category");
-            return ResponseEntity.badRequest()
-                    .build();
-        }
+        modelMap.addAttribute("tab", NAV_MAIN_STR);
+        return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
     }
+
+//    @PostMapping("/save")
+//    public ResponseEntity<CategoryDto> doPostSaveDto(@ModelAttribute @Valid CategoryDto categoryDto) {
+//        Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
+//        categoryService.save(category);
+//        String categoryDtoName = categoryDto.getName();
+//        if (categoryService.isExistCategoryByName(categoryDtoName)) {
+//            return ResponseEntity.status(HttpStatus.CREATED)
+//                    .body(new CategoryDto(category));
+//        } else {
+//            log.warn("problem to save category");
+//            return ResponseEntity.badRequest()
+//                    .build();
+//        }
+//    }
 
     @PostMapping("/{categoryId}/image")
     public ModelAndView doPostSaveImage(@PathVariable(name = "categoryId") @Min(1) Integer categoryId,
@@ -150,6 +152,7 @@ public class AdminCategoryController {
 
     private static String readTabAttributeValue(String tabRequestParam, ModelMap modelMap) {
         String mapAttribute = (String) modelMap.getAttribute("tab");
+        // TODO refactor
         return StringUtils.isNotBlank(mapAttribute)
                 ? mapAttribute
                 : StringUtils.isNotBlank(tabRequestParam) ? tabRequestParam : NAV_MAIN_STR;
@@ -233,19 +236,5 @@ public class AdminCategoryController {
         }
         return ResponseEntity.badRequest().build();
     }
-
-//    // TODO use @ControllerAdvice exception handlers for all admin controllers
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException manve) {
-//        Map<String, String> errors = new HashMap<>();
-//        List<FieldError> fieldErrorList = AdminControllerUtils.getFieldErrorList(manve);
-//        for (FieldError fieldError : fieldErrorList) {
-//            String fieldName = fieldError.getField();
-//            String errorMessage = fieldError.getDefaultMessage();
-//            errors.put(fieldName, errorMessage);
-//        }
-//        return errors;
-//    }
 
 }
