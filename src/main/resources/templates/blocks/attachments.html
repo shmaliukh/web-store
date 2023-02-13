@@ -6,4 +6,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Application JS utils -->
     <script src="/utils.js"></script>
+
+    <th:block th:if="${errorMessage} != null">
+        <script th:inline="javascript">
+            let errorMessage = [[${errorMessage}]];
+            alert(errorMessage);
+        </script>
+    </th:block>
+
 </div>

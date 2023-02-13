@@ -2,7 +2,8 @@ server:
   port: 8082
 
 app:
-  webSecurityEnable: !!bool false
+  webSecurityEnabled: !!bool false
+  validationEnabled: !!bool true
 
 logging:
   level:
