@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore;
+package com.vshmaliukh.webstore.configs;
 
 import com.vshmaliukh.webstore.login.CustomOAuth2User;
 import com.vshmaliukh.webstore.login.CustomOAuth2UserService;
@@ -31,8 +31,8 @@ public class WebSecurityConfig {
     private final CustomOAuth2UserService oauthUserService;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    @Value("${app.webSecurityEnable:true}")
-    public boolean webSecurityEnable;
+    @Value("${app.webSecurityEnabled:true}")
+    public boolean webSecurityEnabled;
 
     @Autowired
     public WebSecurityConfig(UserService userService,
@@ -63,7 +63,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        if (webSecurityEnable) {
+        if (webSecurityEnabled) {
             configWithSecurity(http);
         } else {
             configWithoutSecurity(http);
