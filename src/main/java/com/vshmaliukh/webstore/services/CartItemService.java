@@ -7,6 +7,8 @@ import com.vshmaliukh.webstore.repositories.CartItemRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class CartItemService {
@@ -29,4 +31,7 @@ public class CartItemService {
         return cartItemRepository.existsByItem(item);
     }
 
+    public Optional<CartItem> readCartItemById(Long cartId) {
+        return cartItemRepository.readById(cartId);
+    }
 }

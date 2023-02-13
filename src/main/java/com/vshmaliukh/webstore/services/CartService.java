@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @Slf4j
@@ -53,13 +52,20 @@ public class CartService {
     }
 
     public void addItemToCart(Item item, Long cartId) {
-        Cart cart = getCartByCartId(cartId).get();
-        List<CartItem> cartItems = cart.getItems();
-        if(cartItems.isEmpty()||!cartItems.stream().anyMatch(o->o.getItem().getId().equals(item.getId()))){
-            CartItem cartItem = cartItemService.createNewCartItem(item, 1); // todo implement quantity checking
-            cartItems.add(cartItem);
-            cart.setItems(cartItems);
-            addNewCart(cart);
+        Optional<Cart> optionalCart = getCartByCartId(cartId);
+        if(optionalCart.isPresent()) {
+            Cart cart = optionalCart.get();
+            List<CartItem> cartItems = cart.getItems();
+            Optional<CartItem> optionalCartItem = cartItemService.readCartItemById(cartId);
+            if (optionalCartItem.isPresent()) {
+                CartItem cartItem = optionalCartItem.get();
+                if (!cartItem.getCart().equals(cart)) {
+                    CartItem newCartItem = cartItemService.createNewCartItem(item, 1); // todo implement quantity checking
+                    cartItems.add(newCartItem);
+                    cart.setItems(cartItems);
+                    addNewCart(cart);
+                }
+            }
         }
     }
 
