@@ -104,6 +104,15 @@ public class ItemService implements EntityValidator<Item> {
         return false;
     }
 
+    public List<? extends Item> readSortedItemsByTypeName(String itemTypeName, String sortingParameter){ // todo refactor
+        BaseItemRepository<? extends Item> itemRepositoryByItemTypeNameByType = itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeName);
+        if (itemRepositoryByItemTypeNameByType != null) {
+            return itemRepositoryByItemTypeNameByType.readAllByOrderByName();
+        }
+        log.error("problem to read all items by type name // not found repository // itemTypeName: {}", itemTypeName);
+        return Collections.emptyList();
+    }
+
     public List<? extends Item> readAllItemsByTypeName(String itemTypeName) {
         BaseItemRepository<? extends Item> itemRepositoryByItemTypeNameByType = itemRepositoryProvider.getItemRepositoryByItemClassName(itemTypeName);
         if (itemRepositoryByItemTypeNameByType != null) {
@@ -128,6 +137,13 @@ public class ItemService implements EntityValidator<Item> {
 
     public Set<String> readTypeNameSet() {
         return Collections.unmodifiableSet(itemRepositoryProvider.readTypeNameSet());
+    }
+
+    public List<String> readSortingOptionsList(){
+
+
+
+        return new ArrayList<>(); // todo implement
     }
 
     public BaseItemRepository getItemRepositoryByItemTypeName(String itemTypeStr) {

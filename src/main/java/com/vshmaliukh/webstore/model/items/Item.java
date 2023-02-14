@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -166,6 +167,14 @@ public abstract class Item extends AuditModel {
                 ", status='" + status + '\'' +
                 ", isAvailableInStore=" + isAvailableInStore +
                 '}';
+    }
+
+    public List<String> getSortingOptions(){
+        List<String> sortingOptions = new ArrayList<>(Arrays.asList(
+                "name",
+                "salePrice"
+        ));
+        return sortingOptions;
     }
 
 }

@@ -89,8 +89,12 @@ public class CartService {
     Cart removeItemFromCart(Cart cart, Long cartItemId){
         List<CartItem> cartItems = cart.getItems();
         CartItem cartItemToRemove = new CartItem();
+        List<CartItem> itemList = cart.getItems();
+        boolean isRemoved = itemList.remove(cartItemToRemove);
+        cart.setItems(itemList);
+
         for (CartItem cartItem : cartItems) {
-            if (Objects.equals(cartItem.getId(), cartItemId)){
+            if (cartItem.getId().equals( cartItemId)){
                 cartItemToRemove = cartItem;
                 cartItems.remove(cartItem);
                 break;
