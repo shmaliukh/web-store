@@ -138,3 +138,16 @@ a:hover{
     width: 50%;
 }
 
+.sorting-filtering-box{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: 0 10% 1%;
+}
+
+.sorting-or-filtering-box{
+    display: flex;
+    width: 11.5%;
+    margin-right: 1%;
+}
+

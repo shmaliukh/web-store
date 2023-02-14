@@ -50,10 +50,23 @@
             </div>
         </div>
     </section>
-
+    <div class="sorting-filtering-box">
+        <select id="selectSortingOption" name="status" class="form-select sorting-or-filtering-box">
+            <option selected="">Option for sorting</option>
+            <script th:inline="javascript">
+                generateOptionUsingDataFromApi("selectSortingOption", "http://localhost:8082/item/status-names");
+            </script>
+        </select>
+        <select id="selectFilters" name="status" class="form-select sorting-or-filtering-box">
+<!--            TODO create checkbox for it -->
+            <option selected="">Filter</option>
+            <script th:inline="javascript">
+                generateOptionUsingDataFromApi("selectFilters", "http://localhost:8082/item/status-names");
+            </script>
+        </select>
+    </div>
     <div class="album py-3 bg-light">
         <div class="container">
-
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <!---->
                 <th:block th:each="item, index: ${itemList}">
