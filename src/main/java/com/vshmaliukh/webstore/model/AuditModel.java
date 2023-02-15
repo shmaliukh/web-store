@@ -21,9 +21,7 @@ import java.util.Date;
         allowGetters = true
 )
 public abstract class AuditModel implements Serializable {
-
-    // TODO implement auditing the 'Author' of changes
-
+    
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false, nullable = false)
     @CreatedDate

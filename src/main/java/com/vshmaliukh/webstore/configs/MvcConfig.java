@@ -19,9 +19,9 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry interceptorRegistry) {
         if (validationEnabled) {
-            String adminPathStr = "/admin/**";
-            interceptorRegistry.addInterceptor(new ValidationErrorMessageInterceptor()).addPathPatterns(adminPathStr);
-            log.info("validation interceptor for '{}' path is active", adminPathStr);
+            String validationPathStr = "/admin/**";
+            interceptorRegistry.addInterceptor(new ValidationErrorMessageInterceptor()).addPathPatterns(validationPathStr);
+            log.info("validation interceptor for '{}' path is active", validationPathStr);
         }
         // TODO implement authorisation interceptor
     }

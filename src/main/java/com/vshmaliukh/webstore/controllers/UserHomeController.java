@@ -1,16 +1,12 @@
 package com.vshmaliukh.webstore.controllers;
 
-import com.vshmaliukh.webstore.model.UnauthorizedUser;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.services.UnauthorizedUserService;
 import com.vshmaliukh.webstore.services.UserService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.USER_HOME;
 
 @Controller
 @RequestMapping("/user-home")
@@ -29,7 +25,7 @@ public class UserHomeController {
         if(authorization){
             return new ModelAndView("unauthorizedUserPage"); // todo implement unauthorized user page -> "you should authorize to get this page"
         }
-        User user = userService.getUserById(userId);
+        User user = userService.readUserById(userId).get();
         modelMap.addAttribute("user", user);
 
 //        User testUser = new User(); // for tests
@@ -56,7 +52,7 @@ public class UserHomeController {
     @PostMapping("/edit-email-user-page")
     public String editEmailUsersPage(@CookieValue Long userId, @RequestParam String email) {
 
-        User user = userService.getUserById(userId);
+        User user = userService.readUserById(userId).get();
         user.setEmail(email);
         userService.save(user);
         return "redirect:/user-home";
@@ -65,7 +61,7 @@ public class UserHomeController {
     @PostMapping("/edit-username-user-page")
     public String editUsernameUsersPage(@CookieValue Long userId, @RequestParam String username) {
 
-        User user = userService.getUserById(userId);
+        User user = userService.readUserById(userId).get();
         user.setUsername(username);
         userService.save(user);
 

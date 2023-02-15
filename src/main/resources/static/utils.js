@@ -63,7 +63,9 @@ function informAboutResultAndRedirect(formElemId, pageToRedirect) {
             if (res.ok) {
                 window.location.href = pageToRedirect;
             } else {
-                alert('Item NOT saved');
+                let jsonWithErrors = res.json();
+                let text = jsonWithErrors.errors.join("\n");
+                alert(text);
                 alert('Problem status: ' + res.status +
                     'Message: ' + res.body);
             }

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,11 +77,17 @@ public class AdminCategoryController {
 
     @PostMapping("/save")
     public ModelAndView doPostSave(@ModelAttribute @Valid CategoryDto categoryDto,
+                                   BindingResult validationResult,
                                    ModelMap modelMap) {
-        Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
-        categoryService.save(category);
-        modelMap.addAttribute("tab", NAV_MAIN_STR);
-        return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
+        if(!validationResult.hasErrors()){
+            Category category = categoryService.getUpdatedOrCreateBaseCategory(categoryDto);
+            categoryService.save(category);
+
+            modelMap.addAttribute("tab", NAV_MAIN_STR);
+            return new ModelAndView("redirect:/admin/category/" + category.getId() + "/details", modelMap);
+        } else {
+            return new ModelAndView("redirect:/admin/category/create", modelMap);
+        }
     }
 
 //    @PostMapping("/save")

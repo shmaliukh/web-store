@@ -130,7 +130,7 @@ public class AdminUserController {
         if (orderList == null) {
             orderList = Collections.emptyList();
         }
-        modelMap.addAttribute("user", user);
+        modelMap.addAttribute( user);   
         modelMap.addAttribute("orderList", orderList);
     }
 
