@@ -1,12 +1,12 @@
 package com.vshmaliukh.webstore.repositories;
 
-import com.vshmaliukh.webstore.model.Role;
+import com.vshmaliukh.webstore.model.Privilege;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
 
-    Role findByName(String name);
+    Privilege findByName(String name);
 
 }

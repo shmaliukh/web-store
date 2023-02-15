@@ -2,7 +2,6 @@ package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.OrderStatus;
 import com.vshmaliukh.webstore.login.LogInProvider;
-import com.vshmaliukh.webstore.login.UserRole;
 import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.OrderItem;

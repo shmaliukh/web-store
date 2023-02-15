@@ -1,7 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import com.vshmaliukh.webstore.login.UserRole;
+import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,15 +39,6 @@ public class UserService implements EntityValidator<User> {
         return Collections.unmodifiableList(userRepository.findAll());
     }
 
-    public boolean isAdminUser(User user) {
-        if (isValidEntity(user)) {
-            UserRole userRole = user.getRole();
-            return userRole != null && userRole.equals(UserRole.ADMIN);
-        }
-        log.warn("problem to check user role // invalid user");
-        return false;
-    }
-
     // TODO add test for 'processOAuthPostLogin' method
     public void processOAuthPostLogin(String username) {
         User user = userRepository.findUserByUsername(username);
@@ -74,12 +66,14 @@ public class UserService implements EntityValidator<User> {
                                 //  @Email
                                 String email,
                                 //  @NotEmpty
-                                UserRole role,
+                                Role role,
                                 boolean enabled) {
         User user = new User();
         user.setUsername(userName);
         user.setEmail(email);
-        user.setRole(role);
+        Collection<Role> userRoles = user.getRoles();
+        userRoles.add(role);
+        user.setRoles(userRoles);
         user.setLogInProvider(LOCAL);
         user.setEnabled(enabled);
         user.setPassword(DEFAULT_PASSWORD);

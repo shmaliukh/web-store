@@ -1,23 +1,31 @@
 package com.vshmaliukh.webstore.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Collection;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.*;
-
-@Getter
-@Setter
 @Entity
-@Table(name = ROLE_TABLE)
-public class Role extends AuditModel{
+@Data
+@Table(name = "Roles")
+public class Role extends AuditModel {
 
     @Id
-    @Column(name = ROLE_ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "role_id")
+    private Long id;
 
-    @Column(name = ROLE_NAME_COLUMN)
     private String name;
 
+    @ManyToMany(mappedBy = "Roles")
+    private Collection<User> users;
+
+    @ManyToMany
+    @JoinTable(
+            name = "Roles_Privileges",
+            joinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "role_id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "privilege_id", referencedColumnName = "privilege_id"))
+    private Collection<Privilege> privileges;
 }
