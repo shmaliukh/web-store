@@ -47,16 +47,15 @@ public class UserService implements EntityValidator<User> {
         }
     }
 
-    // TODO refactor 'insertUser' method
     public void insertUser(String username, LogInProvider logInProvider) {
         User user = new User();
-        user.setId(null);
         user.setUsername(username);
         user.setLogInProvider(logInProvider);
         user.setEnabled(true);
+        user.setRoles(Collections.emptyList());
 
-        userRepository.save(user);
-        log.info("Created new user: '{}', provider: '{}'", user, logInProvider);
+        User savedUser = userRepository.save(user);
+        log.info("Created new user: '{}', provider: '{}'", savedUser, logInProvider);
     }
 
     // TODO implement service layer validation

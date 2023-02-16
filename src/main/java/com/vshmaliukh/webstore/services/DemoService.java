@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import com.vshmaliukh.webstore.login.UserRole;
 import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
@@ -39,8 +38,8 @@ public class DemoService {
     }
 
     private void addUsers() {
-        User user1 = new User(null, "default username", "default@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "admin", false);
-        User user2 = new User(null, "Vlad", "zskat@gmail.com", LogInProvider.LOCAL, UserRole.ADMIN, "admin", true);
+        User user1 = new User(null, "default username", "default@mail.com", LogInProvider.LOCAL, null, "admin", false);
+        User user2 = new User(null, "Vlad", "zskat@gmail.com", LogInProvider.LOCAL, null, "admin", true);
         userService.save(user1);
         userService.save(user2);
     }

@@ -17,7 +17,7 @@ public class Privilege extends AuditModel {
 
     private String name;
 
-    @ManyToMany(mappedBy = "Privileges")
+    @ManyToMany(mappedBy = "privileges")
     private Collection<Role> roles;
 
 }
