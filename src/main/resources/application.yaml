@@ -2,7 +2,14 @@ server:
   port: 8082
 
 app:
-  webSecurityEnable: !!bool true
+  webSecurity:
+    enabled: !!bool true
+    login:
+      viaGoogle: !!bool false
+  rememberMe:
+    time: !!int 8400
+    key: !!str secretAndUnique
+    cookieName: !!str rememberMe
 
 logging:
   level:
