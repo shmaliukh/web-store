@@ -10,13 +10,11 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.NEWSPAPER_TABLE;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = NEWSPAPER_TABLE)
+@Table(name = "Newspapers")
 public class Newspaper extends LiteratureItem {
 
     @JsonCreator

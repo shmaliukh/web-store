@@ -1,11 +1,13 @@
 package com.vshmaliukh.webstore.services;
 
+import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
+import com.vshmaliukh.webstore.repositories.ImageRepository;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
@@ -40,6 +42,9 @@ class ItemServiceTest {
 
     @MockBean
     ItemRepository itemRepository;
+
+    @MockBean
+    ImageRepository imageRepository;
 
     @MockBean
     ItemRepositoryProvider itemRepositoryProvider;
@@ -333,6 +338,9 @@ class ItemServiceTest {
     @Test
     void addImageToItem_successfulLogInfo(CapturedOutput output) throws IOException {
         Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
+        Mockito
+                .when(imageRepository.save((Mockito.any(Image.class))))
+                .thenReturn(new Image());
         MockMultipartFile mockMultipartFile = new MockMultipartFile(IMAGE_1_NAME, IMAGE_1_NAME, MediaType.IMAGE_PNG_VALUE, Files.newInputStream(Paths.get(SRC_TEST_RESOURCES_PATH_STR, IMAGE_1_NAME)));
         itemService.addImageToItem(book, mockMultipartFile);
 
@@ -346,6 +354,9 @@ class ItemServiceTest {
         Optional<ItemImage> optionalItemImage = imageService.formItemImageFromFile(new Magazine(), mockMultipartFile1);
         assertTrue(optionalItemImage.isPresent());
         ItemImage itemImage = optionalItemImage.get();
+        Mockito
+                .when(imageRepository.save((Mockito.any(Image.class))))
+                .thenReturn(new Image());
         itemService.changeItemImage(null, itemImage, mockMultipartFile2);
 
         assertTrue(output.getOut().contains("problem to change item image"));

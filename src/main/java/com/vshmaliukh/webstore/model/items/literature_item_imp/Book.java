@@ -13,20 +13,18 @@ import javax.persistence.Table;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 import static com.vshmaliukh.webstore.ItemUtil.DATE_FORMAT_STR;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = BOOK_TABLE)
+@Table(name = "Books")
 public class Book extends LiteratureItem {
 
-    @Column(name = AUTHOR_COLUMN)
     private String author;
 
-    @Column(name = DATE_COLUMN)
+    @Column(name = "date_of_issue")
     private Date dateOfIssue;
 
     @JsonCreator

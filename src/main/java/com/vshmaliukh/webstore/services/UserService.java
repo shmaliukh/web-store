@@ -9,10 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.vshmaliukh.webstore.login.LogInProvider.LOCAL;
 
@@ -70,7 +67,7 @@ public class UserService implements EntityValidator<User> {
         User user = new User();
         user.setUsername(userName);
         user.setEmail(email);
-        Collection<Role> userRoles = user.getRoles();
+        Collection<Role> userRoles = user.getRoles() != null ? user.getRoles() : new ArrayList<>();
         userRoles.add(role);
         user.setRoles(userRoles);
         user.setLogInProvider(LOCAL);

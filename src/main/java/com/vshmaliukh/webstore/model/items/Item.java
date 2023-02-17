@@ -25,7 +25,8 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "item")
+@Entity
+@Table(name = "Items")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({

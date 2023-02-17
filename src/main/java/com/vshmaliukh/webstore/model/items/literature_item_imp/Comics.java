@@ -11,14 +11,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.COMICS_TABLE;
 import static com.vshmaliukh.webstore.ConstantsForEntities.PUBLISHER_COLUMN;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = COMICS_TABLE)
+@Table(name = "Comics")
 public class Comics extends LiteratureItem {
 
     @Column(name = PUBLISHER_COLUMN)

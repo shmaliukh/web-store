@@ -23,12 +23,14 @@ public class ImageService implements EntityValidator<Image> {
     final ImageRepository imageRepository;
     final ItemImageRepository itemImageRepository;
 
-    public void saveImage(Image image) {
+    public Optional<Image> saveImage(Image image) {
         if (isValidEntity(image)) {
             imageRepository.save(image);
             log.info("saved image: {}", image);
+            return Optional.of(image);
         } else {
-            log.error("image not saved // invalid image");
+            log.error("image not saved // invalid image: {}", image);
+            return Optional.empty();
         }
     }
 

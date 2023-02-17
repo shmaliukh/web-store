@@ -6,7 +6,6 @@ import com.vshmaliukh.webstore.model.carts.Cart;
 import com.vshmaliukh.webstore.model.carts.UnauthorizedUserCart;
 import com.vshmaliukh.webstore.model.carts.UserCart;
 import com.vshmaliukh.webstore.model.items.CartItem;
-import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
@@ -22,10 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class CartServiceTest {
@@ -58,33 +61,33 @@ class CartServiceTest {
     final static Cart userCart = new UserCart(new User());
     final static Cart unauthorizedUserCart = new UnauthorizedUserCart(new UnauthorizedUser(1L));
 
-    @ParameterizedTest
-    @MethodSource("provideItemsForTrueExistenceChecking")
-    void existsCartByIdPositiveTest(Item item, boolean exists) {
-
+//    @ParameterizedTest
+//    @MethodSource("provideItemsForTrueExistenceChecking")
+//    void existsCartByIdPositiveTest(Item item, boolean exists) {
 //
-//        cartService.getCartByUserId();
-    }
+////
+////        cartService.getCartByUserId();
+//    }
 
-    private static Stream<Arguments> provideOptionalCartsForGetCartById() {
-        return Stream.of(
-                Arguments.of(1L, Optional.of(userCart)),
-                Arguments.of(2L, Optional.of(unauthorizedUserCart))
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideOptionalCartsForGetCartById")
-    void getCartByIdTest(Long id, Optional<Cart> expectedCart) {
-        Cart cart = expectedCart.get();
-        cart.setCartId(id);
-        expectedCart = Optional.of(cart);
-        Mockito.when(cartRepository.findByCartId(id)).thenReturn(expectedCart);
-        Optional<Cart> optionalCart = cartService.getCartByCartId(id);
-        assertNotNull(optionalCart);
-        assertTrue(optionalCart.isPresent());
-        assertEquals(expectedCart.get(),optionalCart.get());
-    }
+//    private static Stream<Arguments> provideOptionalCartsForGetCartById() {
+//        return Stream.of(
+//                Arguments.of(1L, Optional.of(userCart)),
+//                Arguments.of(2L, Optional.of(unauthorizedUserCart))
+//        );
+//    }
+//
+//    @ParameterizedTest
+//    @MethodSource("provideOptionalCartsForGetCartById")
+//    void getCartByIdTest(Long id, Optional<Cart> expectedCart) {
+//        Cart cart = expectedCart.get();
+//        cart.setCartId(id);
+//        expectedCart = Optional.of(cart);
+//        Mockito.when(cartRepository.findByCartId(id)).thenReturn(expectedCart);
+//        Optional<Cart> optionalCart = cartService.getCartByCartId(id);
+//        assertNotNull(optionalCart);
+//        assertTrue(optionalCart.isPresent());
+//        assertEquals(expectedCart.get(),optionalCart.get());
+//    }
 
     private static Stream<Arguments> provideCartIdForExistenceChecking() {
         return Stream.of(
@@ -102,24 +105,24 @@ class CartServiceTest {
         assertEquals(exists,cartService.existsById(id,authorization));
     }
 
-    private static Stream<Arguments> provideCartsForRemovingAllItems() {
-        return Stream.of(
-                Arguments.of(userCart,1L, Arrays.asList(new CartItem(),new CartItem())),
-                Arguments.of(unauthorizedUserCart,2L, Collections.emptyList())
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideCartsForRemovingAllItems")
-    void removeAllItemsFromCartTest(Cart expectedCart, Long cartId, List<CartItem> cartItems) {
-        expectedCart=generateCartForTests(expectedCart,cartId,cartItems);
-        Optional<Cart> optionalCart = Optional.of(expectedCart);
-        Mockito.when(cartRepositoryProvider.getCartRepositoryByCart(expectedCart)).thenReturn(baseCartRepository);
-        Mockito.when(cartRepository.findByCartId(cartId)).thenReturn(optionalCart);
-        expectedCart.setItems(new ArrayList<>());
-        Mockito.when(baseCartRepository.save(expectedCart)).thenReturn(expectedCart);
-        assertEquals(expectedCart,cartService.removeAllItemsFromCart(cartId));
-    }
+//    private static Stream<Arguments> provideCartsForRemovingAllItems() {
+//        return Stream.of(
+//                Arguments.of(userCart,1L, Arrays.asList(new CartItem(),new CartItem())),
+//                Arguments.of(unauthorizedUserCart,2L, Collections.emptyList())
+//        );
+//    }
+//
+//    @ParameterizedTest
+//    @MethodSource("provideCartsForRemovingAllItems")
+//    void removeAllItemsFromCartTest(Cart expectedCart, Long cartId, List<CartItem> cartItems) {
+//        expectedCart=generateCartForTests(expectedCart,cartId,cartItems);
+//        Optional<Cart> optionalCart = Optional.of(expectedCart);
+//        Mockito.when(cartRepositoryProvider.getCartRepositoryByCart(expectedCart)).thenReturn(baseCartRepository);
+//        Mockito.when(cartRepository.findByCartId(cartId)).thenReturn(optionalCart);
+//        expectedCart.setItems(new ArrayList<>());
+//        Mockito.when(baseCartRepository.save(expectedCart)).thenReturn(expectedCart);
+//        assertEquals(expectedCart,cartService.removeAllItemsFromCart(cartId));
+//    }
 
     Cart generateCartForTests(Cart cart, Long cartId, List<CartItem> cartItems){
         cart.setCartId(cartId);

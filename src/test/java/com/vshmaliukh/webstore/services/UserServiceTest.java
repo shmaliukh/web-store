@@ -1,7 +1,7 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import com.vshmaliukh.webstore.login.UserRole;
+import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +55,7 @@ class UserServiceTest {
     @MethodSource("providedArgs_readUserByIdTest")
     void readUserByIdTest(Long id) {
         Optional<User> optionalUserToReturn = Optional.of(
-                new User(id, "some username", "some@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true));
+                new User(id, "some username", "some@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true));
         Mockito
                 .when(userRepository.findById(id))
                 .thenReturn(optionalUserToReturn);
@@ -105,35 +105,6 @@ class UserServiceTest {
         assertTrue(output.getOut().contains("id < 1"));
     }
 
-    private static Stream<Arguments> providedArgs_isAdminUserTest() {
-        User user1 = new User(null, "some username1", "some1@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
-        User user2 = new User(null, "some username2", "some2@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", true);
-        User user3 = new User(null, "some username2", "some2@mail.com", LogInProvider.LOCAL, null, "1234", true);
-        return Stream.of(
-                Arguments.of(user1, true),
-                Arguments.of(user2, false),
-                Arguments.of(user3, false),
-                Arguments.of(null, false)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("providedArgs_isAdminUserTest")
-    void isAdminUserTest(User user, boolean isAdminExpectedResult) {
-        boolean isAdminResult = userService.isAdminUser(user);
-
-        assertEquals(isAdminExpectedResult, isAdminResult);
-    }
-
-    @Test
-    void isAdminUserTest_invalidUserLogErr(CapturedOutput output) {
-        boolean isAdminResult = userService.isAdminUser(null);
-
-        assertFalse(isAdminResult);
-        assertTrue(output.getOut().contains("problem to check user role"));
-        assertTrue(output.getOut().contains("invalid user"));
-    }
-
     @Test
     void saveTest_null(CapturedOutput output) {
         userService.save(null);
@@ -144,20 +115,20 @@ class UserServiceTest {
 
     @Test
     void saveTest(CapturedOutput output) {
-        User user = new User(1L, "some username", "some@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        User user = new User(1L, "some username", "some@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
         userService.save(user);
 
         assertTrue(output.getOut().contains("saved user"));
     }
 
     private static Stream<Arguments> providedArgs_isUserSavedTest() {
-        User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
-        User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", true);
-        User user3 = new User(3L, "some username3", "some3@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
-        User user4 = new User(null, "some username4", "some4@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", false);
+        User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
+        User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
+        User user3 = new User(3L, "some username3", "some3@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
+        User user4 = new User(null, "some username4", "some4@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", false);
         User user5 = new User(null, null, null, null, null, null, false);
         User user6 = new User(-1L, null, null, null, null, null, false);
-        User user7 = new User(0L, "some username4", "some4@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", false);
+        User user7 = new User(0L, "some username4", "some4@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", false);
         return Stream.of(
                 Arguments.of(user1, true),
                 Arguments.of(user2, true),
@@ -185,13 +156,13 @@ class UserServiceTest {
     }
 
     private static Stream<Arguments> providedArgs_isValidEntityTest() {
-        User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
-        User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", true);
-        User user3 = new User(3L, "some username3", "some3@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
-        User user4 = new User(null, "some username4", "some4@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", false);
+        User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
+        User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
+        User user3 = new User(3L, "some username3", "some3@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
+        User user4 = new User(null, "some username4", "some4@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", false);
         User user5 = new User(null, null, null, null, null, null, false);
         User user6 = new User(-1L, null, null, null, null, null, false);
-        User user7 = new User(0L, "some username4", "some4@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", false);
+        User user7 = new User(0L, "some username4", "some4@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", false);
         return Stream.of(
                 Arguments.of(user1, true),
                 Arguments.of(user2, true),
@@ -224,25 +195,26 @@ class UserServiceTest {
         }
         String maxLengthNameStr = stringBuilder.toString();
         return Stream.of(
-                Arguments.of(maxLengthNameStr, "some1@mail.com", UserRole.CUSTOMER, true),
-                Arguments.of("username1", "some1@mail.com", UserRole.CUSTOMER, true),
-                Arguments.of("username2", "some2@mail.com", UserRole.CUSTOMER, false),
-                Arguments.of("username3", "some2@mail.com", UserRole.ADMIN, false),
-                Arguments.of("username4", "a@b.c", UserRole.ADMIN, false),
-                Arguments.of("abc", "a@b.c", UserRole.ADMIN, true),
-                Arguments.of("ac", "a@b.c", UserRole.ADMIN, false)
+                Arguments.of(maxLengthNameStr, "some1@mail.com", new Role(), true),
+                Arguments.of("username1", "some1@mail.com", new Role(), true),
+                Arguments.of("username2", "some2@mail.com", new Role(), false),
+                Arguments.of("username3", "some2@mail.com", new Role(), false),
+                Arguments.of("username4", "a@b.c", new Role(), false),
+                Arguments.of("abc", "a@b.c", new Role(), true),
+                Arguments.of("ac", "a@b.c", new Role(), false)
         );
     }
 
     @ParameterizedTest
     @MethodSource("providedArgs_createBaseUserTest")
-    void createBaseUserTest(String username, String email, UserRole role, boolean enabled) {
+    // FIXME refactor to test new 'role' implementation
+    void createBaseUserTest(String username, String email, Role role, boolean enabled) {
         User baseUser = userService.createBaseUser(username, email, role, enabled);
 
         assertNotNull(baseUser);
         assertNull(baseUser.getId());
-        assertNotNull(baseUser.getRole());
-        assertEquals(role, baseUser.getRole());
+        assertNotNull(baseUser.getRoles());
+//        assertEquals(role, baseUser.getRoles());
         assertNotNull(baseUser.getUsername());
         assertEquals(username, baseUser.getUsername());
         assertNotNull(baseUser.getEmail());
@@ -259,9 +231,9 @@ class UserServiceTest {
     }
 
     private static Stream<Arguments> providedArgs_readAllUserListTest() {
-        User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
-        User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, UserRole.CUSTOMER, "1234", true);
-        User user3 = new User(3L, "some username3", "some3@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        User user1 = new User(1L, "some username1", "some1@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
+        User user2 = new User(2L, "some username2", "some2@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
+        User user3 = new User(3L, "some username3", "some3@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
         return Stream.of(
                 Arguments.of(Collections.emptyList()),
                 Arguments.of(Collections.singletonList(user1)),

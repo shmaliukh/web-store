@@ -323,7 +323,7 @@ class OrderServiceTest {
     @ParameterizedTest
     @MethodSource("providedArgs_createEmptyOrderTest")
     void createEmptyOrderTest(Long userId, String status, String comment) {
-        User user = new User(userId, "some name", "some@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true);
+        User user = new User(userId, "some name", "some@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true);
         Mockito
                 .when(userService.readUserById(userId))
                 .thenReturn(Optional.of(user));
@@ -371,7 +371,7 @@ class OrderServiceTest {
         Long id = 1L;
         Mockito
                 .when(userService.readUserById(id))
-                .thenReturn(Optional.of(new User(id, "some name", "some@mail.com", LogInProvider.LOCAL, UserRole.ADMIN, "1234", true)));
+                .thenReturn(Optional.of(new User(id, "some name", "some@mail.com", LogInProvider.LOCAL, Collections.emptyList(), "1234", true)));
         Optional<Order> optionalOrder = orderService.createEmptyOrder(id, "", "some comment");
 
         assertNotNull(optionalOrder);

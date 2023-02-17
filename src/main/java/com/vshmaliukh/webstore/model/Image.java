@@ -22,7 +22,7 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonTypeInfo(use = NAME, include = PROPERTY)
 @JsonSubTypes({@JsonSubTypes.Type(value = ItemImage.class, name = "itemImage")})
-public class Image extends AuditModel{
+public class Image extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +35,7 @@ public class Image extends AuditModel{
     @Lob
     @ToString.Exclude
     @Column(name = "image", length = Integer.MAX_VALUE)
+    // FIXME refactor image data storage (save images files on local machine instead of database)
     private byte[] imageData;
 
     @Override

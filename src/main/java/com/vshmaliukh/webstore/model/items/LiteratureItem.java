@@ -7,15 +7,13 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import static com.vshmaliukh.webstore.ConstantsForEntities.PAGES_COLUMN;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class LiteratureItem extends Item {
 
-    @Column(name = PAGES_COLUMN, nullable = false)
+    @Column(nullable = false)
     private int pages;
 
     protected LiteratureItem(Integer id,

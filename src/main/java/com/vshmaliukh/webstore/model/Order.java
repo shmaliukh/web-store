@@ -21,7 +21,7 @@ import static com.vshmaliukh.webstore.ConstantsForEntities.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = ORDER_TABLE)
+@Table(name = "Orders")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderProducts")
 public class Order extends AuditModel {
 
@@ -34,14 +34,11 @@ public class Order extends AuditModel {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-    @Column(name = ORDER_DATE_COLUMN, nullable = false)
+    @Column(name = "date_created", nullable = false)
     @JsonFormat(pattern = DD_MM_YYYY_ORDER_DATE_PATTERN_STR)
     private Date dateCreated;
 
-    @Column(name = ORDER_STATUS_COLUMN)
     private String status;
-
-    @Column(name = ORDER_COMMENT_COLUMN)
     private String comment;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
