@@ -42,20 +42,37 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (alreadySetup) return;
-        Privilege readPrivilege
-                = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege writePrivilege
-                = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
+        Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
+        Privilege createPrivilege = createPrivilegeIfNotFound("CREATE_PRIVILEGE");
+        Privilege updatePrivilege = createPrivilegeIfNotFound("UPDATE_PRIVILEGE");
+        Privilege deletePrivilege = createPrivilegeIfNotFound("DELETE_PRIVILEGE");
 
-        List<Privilege> adminPrivileges = Arrays.asList(
-                readPrivilege, writePrivilege);
-        createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+        List<Privilege> devPrivilegesList = Arrays.asList(readPrivilege, updatePrivilege);
+        List<Privilege> adminPrivilegeList = Arrays.asList(readPrivilege, updatePrivilege);
+
+        createRoleIfNotFound("ROLE_DEV", devPrivilegesList);
+        createRoleIfNotFound("ROLE_ADMIN", adminPrivilegeList);
+        // TODO config 'ROLE_STAFF' privileges
+        createRoleIfNotFound("ROLE_STAFF", Collections.singletonList(readPrivilege));
         createRoleIfNotFound("ROLE_USER", Collections.singletonList(readPrivilege));
 
+        saveDefaultDev();
         saveDefaultAdmin();
         saveDefaultUser();
 
         alreadySetup = true;
+    }
+
+    private void saveDefaultDev() {
+        Role devRole = roleRepository.findByName("ROLE_DEV");
+        User user = new User();
+        user.setUsername("dev");
+        user.setLogInProvider(LogInProvider.LOCAL);
+        user.setPassword(passwordEncoder.encode("000"));
+        user.setEmail("dev@mail.com");
+        user.setRoles(Collections.singletonList(devRole));
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 
     private void saveDefaultAdmin() {
@@ -84,7 +101,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Transactional
     Privilege createPrivilegeIfNotFound(String name) {
-
         Privilege privilege = privilegeRepository.findByName(name);
         if (privilege == null) {
             privilege = new Privilege();

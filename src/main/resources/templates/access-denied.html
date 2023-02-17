@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Access denied</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -12,6 +12,13 @@
     <!--  TODO  -->
     <h1>Access denied.</h1>
 <!--    <h2 th:text="|Path: ${path}|"></h2>-->
+
+    <div sec:authorize="isAuthenticated()">
+        User info: <br>
+        username: '<b><span sec:authentication="name">Username</span></b>' <br>
+        User authorities: '<i><span sec:authentication="principal.authorities">Roles</span></i>'
+<!--        &nbsp;-->
+    </div>
 </div>
 
 <footer th:insert="/blocks/page-blocks :: footer"></footer>

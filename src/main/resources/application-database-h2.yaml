@@ -2,6 +2,7 @@ spring:
   h2:
     console:
       enabled: true
+      path: !!str /h2
   datasource:
     url: ${h2.url}
     username: ${h2.username}

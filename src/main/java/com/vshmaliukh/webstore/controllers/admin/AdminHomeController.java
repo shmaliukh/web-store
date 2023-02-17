@@ -60,7 +60,7 @@ public class AdminHomeController {
     @GetMapping("/exit")
     public ModelAndView exit(ModelMap modelMap) {
         // TODO implement exit
-        return new ModelAndView("redirect:/home", modelMap);
+        return new ModelAndView("redirect:/logout", modelMap);
     }
 
 }

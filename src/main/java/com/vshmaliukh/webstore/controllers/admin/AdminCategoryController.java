@@ -225,18 +225,4 @@ public class AdminCategoryController {
         return ResponseEntity.badRequest().build();
     }
 
-    // TODO use @ControllerAdvice exception handlers for all admin controllers
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException manve) {
-        Map<String, String> errors = new HashMap<>();
-        List<FieldError> fieldErrorList = AdminControllerUtils.getFieldErrorList(manve);
-        for (FieldError fieldError : fieldErrorList) {
-            String fieldName = fieldError.getField();
-            String errorMessage = fieldError.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        }
-        return errors;
-    }
-
 }
