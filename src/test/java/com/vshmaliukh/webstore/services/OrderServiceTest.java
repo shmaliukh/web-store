@@ -407,7 +407,7 @@ class OrderServiceTest {
 
     private static Stream<Arguments> providedArgs_changeOrderStatusTest() {
         return Stream.of(
-                Arguments.of(new Order(), OrderStatus.Completed.getStatus().getStatusName()),
+                Arguments.of(new Order(), OrderStatus.COMPLETED.getStatus().getStatusName()),
                 Arguments.of(new Order(), "some status"),
                 Arguments.of(new Order(), "s")
         );
@@ -427,7 +427,7 @@ class OrderServiceTest {
 
     @Test
     void changeOrderStatusTest_orderIsNotPresentLogErr(CapturedOutput output) {
-        orderService.changeOrderStatus(Optional.empty(), OrderStatus.Pending.getStatus().getStatusName());
+        orderService.changeOrderStatus(Optional.empty(), OrderStatus.PENDING.getStatus().getStatusName());
 
         assertTrue(output.getOut().contains("problem to change order status"));
         assertTrue(output.getOut().contains("order is not present"));
@@ -452,7 +452,7 @@ class OrderServiceTest {
     @Test
     void setUpSoldQuantityIfOrderIsCompletedTest_successfullyChangedLogInfo(CapturedOutput output) {
         Order order = new Order();
-        order.setStatus(OrderStatus.Completed.getStatus().getStatusName());
+        order.setStatus(OrderStatus.COMPLETED.getStatus().getStatusName());
         Mockito
                 .when(orderItemService.readOrderItemListByOrder(order))
                 .thenReturn(Collections.emptyList());
@@ -463,7 +463,7 @@ class OrderServiceTest {
 
     private static Stream<Arguments> providedArgs_setUpSoldQuantityIfOrderIsCompletedTest() {
         Order order = new Order();
-        order.setStatus(OrderStatus.Completed.getStatus().getStatusName());
+        order.setStatus(OrderStatus.COMPLETED.getStatus().getStatusName());
 
         Book book = new Book(1, "book name", 1, 1, 1, 1, "some description", "some status", true, 0, 123, "some author", new Date());
         Magazine magazine = new Magazine(2, "magazine name", 2, 2, 2, 2, "some description", "some status", true, 0, 345);

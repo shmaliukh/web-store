@@ -1,11 +1,9 @@
 package com.vshmaliukh.webstore;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@ToString
+@Data
 @AllArgsConstructor
 public class Status {
 
