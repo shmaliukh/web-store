@@ -34,7 +34,7 @@ function removeItem(itemId){
 function removeAllItems(){
     sendJSON(removeAllItemsLink,DELETE_METHOD).then(res=>{
         removeElement("cart","allCartItems");
-        setCartItemsTotalQuantityInPage(0);
+        setNewValueInPage('totalItems',0);
         setCartItemsTotalPriceInPage(0);
     });
 }
@@ -63,15 +63,11 @@ function setNewValueInPage(tagId,newValue){
 }
 
 function incCartItemsTotalQuantityInPage(){
-    setCartItemsTotalQuantityInPage((parseInt(document.getElementById("totalItems").textContent)+1).toString());
+    setNewValueInPage('totalItems',(parseInt(document.getElementById("totalItems").textContent)+1).toString());
 }
 
 function minusCartItemsTotalQuantityInPage(dif){
-    setCartItemsTotalQuantityInPage((parseInt(document.getElementById("totalItems").textContent,10)-dif).toString());
-}
-
-function setCartItemsTotalQuantityInPage(quantity){
-    document.getElementById("totalItems").innerHTML = quantity;
+    setNewValueInPage('totalItems',(parseInt(document.getElementById("totalItems").textContent,10)-dif).toString());
 }
 
 function setCartItemsTotalPriceInPage(price){
