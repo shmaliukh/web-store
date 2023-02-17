@@ -7,7 +7,7 @@ app:
     login:
       viaGoogle: !!bool false
   rememberMe:
-    time: !!int 8400
+    time: !!int 1209600 # two weeks
     key: !!str secretAndUnique
     cookieName: !!str rememberMe
 

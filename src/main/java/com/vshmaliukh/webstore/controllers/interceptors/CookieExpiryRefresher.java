@@ -21,6 +21,7 @@ public class CookieExpiryRefresher implements HandlerInterceptor {
 
     @Autowired
     public CookieExpiryRefresher(@Value("${app.rememberMe.time:1209600}") int rememberMeTime,
+                                 // default rememberMeTime is two weeks (1209600 seconds)
                                  @Value("${app.rememberMe.cookieName:rememberMe}") String rememberMeCookieName) {
         this.rememberMeTime = rememberMeTime;
         this.rememberMeCookieName = rememberMeCookieName;

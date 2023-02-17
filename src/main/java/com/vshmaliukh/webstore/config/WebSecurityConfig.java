@@ -27,7 +27,8 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.OAUTH_
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Value("${app.rememberMe.time:1000}")
+    // default rememberMeTime is two weeks (1209600 seconds)
+    @Value("${app.rememberMe.time:1209600}")
     private int rememberMeTime;
 
     @Value("${app.rememberMe.cookieName:rememberMe}")
@@ -56,7 +57,7 @@ public class WebSecurityConfig {
     public WebSecurityConfig(UserService userService,
                              CustomOAuth2UserService oauthUserService,
                              CustomUserDetailsService userDetailsService,
-                             CustomAccessDeniedHandler customAccessDeniedHandler, CustomAuditorAware customAuditorAware) {
+                             CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.userService = userService;
         this.oauthUserService = oauthUserService;
         this.userDetailsService = userDetailsService;
