@@ -34,12 +34,12 @@ public abstract class AuditModel implements Serializable {
     @LastModifiedDate
     private Date updatedAt;
 
-    @Column(name = "created_by")
     @CreatedBy
-    private String createdBy;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private User createdBy;
 
-    @Column(name = "modified_by")
     @LastModifiedBy
-    private String modifiedBy;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private User modifiedBy;
 
 }

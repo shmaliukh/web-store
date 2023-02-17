@@ -1,6 +1,7 @@
 package com.vshmaliukh.webstore.config;
 
 import com.vshmaliukh.webstore.login.CustomAuditorAware;
+import com.vshmaliukh.webstore.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -17,7 +18,7 @@ public class AuditingConfig {
     }
 
     @Bean(name = "aware")
-    public AuditorAware<String> auditorProvider() {
+    public AuditorAware<User> auditorProvider() {
         return customAuditorAware;
     }
 

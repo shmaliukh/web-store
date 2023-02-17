@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 @Transactional
 @AllArgsConstructor
-public class MyUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
