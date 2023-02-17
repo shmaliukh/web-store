@@ -50,7 +50,7 @@
                         <td class="align-middle" th:text="${user.getLogInProvider()}">Provider</td>
                         <td class="align-middle">
                             <input class="form-control" type="text" name="role"
-                                   th:value="${user.getRole()}"></td>
+                                   th:value="${user.getRoles()}"></td>
                         <td class="align-middle">
                             <input class="form-check-input" type="checkbox" name="enabled" id="checkbox"
                                    th:value="${user.isEnabled()}" th:checked="${user.isEnabled()}">

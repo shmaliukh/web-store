@@ -48,7 +48,7 @@
                     <td class="align-middle" th:text="${user.getUsername()}">Username</td>
                     <td class="align-middle" th:text="${user.getEmail()}">Email</td>
                     <td class="align-middle" th:text="${user.getLogInProvider()}">Provider</td>
-                    <td class="align-middle" th:text="${user.getRole()}">UserTole</td>
+                    <td class="align-middle" th:text="${user.getRoles()}">UserTole</td>
                     <td><input class="form-check-input align-middle" type="checkbox" name="enable"
                                th:value="${user.isEnabled()}" th:checked="${user.isEnabled()}"
                                disabled>
