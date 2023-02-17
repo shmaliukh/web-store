@@ -7,18 +7,18 @@ const PUT_METHOD = "PUT";
 const DELETE_METHOD = "DELETE";
 function incCartItem(itemId){
     sendJSON(incItemLink+itemId, PUT_METHOD).then(res=>{
-        changeCartItemPriceInPage(itemId,newCartItem.item.price*newCartItem.quantity);
+        setNewValueInPage('cartItemPrice'+itemId,newCartItem.item.price*newCartItem.quantity);
         changeCartItemQuantityInPage(itemId,newCartItem.quantity);
-        incCartItemsAllQuantityInPage();
+        incCartItemsTotalQuantityInPage();
         changeCartItemsTotalPriceOnDif(newCartItem.item.price,true);
     });
 }
 
 function decCartItem(itemId){
     sendJSON(decItemLink+itemId, PUT_METHOD).then(res=>{
-        changeCartItemPriceInPage(itemId,newCartItem.item.price*newCartItem.quantity);
+        setNewValueInPage('cartItemPrice'+itemId,newCartItem.item.price*newCartItem.quantity);
         changeCartItemQuantityInPage(itemId,newCartItem.quantity);
-        minusCartItemsAllQuantityInPage(1);
+        minusCartItemsTotalQuantityInPage(1);
         changeCartItemsTotalPriceOnDif(newCartItem.item.price, Boolean(false));
     });
 }
@@ -27,14 +27,14 @@ function removeItem(itemId){
     sendJSON(removeOneItemLink+itemId, PUT_METHOD).then(res => {
         removeElement("allCartItems", "cartItem"+itemId);
         changeCartItemsTotalPriceOnDif(newCartItem.item.price*newCartItem.quantity,Boolean(false));
-        minusCartItemsAllQuantityInPage(newCartItem.quantity);
+        minusCartItemsTotalQuantityInPage(newCartItem.quantity);
     });
 }
 
 function removeAllItems(){
     sendJSON(removeAllItemsLink,DELETE_METHOD).then(res=>{
         removeElement("cart","allCartItems");
-        setCartItemsAllQuantityInPage(0);
+        setCartItemsTotalQuantityInPage(0);
         setCartItemsTotalPriceInPage(0);
     });
 }
@@ -57,24 +57,31 @@ async function sendJSON(link, method) {
             newCartItem = data;
         });
 }
-function changeCartItemPriceInPage(itemId, newPrice){
-    document.getElementById('cartItemPrice' + itemId).innerHTML = newPrice;
+
+function setNewValueInPage(tagId,newValue){
+    document.getElementById(tagId).innerHTML = newValue;
 }
+
 function changeCartItemQuantityInPage(itemId, newQuantity){
     document.getElementById('cartItemQuantity' + itemId).innerHTML = newQuantity;
 }
-function incCartItemsAllQuantityInPage(){
-    document.getElementById("totalItems").innerHTML = (parseInt(document.getElementById("totalItems").textContent)+1).toString();
+
+function incCartItemsTotalQuantityInPage(){
+    setCartItemsTotalQuantityInPage((parseInt(document.getElementById("totalItems").textContent)+1).toString());
 }
-function minusCartItemsAllQuantityInPage(dif){
-    document.getElementById("totalItems").innerHTML = (parseInt(document.getElementById("totalItems").textContent,10)-dif).toString();
+
+function minusCartItemsTotalQuantityInPage(dif){
+    setCartItemsTotalQuantityInPage((parseInt(document.getElementById("totalItems").textContent,10)-dif).toString());
 }
-function setCartItemsAllQuantityInPage(quantity){
+
+function setCartItemsTotalQuantityInPage(quantity){
     document.getElementById("totalItems").innerHTML = quantity;
 }
+
 function setCartItemsTotalPriceInPage(price){
     document.getElementById("totalPrice").innerHTML = price;
 }
+
 function changeCartItemsTotalPriceOnDif(dif,add){
     let newPrice;
     let oldPrice = document.getElementById("totalPrice").textContent;
