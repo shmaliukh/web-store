@@ -5,10 +5,13 @@ let removeAllItemsLink = "/shopping-cart/remove-all-items";
 let newCartItem;
 const PUT_METHOD = "PUT";
 const DELETE_METHOD = "DELETE";
+
+const ID_CART_ITEM_QUANTITY = "cartItemQuantity";
+const ID_CART_ITEM_PRICE = "cartItemPrice";
 function incCartItem(itemId){
     sendJSON(incItemLink+itemId, PUT_METHOD).then(res=>{
-        setNewValueInPage('cartItemPrice'+itemId,newCartItem.item.price*newCartItem.quantity);
-        setNewValueInPage('cartItemQuantity'+itemId,newCartItem.quantity);
+        setNewValueInPage(ID_CART_ITEM_PRICE+itemId,newCartItem.item.price*newCartItem.quantity);
+        setNewValueInPage(ID_CART_ITEM_QUANTITY+itemId,newCartItem.quantity);
         incCartItemsTotalQuantityInPage();
         changeCartItemsTotalPriceOnDif(newCartItem.item.price,true);
     });
@@ -16,8 +19,8 @@ function incCartItem(itemId){
 
 function decCartItem(itemId){
     sendJSON(decItemLink+itemId, PUT_METHOD).then(res=>{
-        setNewValueInPage('cartItemPrice'+itemId,newCartItem.item.price*newCartItem.quantity);
-        changeCartItemQuantityInPage(itemId,newCartItem.quantity);
+        setNewValueInPage(ID_CART_ITEM_PRICE+itemId,newCartItem.item.price*newCartItem.quantity);
+        setNewValueInPage(ID_CART_ITEM_PRICE+itemId,newCartItem.quantity);
         minusCartItemsTotalQuantityInPage(1);
         changeCartItemsTotalPriceOnDif(newCartItem.item.price, Boolean(false));
     });
@@ -34,8 +37,8 @@ function removeItem(itemId){
 function removeAllItems(){
     sendJSON(removeAllItemsLink,DELETE_METHOD).then(res=>{
         removeElement("cart","allCartItems");
-        setNewValueInPage('totalItems',0);
-        setCartItemsTotalPriceInPage(0);
+        setNewValueInPage("totalItems",0);
+        setNewValueInPage("totalPrice",0);
     });
 }
 async function sendJSON(link, method) {
@@ -63,15 +66,11 @@ function setNewValueInPage(tagId,newValue){
 }
 
 function incCartItemsTotalQuantityInPage(){
-    setNewValueInPage('totalItems',(parseInt(document.getElementById("totalItems").textContent)+1).toString());
+    setNewValueInPage("totalItems",(parseInt(document.getElementById("totalItems").textContent)+1).toString());
 }
 
 function minusCartItemsTotalQuantityInPage(dif){
-    setNewValueInPage('totalItems',(parseInt(document.getElementById("totalItems").textContent,10)-dif).toString());
-}
-
-function setCartItemsTotalPriceInPage(price){
-    document.getElementById("totalPrice").innerHTML = price;
+    setNewValueInPage("totalItems",(parseInt(document.getElementById("totalItems").textContent,10)-dif).toString());
 }
 
 function changeCartItemsTotalPriceOnDif(dif,add){
