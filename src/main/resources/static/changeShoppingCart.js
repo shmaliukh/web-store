@@ -8,7 +8,7 @@ const DELETE_METHOD = "DELETE";
 function incCartItem(itemId){
     sendJSON(incItemLink+itemId, PUT_METHOD).then(res=>{
         setNewValueInPage('cartItemPrice'+itemId,newCartItem.item.price*newCartItem.quantity);
-        changeCartItemQuantityInPage(itemId,newCartItem.quantity);
+        setNewValueInPage('cartItemQuantity'+itemId,newCartItem.quantity);
         incCartItemsTotalQuantityInPage();
         changeCartItemsTotalPriceOnDif(newCartItem.item.price,true);
     });
@@ -60,10 +60,6 @@ async function sendJSON(link, method) {
 
 function setNewValueInPage(tagId,newValue){
     document.getElementById(tagId).innerHTML = newValue;
-}
-
-function changeCartItemQuantityInPage(itemId, newQuantity){
-    document.getElementById('cartItemQuantity' + itemId).innerHTML = newQuantity;
 }
 
 function incCartItemsTotalQuantityInPage(){
