@@ -58,12 +58,13 @@ public class AdminUserController {
     }
 
     @PostMapping("/create")
+    // TODO refactor
     public ModelAndView doPostCreate(@RequestParam("userName") String userName,
                                      @RequestParam("email") String email,
                                      @RequestParam("role") Role role,
                                      @RequestParam(value = "enabled", defaultValue = "false") boolean enabled,
                                      ModelMap modelMap) {
-        User user = userService.createBaseUser(userName, email, role, enabled);
+        User user = userService.createBaseUser(userName, email, enabled);
         ResponseEntity<Void> response = saveUser(user);
         if (!response.getStatusCode().isError()) {
             return new ModelAndView("redirect:/admin/user/catalog", modelMap);
@@ -110,13 +111,14 @@ public class AdminUserController {
     }
 
     @PostMapping("/edit/{userId}")
+    // TODO refactor
     public ModelAndView doPostEdit(@PathVariable(name = "userId") Long userId,
                                    @RequestParam("userName") String userName,
                                    @RequestParam("email") String email,
                                    @RequestParam("role") Role role,
                                    @RequestParam(value = "enabled", defaultValue = "false") boolean enabled,
                                    ModelMap modelMap) {
-        User user = userService.createBaseUser(userName, email, role, enabled);
+        User user = userService.createBaseUser(userName, email, enabled);
         user.setId(userId);
         ResponseEntity<Void> response = saveUser(user);
         if (!response.getStatusCode().isError()) {

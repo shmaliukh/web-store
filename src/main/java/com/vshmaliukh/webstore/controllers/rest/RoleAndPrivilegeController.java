@@ -2,7 +2,7 @@ package com.vshmaliukh.webstore.controllers.rest;
 
 import com.vshmaliukh.webstore.model.Privilege;
 import com.vshmaliukh.webstore.model.Role;
-import com.vshmaliukh.webstore.repositories.PrivilegeRepository;
+import com.vshmaliukh.webstore.services.PrivilegeService;
 import com.vshmaliukh.webstore.services.RoleService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +16,18 @@ import java.util.List;
 public class RoleAndPrivilegeController {
 
     private final RoleService roleService;
-    private final PrivilegeRepository privilegeRepository;
+    private final PrivilegeService privilegeService;
 
-    public RoleAndPrivilegeController(RoleService roleService, PrivilegeRepository privilegeRepository) {
+    public RoleAndPrivilegeController(RoleService roleService,
+                                      PrivilegeService privilegeService) {
         this.roleService = roleService;
-        this.privilegeRepository = privilegeRepository;
+        this.privilegeService = privilegeService;
     }
 
     @GetMapping("/privileges")
     @PreAuthorize("hasAuthority('PRIVILEGE_READ_PRIVILEGES')")
     public ResponseEntity<List<Privilege>> readAllPrivilegeList(){
-        List<Privilege> privilegeList = privilegeRepository.findAll();
+        List<Privilege> privilegeList = privilegeService.readAllRoleList();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(privilegeList);

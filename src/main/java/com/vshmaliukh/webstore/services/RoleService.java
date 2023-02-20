@@ -21,10 +21,6 @@ public class RoleService implements EntityValidator<Role> {
         this.roleRepository = roleRepository;
     }
 
-    public List<Role> readAllRoleList() {
-        return roleRepository.findAll();
-    }
-
     @Transactional
     public void createRoleIfNotFound(String name, Collection<Privilege> privileges) {
         Role role = roleRepository.findByNameIgnoreCase(name);
@@ -41,8 +37,12 @@ public class RoleService implements EntityValidator<Role> {
         if (StringUtils.isNotBlank(name)) {
             return roleRepository.findByNameIgnoreCase(name);
         }
-        log.warn("problem to find role // name is blank ");
+        log.warn("problem to find role by name // name is blank ");
         return null;
+    }
+
+    public List<Role> readAllRoleList() {
+        return roleRepository.findAll();
     }
 
 }

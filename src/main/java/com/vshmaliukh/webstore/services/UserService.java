@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.services;
 
 import com.vshmaliukh.webstore.login.LogInProvider;
-import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import javax.transaction.Transactional;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static com.vshmaliukh.webstore.login.LogInProvider.LOCAL;
 
@@ -18,10 +20,10 @@ import static com.vshmaliukh.webstore.login.LogInProvider.LOCAL;
 @AllArgsConstructor
 public class UserService implements EntityValidator<User> {
 
-    public static final String DEFAULT_PASSWORD = "1234";
+    public static final String DEFAULT_PASSWORD = "000";
 
     @Getter
-    final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public Optional<User> readUserById(Long userId) {
         if(userId != null && userId > 0){
@@ -62,20 +64,18 @@ public class UserService implements EntityValidator<User> {
                                 //  @Email
                                 String email,
                                 //  @NotEmpty
-                                Role role,
                                 boolean enabled) {
         User user = new User();
         user.setUsername(userName);
         user.setEmail(email);
-        Collection<Role> userRoles = user.getRoles() != null ? user.getRoles() : new ArrayList<>();
-        userRoles.add(role);
-        user.setRoles(userRoles);
+        user.setRoles(Collections.emptyList());
         user.setLogInProvider(LOCAL);
         user.setEnabled(enabled);
         user.setPassword(DEFAULT_PASSWORD);
         return user;
     }
 
+    @Transactional
     public void save(User user) {
         if (isValidEntity(user)) {
             userRepository.save(user);
@@ -106,6 +106,10 @@ public class UserService implements EntityValidator<User> {
                     : " // user is NULL"));
         }
         return isValid;
+    }
+
+    public Optional<User> readUserByUsernameIgnoreCase(String username) {
+        return userRepository.readByUsernameIgnoreCase(username);
     }
 
 }

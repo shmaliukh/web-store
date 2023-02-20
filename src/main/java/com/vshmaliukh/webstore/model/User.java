@@ -1,5 +1,6 @@
 package com.vshmaliukh.webstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vshmaliukh.webstore.login.LogInProvider;
 import lombok.*;
 
@@ -41,6 +42,8 @@ public class User extends AuditModel {
                     name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "role_id"))
+    @ToString.Exclude
+    @JsonIgnore
     private Collection<Role> roles;
 
     @ToString.Exclude

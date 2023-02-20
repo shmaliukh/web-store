@@ -3,48 +3,45 @@ package com.vshmaliukh.webstore.login;
 import com.vshmaliukh.webstore.model.Privilege;
 import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
-import com.vshmaliukh.webstore.repositories.PrivilegeRepository;
-import com.vshmaliukh.webstore.repositories.UserRepository;
+import com.vshmaliukh.webstore.services.PrivilegeService;
 import com.vshmaliukh.webstore.services.RoleService;
+import com.vshmaliukh.webstore.services.UserService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private boolean alreadySetup;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final RoleService roleService;
-    private final PasswordEncoder passwordEncoder;
-    private final PrivilegeRepository privilegeRepository;
+    private final PrivilegeService privilegeService;
 
-    public SetupDataLoader(UserRepository userRepository,
+    public SetupDataLoader(UserService userService,
                            RoleService roleService,
-                           PasswordEncoder passwordEncoder,
-                           PrivilegeRepository privilegeRepository) {
-        this.userRepository = userRepository;
+                           PrivilegeService privilegeService) {
+        this.userService = userService;
         this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
-        this.privilegeRepository = privilegeRepository;
+        this.privilegeService = privilegeService;
     }
 
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (alreadySetup) return;
-        Privilege privilegeRead = createPrivilegeIfNotFound("PRIVILEGE_READ");
-        Privilege privilegeUpdate = createPrivilegeIfNotFound("PRIVILEGE_UPDATE");
-        Privilege privilegeChangePassword = createPrivilegeIfNotFound("PRIVILEGE_CHANGE_PASSWORD");
-        Privilege privilegeReadPrivileges = createPrivilegeIfNotFound("PRIVILEGE_READ_PRIVILEGES");
-        Privilege privilegeReadRoles = createPrivilegeIfNotFound("PRIVILEGE_READ_ROLES");
+        Privilege privilegeRead = privilegeService.createPrivilegeIfNotFound("PRIVILEGE_READ");
+        Privilege privilegeUpdate = privilegeService.createPrivilegeIfNotFound("PRIVILEGE_UPDATE");
+        Privilege privilegeChangePassword = privilegeService.createPrivilegeIfNotFound("PRIVILEGE_CHANGE_PASSWORD");
+        Privilege privilegeReadPrivileges = privilegeService.createPrivilegeIfNotFound("PRIVILEGE_READ_PRIVILEGES");
+        Privilege privilegeReadRoles = privilegeService.createPrivilegeIfNotFound("PRIVILEGE_READ_ROLES");
 
         List<Privilege> devPrivilegesList = Arrays.asList(privilegeRead, privilegeUpdate, privilegeChangePassword,
                 privilegeReadPrivileges, privilegeReadRoles);
@@ -64,32 +61,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         alreadySetup = true;
     }
 
-    private void saveDefaultUser(String devUsername, String userRole) {
-        User userByUsername = userRepository.findByUsernameIgnoreCase(devUsername);
-        if (userByUsername == null) {
-            Role devRole = roleService.findRoleByNameIgnoreCase(userRole);
-            User user = new User();
-            user.setUsername(devUsername);
-            user.setLogInProvider(LogInProvider.LOCAL);
-            user.setPassword(passwordEncoder.encode("000"));
-            user.setEmail(devUsername + "@mail.com");
-            List<Role> roleList = Collections.singletonList(devRole);
-            user.setRoles(roleList);
-            user.setEnabled(true);
-            userRepository.save(user);
-        }
-
-    }
-
-    @Transactional
-    Privilege createPrivilegeIfNotFound(String name) {
-        Privilege privilege = privilegeRepository.findByName(name);
-        if (privilege == null) {
-            privilege = new Privilege();
-            privilege.setName(name);
-            privilegeRepository.save(privilege);
-        }
-        return privilege;
+    private void saveDefaultUser(String username, String userRoleName) {
+        User user;
+        Role role = roleService.findRoleByNameIgnoreCase(userRoleName);
+        List<Role> roleList = Collections.singletonList(role);
+        Optional<User> optionalUser = userService.readUserByUsernameIgnoreCase(username);
+        user = optionalUser.orElseGet(() -> userService.createBaseUser(username, username + "@mail.com", true));
+        user.setRoles(roleList);
+        userService.save(user);
     }
 
 }
