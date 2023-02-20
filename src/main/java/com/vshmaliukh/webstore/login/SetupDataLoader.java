@@ -4,8 +4,8 @@ import com.vshmaliukh.webstore.model.Privilege;
 import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.PrivilegeRepository;
-import com.vshmaliukh.webstore.repositories.RoleRepository;
 import com.vshmaliukh.webstore.repositories.UserRepository;
+import com.vshmaliukh.webstore.services.RoleService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,26 +13,25 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    boolean alreadySetup;
+    private boolean alreadySetup;
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final PrivilegeRepository privilegeRepository;
 
     public SetupDataLoader(UserRepository userRepository,
-                           RoleRepository roleRepository,
+                           RoleService roleService,
                            PasswordEncoder passwordEncoder,
                            PrivilegeRepository privilegeRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
         this.privilegeRepository = privilegeRepository;
     }
@@ -51,11 +50,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 privilegeReadPrivileges, privilegeReadRoles);
         List<Privilege> adminPrivilegeList = Arrays.asList(privilegeRead, privilegeUpdate, privilegeChangePassword);
 
-        createRoleIfNotFound("ROLE_DEV", devPrivilegesList);
-        createRoleIfNotFound("ROLE_ADMIN", adminPrivilegeList);
+
+        roleService.createRoleIfNotFound("ROLE_DEV", devPrivilegesList);
+        roleService.createRoleIfNotFound("ROLE_ADMIN", adminPrivilegeList);
         // TODO config 'ROLE_STAFF' privileges
         //createRoleIfNotFound("ROLE_STAFF", Collections.singletonList(privilegeRead));
-        createRoleIfNotFound("ROLE_USER", Collections.singletonList(privilegeRead));
+        roleService.createRoleIfNotFound("ROLE_USER", Collections.singletonList(privilegeRead));
 
         saveDefaultUser("dev", "ROLE_DEV");
         saveDefaultUser("admin", "ROLE_ADMIN");
@@ -67,7 +67,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private void saveDefaultUser(String devUsername, String userRole) {
         User userByUsername = userRepository.findByUsernameIgnoreCase(devUsername);
         if (userByUsername == null) {
-            Role devRole = roleRepository.findByName(userRole);
+            Role devRole = roleService.findRoleByNameIgnoreCase(userRole);
             User user = new User();
             user.setUsername(devUsername);
             user.setLogInProvider(LogInProvider.LOCAL);
@@ -90,17 +90,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             privilegeRepository.save(privilege);
         }
         return privilege;
-    }
-
-    @Transactional
-    void createRoleIfNotFound(String name, Collection<Privilege> privileges) {
-        Role role = roleRepository.findByName(name);
-        if (role == null) {
-            role = new Role();
-            role.setName(name);
-            role.setPrivileges(privileges);
-            roleRepository.save(role);
-        }
     }
 
 }

@@ -3,8 +3,8 @@ package com.vshmaliukh.webstore.login;
 import com.vshmaliukh.webstore.model.Privilege;
 import com.vshmaliukh.webstore.model.Role;
 import com.vshmaliukh.webstore.model.User;
-import com.vshmaliukh.webstore.repositories.RoleRepository;
 import com.vshmaliukh.webstore.repositories.UserRepository;
+import com.vshmaliukh.webstore.services.RoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +25,7 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -33,9 +33,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             return new org.springframework.security.core.userdetails.User(
                     " ", " ", true, true, true, true,
-                    getAuthorities(Collections.singletonList(roleRepository.findByName("ROLE_USER"))));
+                    getAuthorities(Collections.singletonList(roleService.findRoleByNameIgnoreCase("ROLE_USER"))));
         }
-
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(), user.isEnabled(), true, true,
                 true, getAuthorities(user.getRoles()));
