@@ -30,7 +30,7 @@ public class ShoppingCartController {
         // todo add checking for user authorizing
         boolean authorization = false;
 
-        modelMap = shoppingCartHandler.showShoppingCart(authorization,cartId,modelMap,response);
+        modelMap.addAttribute("items", shoppingCartHandler.showShoppingCart(authorization,cartId,response));
         return new ModelAndView("shopping-cart", modelMap);
     }
 

@@ -45,7 +45,8 @@ public class ShoppingCartHandler {
         return cartService.addNewCart(unauthorizedUserCart);
     }
 
-    public ModelMap showShoppingCart(boolean authorization, Long cartId, ModelMap modelMap, HttpServletResponse response){
+    public List<CartItem> showShoppingCart(boolean authorization, Long cartId, HttpServletResponse response){
+        List<CartItem> cartItems = new ArrayList<>();
         if(!authorization){
             if(cartId==null){
                 cartId = createNewCart().getCartId();
@@ -54,14 +55,13 @@ public class ShoppingCartHandler {
                 );
             }
             Optional<Cart> optionalCart = cartService.getCartByCartId(cartId);
-            List<CartItem> cartItems = new ArrayList<>();
+
             if (optionalCart.isPresent()){
                 Cart cart = optionalCart.get();
                  cartItems = cart.getItems();
             }
-            modelMap.addAttribute("items", cartItems);
         }
-        return modelMap;
+        return cartItems;
     }
 
     public void addItemToCartFromMainPage(boolean authorization, Long cartId, Integer itemId, String type,  HttpServletResponse response){
