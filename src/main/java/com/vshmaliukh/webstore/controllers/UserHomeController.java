@@ -44,7 +44,7 @@ public class UserHomeController {
     }
 
     @PutMapping("/edit-email-user-page")
-    public ResponseEntity<User> editEmailUsersPage(@CookieValue Long userId, @RequestParam String email) {
+    public ResponseEntity<User> editEmailUsersPage(@CookieValue Long userId, @RequestBody String email) {
         Optional<User> optionalUser = userService.readUserById(userId);
         if(optionalUser.isPresent()){
             User user =  optionalUser.get();
@@ -57,11 +57,22 @@ public class UserHomeController {
     }
 
     @PutMapping("/edit-username-user-page")
-    public ResponseEntity<User> editUsernameUsersPage(@CookieValue Long userId, @RequestParam String username) {
+    public ResponseEntity<User> editUsernameUsersPage(@CookieValue Long userId, @RequestBody String username) {
         Optional<User> optionalUser = userService.readUserById(userId);
         if(optionalUser.isPresent()){
             User user =  optionalUser.get();
             user.setUsername(username);
+            userService.save(user);
+            return ResponseEntity.ok(user);  // todo remove User usage - use DTO instead
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/edit-avatar-user-page")
+    public ResponseEntity<User> editAvatarUsersPage(@CookieValue Long userId, @RequestBody String avatar) { // todo implement avatar setting
+        Optional<User> optionalUser = userService.readUserById(userId);
+        if(optionalUser.isPresent()){
+            User user =  optionalUser.get();
             userService.save(user);
             return ResponseEntity.ok(user);  // todo remove User usage - use DTO instead
         }

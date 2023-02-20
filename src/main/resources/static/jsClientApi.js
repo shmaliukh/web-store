@@ -4,6 +4,7 @@ let removeOneItemLink = "/shopping-cart/remove-all/";
 let removeAllItemsLink = "/shopping-cart/remove-all-items";
 let editUsernameLink = "/user-home/edit-username-user-page";
 let editUserEmailLink = "/user-home/edit-email-user-page";
+let editUserAvatarLink = "/user-home/edit-avatar-user-page";
 
 const PUT_METHOD = "PUT";
 const DELETE_METHOD = "DELETE";
