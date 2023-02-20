@@ -129,3 +129,21 @@ function validateUsername(username,tagId){
     }
     return true;
 }
+
+function saveUserChanges(link,tagId){
+
+    var userChanges = document.getElementById(tagId).value;
+    alert(userChanges);
+    var isValid;
+    if(tagId===ID_EMAIL){
+        isValid = validateEmail(userChanges,tagId);
+    } else if (tagId===ID_USERNAME){
+        isValid=validateUsername(userChanges);
+    }
+    if(Boolean(isValid)){
+        sendJSON(link, PUT_METHOD, userChanges).then(res=>{
+            clearField(tagId);
+        });
+    }
+
+}
