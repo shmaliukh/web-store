@@ -109,3 +109,23 @@ function removeElement(parentDiv,divToRemove) {
 function clearField(fieldId){
     document.getElementById(fieldId).value = '';
 }
+
+function validateEmail(input, tagId) {
+    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (!input.match(validRegex)) {
+        alert("Invalid email address!");
+        document.document.getElementById(tagId).value.focus();
+        return false;
+    }
+    return true;
+}
+
+function validateUsername(username,tagId){
+    const validRegex = /^[a-z0-9_.]+$/;
+    if (!username.match(validRegex)) {
+        alert("Invalid username!");
+        document.document.getElementById(tagId).value.focus();
+        return false;
+    }
+    return true;
+}
