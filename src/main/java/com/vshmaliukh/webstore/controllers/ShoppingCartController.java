@@ -31,7 +31,7 @@ public class ShoppingCartController {
         boolean authorization = false;
 
         modelMap = shoppingCartHandler.showShoppingCart(authorization,cartId,modelMap,response);
-        return new ModelAndView("shopping-cart", modelMap);
+        return new ModelAndView("shopping-cart", modelMap); // todo refactor multiple modelMap usage
     }
 
     @GetMapping("/add-one/{category}/{type}/{cartItemId}")
@@ -42,7 +42,7 @@ public class ShoppingCartController {
         // todo add checking authorization
         boolean authorization = false;
         cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,true); // because of incrementing
-        return "redirect:/shopping-cart";
+        return "redirect:/shopping-cart"; // todo remove
     }
 
     @GetMapping("/remove-one/{category}/{type}/{cartItemId}")
@@ -53,20 +53,20 @@ public class ShoppingCartController {
         // todo implement authorization checking
         boolean authorization = false;
         cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,false); // because of decrementing
-        return "redirect:/shopping-cart";
+        return "redirect:/shopping-cart"; // todo remove
     }
 
     @GetMapping("/remove-all/{cartItemId}")
     public String removeItemsType(@PathVariable Long cartItemId,
                                   @CookieValue Long cartId) {
         cartService.getCartByCartId(cartId).ifPresent(cart -> cartService.removeOneCartItemsTypeFromCart(cart,cartItemId));
-        return "redirect:/shopping-cart";
+        return "redirect:/shopping-cart"; // todo remove
     }
 
     @GetMapping("/remove-all-items")
     public String removeAllItemsFromCart(@CookieValue Long cartId) {
         cartService.removeAllItemsFromCart(cartId);
-        return "redirect:/shopping-cart";
+        return "redirect:/shopping-cart"; // todo remove
     }
 
 }
