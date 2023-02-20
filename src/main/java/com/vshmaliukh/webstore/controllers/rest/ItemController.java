@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.controllers.rest;
 
 import com.vshmaliukh.webstore.services.ItemService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +12,13 @@ import java.util.Set;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
 public class ItemController {
 
-    final ItemService itemService;
+    private final ItemService itemService;
+
+    public ItemController(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     @GetMapping("/item/status-names")
     public ResponseEntity<List<String>> readItemStatusNameList(){

@@ -4,7 +4,6 @@ import com.vshmaliukh.webstore.model.Category;
 import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.CategoryRepository;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,13 +15,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class CategoryService implements EntityValidator<Category> {
 
-    protected final ImageService imageService;
-
     @Getter
-    protected final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     public List<Category> readAll() {
         return Collections.unmodifiableList(categoryRepository.findAll());

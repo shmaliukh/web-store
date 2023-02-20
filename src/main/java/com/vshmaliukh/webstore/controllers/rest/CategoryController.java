@@ -1,7 +1,6 @@
 package com.vshmaliukh.webstore.controllers.rest;
 
 import com.vshmaliukh.webstore.services.CategoryService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +11,13 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
 public class CategoryController {
 
-    final CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/category/names")
     public ResponseEntity<List<String>> readCatalogNameList(){

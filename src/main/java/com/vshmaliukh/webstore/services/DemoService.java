@@ -7,13 +7,11 @@ import com.vshmaliukh.webstore.model.items.literature_item_imp.Book;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Comics;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Magazine;
 import com.vshmaliukh.webstore.model.items.literature_item_imp.Newspaper;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-@AllArgsConstructor
 public class DemoService {
 
     // TODO implement test
@@ -21,6 +19,14 @@ public class DemoService {
     private final UserService userService;
     private final ItemService itemService;
     private final CategoryService categoryService;
+
+    public DemoService(UserService userService,
+                       ItemService itemService,
+                       CategoryService categoryService) {
+        this.userService = userService;
+        this.itemService = itemService;
+        this.categoryService = categoryService;
+    }
 
     public void addDataToDatabase() {
         addItems();

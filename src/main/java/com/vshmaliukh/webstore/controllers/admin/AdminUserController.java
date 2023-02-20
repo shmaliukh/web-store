@@ -64,7 +64,7 @@ public class AdminUserController {
                                      @RequestParam("role") Role role,
                                      @RequestParam(value = "enabled", defaultValue = "false") boolean enabled,
                                      ModelMap modelMap) {
-        User user = userService.createBaseUser(userName, email, enabled);
+        User user = userService.createBaseUser(userName, email, "", enabled);
         ResponseEntity<Void> response = saveUser(user);
         if (!response.getStatusCode().isError()) {
             return new ModelAndView("redirect:/admin/user/catalog", modelMap);
@@ -118,7 +118,7 @@ public class AdminUserController {
                                    @RequestParam("role") Role role,
                                    @RequestParam(value = "enabled", defaultValue = "false") boolean enabled,
                                    ModelMap modelMap) {
-        User user = userService.createBaseUser(userName, email, enabled);
+        User user = userService.createBaseUser(userName, email, "", enabled);
         user.setId(userId);
         ResponseEntity<Void> response = saveUser(user);
         if (!response.getStatusCode().isError()) {

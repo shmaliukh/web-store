@@ -5,7 +5,6 @@ import com.vshmaliukh.webstore.model.ItemImage;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ImageRepository;
 import com.vshmaliukh.webstore.repositories.ItemImageRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,11 +16,15 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class ImageService implements EntityValidator<Image> {
 
-    final ImageRepository imageRepository;
-    final ItemImageRepository itemImageRepository;
+    private final ImageRepository imageRepository;
+    private final ItemImageRepository itemImageRepository;
+
+    public ImageService(ImageRepository imageRepository, ItemImageRepository itemImageRepository) {
+        this.imageRepository = imageRepository;
+        this.itemImageRepository = itemImageRepository;
+    }
 
     public Optional<Image> saveImage(Image image) {
         if (isValidEntity(image)) {

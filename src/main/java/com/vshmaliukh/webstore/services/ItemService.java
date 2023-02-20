@@ -6,7 +6,6 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRepository;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,13 +16,20 @@ import java.util.*;
 
 @Slf4j
 @Component
-@AllArgsConstructor
 public class ItemService implements EntityValidator<Item> {
 
     @Getter
-    final ItemRepository itemRepository;
-    final ItemRepositoryProvider itemRepositoryProvider;
-    final ImageService imageService;
+    private final ItemRepository itemRepository;
+    private final ItemRepositoryProvider itemRepositoryProvider;
+    private final ImageService imageService;
+
+    public ItemService(ItemRepository itemRepository,
+                       ItemRepositoryProvider itemRepositoryProvider,
+                       ImageService imageService) {
+        this.itemRepository = itemRepository;
+        this.itemRepositoryProvider = itemRepositoryProvider;
+        this.imageService = imageService;
+    }
 
     public void addImageToItem(Item item, MultipartFile file) {
         if (isValidEntity(item)) {

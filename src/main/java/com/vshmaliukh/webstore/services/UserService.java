@@ -3,7 +3,6 @@ package com.vshmaliukh.webstore.services;
 import com.vshmaliukh.webstore.login.LogInProvider;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,16 +16,17 @@ import static com.vshmaliukh.webstore.login.LogInProvider.LOCAL;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class UserService implements EntityValidator<User> {
-
-    public static final String DEFAULT_PASSWORD = "000";
 
     @Getter
     private final UserRepository userRepository;
 
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public Optional<User> readUserById(Long userId) {
-        if(userId != null && userId > 0){
+        if (userId != null && userId > 0) {
             return userRepository.findById(userId);
         }
         log.error("problem to read user by id"
@@ -41,7 +41,7 @@ public class UserService implements EntityValidator<User> {
     // TODO add test for 'processOAuthPostLogin' method
     public void processOAuthPostLogin(String username) {
         User user = userRepository.findByUsernameIgnoreCase(username);
-        if (!isValidEntity(user) ) {
+        if (!isValidEntity(user)) {
             insertUser(username, LogInProvider.GOOGLE);
         }
     }
@@ -59,19 +59,20 @@ public class UserService implements EntityValidator<User> {
 
     // TODO implement service layer validation
     public User createBaseUser(
-                                //  @Size(min = 3, max = 50)
-                                String userName,
-                                //  @Email
-                                String email,
-                                //  @NotEmpty
-                                boolean enabled) {
+            //  @Size(min = 3, max = 50)
+            String userName,
+            //  @Email
+            String email,
+            String password,
+            //  @NotEmpty
+            boolean enabled) {
         User user = new User();
         user.setUsername(userName);
         user.setEmail(email);
         user.setRoles(Collections.emptyList());
         user.setLogInProvider(LOCAL);
         user.setEnabled(enabled);
-        user.setPassword(DEFAULT_PASSWORD);
+        user.setPassword(password);
         return user;
     }
 

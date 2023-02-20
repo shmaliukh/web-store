@@ -5,7 +5,6 @@ import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
 import com.vshmaliukh.webstore.repositories.OrderRepository;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,17 +17,25 @@ import java.util.Optional;
 
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.ORDER_STATUS_COMPLETED_STR;
 
-
 @Slf4j
 @Service
-@Getter
-@AllArgsConstructor
 public class OrderService implements EntityValidator<Order> {
 
-    final ItemService itemService;
-    final UserService userService;
-    final OrderRepository orderRepository;
-    final OrderItemService orderItemService;
+    @Getter
+    private final OrderRepository orderRepository;
+    private final ItemService itemService;
+    private final UserService userService;
+    private final OrderItemService orderItemService;
+
+    public OrderService(ItemService itemService,
+                        UserService userService,
+                        OrderRepository orderRepository,
+                        OrderItemService orderItemService) {
+        this.itemService = itemService;
+        this.userService = userService;
+        this.orderRepository = orderRepository;
+        this.orderItemService = orderItemService;
+    }
 
     public void setUpItemAvailableQuantity(OrderItem orderItem, int oldOrderItemQuantity) {
         // TODO refactor

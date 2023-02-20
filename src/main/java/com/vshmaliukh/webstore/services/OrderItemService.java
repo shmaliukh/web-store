@@ -4,7 +4,6 @@ import com.vshmaliukh.webstore.model.Order;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.model.items.OrderItem;
 import com.vshmaliukh.webstore.repositories.OrderItemRepository;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,15 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Getter
 @Service
-@AllArgsConstructor
 public class OrderItemService implements EntityValidator<OrderItem> {
 
     @Getter
-    final OrderItemRepository orderItemRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    final ItemService itemService;
+    public OrderItemService(OrderItemRepository orderItemRepository) {
+        this.orderItemRepository = orderItemRepository;
+    }
 
     // FIXME
     public OrderItem formOrderItem(Integer quantity, Item item, Order order) {

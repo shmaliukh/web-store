@@ -31,11 +31,11 @@ import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.gen
 @RequestMapping("/admin/order")
 public class AdminOrderController {
 
-    final UserService userService;
-    final ItemService itemService;
-    final OrderService orderService;
-    final OrderItemService orderItemService;
-    final ItemRepositoryProvider itemRepositoryProvider;
+    private final UserService userService;
+    private final ItemService itemService;
+    private final OrderService orderService;
+    private final OrderItemService orderItemService;
+    private final ItemRepositoryProvider itemRepositoryProvider;
 
     @GetMapping("/**")
     public ModelAndView doGet(ModelMap modelMap) {

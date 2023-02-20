@@ -9,10 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.ModelMap;
 
-import java.util.Collection;
 import java.util.List;
 
-import static org.springframework.data.domain.Sort.*;
+import static org.springframework.data.domain.Sort.Direction;
+import static org.springframework.data.domain.Sort.Order;
 
 
 @Slf4j
@@ -35,7 +35,7 @@ public abstract class TableContentImp<T extends AuditModel>
     private Pageable pageable;
     private Page<T> pageWithContent;
 
-    public TableContentImp(String keyword, int currentPage, int pageSize, String sortField, String sortDirection) {
+    protected TableContentImp(String keyword, int currentPage, int pageSize, String sortField, String sortDirection) {
         this.keyword = keyword;
         this.currentPage = currentPage - 1;
         this.pageSize = pageSize;

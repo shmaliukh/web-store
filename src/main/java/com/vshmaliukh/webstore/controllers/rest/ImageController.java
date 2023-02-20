@@ -2,7 +2,6 @@ package com.vshmaliukh.webstore.controllers.rest;
 
 import com.vshmaliukh.webstore.model.Image;
 import com.vshmaliukh.webstore.services.ImageService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +15,13 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
 public class ImageController {
 
-    final ImageService imageService;
+    private final ImageService imageService;
+
+    public ImageController(ImageService imageService) {
+        this.imageService = imageService;
+    }
 
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> showProductImage(@PathVariable @Min(1) Long id) {

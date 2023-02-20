@@ -1,4 +1,4 @@
-package com.vshmaliukh.webstore.login;
+package com.vshmaliukh.webstore.config;
 
 import com.vshmaliukh.webstore.model.Privilege;
 import com.vshmaliukh.webstore.model.Role;
@@ -8,6 +8,7 @@ import com.vshmaliukh.webstore.services.RoleService;
 import com.vshmaliukh.webstore.services.UserService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -19,17 +20,21 @@ import java.util.Optional;
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
+    public static final String DEFAULT_PASSWORD = "000";
     private boolean alreadySetup;
 
     private final UserService userService;
     private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
     private final PrivilegeService privilegeService;
 
     public SetupDataLoader(UserService userService,
                            RoleService roleService,
+                           PasswordEncoder passwordEncoder,
                            PrivilegeService privilegeService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
         this.privilegeService = privilegeService;
     }
 
@@ -66,7 +71,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Role role = roleService.findRoleByNameIgnoreCase(userRoleName);
         List<Role> roleList = Collections.singletonList(role);
         Optional<User> optionalUser = userService.readUserByUsernameIgnoreCase(username);
-        user = optionalUser.orElseGet(() -> userService.createBaseUser(username, username + "@mail.com", true));
+        user = optionalUser.orElseGet(() -> userService.createBaseUser(username, username + "@mail.com", passwordEncoder.encode(DEFAULT_PASSWORD), true));
         user.setRoles(roleList);
         userService.save(user);
     }
