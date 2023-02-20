@@ -3,6 +3,7 @@ package com.vshmaliukh.webstore.controllers;
 import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.services.UnauthorizedUserService;
 import com.vshmaliukh.webstore.services.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -29,25 +30,21 @@ public class UserHomeController {
         }
         Optional<User> optionalUser = userService.readUserById(userId);
         optionalUser.ifPresent(user -> modelMap.addAttribute("user", user));
-        return new ModelAndView("user-home-page");
+        return new ModelAndView("/user/user-home-page");
     }
 
-    @GetMapping("/{data}")
-    public ModelAndView showUsersEditPage(@PathVariable String data, ModelMap modelMap, @CookieValue Long userId) {
-
+    @GetMapping("/edit")
+    public ModelAndView showUsersEditPage(@CookieValue Long userId) {
         // todo implement authorizing checking
-
         boolean authorization = false;
         if(authorization){
-            return new ModelAndView("unauthorizedUserPage");
+            return new ModelAndView("/user/unauthorized-user-page");
         }
-
-        modelMap.addAttribute("form", data);
-        return new ModelAndView("edit-data-users-page", modelMap);
+        return new ModelAndView("/user/edit-data-users-page");
     }
 
-    @PostMapping("/edit-email-user-page")
-    public String editEmailUsersPage(@CookieValue Long userId, @RequestParam String email) {
+    @PutMapping("/edit-email-user-page")
+    public ResponseEntity<User> editEmailUsersPage(@CookieValue Long userId, @RequestParam String email) {
 
 
         Optional<User> optionalUser = userService.readUserById(userId);
@@ -55,20 +52,23 @@ public class UserHomeController {
             User user =  optionalUser.get();
             user.setEmail(email);
             userService.save(user);
+            return ResponseEntity.ok(user);
+//            new org.springframework.security.core.userdetails.User(user.getUsername(), user.getEmail());
         }
-        return "redirect:/user-home";
+        return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/edit-username-user-page")
-    public String editUsernameUsersPage(@CookieValue Long userId, @RequestParam String username) {
+    @PutMapping("/edit-username-user-page")
+    public ResponseEntity<User> editUsernameUsersPage(@CookieValue Long userId, @RequestParam String username) {
 
         Optional<User> optionalUser = userService.readUserById(userId);
         if(optionalUser.isPresent()){
             User user =  optionalUser.get();
             user.setUsername(username);
             userService.save(user);
+            return ResponseEntity.ok(user);
         }
-        return "redirect:/user-home";
+        return ResponseEntity.notFound().build();
     }
 
 }
