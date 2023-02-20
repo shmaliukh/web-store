@@ -9,6 +9,7 @@ import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.repositories.cart_repositories.UserCartRepository;
 import com.vshmaliukh.webstore.repositories.literature_items_repositories.BaseItemRepository;
+import com.vshmaliukh.webstore.services.CartItemService;
 import com.vshmaliukh.webstore.services.CartService;
 import com.vshmaliukh.webstore.services.UnauthorizedUserService;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class ShoppingCartHandler {
 
     CookieHandler cookieHandler;
     CartService cartService;
+    CartItemService cartItemService;
     UnauthorizedUserService unauthorizedUserService;
     UserCartRepository userCartRepository;
     ItemRepositoryProvider itemRepositoryProvider;
@@ -89,6 +91,18 @@ public class ShoppingCartHandler {
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = itemRepository.findById(itemId);
         cartService.addItemToCart(optionalItem.get(), cartId);
+    }
+
+    public CartItem removeCartItemFromCart(Long cartId, Long cartItemId){
+        Optional<Cart> optionalCart = cartService.getCartByCartId(cartId);
+        if(optionalCart.isPresent()){
+            cartService.removeOneCartItemsTypeFromCart(optionalCart.get(), cartItemId);
+            Optional<CartItem> optionalCartItem = cartItemService.readCartItemById(cartItemId);
+            if(optionalCartItem.isPresent()){
+                return optionalCartItem.get();
+            }
+        }
+        return null;
     }
 
 }

@@ -1,17 +1,17 @@
 package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.controllers.handlers.ShoppingCartHandler;
+import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.services.*;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequestMapping("/shopping-cart")
@@ -34,39 +34,42 @@ public class ShoppingCartController {
         return new ModelAndView("shopping-cart", modelMap); // todo refactor multiple modelMap usage
     }
 
-    @GetMapping("/add-one/{category}/{type}/{cartItemId}")
-    public String incItemQuantity(@PathVariable String category,
-                                  @PathVariable String type, // todo mb optimize it
-                                  @PathVariable Long cartItemId,
-                                  @CookieValue Long userId) {
+    @PutMapping("/add-one/{category}/{type}/{cartItemId}")
+    public ResponseEntity<CartItem> incItemQuantity(@PathVariable String category,
+                                                    @PathVariable String type, // todo mb optimize it
+                                                    @PathVariable Long cartItemId,
+                                                    @CookieValue Long userId) {
         // todo add checking authorization
         boolean authorization = false;
-        cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,true); // because of incrementing
-        return "redirect:/shopping-cart"; // todo remove
+        CartItem changedCartItem = cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,true); // because of incrementing
+        return ResponseEntity.ok(changedCartItem);
     }
 
-    @GetMapping("/remove-one/{category}/{type}/{cartItemId}")
-    public String decItemQuantity(@PathVariable String category,
+    @PutMapping("/remove-one/{category}/{type}/{cartItemId}")
+    public ResponseEntity<CartItem> decItemQuantity(@PathVariable String category,
                                   @PathVariable String type, // todo mb optimize it
                                   @PathVariable Long cartItemId,
                                   @CookieValue Long userId) {
         // todo implement authorization checking
         boolean authorization = false;
-        cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,false); // because of decrementing
-        return "redirect:/shopping-cart"; // todo remove
+        CartItem changedCartItem = cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,false); // because of decrementing
+        return ResponseEntity.ok(changedCartItem);
     }
 
-    @GetMapping("/remove-all/{cartItemId}")
-    public String removeItemsType(@PathVariable Long cartItemId,
-                                  @CookieValue Long cartId) {
-        cartService.getCartByCartId(cartId).ifPresent(cart -> cartService.removeOneCartItemsTypeFromCart(cart,cartItemId));
-        return "redirect:/shopping-cart"; // todo remove
+    @PutMapping("/remove-all/{cartItemId}")
+    public ResponseEntity<CartItem> removeItemsType(@PathVariable Long cartItemId,
+                                                    @CookieValue Long cartId) {
+        CartItem changedCartItem = shoppingCartHandler.removeCartItemFromCart(cartId,cartItemId);
+        return ResponseEntity.ok(changedCartItem);
     }
 
-    @GetMapping("/remove-all-items")
-    public String removeAllItemsFromCart(@CookieValue Long cartId) {
-        cartService.removeAllItemsFromCart(cartId);
-        return "redirect:/shopping-cart"; // todo remove
+    @DeleteMapping("/remove-all-items")
+    public ResponseEntity<List<CartItem>> removeAllItemsFromCart(@CookieValue Long cartId) {
+
+        return ResponseEntity.ok(
+                cartService
+                        .removeAllItemsFromCart(cartId)
+                        .getItems());
     }
 
 }

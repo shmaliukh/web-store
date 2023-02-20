@@ -23,7 +23,7 @@ public class CartService {
 
     CartItemService cartItemService;
 
-    public void changeCartItemQuantityInCartOnOne(Long cartItemId, Long userId, boolean authorized, boolean increment){
+    public CartItem changeCartItemQuantityInCartOnOne(Long cartItemId, Long userId, boolean authorized, boolean increment){
         Cart cart = getCartByUserId(userId,authorized);
         List<CartItem> cartItems = cart.getItems();
         for (CartItem cartItem : cartItems) {
@@ -38,10 +38,11 @@ public class CartService {
                     cartItem.setQuantity(resultQuantity);cartItemService.saveCartItem(cartItem);
                     cart.setItems(cartItems);
                     addNewCart(cart);
-                    break;
+                    return cartItem;
                 }
             }
         }
+        return null;
     }
 
     public void addItemToCart(Item item, Long cartId) {
