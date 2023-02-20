@@ -45,14 +45,12 @@ public class UserHomeController {
 
     @PutMapping("/edit-email-user-page")
     public ResponseEntity<User> editEmailUsersPage(@CookieValue Long userId, @RequestParam String email) {
-
-
         Optional<User> optionalUser = userService.readUserById(userId);
         if(optionalUser.isPresent()){
             User user =  optionalUser.get();
             user.setEmail(email);
             userService.save(user);
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(user); // todo remove User usage - use DTO instead
 //            new org.springframework.security.core.userdetails.User(user.getUsername(), user.getEmail());
         }
         return ResponseEntity.notFound().build();
@@ -60,13 +58,12 @@ public class UserHomeController {
 
     @PutMapping("/edit-username-user-page")
     public ResponseEntity<User> editUsernameUsersPage(@CookieValue Long userId, @RequestParam String username) {
-
         Optional<User> optionalUser = userService.readUserById(userId);
         if(optionalUser.isPresent()){
             User user =  optionalUser.get();
             user.setUsername(username);
             userService.save(user);
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(user);  // todo remove User usage - use DTO instead
         }
         return ResponseEntity.notFound().build();
     }
