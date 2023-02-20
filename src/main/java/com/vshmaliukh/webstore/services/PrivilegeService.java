@@ -39,7 +39,7 @@ public class PrivilegeService implements EntityValidator<Privilege> {
         return null;
     }
 
-    public List<Privilege> readAllRoleList() {
+    public List<Privilege> readAllPrivilegeList() {
         return privilegeRepository.findAll();
     }
 

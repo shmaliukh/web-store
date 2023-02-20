@@ -23,6 +23,7 @@ public class Role extends AuditModel {
 
     @ManyToMany(mappedBy = "roles")
     @ToString.Exclude
+    @JsonIgnore
     private Collection<User> users;
 
     @ManyToMany

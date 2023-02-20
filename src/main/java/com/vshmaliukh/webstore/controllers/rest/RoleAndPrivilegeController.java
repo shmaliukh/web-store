@@ -26,8 +26,8 @@ public class RoleAndPrivilegeController {
 
     @GetMapping("/privileges")
     @PreAuthorize("hasAuthority('PRIVILEGE_READ_PRIVILEGES')")
-    public ResponseEntity<List<Privilege>> readAllPrivilegeList(){
-        List<Privilege> privilegeList = privilegeService.readAllRoleList();
+    public ResponseEntity<List<Privilege>> readAllPrivilegeList() {
+        List<Privilege> privilegeList = privilegeService.readAllPrivilegeList();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(privilegeList);
@@ -35,7 +35,7 @@ public class RoleAndPrivilegeController {
 
     @GetMapping("/roles")
     @PreAuthorize("hasAuthority('PRIVILEGE_READ_ROLES')")
-    public ResponseEntity<List<Role>> readAllRoleList(){
+    public ResponseEntity<List<Role>> readAllRoleList() {
         List<Role> roleList = roleService.readAllRoleList();
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)

@@ -21,12 +21,14 @@ import java.util.Optional;
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     public static final String DEFAULT_PASSWORD = "000";
+
     private boolean alreadySetup;
 
     private final UserService userService;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final PrivilegeService privilegeService;
+
 
     public SetupDataLoader(UserService userService,
                            RoleService roleService,
@@ -59,21 +61,23 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         //createRoleIfNotFound("ROLE_STAFF", Collections.singletonList(privilegeRead));
         roleService.createRoleIfNotFound("ROLE_USER", Collections.singletonList(privilegeRead));
 
-        saveDefaultUser("dev", "ROLE_DEV");
-        saveDefaultUser("admin", "ROLE_ADMIN");
-        saveDefaultUser("user", "ROLE_USER");
+        createDefaultUserIfNotFound("dev", "ROLE_DEV");
+        createDefaultUserIfNotFound("admin", "ROLE_ADMIN");
+        createDefaultUserIfNotFound("user", "ROLE_USER");
 
         alreadySetup = true;
     }
 
-    private void saveDefaultUser(String username, String userRoleName) {
+    private void createDefaultUserIfNotFound(String username, String roleName) {
         User user;
-        Role role = roleService.findRoleByNameIgnoreCase(userRoleName);
-        List<Role> roleList = Collections.singletonList(role);
         Optional<User> optionalUser = userService.readUserByUsernameIgnoreCase(username);
-        user = optionalUser.orElseGet(() -> userService.createBaseUser(username, username + "@mail.com", passwordEncoder.encode(DEFAULT_PASSWORD), true));
-        user.setRoles(roleList);
-        userService.save(user);
+        Role role = roleService.findRoleByNameIgnoreCase(roleName);
+        List<Role> roleList = Collections.singletonList(role);
+        if(!optionalUser.isPresent()) {
+            user = userService.createBaseUser(username, username + "@mail.com", passwordEncoder.encode(DEFAULT_PASSWORD), true);
+            user.setRoles(roleList);
+            userService.save(user);
+        }
     }
 
 }
