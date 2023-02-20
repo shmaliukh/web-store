@@ -2,6 +2,8 @@ let incItemLink = "/shopping-cart/add-one/literature/newspaper/";
 let decItemLink = "/shopping-cart/remove-one/literature/newspaper/";
 let removeOneItemLink = "/shopping-cart/remove-all/";
 let removeAllItemsLink = "/shopping-cart/remove-all-items";
+let editUsernameLink = "/user-home/edit-username-user-page";
+let editUserEmailLink = "/user-home/edit-email-user-page";
 
 const PUT_METHOD = "PUT";
 const DELETE_METHOD = "DELETE";
@@ -13,13 +15,16 @@ const ID_CART_ITEM = "cartItem";
 const ID_CART = "cart";
 const ID_TOTAL_ITEMS = "totalItems";
 const ID_TOTAL_PRICE = "totalPrice";
+const ID_EMAIL = "email";
+const ID_USERNAME = "username";
 
 
 let newCartItem;
 
+const emptyBody = {title:''} ;
 
 function incCartItem(itemId){
-    sendJSON(incItemLink+itemId, PUT_METHOD).then(res=>{
+    sendJSON(incItemLink+itemId, PUT_METHOD,emptyBody).then(res=>{
         setNewValueInPage(ID_CART_ITEM_PRICE+itemId,newCartItem.item.price*newCartItem.quantity);
         setNewValueInPage(ID_CART_ITEM_QUANTITY+itemId,newCartItem.quantity);
         incCartItemsTotalQuantityInPage();
@@ -28,7 +33,7 @@ function incCartItem(itemId){
 }
 
 function decCartItem(itemId){
-    sendJSON(decItemLink+itemId, PUT_METHOD).then(res=>{
+    sendJSON(decItemLink+itemId, PUT_METHOD,emptyBody).then(res=>{
         setNewValueInPage(ID_CART_ITEM_PRICE+itemId,newCartItem.item.price*newCartItem.quantity);
         setNewValueInPage(ID_CART_ITEM_PRICE+itemId,newCartItem.quantity);
         minusCartItemsTotalQuantityInPage(1);
@@ -37,7 +42,7 @@ function decCartItem(itemId){
 }
 
 function removeItem(itemId){
-    sendJSON(removeOneItemLink+itemId, PUT_METHOD).then(res => {
+    sendJSON(removeOneItemLink+itemId, PUT_METHOD,emptyBody).then(res => {
         removeElement(ID_ALL_CART_ITEMS, ID_CART_ITEM+itemId);
         changeCartItemsTotalPriceOnDif(newCartItem.item.price*newCartItem.quantity,Boolean(false));
         minusCartItemsTotalQuantityInPage(newCartItem.quantity);
@@ -45,20 +50,21 @@ function removeItem(itemId){
 }
 
 function removeAllItems(){
-    sendJSON(removeAllItemsLink,DELETE_METHOD).then(res=>{
+    sendJSON(removeAllItemsLink,DELETE_METHOD,emptyBody).then(res=>{
         removeElement(ID_CART,ID_ALL_CART_ITEMS);
         setNewValueInPage(ID_TOTAL_ITEMS,0);
         setNewValueInPage(ID_TOTAL_PRICE,0);
     });
 }
-async function sendJSON(link, method) {
+
+async function sendJSON(link, method,body) {
     const requestOptions = {
         method: method,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ title:'' })
+        body: body
     };
     await fetch(link,requestOptions)
         .then((res) => {
