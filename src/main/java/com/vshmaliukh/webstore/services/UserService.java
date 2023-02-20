@@ -38,7 +38,7 @@ public class UserService implements EntityValidator<User> {
 
     // TODO add test for 'processOAuthPostLogin' method
     public void processOAuthPostLogin(String username) {
-        User user = userRepository.findUserByUsername(username);
+        User user = userRepository.findByUsernameIgnoreCase(username);
         if (!isValidEntity(user) ) {
             insertUser(username, LogInProvider.GOOGLE);
         }

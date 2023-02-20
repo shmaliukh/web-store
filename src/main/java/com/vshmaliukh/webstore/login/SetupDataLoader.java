@@ -41,60 +41,44 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (alreadySetup) return;
-        Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege updatePrivilege = createPrivilegeIfNotFound("UPDATE_PRIVILEGE");
-        Privilege changePassword = createPrivilegeIfNotFound("CHANGE_PASSWORD");
+        Privilege privilegeRead = createPrivilegeIfNotFound("PRIVILEGE_READ");
+        Privilege privilegeUpdate = createPrivilegeIfNotFound("PRIVILEGE_UPDATE");
+        Privilege privilegeChangePassword = createPrivilegeIfNotFound("PRIVILEGE_CHANGE_PASSWORD");
+        Privilege privilegeReadPrivileges = createPrivilegeIfNotFound("PRIVILEGE_READ_PRIVILEGES");
+        Privilege privilegeReadRoles = createPrivilegeIfNotFound("PRIVILEGE_READ_ROLES");
 
-        List<Privilege> devPrivilegesList = Arrays.asList(readPrivilege, updatePrivilege, changePassword);
-        List<Privilege> adminPrivilegeList = Arrays.asList(readPrivilege, updatePrivilege, changePassword);
+        List<Privilege> devPrivilegesList = Arrays.asList(privilegeRead, privilegeUpdate, privilegeChangePassword,
+                privilegeReadPrivileges, privilegeReadRoles);
+        List<Privilege> adminPrivilegeList = Arrays.asList(privilegeRead, privilegeUpdate, privilegeChangePassword);
 
         createRoleIfNotFound("ROLE_DEV", devPrivilegesList);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivilegeList);
         // TODO config 'ROLE_STAFF' privileges
-        //createRoleIfNotFound("ROLE_STAFF", Collections.singletonList(readPrivilege));
-        createRoleIfNotFound("ROLE_USER", Collections.singletonList(readPrivilege));
+        //createRoleIfNotFound("ROLE_STAFF", Collections.singletonList(privilegeRead));
+        createRoleIfNotFound("ROLE_USER", Collections.singletonList(privilegeRead));
 
-        saveDefaultDev();
-        saveDefaultAdmin();
-        saveDefaultUser();
+        saveDefaultUser("dev", "ROLE_DEV");
+        saveDefaultUser("admin", "ROLE_ADMIN");
+        saveDefaultUser("user", "ROLE_USER");
 
         alreadySetup = true;
     }
 
-    private void saveDefaultDev() {
-        Role devRole = roleRepository.findByName("ROLE_DEV");
-        User user = new User();
-        user.setUsername("dev");
-        user.setLogInProvider(LogInProvider.LOCAL);
-        user.setPassword(passwordEncoder.encode("000"));
-        user.setEmail("dev@mail.com");
-        user.setRoles(Collections.singletonList(devRole));
-        user.setEnabled(true);
-        userRepository.save(user);
-    }
+    private void saveDefaultUser(String devUsername, String userRole) {
+        User userByUsername = userRepository.findByUsernameIgnoreCase(devUsername);
+        if (userByUsername == null) {
+            Role devRole = roleRepository.findByName(userRole);
+            User user = new User();
+            user.setUsername(devUsername);
+            user.setLogInProvider(LogInProvider.LOCAL);
+            user.setPassword(passwordEncoder.encode("000"));
+            user.setEmail(devUsername + "@mail.com");
+            List<Role> roleList = Collections.singletonList(devRole);
+            user.setRoles(roleList);
+            user.setEnabled(true);
+            userRepository.save(user);
+        }
 
-    private void saveDefaultAdmin() {
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-        User user = new User();
-        user.setUsername("admin");
-        user.setLogInProvider(LogInProvider.LOCAL);
-        user.setPassword(passwordEncoder.encode("000"));
-        user.setEmail("admin@mail.com");
-        user.setRoles(Collections.singletonList(adminRole));
-        user.setEnabled(true);
-        userRepository.save(user);
-    }
-
-    private void saveDefaultUser() {
-        Role adminRole = roleRepository.findByName("ROLE_USER");
-        User user = new User();
-        user.setUsername("user");
-        user.setLogInProvider(LogInProvider.LOCAL);
-        user.setPassword(passwordEncoder.encode("000"));
-        user.setEmail("user@mail.com");
-        user.setRoles(Collections.singletonList(adminRole));
-        user.setEnabled(true);
-        userRepository.save(user);
     }
 
     @Transactional

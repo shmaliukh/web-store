@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findUserByUsername(String username);
+    User findByUsernameIgnoreCase(String username);
 
     Page<User> findByUsernameIgnoreCase(String keyword, Pageable pageable);
 

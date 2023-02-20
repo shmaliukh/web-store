@@ -1,9 +1,7 @@
 package com.vshmaliukh.webstore.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -12,7 +10,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Table(name = "Roles")
 public class Role extends AuditModel {
 
@@ -35,6 +33,7 @@ public class Role extends AuditModel {
             inverseJoinColumns = @JoinColumn(
                     name = "privilege_id", referencedColumnName = "privilege_id"))
     @ToString.Exclude
+    @JsonIgnore
     private Collection<Privilege> privileges;
 
     @Override

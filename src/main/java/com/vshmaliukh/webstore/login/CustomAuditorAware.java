@@ -30,7 +30,7 @@ public class CustomAuditorAware implements AuditorAware<User> {
                 Object principal = authentication.getPrincipal();
                 org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
                 String username = user.getUsername();
-                return Optional.ofNullable(userRepository.findUserByUsername(username));
+                return Optional.ofNullable(userRepository.findByUsernameIgnoreCase(username));
             } else {
                 log.error("problem to register author of changes // unauthenticated user");
             }
