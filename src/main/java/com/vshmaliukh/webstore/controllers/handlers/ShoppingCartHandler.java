@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,22 +31,6 @@ public class ShoppingCartHandler {
     UnauthorizedUserService unauthorizedUserService;
     UserCartRepository userCartRepository;
     ItemRepositoryProvider itemRepositoryProvider;
-
-    public int countAllItemsPrice(List<CartItem> cartItems){
-        int totalPrice = 0;
-        for (CartItem cartItem : cartItems) {
-            totalPrice = totalPrice + cartItem.getItem().getSalePrice() * cartItem.getQuantity();
-        }
-        return totalPrice;
-    }
-
-    public int countAllItemsQuantity(List<CartItem> cartItems) {
-        int totalCount = 0;
-        for (CartItem cartItem : cartItems) {
-            totalCount += cartItem.getQuantity();
-        }
-        return totalCount;
-    }
 
     public void changeCartToAuthorized(Cart unauthorizedUserCart, User authorizedUser){
         UserCart userCart = new UserCart();
@@ -68,13 +53,13 @@ public class ShoppingCartHandler {
                         cookieHandler.createCookie(cartId,"cartId")
                 );
             }
-            Cart cart = cartService.getCartByCartId(cartId).get();
-            List<CartItem> cartItems = cart.getItems();
-            int totalCount = countAllItemsQuantity(cartItems);
-            int totalPrice =  countAllItemsPrice(cartItems);
+            Optional<Cart> optionalCart = cartService.getCartByCartId(cartId);
+            List<CartItem> cartItems = new ArrayList<>();
+            if (optionalCart.isPresent()){
+                Cart cart = optionalCart.get();
+                 cartItems = cart.getItems();
+            }
             modelMap.addAttribute("items", cartItems);
-            modelMap.addAttribute("totalItems", totalCount);
-            modelMap.addAttribute("totalPrice", totalPrice);
         }
         return modelMap;
     }
@@ -83,7 +68,7 @@ public class ShoppingCartHandler {
         if(!authorization){
             if(cartId==0||!cartService.existsById(cartId,authorization)){
                 cartId = createNewCart().getCartId();
-                Long userId = cartService.getCartByCartId(cartId).get().getCartId(); // todo remove its usage
+                Long userId = cartService.getCartByCartId(cartId).get().getCartId(); // todo remove userId usage
                 response.addCookie(new CookieHandler().createCookie(cartId,"cartId"));
                 response.addCookie(new CookieHandler().createCookie(userId,"userId"));
             }

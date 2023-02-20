@@ -31,7 +31,7 @@ public class ShoppingCartController {
         boolean authorization = false;
 
         modelMap = shoppingCartHandler.showShoppingCart(authorization,cartId,modelMap,response);
-        return new ModelAndView("shopping-cart", modelMap); // todo refactor multiple modelMap usage
+        return new ModelAndView("shopping-cart", modelMap);
     }
 
     @PutMapping("/add-one/{category}/{type}/{cartItemId}")
@@ -65,7 +65,6 @@ public class ShoppingCartController {
 
     @DeleteMapping("/remove-all-items")
     public ResponseEntity<List<CartItem>> removeAllItemsFromCart(@CookieValue Long cartId) {
-
         return ResponseEntity.ok(
                 cartService
                         .removeAllItemsFromCart(cartId)
