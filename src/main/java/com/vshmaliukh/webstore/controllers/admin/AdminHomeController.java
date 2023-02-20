@@ -1,10 +1,9 @@
 package com.vshmaliukh.webstore.controllers.admin;
 
-import com.vshmaliukh.webstore.model.User;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.UserService;
-import lombok.AllArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -14,16 +13,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
-@AllArgsConstructor
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DEV')")
 public class AdminHomeController {
     // TODO refactor 'home' page
 
     final UserService userService;
     final ItemRepositoryProvider itemRepositoryProvider;
+
+    public AdminHomeController(UserService userService, ItemRepositoryProvider itemRepositoryProvider) {
+        this.userService = userService;
+        this.itemRepositoryProvider = itemRepositoryProvider;
+    }
 
     @GetMapping("/**")
     public ModelAndView doGetAll(ModelMap modelMap) {

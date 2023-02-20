@@ -37,23 +37,21 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         this.privilegeRepository = privilegeRepository;
     }
 
-
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (alreadySetup) return;
         Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege createPrivilege = createPrivilegeIfNotFound("CREATE_PRIVILEGE");
         Privilege updatePrivilege = createPrivilegeIfNotFound("UPDATE_PRIVILEGE");
-        Privilege deletePrivilege = createPrivilegeIfNotFound("DELETE_PRIVILEGE");
+        Privilege changePassword = createPrivilegeIfNotFound("CHANGE_PASSWORD");
 
-        List<Privilege> devPrivilegesList = Arrays.asList(readPrivilege, updatePrivilege);
-        List<Privilege> adminPrivilegeList = Arrays.asList(readPrivilege, updatePrivilege);
+        List<Privilege> devPrivilegesList = Arrays.asList(readPrivilege, updatePrivilege, changePassword);
+        List<Privilege> adminPrivilegeList = Arrays.asList(readPrivilege, updatePrivilege, changePassword);
 
         createRoleIfNotFound("ROLE_DEV", devPrivilegesList);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivilegeList);
         // TODO config 'ROLE_STAFF' privileges
-        createRoleIfNotFound("ROLE_STAFF", Collections.singletonList(readPrivilege));
+        //createRoleIfNotFound("ROLE_STAFF", Collections.singletonList(readPrivilege));
         createRoleIfNotFound("ROLE_USER", Collections.singletonList(readPrivilege));
 
         saveDefaultDev();

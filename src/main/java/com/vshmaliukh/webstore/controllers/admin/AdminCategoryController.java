@@ -10,23 +10,18 @@ import com.vshmaliukh.webstore.repositories.literature_items_repositories.ItemRe
 import com.vshmaliukh.webstore.services.CategoryService;
 import com.vshmaliukh.webstore.services.ImageService;
 import com.vshmaliukh.webstore.services.ItemService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.Min;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.generateItemTableContentForCategoryDetails;
@@ -35,16 +30,24 @@ import static com.vshmaliukh.webstore.controllers.admin.AdminControllerUtils.gen
 @Slf4j
 @Controller
 @RequestMapping("/admin/category")
-@AllArgsConstructor
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DEV')")
 public class AdminCategoryController {
 
     public static final String NAV_MAIN_STR = "nav-main";
     public static final String NAV_ITEMS_STR = "nav-items";
     public static final String NAV_IMAGE_STR = "nav-image";
 
-    final ItemService itemService;
-    final ImageService imageService;
-    final CategoryService categoryService;
+    private final ItemService itemService;
+    private final ImageService imageService;
+    private final CategoryService categoryService;
+
+    public AdminCategoryController(ItemService itemService,
+                                   ImageService imageService,
+                                   CategoryService categoryService) {
+        this.itemService = itemService;
+        this.imageService = imageService;
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/**")
     public ModelAndView doGetAll(ModelMap modelMap){
