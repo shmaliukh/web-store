@@ -105,3 +105,7 @@ function removeElement(parentDiv,divToRemove) {
     var oldDiv = document.getElementById(divToRemove);
     div.removeChild(oldDiv);
 }
+
+function clearField(fieldId){
+    document.getElementById(fieldId).value = '';
+}
