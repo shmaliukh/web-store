@@ -1,4 +1,8 @@
 server:
+  servlet:
+    session:
+      cookie:
+        name: JSESSIONID
   port: 8082
 
 app:

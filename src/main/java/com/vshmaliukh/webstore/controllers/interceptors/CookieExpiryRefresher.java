@@ -12,18 +12,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
-@Component
+@Component("cookieExpiryRefresher")
 @PropertySource("classpath:application.yaml")
 public class CookieExpiryRefresher implements HandlerInterceptor {
 
     private int rememberMeTime;
+    private String sessionCookieName;
     private String rememberMeCookieName;
 
     @Autowired
     public CookieExpiryRefresher(@Value("${app.rememberMe.time:1209600}") int rememberMeTime,
                                  // default rememberMeTime is two weeks (1209600 seconds)
-                                 @Value("${app.rememberMe.cookieName:rememberMe}") String rememberMeCookieName) {
+                                 @Value("${app.rememberMe.cookieName:rememberMe}") String rememberMeCookieName,
+                                 @Value("${server.servlet.session.cookie.name:JSESSIONID}") String sessionCookieName) {
         this.rememberMeTime = rememberMeTime;
+        this.sessionCookieName = sessionCookieName;
         this.rememberMeCookieName = rememberMeCookieName;
     }
 
@@ -37,18 +40,21 @@ public class CookieExpiryRefresher implements HandlerInterceptor {
 
     private void refreshRememberMeCookie(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
-        boolean cookiesContainsRememberMe = Arrays.stream(cookies)
-                .anyMatch(cookie -> cookie.getName().contentEquals(rememberMeCookieName));
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().contentEquals(rememberMeCookieName)
-                    || (cookiesContainsRememberMe && cookie.getName().contentEquals("JSESSIONID"))) {
-                refreshCookie(rememberMeTime, response, cookie);
+        if (cookies != null && cookies.length > 0) {
+            boolean cookiesContainsRememberMe = Arrays.stream(cookies)
+                    .anyMatch(cookie -> cookie.getName().contentEquals(rememberMeCookieName));
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().contentEquals(rememberMeCookieName)
+                        || (cookiesContainsRememberMe && cookie.getName().contentEquals(sessionCookieName))) {
+                    refreshCookie(rememberMeTime, response, cookie);
+                }
             }
         }
     }
 
     private void refreshCookie(int timeInSeconds, HttpServletResponse response, Cookie cookie) {
         cookie.setMaxAge(timeInSeconds);
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 

@@ -1,7 +1,7 @@
 package com.vshmaliukh.webstore.config;
 
-import com.vshmaliukh.webstore.login.*;
-import com.vshmaliukh.webstore.services.UserService;
+import com.vshmaliukh.webstore.login.CustomAccessDeniedHandler;
+import com.vshmaliukh.webstore.login.CustomPersistentTokenHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,15 +13,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.RememberMeServices;
-import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import java.io.IOException;
-
-import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.HOME_PAGE;
 import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.OAUTH_LOGIN_PAGE;
 
 @Slf4j
@@ -29,8 +26,7 @@ import static com.vshmaliukh.webstore.controllers.ConstantsForControllers.OAUTH_
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    // default rememberMeTime is two weeks (1209600 seconds)
-    @Value("${app.rememberMe.time:1209600}")
+    @Value("${app.rememberMe.time:1209600}") // default rememberMeTime is two weeks (1209600 seconds)
     private int rememberMeTime;
 
     @Value("${app.rememberMe.cookieName:rememberMe}")
@@ -48,39 +44,74 @@ public class WebSecurityConfig {
     @Value("${spring.h2.console.path:/h2-console}")
     public String springH2ConsolePath;
 
-    // TODO refactor
-    public static final String LOG_IN_SUCCESS_URL_STR = "/" + HOME_PAGE;
+    @Value("${server.servlet.session.cookie.name:JSESSIONID}")
+    public String sessionCookieName;
 
-    private final UserService userService;
-    private final CustomOAuth2UserService oauthUserService;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomPersistentTokenHandler customPersistentTokenHandler;
 
-    public WebSecurityConfig(UserService userService,
-                             CustomOAuth2UserService oauthUserService,
-                             CustomUserDetailsService userDetailsService,
-                             CustomAccessDeniedHandler customAccessDeniedHandler) {
-        this.userService = userService;
-        this.oauthUserService = oauthUserService;
+    public WebSecurityConfig(UserDetailsService userDetailsService,
+                             CustomAccessDeniedHandler customAccessDeniedHandler,
+                             CustomPersistentTokenHandler customPersistentTokenHandler) {
         this.userDetailsService = userDetailsService;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.customPersistentTokenHandler = customPersistentTokenHandler;
+    }
+
+    private void configWithSecurity(HttpSecurity http) throws Exception {
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
+        http // allowed without authentication
+                .authorizeRequests()
+                .antMatchers(springH2ConsolePath + "/**").permitAll()
+                .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/", "/" + OAUTH_LOGIN_PAGE, "/oauth/**").permitAll();
+        http // login config
+                .formLogin()
+                .defaultSuccessUrl("/admin")
+                .permitAll();
+        //TODO fix login via google
+        //if (isEnabledLoginViaGoogle) {
+        //    http // oauth2Login config
+        //            .oauth2Login().permitAll()
+        //            .successHandler(getAuthenticationSuccessHandler())
+        //            //.loginPage("/" + PAGE_LOGIN)
+        //            .userInfoEndpoint()
+        //            .userService(oauthUserService);
+        //}
+        http // 'rememberMe' config
+                .rememberMe()
+                .rememberMeServices(rememberMeServices())
+        ;
+        http // logout config
+                .logout()
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .deleteCookies(
+                        sessionCookieName,
+                        rememberMeCookieName
+                ).permitAll();
+        http // exception handling config
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler());
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return userDetailsService;
+    public PersistentTokenRepository persistentTokenRepository() {
+        return customPersistentTokenHandler;
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder(11);
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(encoder());
         return authProvider;
     }
 
@@ -94,52 +125,20 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    private void configWithSecurity(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
-        http // allowed without authentication
-                .authorizeRequests()
-                .antMatchers(springH2ConsolePath + "/**").permitAll()
-//                .antMatchers("/access-denied").permitAll()
-                .antMatchers("/oauth/token").permitAll()
-                .antMatchers("/", "/" + OAUTH_LOGIN_PAGE, "/oauth/**").permitAll();
-        http // login config
-                .formLogin()
-                .defaultSuccessUrl("/admin")
-                .permitAll();
-        if (isEnabledLoginViaGoogle) {
-            http // oauth2Login config
-                    .oauth2Login().permitAll()
-                    .successHandler(getAuthenticationSuccessHandler())
-                    //.loginPage("/" + PAGE_LOGIN)
-                    .userInfoEndpoint()
-                    .userService(oauthUserService);
-        }
-        http // logout config
-                .logout()
-                .logoutUrl("/logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll();
-        http // exception handling config
-                .exceptionHandling()
-                .accessDeniedHandler(accessDeniedHandler());
-        http // 'rememberMe' config
-                .rememberMe()
-                .rememberMeServices(rememberMeServices())
-                .key(rememberMeKey)
-                .tokenValiditySeconds(rememberMeTime)
-                .rememberMeParameter(rememberMeCookieName);
-    }
-
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return customAccessDeniedHandler;
     }
 
     @Bean
-    public RememberMeServices rememberMeServices() {
-        return new CustomRememberMeServices(rememberMeKey, userDetailsService, new InMemoryTokenRepositoryImpl());
+    public PersistentTokenBasedRememberMeServices rememberMeServices() {
+        PersistentTokenBasedRememberMeServices rememberMeServices
+                = new PersistentTokenBasedRememberMeServices(rememberMeKey, userDetailsService, persistentTokenRepository());
+        rememberMeServices.setCookieName(rememberMeCookieName);
+        rememberMeServices.setTokenValiditySeconds(rememberMeTime);
+        rememberMeServices.setAlwaysRemember(true);
+        rememberMeServices.setUseSecureCookie(true);
+        return rememberMeServices;
     }
 
     @Bean
@@ -154,28 +153,9 @@ public class WebSecurityConfig {
     }
 
     private static void configWithoutSecurity(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/**").permitAll()
-                .and()
-                .authorizeRequests().antMatchers("/h2-console/**").permitAll()
-
-        // TODO set allowed paths to visit without security
-        ;
+        http.authorizeRequests().antMatchers("/**").permitAll();
         http.csrf().disable();
         http.headers().frameOptions().disable();
-    }
-
-    private AuthenticationSuccessHandler getAuthenticationSuccessHandler() {
-        return (request, response, authentication) -> {
-            log.info("Authentication name: " + authentication.getName());
-            CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-            userService.processOAuthPostLogin(oauthUser.getEmail());
-            try {
-                response.sendRedirect(LOG_IN_SUCCESS_URL_STR);
-            } catch (IOException ioe) {
-                log.warn("problem to redirect to '{}' page", LOG_IN_SUCCESS_URL_STR);
-                log.error(ioe.getMessage(), ioe);
-            }
-        };
     }
 
 }
