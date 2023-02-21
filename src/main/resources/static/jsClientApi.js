@@ -2,9 +2,9 @@ let incItemLink = "/shopping-cart/add-one/literature/newspaper/";
 let decItemLink = "/shopping-cart/remove-one/literature/newspaper/";
 let removeOneItemLink = "/shopping-cart/remove-all/";
 let removeAllItemsLink = "/shopping-cart/remove-all-items";
-let editUsernameLink = "/user-home/edit-username-user-page";
-let editUserEmailLink = "/user-home/edit-email-user-page";
-let editUserAvatarLink = "/user-home/edit-avatar-user-page";
+let editUsernameLink = "/user/edit-username-user-page";
+let editUserEmailLink = "/user/edit-email-user-page";
+let editUserAvatarLink = "/user/edit-avatar-user-page";
 
 const POST_METHOD = "POST";
 const PUT_METHOD = "PUT";
