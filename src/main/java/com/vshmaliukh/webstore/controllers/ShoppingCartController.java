@@ -20,8 +20,6 @@ public class ShoppingCartController {
 
     final ShoppingCartHandler shoppingCartHandler;
 
-    final CartService cartService;
-
     @GetMapping
     public ModelAndView showCartPage(ModelMap modelMap,
                                      HttpServletResponse response,
@@ -32,43 +30,6 @@ public class ShoppingCartController {
 
         modelMap.addAttribute("items", shoppingCartHandler.showShoppingCart(authorization,cartId,response));
         return new ModelAndView("shopping-cart", modelMap);
-    }
-
-    @PutMapping("/add-one/{category}/{type}/{cartItemId}")
-    public ResponseEntity<CartItem> incItemQuantity(@PathVariable String category,
-                                                    @PathVariable String type, // todo mb optimize it
-                                                    @PathVariable Long cartItemId,
-                                                    @CookieValue Long userId) {
-        // todo add checking authorization
-        boolean authorization = false;
-        CartItem changedCartItem = cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,true); // because of incrementing
-        return ResponseEntity.ok(changedCartItem);
-    }
-
-    @PutMapping("/remove-one/{category}/{type}/{cartItemId}")
-    public ResponseEntity<CartItem> decItemQuantity(@PathVariable String category,
-                                  @PathVariable String type, // todo mb optimize it
-                                  @PathVariable Long cartItemId,
-                                  @CookieValue Long userId) {
-        // todo implement authorization checking
-        boolean authorization = false;
-        CartItem changedCartItem = cartService.changeCartItemQuantityInCartOnOne(cartItemId,userId,authorization,false); // because of decrementing
-        return ResponseEntity.ok(changedCartItem);
-    }
-
-    @PutMapping("/remove-all/{cartItemId}")
-    public ResponseEntity<CartItem> removeItemsType(@PathVariable Long cartItemId,
-                                                    @CookieValue Long cartId) {
-        CartItem changedCartItem = shoppingCartHandler.removeCartItemFromCart(cartId,cartItemId);
-        return ResponseEntity.ok(changedCartItem);
-    }
-
-    @DeleteMapping("/remove-all-items")
-    public ResponseEntity<List<CartItem>> removeAllItemsFromCart(@CookieValue Long cartId) {
-        return ResponseEntity.ok(
-                cartService
-                        .removeAllItemsFromCart(cartId)
-                        .getItems());
     }
 
 }

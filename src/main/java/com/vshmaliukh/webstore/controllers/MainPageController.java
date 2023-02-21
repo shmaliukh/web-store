@@ -59,19 +59,6 @@ public class MainPageController {
         return new ModelAndView("item-page");
     }
 
-    @PostMapping("/catalog/{category}/{type}/{itemId}")
-    public ResponseEntity<CartItem> addItemToCartFromMainPage(@PathVariable String category,
-                                                              @PathVariable String type,
-                                                              @PathVariable Integer itemId,
-                                                              @CookieValue(defaultValue = "0") Long cartId,
-                                                              HttpServletResponse response) {
-        // todo add checking user authorization
-        boolean authorization = false;
-        CartItem cartItem = shoppingCartHandler.addItemToCartFromMainPage(authorization,cartId,itemId,type,response);
-        if (cartItem!=null){
-            return ResponseEntity.ok(cartItem);
-        }
-        return ResponseEntity.notFound().build();
-    }
+
 
 }

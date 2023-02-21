@@ -65,7 +65,7 @@
                             <div style="text-align: center">
                                 <div class="btn-group">
                                     <button th:id="'cartButton' + ${item.getId()}"
-                                            th:href="'/main/catalog/literature/' + ${item.getClass().getSimpleName()} + '/' + ${item.getId()}"
+                                            th:href="'/cart-item/add-new/literature/' + ${item.getClass().getSimpleName()} + '/' + ${item.getId()}"
                                             th:onclick="'addItemToCart('+${item.getId()}+')'"
                                             class="btn btn-sm btn-outline-secondary">
                                         <img
@@ -75,7 +75,7 @@
                                 <div class="btn-group">
 <!--                                    todo change method-->
                                     <button th:id="'buyButton' + ${item.getId()}"
-                                            th:href="'/main/catalog/literature/' + ${item.getClass().getSimpleName()} + '/' + ${item.getId()}"
+                                            th:href="'/cart-item/add-new/literature/' + ${item.getClass().getSimpleName()} + '/' + ${item.getId()}"
                                             th:onclick="'addItemToCart('+${item.getId()}+')'"
                                             class="btn btn-sm btn-outline-secondary">
                                         <img class="shopping-icon" src="/icons/buy.png">
