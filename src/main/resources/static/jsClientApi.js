@@ -6,6 +6,7 @@ let editUsernameLink = "/user-home/edit-username-user-page";
 let editUserEmailLink = "/user-home/edit-email-user-page";
 let editUserAvatarLink = "/user-home/edit-avatar-user-page";
 
+const POST_METHOD = "POST";
 const PUT_METHOD = "PUT";
 const DELETE_METHOD = "DELETE";
 
@@ -147,4 +148,12 @@ function saveUserChanges(link,tagId){
         });
     }
 
+}
+
+function addItemToCart(itemId){
+    let link = document.getElementById("cartButton" + itemId).getAttribute("href");
+    alert(link);
+    sendJSON(link,POST_METHOD,JSON.stringify({itemId:itemId})).then(res=>{
+        alert(res);
+    });
 }
