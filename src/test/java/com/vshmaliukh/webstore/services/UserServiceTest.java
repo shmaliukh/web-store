@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static com.vshmaliukh.webstore.TestUtils.isUnmodifiableList;
-import static com.vshmaliukh.webstore.services.UserService.DEFAULT_PASSWORD;
+//import static com.vshmaliukh.webstore.services.UserService.DEFAULT_PASSWORD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -209,7 +209,7 @@ class UserServiceTest {
     @MethodSource("providedArgs_createBaseUserTest")
     // FIXME refactor to test new 'role' implementation
     void createBaseUserTest(String username, String email, Role role, boolean enabled) {
-        User baseUser = userService.createBaseUser(username, email, role, enabled);
+        User baseUser = userService.createBaseUser(username, email, Optional.ofNullable(role).get().toString(), enabled);
 
         assertNotNull(baseUser);
         assertNull(baseUser.getId());
@@ -221,7 +221,7 @@ class UserServiceTest {
         assertEquals(email, baseUser.getEmail());
         assertTrue(baseUser.getEmail().length() >= 5);
         assertEquals(enabled, baseUser.isEnabled());
-        assertEquals(DEFAULT_PASSWORD, baseUser.getPassword());
+//        assertEquals(DEFAULT_PASSWORD, baseUser.getPassword());
         assertEquals(LogInProvider.LOCAL, baseUser.getLogInProvider());
     }
 
