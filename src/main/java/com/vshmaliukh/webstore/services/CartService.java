@@ -45,7 +45,7 @@ public class CartService {
         return null;
     }
 
-    public void addItemToCart(Item item, Long cartId) {
+    public CartItem addItemToCart(Item item, Long cartId) {
         Optional<Cart> optionalCart = getCartByCartId(cartId);
         if(optionalCart.isPresent()) {
             Cart cart = optionalCart.get();
@@ -58,9 +58,12 @@ public class CartService {
                     cartItems.add(newCartItem);
                     cart.setItems(cartItems);
                     addNewCart(cart);
+                    return newCartItem;
                 }
+                return cartItem;
             }
         }
+        return null;
     }
 
     public Cart addNewCart(Cart cart){

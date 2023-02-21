@@ -64,7 +64,7 @@ public class ShoppingCartHandler {
         return cartItems;
     }
 
-    public void addItemToCartFromMainPage(boolean authorization, Long cartId, Integer itemId, String type,  HttpServletResponse response){
+    public CartItem addItemToCartFromMainPage(boolean authorization, Long cartId, Integer itemId, String type,  HttpServletResponse response){
         if(!authorization){
             if(cartId==0||!cartService.existsById(cartId,authorization)){
                 cartId = createNewCart().getCartId();
@@ -75,7 +75,7 @@ public class ShoppingCartHandler {
         }
         BaseItemRepository itemRepository = itemRepositoryProvider.getItemRepositoryByItemClassName(type);
         Optional<Item> optionalItem = itemRepository.findById(itemId);
-        cartService.addItemToCart(optionalItem.get(), cartId);
+        return cartService.addItemToCart(optionalItem.get(), cartId);
     }
 
     public CartItem removeCartItemFromCart(Long cartId, Long cartItemId){

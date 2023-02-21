@@ -1,10 +1,12 @@
 package com.vshmaliukh.webstore.controllers;
 
 import com.vshmaliukh.webstore.controllers.handlers.ShoppingCartHandler;
+import com.vshmaliukh.webstore.model.items.CartItem;
 import com.vshmaliukh.webstore.model.items.Item;
 import com.vshmaliukh.webstore.repositories.ItemRepositoryProvider;
 import com.vshmaliukh.webstore.services.*;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -58,16 +60,18 @@ public class MainPageController {
     }
 
     @PostMapping("/catalog/{category}/{type}/{itemId}")
-    public String addItemToCartFromMainPage(@PathVariable String category,
-                                            @PathVariable String type,
-                                            @PathVariable Integer itemId,
-                                            @CookieValue(defaultValue = "0") Long cartId,
-                                            @RequestHeader String referer,
-                                            HttpServletResponse response) {
+    public ResponseEntity<CartItem> addItemToCartFromMainPage(@PathVariable String category,
+                                                              @PathVariable String type,
+                                                              @PathVariable Integer itemId,
+                                                              @CookieValue(defaultValue = "0") Long cartId,
+                                                              HttpServletResponse response) {
         // todo add checking user authorization
         boolean authorization = false;
-        shoppingCartHandler.addItemToCartFromMainPage(authorization,cartId,itemId,type,response);
-        return "redirect:" + referer;
+        CartItem cartItem = shoppingCartHandler.addItemToCartFromMainPage(authorization,cartId,itemId,type,response);
+        if (cartItem!=null){
+            return ResponseEntity.ok(cartItem);
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }
