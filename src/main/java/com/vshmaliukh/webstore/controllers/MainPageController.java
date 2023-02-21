@@ -53,7 +53,6 @@ public class MainPageController {
         if (optionalItem.isPresent()) {
             item = optionalItem.get();
         }
-        modelMap.addAttribute("type", type.toLowerCase());
         modelMap.addAttribute("item", item);
         return new ModelAndView("item-page");
     }

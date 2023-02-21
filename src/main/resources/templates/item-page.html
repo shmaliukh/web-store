@@ -84,7 +84,7 @@
                 <div class="card shadow-sm">
                     <div class="item-info" th:each="item: ${item}">
                         <div>
-                            <div th:insert="/blocks/item-details :: ${type}">
+                            <div th:insert="/blocks/item-details :: ${item.getClass().getSimpleName().toLowerCase}">
                             </div>
                         </div>
                     </div>
