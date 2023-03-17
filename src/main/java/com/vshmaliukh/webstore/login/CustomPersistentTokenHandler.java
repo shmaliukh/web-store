@@ -1,7 +1,7 @@
 package com.vshmaliukh.webstore.login;
 
 import com.vshmaliukh.webstore.model.PersistentToken;
-import com.vshmaliukh.webstore.repositories.PersistentTokenRepository;
+import com.vshmaliukh.webstore.repositories.MyPersistentTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 import org.springframework.stereotype.Component;
@@ -14,19 +14,19 @@ import java.util.Optional;
 @Component
 public class CustomPersistentTokenHandler implements org.springframework.security.web.authentication.rememberme.PersistentTokenRepository {
 
-    private final PersistentTokenRepository persistentTokenRepository;
+    private final MyPersistentTokenRepository myPersistentTokenRepository;
 
-    public CustomPersistentTokenHandler(PersistentTokenRepository persistentTokenRepository) {
-        this.persistentTokenRepository = persistentTokenRepository;
+    public CustomPersistentTokenHandler(MyPersistentTokenRepository myPersistentTokenRepository) {
+        this.myPersistentTokenRepository = myPersistentTokenRepository;
     }
 
     @Override
     public void createNewToken(PersistentRememberMeToken token) {
         String series = token.getSeries();
-        PersistentToken persistentToken = persistentTokenRepository.findBySeries(series);
+        PersistentToken persistentToken = myPersistentTokenRepository.findBySeries(series);
         if (persistentToken == null) {
             persistentToken = new PersistentToken(token.getUsername(), token.getSeries(), token.getTokenValue(), new Date());
-            persistentTokenRepository.save(persistentToken);
+            myPersistentTokenRepository.save(persistentToken);
         } else {
             log.error("problem to create new persistent login token // token with '{}' series already exists", series);
         }
@@ -34,17 +34,17 @@ public class CustomPersistentTokenHandler implements org.springframework.securit
 
     @Override
     public void updateToken(String series, String tokenValue, Date lastUsed) {
-        PersistentToken persistentToken = persistentTokenRepository.findBySeries(series);
+        PersistentToken persistentToken = myPersistentTokenRepository.findBySeries(series);
         if (persistentToken != null) {
             persistentToken.setToken(tokenValue);
             persistentToken.setLastUsed(new Date());
-            persistentTokenRepository.save(persistentToken);
+            myPersistentTokenRepository.save(persistentToken);
         }
     }
 
     @Override
     public PersistentRememberMeToken getTokenForSeries(String seriesId) {
-        Optional<PersistentToken> optionalPersistentLogin = persistentTokenRepository.findById(seriesId);
+        Optional<PersistentToken> optionalPersistentLogin = myPersistentTokenRepository.findById(seriesId);
         if (optionalPersistentLogin.isPresent()) {
             PersistentToken persistentToken = optionalPersistentLogin.get();
             new PersistentRememberMeToken(
@@ -59,8 +59,8 @@ public class CustomPersistentTokenHandler implements org.springframework.securit
 
     @Override
     public void removeUserTokens(String username) {
-        List<PersistentToken> persistentTokenList = persistentTokenRepository.findAllByUsernameIgnoreCase(username);
-        persistentTokenRepository.deleteAll(persistentTokenList);
+        List<PersistentToken> persistentTokenList = myPersistentTokenRepository.findAllByUsernameIgnoreCase(username);
+        myPersistentTokenRepository.deleteAll(persistentTokenList);
     }
 
 }

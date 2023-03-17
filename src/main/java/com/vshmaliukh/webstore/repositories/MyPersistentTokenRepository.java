@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PersistentTokenRepository extends JpaRepository<PersistentToken, String> {
+public interface MyPersistentTokenRepository extends JpaRepository<PersistentToken, String> {
 
     // repository to store 'rememberMe' services tokens in a database
 
