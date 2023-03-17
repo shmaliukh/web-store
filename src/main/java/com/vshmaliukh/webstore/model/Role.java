@@ -1,10 +1,13 @@
 package com.vshmaliukh.webstore.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,7 +27,7 @@ public class Role extends AuditModel {
     @ManyToMany(mappedBy = "roles")
     @ToString.Exclude
     @JsonIgnore
-    private Collection<User> users;
+    private Set<User> users;
 
     @ManyToMany
     @JoinTable(
@@ -35,7 +38,7 @@ public class Role extends AuditModel {
                     name = "privilege_id", referencedColumnName = "privilege_id"))
     @ToString.Exclude
     @JsonIgnore
-    private Collection<Privilege> privileges;
+    private Set<Privilege> privileges;
 
     @Override
     public boolean equals(Object o) {

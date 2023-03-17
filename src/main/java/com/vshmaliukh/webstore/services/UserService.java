@@ -51,7 +51,7 @@ public class UserService implements EntityValidator<User> {
         user.setUsername(username);
         user.setLogInProvider(logInProvider);
         user.setEnabled(true);
-        user.setRoles(Collections.emptyList());
+        user.setRoles(Collections.emptySet());
 
         User savedUser = userRepository.save(user);
         log.info("Created new user: '{}', provider: '{}'", savedUser, logInProvider);
@@ -69,7 +69,7 @@ public class UserService implements EntityValidator<User> {
         User user = new User();
         user.setUsername(userName);
         user.setEmail(email);
-        user.setRoles(Collections.emptyList());
+        user.setRoles(Collections.emptySet());
         user.setLogInProvider(LOCAL);
         user.setEnabled(enabled);
         user.setPassword(password);

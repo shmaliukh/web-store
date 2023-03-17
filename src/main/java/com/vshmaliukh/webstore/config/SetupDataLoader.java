@@ -12,10 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -72,7 +69,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         User user;
         Optional<User> optionalUser = userService.readUserByUsernameIgnoreCase(username);
         Role role = roleService.findRoleByNameIgnoreCase(roleName);
-        List<Role> roleList = Collections.singletonList(role);
+        Set<Role> roleList = new HashSet<>(Collections.singletonList(role));
         if(!optionalUser.isPresent()) {
             user = userService.createBaseUser(username, username + "@mail.com", passwordEncoder.encode(DEFAULT_PASSWORD), true);
             user.setRoles(roleList);

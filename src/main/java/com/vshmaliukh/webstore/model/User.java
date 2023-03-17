@@ -5,7 +5,7 @@ import com.vshmaliukh.webstore.login.LogInProvider;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -35,7 +35,7 @@ public class User extends AuditModel {
     @Column(name = "log_in_provider", nullable = false)
     private LogInProvider logInProvider;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "Users_Roles",
             joinColumns = @JoinColumn(
@@ -44,7 +44,7 @@ public class User extends AuditModel {
                     name = "role_id", referencedColumnName = "role_id"))
     @ToString.Exclude
     @JsonIgnore
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     @ToString.Exclude
 //    @Size(min = 4, max = 50, message = "Please provide a valid 'password' (min = 4, max = 50)")

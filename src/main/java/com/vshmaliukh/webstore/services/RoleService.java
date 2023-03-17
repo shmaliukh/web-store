@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -22,7 +24,7 @@ public class RoleService implements EntityValidator<Role> {
     }
 
     @Transactional
-    public void createRoleIfNotFound(String name, Collection<Privilege> privileges) {
+    public void createRoleIfNotFound(String name, Set<Privilege> privileges) {
         Role role = roleRepository.findByNameIgnoreCase(name);
         if (role == null) {
             role = new Role();
@@ -31,6 +33,11 @@ public class RoleService implements EntityValidator<Role> {
             roleRepository.save(role);
             log.info("created new role: '{}' with privileges: '{}'", role, privileges);
         }
+    }
+
+    @Transactional
+    public void createRoleIfNotFound(String name, Collection<Privilege> privileges) {
+        createRoleIfNotFound(name, new LinkedHashSet<>(privileges));
     }
 
     public Role findRoleByNameIgnoreCase(String name) {
