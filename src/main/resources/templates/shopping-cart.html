@@ -58,14 +58,14 @@
                                 <div class=" width: 65%">
                                     <button
                                             th:onclick="'decCartItem(' + ${item.getId()}+')'"
-                                            th:href="'/shopping-cart/remove-one/literature/newspaper/' + ${item.getId()}"
+                                            th:href="'/shopping-cart/remove-one/literature/' + ${item.getItem().getTypeStr()} + '/' + ${item.getId()}"
                                             class="navbar-toggler" style="color: darkgrey">
                                         <img class="cart-plus-minus-icon" src="/icons/minus-icon.png" alt="">
                                     </button>
                                     <span th:id="'cartItemQuantity' + ${item.getId()}" class="text-muted"
                                           th:text=" ${item.getQuantity()}">0</span>
                                     <button th:onclick="'incCartItem(' + ${item.getId()}+')'"
-                                            th:href="'/shopping-cart/add-one/literature/newspaper/' + ${item.getId()}"
+                                            th:href="'/shopping-cart/add-one/literature/' + ${item.getItem().getTypeStr()} + '/' + ${item.getId()}"
                                             class="navbar-toggler" style="color: darkgrey">
                                         <img class="cart-plus-minus-icon" src="/icons/plus-icon.png">
                                     </button>
@@ -108,25 +108,9 @@
                     setNewValueInPage(ID_TOTAL_ITEMS,totalQuantity);
                     setNewValueInPage(ID_TOTAL_PRICE,totalPrice)
                 </script>
-                <!--                <li class="list-group-item d-flex justify-content-between bg-light">-->
-                <!--                    <div class="text-success">-->
-                <!--                        <h6 class="my-0">Promo code</h6>-->
-                <!--                        <small>EXAMPLECODE</small>-->
-                <!--                    </div>-->
-                <!--                    <span class="text-success">−$5</span>-->
-                <!--                </li>-->
-
             </ul>
         </div>
     </div>
-
-
-    <!--    <form class="card p-2">-->
-    <!--        <div class="input-group">-->
-    <!--            <input type="text" class="form-control" placeholder="Promo code">-->
-    <!--            <button type="submit" class="btn btn-secondary">Redeem</button>-->
-    <!--        </div>-->
-    <!--    </form>-->
 </main>
 
 <footer th:insert="/blocks/page-blocks :: footer"></footer>
