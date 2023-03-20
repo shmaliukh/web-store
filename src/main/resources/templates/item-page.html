@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="/tag-style.css">
     <link rel="stylesheet" href="/styles.css">
 
+    <script src="/jsClientApi.js"></script>
+
 </head>
 <body>
 
@@ -62,18 +64,23 @@
                             <h5>Price: $<b th:text="${item.getSalePrice()}">0</b></h5>
                             <div style="text-align: center">
                                 <div class="btn-group">
-                                    <form method="post" th:action="${href}">
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary"><img
-                                                class="shopping-icon" src="/icons/shopping-cart.png"></button>
-                                    </form>
+                                    <button th:id="'cartButton' + ${item.getId()}"
+                                            th:href="'/cart-item/add-new/literature/' + ${item.getClass().getSimpleName()} + '/' + ${item.getId()}"
+                                            th:onclick="'addItemToCart('+${item.getId()}+')'"
+                                            class="btn btn-sm btn-outline-secondary">
+                                        <img
+                                                class="shopping-icon" src="/icons/shopping-cart.png">
+                                    </button>
                                 </div>
                                 <div class="btn-group">
-                                    <form method="post"
-                                          th:action="'/main/catalog/literature/' + ${item.getClass().getSimpleName()} + '/' + ${item.getId()}">
-                                        <!--todo literature change to getCategory()-->
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary"><img
-                                                class="shopping-icon" src="/icons/buy.png"></button>
-                                    </form>
+<!--                                    todo change method-->
+                                    <button th:id="'buyButton' + ${item.getId()}"
+                                            th:href="'/cart-item/add-new/literature/' + ${item.getClass().getSimpleName()} + '/' + ${item.getId()}"
+                                            th:onclick="'addItemToCart('+${item.getId()}+')'"
+                                            class="btn btn-sm btn-outline-secondary">
+                                        <img class="shopping-icon" src="/icons/buy.png">
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -84,7 +91,7 @@
                 <div class="card shadow-sm">
                     <div class="item-info" th:each="item: ${item}">
                         <div>
-                            <div th:insert="/blocks/item-details :: ${type}">
+                            <div th:insert="/blocks/item-details :: ${item.getClass().getSimpleName().toLowerCase}">
                             </div>
                         </div>
                     </div>

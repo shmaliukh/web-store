@@ -28,6 +28,7 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <mysql-connector-java.version>8.0.30</mysql-connector-java.version>
         <spring-boot-starter-validation.version>2.6.3</spring-boot-starter-validation.version>
+        <thymeleaf-extras-springsecurity5.version>3.0.4.RELEASE</thymeleaf-extras-springsecurity5.version>
     </properties>
 
     <dependencies>
@@ -99,6 +100,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring-boot-starter.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+            <version>${thymeleaf-extras-springsecurity5.version}</version>
         </dependency>
     </dependencies>
 
