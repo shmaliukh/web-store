@@ -51,7 +51,7 @@
                             class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0" th:text="${item.getItem().getName()}"></h6>
-                                <small class="text-muted" th:text="'newspaper'"></small>
+                                <small class="text-muted" th:text="${item.getItem().getTypeStr()}"></small>
                             </div>
                             <div class="navbar-cart-block" style="width: 14%">
 
