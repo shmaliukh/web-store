@@ -74,7 +74,6 @@ async function sendJSON(link, method,body) {
                 return res.json();
             }
         }).then(function (data) {
-            console.log(data);
             newCartItem = data;
         });
 }
@@ -152,8 +151,6 @@ function saveUserChanges(link,tagId){
 
 function addItemToCart(itemId){
     let link = document.getElementById("cartButton" + itemId).getAttribute("href");
-    alert(link);
     sendJSON(link,POST_METHOD,JSON.stringify({itemId:itemId})).then(res=>{
-        alert(res);
     });
 }

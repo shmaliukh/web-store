@@ -26,7 +26,7 @@ public class UserHomeController {
 
         boolean authorization = false;
         if(!authorization){
-            return new ModelAndView("unauthorized-user-page");
+            return new ModelAndView("/user/unauthorized-user-page");
         }
         Optional<User> optionalUser = userService.readUserById(userId);
         optionalUser.ifPresent(user -> modelMap.addAttribute("user", user));
